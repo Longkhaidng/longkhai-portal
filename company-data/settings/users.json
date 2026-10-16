@@ -1,0 +1,4760 @@
+[
+  {
+    "id": "1867",
+    "name": "Trương Anh Như Quỳnh",
+    "department": "Ban Giám Đốc",
+    "position": "Phó giám đốc HCNS",
+    "role": "manager",
+    "phone": "0919188051",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements",
+      "departments",
+      "forms",
+      "reports",
+      "web_integrations",
+      "plugins"
+    ],
+    "allowedWebIntegrations": [
+      "WEB-001",
+      "WEB-002"
+    ],
+    "isActive": true,
+    "password": "Quynh1",
+    "createdAt": "2026-10-16T07:48:21.879Z",
+    "updatedAt": "2026-10-16T07:48:21.879Z"
+  },
+  {
+    "id": "ADMIN01",
+    "name": "Quản trị viên Hệ thống",
+    "email": "admin@longkhai.vn",
+    "phone": "0988888888",
+    "department": "Ban Giám Đốc / CNTT",
+    "position": "Quản trị viên Cổng thông tin",
+    "role": "admin",
+    "permissions": [
+      "dashboard",
+      "departments",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements",
+      "forms",
+      "reports",
+      "users",
+      "web_integrations",
+      "plugins",
+      "settings"
+    ],
+    "allowedWebIntegrations": [
+      "WEB-001",
+      "WEB-002",
+      "WEB-003"
+    ],
+    "isActive": true,
+    "password": "admin@123",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "101",
+    "name": "24-40 Nguyễn Hữu Lập",
+    "department": "Đội Bảo Vệ & An Ninh",
+    "position": "Bảo vệ",
+    "role": "security",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T08:18:25.008Z"
+  },
+  {
+    "id": "102",
+    "name": "24-06 Nguyễn Thanh Ba",
+    "department": "Bảo vệ",
+    "position": "Bảo vệ",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "103",
+    "name": "26-16 Nguyễn Danh Thanh",
+    "department": "Bảo vệ",
+    "position": "Bảo vệ",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "104",
+    "name": "25-26 Lương Văn Vĩnh",
+    "department": "Bảo vệ",
+    "position": "Bảo vệ",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T08:02:49.981Z",
+    "allowedWebIntegrations": []
+  },
+  {
+    "id": "105",
+    "name": "23-21 Lê Văn Ân",
+    "department": "Bảo vệ",
+    "position": "Bảo vệ",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "106",
+    "name": "26-21 Trần Văn Phát Huy",
+    "department": "Bảo vệ",
+    "position": "Bảo vệ",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T08:00:33.636Z"
+  },
+  {
+    "id": "107",
+    "name": "24-02 Trương Văn Hùng",
+    "department": "Bảo vệ",
+    "position": "Bảo vệ",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1002",
+    "name": "Trần Thị Kim Loan",
+    "department": "HCNS",
+    "position": "Nhân viên dọn dẹp",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1005",
+    "name": "Dương Thị Thanh",
+    "department": "HCNS",
+    "position": "Nhân viên dọn dẹp",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1008",
+    "name": "Đoàn Thị Thanh Xuân",
+    "department": "Kế toán",
+    "position": "Nhân viên kế toán",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1010",
+    "name": "Nguyễn Thị Thanh Hiền",
+    "department": "PX Dệt",
+    "position": "Chuyên viên kế hoạch dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1012",
+    "name": "Nguyễn Thị Hồng",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1014",
+    "name": "Nguyễn Thị Cẩm Hương",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1015",
+    "name": "Phạm Thị Luyên",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1020",
+    "name": "Lê Nguyễn Quỳnh Hoa",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1022",
+    "name": "Phạm Thị Thư",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1025",
+    "name": "Nguyễn Thị Thu Hoa",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1026",
+    "name": "Phan Thị Thúy An",
+    "department": "KCS",
+    "position": "Nhân viên KCS Hoàn Thành",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1030",
+    "name": "Mai Hồng Hậu",
+    "department": "PX Dệt",
+    "position": "Phụ trách kỹ thuật - PX Dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1035",
+    "name": "Dương Đình Lâm",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -KTD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1049",
+    "name": "Đoàn Thị Lan",
+    "department": "KCS",
+    "position": "Nhân viên KCS Hoàn Thành",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1051",
+    "name": "Ngô Thị Cường",
+    "department": "PXHT",
+    "position": "Phụ trách PX Hoàn thành",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1056",
+    "name": "Nguyễn Thị Tiên",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1061",
+    "name": "Hồ Thị Bình",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1070",
+    "name": "Lê Thị Huệ",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1079",
+    "name": "Nguyễn Bá Phương",
+    "department": "PXHT",
+    "position": "Tổ trưởng",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1085",
+    "name": "Lê Văn Nở",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -KTD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1094",
+    "name": "Vũ Thị Tâm",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1096",
+    "name": "Phạm Thị Diệu Huyền",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - CĐS",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1097",
+    "name": "Châu Thị Ly Viễn",
+    "department": "PXHT",
+    "position": "Công nhân tổ 5 - ĐK",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1101",
+    "name": "Võ Thị Thắm",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1104",
+    "name": "Dương Nguyễn Thị Mộng Tần",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1114",
+    "name": "Từ Thị Phú Minh",
+    "department": "PXHT",
+    "position": "Tổ trưởng",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1116",
+    "name": "Nguyễn Thị Diễm Thúy",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - TN-GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1118",
+    "name": "Trần Thị Kim Ngọc",
+    "department": "PXHT",
+    "position": "Nhân viên phục vụ HT",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1119",
+    "name": "Nguyễn Thị Hải",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - TN-GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1121",
+    "name": "Đỗ Thị Vinh",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - TN-GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1131",
+    "name": "Hoàng Thị Nhung",
+    "department": "HCNS",
+    "position": "Nhân viên dọn dẹp",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1139",
+    "name": "Võ Thị Tuyết",
+    "department": "HCNS",
+    "position": "Chuyên viên hành chính nhân sự",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1147",
+    "name": "Lê Thị Hoa",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1158",
+    "name": "Lê Thị Ly Na",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1204",
+    "name": "Nguyễn Kim Dung",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1205",
+    "name": "Trần Thị Thu Hòa",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1240",
+    "name": "Phan Văn Hát",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1241",
+    "name": "Võ Thị Phương Dung",
+    "department": "Kỹ thuật - Kỹ thuật mẫu",
+    "position": "Nhân viên công nghệ mẫu",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1243",
+    "name": "Huỳnh Thị Liên",
+    "department": "PXHT",
+    "position": "Nhân viên phục vụ HT",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1246",
+    "name": "Đỗ Thị Kim Nhung",
+    "department": "HCNS",
+    "position": "Nhân viên phục vụ - kho PL",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1253",
+    "name": "Trần Dy Khanh",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -KTD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1255",
+    "name": "Hà Thị Như Thùy",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1258",
+    "name": "Nguyễn Thị Thanh Mai",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1264",
+    "name": "Nguyễn Thị Khánh Duyên",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - CĐS",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1271",
+    "name": "Võ Tân Đô",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -KTD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1282",
+    "name": "Nguyễn Thị Nga",
+    "department": "Kế toán",
+    "position": "Kế toán tổng hợp",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1305",
+    "name": "Nguyễn Thị Lệ Quyết",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - TN-GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1307",
+    "name": "Nguyễn Thị Minh Tâm",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1308",
+    "name": "Phan Thu Hà",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1348",
+    "name": "Trần Văn Hiệp",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1368",
+    "name": "Trần Thùy Dương",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - L",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1400",
+    "name": "Nguyễn Thị Xuân Duyên",
+    "department": "Sản xuất",
+    "position": "Phụ trách PX Dệt + PXHT",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1403",
+    "name": "Đỗ Thắng",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -KTD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1413",
+    "name": "Trần Văn Quí",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1418",
+    "name": "Nguyễn Thị Minh Thông",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1419",
+    "name": "Ngô Thị Thu Hường",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1443",
+    "name": "Đỗ Thị Tường Linh",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - TN-GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1444",
+    "name": "Thái Thị Kiều Trang",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1466",
+    "name": "Nguyễn Thị Thanh Tâm",
+    "department": "Kỹ thuật - Kỹ thuật mẫu",
+    "position": "Nhân viên công nghệ mẫu",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1491",
+    "name": "Nguyễn Thị Kim Loan",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1503",
+    "name": "Lê Phú Công",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1527",
+    "name": "Nguyễn Thị Hết",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1532",
+    "name": "Nguyễn Hoàng Thiên",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1554",
+    "name": "Đoàn Anh Vạn",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -KTD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1559",
+    "name": "Hồ Thị Ngọc Diệp",
+    "department": "HCNS",
+    "position": "Bếp chính",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1598",
+    "name": "Lê Dương Hoàng Diệp",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1635",
+    "name": "Bùi Cư",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - L",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1637",
+    "name": "Lê Phan Hoàng Oanh",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1640",
+    "name": "Nguyễn Thị Kim Ny",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - TN-GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1643",
+    "name": "Phan Thị Thanh Xuân",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1649",
+    "name": "Nguyễn Văn Nghĩa",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1672",
+    "name": "Huỳnh Văn Út",
+    "department": "Cơ điện",
+    "position": "Nhân viên vận hành lò hơi",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1679",
+    "name": "Nguyễn Thị Tâm",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1706",
+    "name": "Nguyễn Thị Mỹ Dung",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1770",
+    "name": "Nguyễn Thị Xuân Hoa",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - L",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1778",
+    "name": "Trần Quang Vinh",
+    "department": "PXHT",
+    "position": "Nhân viên Kỹ thuật",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1785",
+    "name": "Nguyễn Thị Kim Dung",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - TN-GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1802",
+    "name": "Nguyễn Thị Gái",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1804",
+    "name": "Đặng Thị Mai",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - CĐS",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1809",
+    "name": "Phạm Thị Thanh Phương",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1849",
+    "name": "Đoàn Thị Thanh Loan",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - L",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1894",
+    "name": "Trần Lê Như Ý",
+    "department": "PXHT",
+    "position": "Chuyên viên kế hoạch HT",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1912",
+    "name": "Trương Hồ Kim Huyền",
+    "department": "PXHT",
+    "position": "Nhân viên kinh tế - kế hoạch HT",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1924",
+    "name": "Phạm Thị Thu Thủy",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1926",
+    "name": "Phạm Thị Thanh Xuân",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1927",
+    "name": "Phan Hải Đăng",
+    "department": "Cơ điện",
+    "position": "Nhân viên cơ điện",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1975",
+    "name": "Đỗ Thị Sự",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1983",
+    "name": "Lê Thị Như Hằng",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2033",
+    "name": "Trương Đức Ri",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD+BTD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2039",
+    "name": "Nguyễn Văn Viên",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -KTD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2040",
+    "name": "Nguyễn Văn Vỹ",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -KTD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2043",
+    "name": "Trần Thị Thu Thảo",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2102",
+    "name": "Nguyễn Thị Kiều My",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2105",
+    "name": "Phan Thị Bích Trang",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2107",
+    "name": "Nguyễn Thị Kim Chi",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2118",
+    "name": "Đỗ Thị Trang",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2120",
+    "name": "Trần Thị Hoa",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - L",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2121",
+    "name": "Trần Ngọc Triều",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2123",
+    "name": "Từ Thị Lạt",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - CĐS",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2124",
+    "name": "Phan Thị Mỹ Hạnh",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2131",
+    "name": "Trương Thị Mỹ Hồng",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2139",
+    "name": "Trương Nguyễn Mỹ Linh",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2140",
+    "name": "Huỳnh Văn Tiến",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2146",
+    "name": "Phạm Thị Hoàng Linh",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2154",
+    "name": "Phạm Sơn Ngọc",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2164",
+    "name": "Hồ Văn Quốc",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -KTD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2190",
+    "name": "Trần Thị Diễm Kiều",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - L",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2196",
+    "name": "Mai Thị Cẩm Nhung",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - GS",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2227",
+    "name": "Chế Thị Mỹ Dung",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - L",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2243",
+    "name": "Nguyễn Thị Thu Hiền",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - TN-GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2247",
+    "name": "Hoàng Thị Kim Chi",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2250",
+    "name": "Huỳnh Kim Vũ",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2254",
+    "name": "Trần Thị Thông",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2265",
+    "name": "Trần Lê Hữu Lực",
+    "department": "HCNS",
+    "position": "Chuyên viên IT",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2267",
+    "name": "Võ Thị Bích Liên",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2268",
+    "name": "Ngô Thị Lan Thanh",
+    "department": "PX Dệt",
+    "position": "Nhân viên công nghệ dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2277",
+    "name": "Phan Phước Vững",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2284",
+    "name": "Nguyễn Thị Kiều Ly",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2287",
+    "name": "Phan Thị Kim Kiều",
+    "department": "HCNS",
+    "position": "Phụ bếp",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2293",
+    "name": "Võ Thị Muội",
+    "department": "KCS",
+    "position": "Nhân viên KCS dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2297",
+    "name": "Lê Văn Tình",
+    "department": "Cơ điện",
+    "position": "Chuyên viên kỹ thuật cơ điện",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2320",
+    "name": "Võ Văn Huy",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2332",
+    "name": "Nguyễn Thùy Nhung",
+    "department": "HCNS",
+    "position": "Phụ bếp",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2336",
+    "name": "Đoàn Huy Mẫn",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2341",
+    "name": "Nguyễn Thị Như Ái",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2342",
+    "name": "Nguyễn Thị Lệ Hằng",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - TN-GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2344",
+    "name": "Trần Thị Mỹ Lệ",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2351",
+    "name": "Lê Quốc Nghĩa",
+    "department": "PX Dệt",
+    "position": "Nhân viên phục vụ dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2359",
+    "name": "Phan Văn Hiền",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2365",
+    "name": "Nguyễn Thị Kiều Duyên",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2366",
+    "name": "Trần Quỳnh Như",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2373",
+    "name": "Lý Trung Lan",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - CĐS",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2374",
+    "name": "Lê Thị Hiến",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2380",
+    "name": "Hoàng Văn Tường",
+    "department": "PXHT",
+    "position": "Tổ trưởng kiêm kỹ thuật in",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2388",
+    "name": "Phan Đình Thảo Uyên",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2391",
+    "name": "Nguyễn Thị Mỹ Lệ",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2399",
+    "name": "Trần Khánh Phúc",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy in trên trục - Máy trưởng",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2409",
+    "name": "Trịnh Anh Tài",
+    "department": "Cơ điện",
+    "position": "Trưởng phòng Cơ điện",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2410",
+    "name": "Nguyễn Thị Dung",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2415",
+    "name": "Nguyễn Thị Ngọc Mỹ",
+    "department": "PXHT",
+    "position": "Nhân viên kinh tế - kế hoạch HT",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2421",
+    "name": "Trương Thị Minh Nguyệt",
+    "department": "KCS",
+    "position": "Nhân viên KCS Hoàn Thành",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2431",
+    "name": "Nguyễn Thị Thanh Nhàn",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2435",
+    "name": "Nguyễn Thị Thanh Thảo",
+    "department": "Kho",
+    "position": "Thủ kho phụ liệu",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2436",
+    "name": "Nguyễn Thị Hồng Vân",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2446",
+    "name": "Đỗ Thị Kiều Hoanh",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2448",
+    "name": "Phan Thị Thuý My",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - CĐS",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2471",
+    "name": "Trần Thị Ánh Hồng",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2472",
+    "name": "Trần Văn Sỹ",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2473",
+    "name": "Nguyễn Thị Thanh Thu",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2474",
+    "name": "Trần Thị Kiều Trang",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2476",
+    "name": "Trần Sơn Lâm",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2486",
+    "name": "Phan Trọng Nghĩa",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy in trên trục - Máy trưởng",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2489",
+    "name": "Lương Thị Mộng Ngân",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - L",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2500",
+    "name": "Phan Thị Thanh Loan",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - CĐS",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2502",
+    "name": "Phan Thị Nữ",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2506",
+    "name": "Nguyễn Thị Ly Ly",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2507",
+    "name": "Lê Thị Kiều Oanh",
+    "department": "KCS",
+    "position": "Nhân viên KCS Hoàn Thành",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2509",
+    "name": "Đỗ Viết Điệp",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2510",
+    "name": "Lê Thị Hà Lan",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2515",
+    "name": "Trần Khánh Đại",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy in trên trục - Máy trưởng",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2522",
+    "name": "Nguyễn Thị Lan",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2525",
+    "name": "Nguyễn Đức Anh Tài",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2528",
+    "name": "Nguyễn Thị Đến",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - TN-GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2529",
+    "name": "Nguyễn Văn Trí Tâm",
+    "department": "PXHT",
+    "position": "Nhân viên phục vụ HT",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2535",
+    "name": "Mai Thành Chót",
+    "department": "Kho",
+    "position": "Phụ kho",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2539",
+    "name": "Nguyễn Quốc Huy",
+    "department": "PXHT",
+    "position": "Nhân viên phục vụ HT",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2560",
+    "name": "Lý Thị Sương",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2576",
+    "name": "Trần Thị Thanh Hiền",
+    "department": "PXHT",
+    "position": "Nhân viên kinh tế - kế hoạch HT",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2598",
+    "name": "Lê Thị Quỳnh Nhi",
+    "department": "KCS",
+    "position": "Nhân viên KCS dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2602",
+    "name": "Phan Quang Huy",
+    "department": "PX Dệt",
+    "position": "Nhân viên phục vụ dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2611",
+    "name": "Võ Thị Tuyến",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2613",
+    "name": "Nguyễn Thị Hồng Vân",
+    "department": "KCS",
+    "position": "Nhân viên KCS Hoàn Thành",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2615",
+    "name": "Nguyễn Văn Đồng",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2620",
+    "name": "Phan Trung Vĩnh",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2625",
+    "name": "Trần Thị Diễm Lan",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - L",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2626",
+    "name": "Nguyễn Trung Bút",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2627",
+    "name": "Huỳnh Thị Hồng",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2629",
+    "name": "Phạm Thị Hà My",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2632",
+    "name": "Trần Xuân Phước",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2645",
+    "name": "Nguyễn Đỗ Thành Nhơn",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -KTD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2646",
+    "name": "Trần Văn An",
+    "department": "PXHT",
+    "position": "Nhân viên phục vụ HT",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2656",
+    "name": "Huỳnh Đức Thắng",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2663",
+    "name": "Nguyễn Thị Mỹ Phượng",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2667",
+    "name": "Nguyễn Thị Kim Thôi",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - CĐS",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2669",
+    "name": "Đỗ Thị Kim Phượng",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2671",
+    "name": "Trần Thị Hiền",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2685",
+    "name": "Đặng Chánh",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2692",
+    "name": "Lý Thị Như Ý",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2710",
+    "name": "Phan Thị Hoài Thương",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2713",
+    "name": "Lý Thị Tuyết",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2717",
+    "name": "Nguyễn Văn Lâm",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2725",
+    "name": "Trần Thị Diễm Trinh",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2727",
+    "name": "Nguyễn Trâm Bảo Anh",
+    "department": "Kế toán",
+    "position": "Nhân viên kế toán",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2732",
+    "name": "Phạm Hưng",
+    "department": "PX Dệt",
+    "position": "Nhân viên phục vụ dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2736",
+    "name": "Trần Thị Ngọc Vân",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2737",
+    "name": "Đỗ Gia Ân",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2739",
+    "name": "Mai Thị Hồng",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2740",
+    "name": "Hồ Thị Liên",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - L",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2741",
+    "name": "Đỗ Thị Mỹ Tuyết",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2742",
+    "name": "Trần Thị Nga",
+    "department": "PXHT",
+    "position": "Công nhân tổ 4 - TN-GBG",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2745",
+    "name": "Bùi Ngọc Phúc",
+    "department": "Kho",
+    "position": "Phụ trách kho",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2747",
+    "name": "Nguyễn Đức Thành",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2752",
+    "name": "Huỳnh Thị Thu Thảo",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2754",
+    "name": "Lê Thị Thu Sương",
+    "department": "PX Dệt",
+    "position": "Nhân viên kinh tế - kế hoạch Dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2755",
+    "name": "Trần Thị Thu Ly",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2760",
+    "name": "Lê Thị Kim Anh",
+    "department": "HCNS",
+    "position": "Phụ bếp",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2765",
+    "name": "Đỗ Thị Thuý Ngọc",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2772",
+    "name": "Nguyễn Thuỳ Trang",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2777",
+    "name": "Nguyễn Thị Kiều Diễm",
+    "department": "PX Dệt",
+    "position": "Nhân viên kinh tế",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2778",
+    "name": "Nguyễn Ngọc Ý Vy",
+    "department": "KCS",
+    "position": "Nhân viên KCS Hoàn Thành",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2781",
+    "name": "Võ Văn Khánh",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2791",
+    "name": "Nguyễn Thị Mỹ Thạnh",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2792",
+    "name": "Trần Văn Tươi",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2793",
+    "name": "Nguyễn Mai Kha",
+    "department": "Kho",
+    "position": "Thủ kho thành phẩm",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2795",
+    "name": "Nguyễn Thị Trang Đài",
+    "department": "PX Dệt",
+    "position": "Nhân viên kế hoạch dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2800",
+    "name": "Trần Thị Lưu",
+    "department": "HCNS",
+    "position": "Phụ bếp",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2802",
+    "name": "Hà Thị Linh",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2810",
+    "name": "Trần Đắc Công Hiếu",
+    "department": "PX Dệt",
+    "position": "Nhân viên phục vụ dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2809",
+    "name": "Trần Bích Ngọc",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2811",
+    "name": "Trần Văn Hải",
+    "department": "Cơ điện",
+    "position": "Nhân viên vận hành lò hơi",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2816",
+    "name": "Phạm Văn Hiếu",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2817",
+    "name": "Lương Thị Mộng Ngọc",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2818",
+    "name": "Nguyễn Thị Kim Yến",
+    "department": "HCNS",
+    "position": "Chuyên viên hành chính nhân sự",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2819",
+    "name": "Nguyễn Thị Hồng Thắm",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2820",
+    "name": "Phạm Duy An",
+    "department": "KCS",
+    "position": "Nhân viên KCS Hoàn Thành",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2822",
+    "name": "Trần Thị Huệ",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2823",
+    "name": "Hồ Duy Hưng",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2826",
+    "name": "Đặng Thị Phương Thảo",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - L",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2830",
+    "name": "Hồ Cao Bằng",
+    "department": "PXHT",
+    "position": "Công nhân tổ 5 - ĐK",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2831",
+    "name": "Trần Thị Thanh Diệu",
+    "department": "KCS",
+    "position": "Phụ trách KCS",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2834",
+    "name": "Nguyễn Văn Khánh",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2836",
+    "name": "Nguyễn Thị Kim Huệ",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2838",
+    "name": "Tạ Thị Ngọc Quyên",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2839",
+    "name": "Nguyễn Ngọc Hải",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2840",
+    "name": "Nguyễn Thị Hậu",
+    "department": "HCNS",
+    "position": "Chuyên viên hành chính nhân sự",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2841",
+    "name": "Nguyễn Thị Thanh Huệ",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2843",
+    "name": "Lê Bích Diễm",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2846",
+    "name": "Vàng Thị Tư",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2847",
+    "name": "Võ Thị Hoạ My",
+    "department": "PXHT",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2848",
+    "name": "Lâm Thị Ngọc Thắm",
+    "department": "PXHT",
+    "position": "Nhân viên phục vụ kiểm hàng",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2849",
+    "name": "Trần Thế Khang",
+    "department": "PXHT",
+    "position": "Công nhân tổ 5 - ĐK",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2850",
+    "name": "Nguyễn Hồng Hạnh",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2851",
+    "name": "Ông Thị Phước",
+    "department": "KCS",
+    "position": "Nhân viên KCS Hoàn Thành",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2852",
+    "name": "Đoàn Thị Thuý Vân",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2854",
+    "name": "Hồ Nguyễn Văn Châu Tú",
+    "department": "PX Dệt",
+    "position": "Công nhân vận hành máy dệt kim tròn -TD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2855",
+    "name": "Võ Thanh Hà",
+    "department": "PXHT",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2856",
+    "name": "Nguyễn Phước Quý Trâm",
+    "department": "PXHT",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1386",
+    "name": "Nguyễn Thanh Hải",
+    "department": "HCNS",
+    "position": "Giám sát nhà máy",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "2424",
+    "name": "Lê Đình Thành",
+    "department": "HCNS",
+    "position": "Nhân viên tưới cây",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1142",
+    "name": "Ada Bongalonta Garcia",
+    "department": "KCS",
+    "position": "Nhân viên KCS dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1310",
+    "name": "Retchel Palmaria Cantos",
+    "department": "KCS",
+    "position": "Nhân viên KCS dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1311",
+    "name": "Joy Naboa Paras",
+    "department": "KCS",
+    "position": "Nhân viên KCS dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1312",
+    "name": "Rosalina Dimailig Comia",
+    "department": "KCS",
+    "position": "Nhân viên KCS dệt",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  },
+  {
+    "id": "1141",
+    "name": "Villagonza Alberto Cutanda",
+    "department": "Vitex QN",
+    "position": "Công nhân vận hành máy dệt kim tròn -KTD",
+    "role": "employee",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-16T07:59:12.466Z",
+    "updatedAt": "2026-10-16T07:59:12.466Z"
+  }
+]
