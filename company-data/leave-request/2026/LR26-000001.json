@@ -1,0 +1,26 @@
+{
+  "id": "LR26-000001",
+  "employeeId": "1002",
+  "employeeName": "Trần Thị Kim Loan",
+  "department": "Phòng Hành Chính Nhân Sự",
+  "leaveType": "phep_nam",
+  "fromDate": "2026-10-17",
+  "toDate": "2026-10-18",
+  "totalDays": 2,
+  "reason": "bận việc gia đình",
+  "handoverPerson": "Dương Thị Thanh",
+  "emergencyContact": "0919188051",
+  "status": "pending",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận phê duyệt",
+      "roleRequired": "manager",
+      "approverId": "1867",
+      "approverName": "Trương Anh Như Quỳnh",
+      "status": "pending"
+    }
+  ],
+  "createdAt": "2026-10-16T08:21:44.358Z",
+  "updatedAt": "2026-10-16T08:21:44.358Z"
+}
