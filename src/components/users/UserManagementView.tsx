@@ -22,6 +22,8 @@ import {
   Check,
   UserPlus,
   Globe,
+  Pencil,
+  Trash2,
 } from 'lucide-react';
 import {
   parseEmployeeExcel,
@@ -71,6 +73,19 @@ export function UserManagementView() {
   ]);
   const [newEmpWebIntegrations, setNewEmpWebIntegrations] = useState<string[]>([]);
   const [addUserError, setAddUserError] = useState<string | null>(null);
+
+  // Edit User Modal State
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editDept, setEditDept] = useState('');
+  const [editPos, setEditPos] = useState('');
+  const [editRole, setEditRole] = useState<UserRole>('employee');
+  const [editEmail, setEditEmail] = useState('');
+  const [editPhone, setEditPhone] = useState('');
+  const [editTeamLeader, setEditTeamLeader] = useState('');
+  const [editDeptHead, setEditDeptHead] = useState('');
+  const [editIsActive, setEditIsActive] = useState(true);
+  const [editError, setEditError] = useState<string | null>(null);
 
   // Filter list
   const filteredUsers = users.filter((u) => {
@@ -148,6 +163,76 @@ export function UserManagementView() {
     setUsers(updated);
     reloadCurrentUser();
     setShowAddUserModal(false);
+  };
+
+  // Handle Open Edit User Modal
+  const handleOpenEditUser = (user: User) => {
+    setEditingUser(user);
+    setEditName(user.name);
+    setEditDept(user.department);
+    setEditPos(user.position);
+    setEditRole(user.role);
+    setEditEmail(user.email || '');
+    setEditPhone(user.phone || '');
+    setEditTeamLeader(user.teamLeaderId || '');
+    setEditDeptHead(user.departmentHeadId || '');
+    setEditIsActive(user.isActive);
+    setEditError(null);
+  };
+
+  // Handle Save Edited User
+  const handleSaveEditUser = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentUser || !editingUser) return;
+    setEditError(null);
+
+    const cleanName = editName.trim();
+    if (!cleanName) {
+      setEditError('Họ và tên không được để trống.');
+      return;
+    }
+
+    const updated = users.map((u) => {
+      if (u.id === editingUser.id) {
+        return {
+          ...u,
+          name: cleanName,
+          department: editDept,
+          position: editPos.trim() || 'Nhân viên',
+          role: editRole,
+          email: editEmail.trim() || undefined,
+          phone: editPhone.trim() || undefined,
+          teamLeaderId: editTeamLeader.trim() || undefined,
+          departmentHeadId: editDeptHead.trim() || undefined,
+          isActive: editIsActive,
+          updatedAt: new Date().toISOString(),
+        };
+      }
+      return u;
+    });
+
+    storage.saveUsers(updated, { id: currentUser.id, name: currentUser.name });
+    setUsers(updated);
+    reloadCurrentUser();
+    setEditingUser(null);
+  };
+
+  // Handle Delete User
+  const handleDeleteUser = (target: User) => {
+    if (!currentUser) return;
+    if (target.id === 'ADMIN01') {
+      alert('Không thể xóa tài khoản Quản trị viên khởi tạo (Root Admin)!');
+      return;
+    }
+    if (confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn nhân viên "${target.name}" (${target.id}) khỏi hệ thống?`)) {
+      const updated = users.filter((u) => u.id !== target.id);
+      storage.saveUsers(updated, { id: currentUser.id, name: currentUser.name });
+      setUsers(updated);
+      reloadCurrentUser();
+      if (editingUser?.id === target.id) {
+        setEditingUser(null);
+      }
+    }
   };
 
   // Handle Excel file selection
@@ -456,13 +541,22 @@ export function UserManagementView() {
                           </span>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-right space-x-1">
+                      <td className="py-3 px-4 text-right space-x-1 whitespace-nowrap">
+                        <button
+                          onClick={() => handleOpenEditUser(u)}
+                          className="px-2.5 py-1 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 text-amber-700 dark:text-amber-300 rounded-lg text-xs font-semibold border border-amber-200 dark:border-amber-800/60 transition-colors inline-flex items-center gap-1"
+                          title="Chỉnh sửa thông tin nhân viên"
+                        >
+                          <Pencil className="w-3 h-3" />
+                          <span>Sửa</span>
+                        </button>
                         <button
                           onClick={() => handleOpenPermissions(u)}
-                          className="px-2.5 py-1 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-semibold border border-blue-200 dark:border-blue-800/60 transition-colors"
+                          className="px-2.5 py-1 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-semibold border border-blue-200 dark:border-blue-800/60 transition-colors inline-flex items-center gap-1"
                           title="Cấu hình danh mục được phép vào"
                         >
-                          Phân quyền
+                          <ShieldCheck className="w-3 h-3" />
+                          <span>Phân quyền</span>
                         </button>
                         <button
                           onClick={() => handleResetPassword(u)}
@@ -472,17 +566,26 @@ export function UserManagementView() {
                           <KeyRound className="w-3.5 h-3.5" />
                         </button>
                         {!isRoot && (
-                          <button
-                            onClick={() => handleToggleStatus(u)}
-                            className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500"
-                            title={u.isActive ? 'Khóa tài khoản' : 'Kích hoạt lại'}
-                          >
-                            {u.isActive ? (
-                              <Lock className="w-3.5 h-3.5 text-rose-500" />
-                            ) : (
-                              <Unlock className="w-3.5 h-3.5 text-emerald-500" />
-                            )}
-                          </button>
+                          <>
+                            <button
+                              onClick={() => handleToggleStatus(u)}
+                              className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500"
+                              title={u.isActive ? 'Khóa tài khoản' : 'Kích hoạt lại'}
+                            >
+                              {u.isActive ? (
+                                <Lock className="w-3.5 h-3.5 text-rose-500" />
+                              ) : (
+                                <Unlock className="w-3.5 h-3.5 text-emerald-500" />
+                              )}
+                            </button>
+                            <button
+                              onClick={() => handleDeleteUser(u)}
+                              className="p-1 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/60 text-slate-400 hover:text-rose-600 transition-colors"
+                              title="Xóa nhân viên"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </>
                         )}
                       </td>
                     </tr>
@@ -1046,6 +1149,225 @@ export function UserManagementView() {
                 Lưu phân quyền ({selectedPermissions.length} danh mục, {selectedWebIntegrations.length} website)
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 4: EDIT EMPLOYEE INFO */}
+      {editingUser && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-8">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 font-mono font-bold text-[11px]">
+                    {editingUser.id}
+                  </span>
+                  <h3 className="font-bold text-base text-slate-900 dark:text-white">
+                    Chỉnh Sửa Thông Tin Nhân Viên
+                  </h3>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Cập nhật họ tên, phòng ban, chức vụ, vai trò và thông tin liên hệ
+                </p>
+              </div>
+              <button
+                onClick={() => setEditingUser(null)}
+                className="text-slate-400 hover:text-slate-600 text-lg font-bold"
+              >
+                &times;
+              </button>
+            </div>
+
+            {editError && (
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 shrink-0" />
+                <span>{editError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSaveEditUser} className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Mã số nhân viên (Tên đăng nhập):
+                  </label>
+                  <input
+                    type="text"
+                    disabled
+                    value={editingUser.id}
+                    className="w-full p-2 bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl font-mono uppercase text-slate-500 cursor-not-allowed"
+                    title="Mã nhân viên cố định để đảm bảo toàn vẹn dữ liệu hồ sơ"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Họ và tên nhân viên: *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    placeholder="VD: Nguyễn Văn A..."
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Phòng ban / Xưởng: *
+                  </label>
+                  <select
+                    value={editDept}
+                    onChange={(e) => setEditDept(e.target.value)}
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                  >
+                    {departments.map((d) => (
+                      <option key={d.id} value={d.name}>
+                        {d.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Chức vụ:
+                  </label>
+                  <input
+                    type="text"
+                    value={editPos}
+                    onChange={(e) => setEditPos(e.target.value)}
+                    placeholder="VD: Công nhân tiện CNC, Kế toán..."
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Vai trò (Role):
+                  </label>
+                  <select
+                    value={editRole}
+                    onChange={(e) => setEditRole(e.target.value as UserRole)}
+                    disabled={editingUser.id === 'ADMIN01'}
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl disabled:opacity-60"
+                  >
+                    <option value="employee">Nhân viên / Công nhân</option>
+                    <option value="team_leader">Tổ trưởng</option>
+                    <option value="manager">Trưởng bộ phận</option>
+                    <option value="hr">Nhân sự (HR)</option>
+                    <option value="security">Bảo vệ cổng</option>
+                    <option value="accountant">Kế toán</option>
+                    <option value="it">CNTT (IT)</option>
+                    <option value="admin">Quản trị viên (Admin)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Số điện thoại:
+                  </label>
+                  <input
+                    type="text"
+                    value={editPhone}
+                    onChange={(e) => setEditPhone(e.target.value)}
+                    placeholder="0901234567..."
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Email công việc:
+                  </label>
+                  <input
+                    type="email"
+                    value={editEmail}
+                    onChange={(e) => setEditEmail(e.target.value)}
+                    placeholder="nhanvien@longkhai.vn..."
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Mã Tổ trưởng (nếu có):
+                  </label>
+                  <input
+                    type="text"
+                    value={editTeamLeader}
+                    onChange={(e) => setEditTeamLeader(e.target.value)}
+                    placeholder="Mã NV của Tổ trưởng..."
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono uppercase"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Mã Trưởng bộ phận:
+                  </label>
+                  <input
+                    type="text"
+                    value={editDeptHead}
+                    onChange={(e) => setEditDeptHead(e.target.value)}
+                    placeholder="Mã NV của Trưởng BP..."
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono uppercase"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Trạng thái tài khoản:
+                  </label>
+                  <select
+                    value={editIsActive ? 'active' : 'inactive'}
+                    onChange={(e) => setEditIsActive(e.target.value === 'active')}
+                    disabled={editingUser.id === 'ADMIN01'}
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold disabled:opacity-60"
+                  >
+                    <option value="active">🟢 Đang hoạt động (Active)</option>
+                    <option value="inactive">🔴 Tạm khóa (Inactive)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+                <div>
+                  {editingUser.id !== 'ADMIN01' && (
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteUser(editingUser)}
+                      className="px-3 py-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Xóa nhân viên</span>
+                    </button>
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setEditingUser(null)}
+                    className="px-4 py-2 font-semibold text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-xs"
+                  >
+                    Hủy bỏ
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-xs shadow-md flex items-center gap-1.5"
+                  >
+                    <Check className="w-4 h-4" />
+                    <span>Lưu thay đổi</span>
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       )}
