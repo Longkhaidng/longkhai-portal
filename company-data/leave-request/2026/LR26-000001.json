@@ -10,7 +10,7 @@
   "reason": "bận việc gia đình",
   "handoverPerson": "Dương Thị Thanh",
   "emergencyContact": "0919188051",
-  "status": "pending",
+  "status": "approved",
   "currentStepIndex": 0,
   "steps": [
     {
@@ -18,9 +18,12 @@
       "roleRequired": "manager",
       "approverId": "1867",
       "approverName": "Trương Anh Như Quỳnh",
-      "status": "pending"
+      "status": "approved",
+      "comment": "xác nhận cho nghỉ phép",
+      "actionAt": "2026-10-16T08:24:05.358Z",
+      "signature": "Trương Anh Như Quỳnh (1867)"
     }
   ],
   "createdAt": "2026-10-16T08:21:44.358Z",
-  "updatedAt": "2026-10-16T08:21:44.358Z"
+  "updatedAt": "2026-10-16T08:24:05.358Z"
 }
