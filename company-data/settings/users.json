@@ -1236,9 +1236,9 @@
   {
     "id": "1400",
     "name": "Nguyễn Thị Xuân Duyên",
-    "department": "Sản xuất",
+    "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Phụ trách PX Dệt + PXHT",
-    "role": "employee",
+    "role": "manager",
     "permissions": [
       "dashboard",
       "leave",
@@ -1249,7 +1249,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:39:31.854Z",
+    "email": "duyen.nguyen@longkhai.com.vn",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn"
   },
   {
     "id": "1403",
