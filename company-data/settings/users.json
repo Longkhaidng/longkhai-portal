@@ -933,7 +933,7 @@
   {
     "id": "1240",
     "name": "Phan Văn Hát",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
     "permissions": [
@@ -946,7 +946,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:28:37.704Z",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051"
   },
   {
     "id": "1241",
