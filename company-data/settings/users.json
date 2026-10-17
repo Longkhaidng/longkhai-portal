@@ -992,7 +992,7 @@
   {
     "id": "1246",
     "name": "Đỗ Thị Kim Nhung",
-    "department": "HCNS",
+    "department": "Phòng Hành Chính Nhân Sự",
     "position": "Nhân viên phục vụ - kho PL",
     "role": "employee",
     "permissions": [
@@ -1005,7 +1005,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:30:22.743Z",
+    "departmentHeadId": "1867",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn"
   },
   {
     "id": "1253",
