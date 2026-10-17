@@ -308,8 +308,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-17T04:03:43.564Z",
-    "departmentHeadId": "1554"
+    "updatedAt": "2026-10-17T04:09:10.939Z",
+    "teamLeaderId": "1554",
+    "departmentHeadId": "1030"
   },
   {
     "id": "1014",
