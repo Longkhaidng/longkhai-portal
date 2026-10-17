@@ -415,7 +415,7 @@
   {
     "id": "1026",
     "name": "Phan Thị Thúy An",
-    "department": "KCS",
+    "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS Hoàn Thành",
     "role": "employee",
     "permissions": [
@@ -428,7 +428,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:11:28.490Z",
+    "departmentHeadId": "2831"
   },
   {
     "id": "1030",
