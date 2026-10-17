@@ -1326,7 +1326,7 @@
   {
     "id": "1443",
     "name": "Đỗ Thị Tường Linh",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - TN-GBG",
     "role": "employee",
     "permissions": [
@@ -1339,7 +1339,10 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:34:46.807Z",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1030",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn"
   },
   {
     "id": "1444",
