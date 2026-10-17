@@ -731,7 +731,7 @@
   {
     "id": "1116",
     "name": "Nguyễn Thị Diễm Thúy",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - TN-GBG",
     "role": "employee",
     "permissions": [
@@ -744,7 +744,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:24:33.824Z",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051"
   },
   {
     "id": "1118",
