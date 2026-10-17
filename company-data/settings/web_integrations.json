@@ -1,0 +1,26 @@
+[
+  {
+    "id": "WEB-001",
+    "title": "Kiểm tra thực phẩm 3 bước",
+    "url": "https://script.google.com/macros/s/AKfycbzKZiFvK7KB",
+    "description": "Quy trình kiểm thực 3 bước và vệ sinh an toàn thực phẩm bếp ăn / nhà xưởng",
+    "iconName": "Globe",
+    "displayMode": "new_tab",
+    "order": 1,
+    "isActive": true,
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "WEB-002",
+    "title": "Kiểm tra PCCC định kỳ",
+    "url": "https://script.google.com/macros/s/AKfycbzPCCCExample",
+    "description": "Trang web biểu mẫu kiểm tra bình chữa cháy và phương tiện PCCC định kỳ",
+    "iconName": "Globe",
+    "displayMode": "new_tab",
+    "order": 2,
+    "isActive": true,
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  }
+]
