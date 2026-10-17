@@ -1,0 +1,23 @@
+{
+  "id": "LR26-000004",
+  "employeeId": "2424",
+  "employeeName": "Lê Đình Thành",
+  "department": "Bộ Phận Công Nghệ Thông Tin (IT)",
+  "leaveType": "phep_nam",
+  "fromDate": "2026-10-19",
+  "toDate": "2026-10-19",
+  "totalDays": 1,
+  "reason": "đau",
+  "status": "pending",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận phê duyệt",
+      "roleRequired": "manager",
+      "approverName": "Trưởng phòng / Quản lý",
+      "status": "pending"
+    }
+  ],
+  "createdAt": "2026-10-17T05:47:16.800Z",
+  "updatedAt": "2026-10-17T05:47:16.800Z"
+}
