@@ -494,9 +494,9 @@
   {
     "id": "1051",
     "name": "Ngô Thị Cường",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Phụ trách PX Hoàn thành",
-    "role": "employee",
+    "role": "manager",
     "permissions": [
       "dashboard",
       "leave",
@@ -507,7 +507,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:15:52.321Z",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn"
   },
   {
     "id": "1056",
