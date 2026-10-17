@@ -1,0 +1,23 @@
+{
+  "id": "LR26-000005",
+  "employeeId": "2424",
+  "employeeName": "Lê Đình Thành",
+  "department": "Phòng Hành Chính Nhân Sự",
+  "leaveType": "phep_nam",
+  "fromDate": "2026-10-19",
+  "toDate": "2026-10-19",
+  "totalDays": 1,
+  "reason": "bận việc",
+  "status": "pending",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận phê duyệt",
+      "roleRequired": "manager",
+      "approverName": "Trưởng phòng / Quản lý",
+      "status": "pending"
+    }
+  ],
+  "createdAt": "2026-10-17T06:24:11.639Z",
+  "updatedAt": "2026-10-17T06:24:11.639Z"
+}
