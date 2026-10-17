@@ -1933,7 +1933,7 @@
   {
     "id": "1927",
     "name": "Phan Hải Đăng",
-    "department": "Cơ điện",
+    "department": "Phòng Cơ Điện & Bảo Trì",
     "position": "Nhân viên cơ điện",
     "role": "employee",
     "permissions": [
@@ -1946,7 +1946,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:51:40.132Z",
+    "departmentHeadId": "2409",
+    "departmentHeadEmail": "tai.trinh@longkhai.com.vn"
   },
   {
     "id": "1975",
