@@ -1496,7 +1496,7 @@
   {
     "id": "1559",
     "name": "Hồ Thị Ngọc Diệp",
-    "department": "HCNS",
+    "department": "Phòng Hành Chính Nhân Sự",
     "position": "Bếp chính",
     "role": "employee",
     "permissions": [
@@ -1509,7 +1509,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:41:20.245Z",
+    "departmentHeadId": "1867",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn"
   },
   {
     "id": "1598",
