@@ -1745,7 +1745,7 @@
   {
     "id": "1785",
     "name": "Nguyễn Thị Kim Dung",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - TN-GBG",
     "role": "employee",
     "permissions": [
@@ -1758,7 +1758,10 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:48:05.644Z",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn"
   },
   {
     "id": "1802",
