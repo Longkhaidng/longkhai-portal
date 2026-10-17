@@ -434,9 +434,9 @@
   {
     "id": "1030",
     "name": "Mai Hồng Hậu",
-    "department": "PX Dệt",
+    "department": "Phân xưởng dệt",
     "position": "Phụ trách kỹ thuật - PX Dệt",
-    "role": "employee",
+    "role": "manager",
     "permissions": [
       "dashboard",
       "leave",
@@ -447,7 +447,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:13:28.498Z",
+    "email": "kythuatmau.01@longkhai.com.vn",
+    "departmentHeadEmail": "tu.pham@longkhai.com.vn"
   },
   {
     "id": "1035",
