@@ -1215,7 +1215,7 @@
   {
     "id": "1368",
     "name": "Trần Thùy Dương",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
     "permissions": [
@@ -1228,7 +1228,10 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:37:57.190Z",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn"
   },
   {
     "id": "1400",
