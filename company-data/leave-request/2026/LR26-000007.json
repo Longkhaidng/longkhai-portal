@@ -8,16 +8,20 @@
   "toDate": "2026-10-20",
   "totalDays": 2,
   "reason": "bận việc",
-  "status": "pending",
+  "status": "approved",
   "currentStepIndex": 0,
   "steps": [
     {
       "stepName": "Trưởng bộ phận phê duyệt",
       "roleRequired": "manager",
-      "approverName": "Trưởng phòng / Quản lý",
-      "status": "pending"
+      "approverName": "Ngô Thị Cường",
+      "status": "approved",
+      "approverId": "1051",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-10-17T06:51:20.593Z",
+      "signature": "Ngô Thị Cường (1051)"
     }
   ],
   "createdAt": "2026-10-17T06:50:09.352Z",
-  "updatedAt": "2026-10-17T06:50:09.352Z"
+  "updatedAt": "2026-10-17T06:51:20.593Z"
 }
