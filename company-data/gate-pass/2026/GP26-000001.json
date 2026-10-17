@@ -1,0 +1,18 @@
+{
+  "id": "GP26-000001",
+  "employeeId": "1051",
+  "employeeName": "Ngô Thị Cường",
+  "department": "Phân xưởng hoàn thành",
+  "purpose": "CN - Ra vào trong giờ làm việc",
+  "passType": "personal",
+  "timeType": "nghi_cuoi_gio",
+  "reasonCategory": "ca_nhan",
+  "specificReason": "CN - Ra vào trong giờ làm việc",
+  "hasAssets": false,
+  "assets": [],
+  "estimatedDepartureTime": "2026-10-17T14:30",
+  "status": "pending",
+  "qrCodeData": "LONGKHAI_GATEPASS:GP26-000001:1051:2026-10-17T14:30",
+  "createdAt": "2026-10-17T06:49:28.758Z",
+  "updatedAt": "2026-10-17T06:49:28.758Z"
+}
