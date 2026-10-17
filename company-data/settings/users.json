@@ -712,9 +712,9 @@
   {
     "id": "1114",
     "name": "Từ Thị Phú Minh",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Tổ trưởng",
-    "role": "employee",
+    "role": "team_leader",
     "permissions": [
       "dashboard",
       "leave",
@@ -725,7 +725,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:24:19.120Z",
+    "departmentHeadId": "1051"
   },
   {
     "id": "1116",
