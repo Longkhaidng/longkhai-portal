@@ -1850,7 +1850,7 @@
   {
     "id": "1894",
     "name": "Trần Lê Như Ý",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Chuyên viên kế hoạch HT",
     "role": "employee",
     "permissions": [
@@ -1863,7 +1863,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:50:08.774Z",
+    "email": "nhu-y.tran@longkhai.com.vn",
+    "departmentHeadEmail": "tu.pham@longkhai.com.vn"
   },
   {
     "id": "1912",
