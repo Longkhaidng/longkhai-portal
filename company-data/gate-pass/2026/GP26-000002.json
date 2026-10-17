@@ -1,0 +1,18 @@
+{
+  "id": "GP26-000002",
+  "employeeId": "1008",
+  "employeeName": "Đoàn Thị Thanh Xuân",
+  "department": "Phòng Kế Toán Tài Chính",
+  "purpose": "CN - Ra vào trong giờ làm việc",
+  "passType": "personal",
+  "timeType": "nghi_cuoi_gio",
+  "reasonCategory": "ca_nhan",
+  "specificReason": "CN - Ra vào trong giờ làm việc",
+  "hasAssets": false,
+  "assets": [],
+  "estimatedDepartureTime": "2026-10-17T14:35",
+  "status": "pending",
+  "qrCodeData": "LONGKHAI_GATEPASS:GP26-000002:1008:2026-10-17T14:35",
+  "createdAt": "2026-10-17T06:56:12.576Z",
+  "updatedAt": "2026-10-17T06:56:12.576Z"
+}
