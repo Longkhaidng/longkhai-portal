@@ -454,7 +454,7 @@
   {
     "id": "1035",
     "name": "Dương Đình Lâm",
-    "department": "PX Dệt",
+    "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -KTD",
     "role": "employee",
     "permissions": [
@@ -467,7 +467,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:13:58.466Z",
+    "departmentHeadId": "1030",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn"
   },
   {
     "id": "1049",
