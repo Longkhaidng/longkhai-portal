@@ -851,7 +851,7 @@
   {
     "id": "1147",
     "name": "Lê Thị Hoa",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
     "permissions": [
@@ -864,7 +864,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:26:35.439Z",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051"
   },
   {
     "id": "1158",
