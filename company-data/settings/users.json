@@ -100,9 +100,9 @@
   {
     "id": "103",
     "name": "26-16 Nguyễn Danh Thanh",
-    "department": "Bảo vệ",
+    "department": "Đội Bảo Vệ & An Ninh",
     "position": "Bảo vệ",
-    "role": "employee",
+    "role": "security",
     "permissions": [
       "dashboard",
       "leave",
@@ -113,7 +113,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T03:08:47.125Z"
   },
   {
     "id": "104",
