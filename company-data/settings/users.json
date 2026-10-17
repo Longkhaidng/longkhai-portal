@@ -353,7 +353,7 @@
   {
     "id": "1020",
     "name": "Lê Nguyễn Quỳnh Hoa",
-    "department": "PX Dệt",
+    "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
     "permissions": [
@@ -366,7 +366,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:09:01.589Z",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030"
   },
   {
     "id": "1022",
