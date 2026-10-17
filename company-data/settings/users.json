@@ -4871,7 +4871,7 @@
   {
     "id": "2424",
     "name": "Lê Đình Thành",
-    "department": "Bộ Phận Công Nghệ Thông Tin (IT)",
+    "department": "Phòng Hành Chính Nhân Sự",
     "position": "Nhân viên tưới cây",
     "role": "employee",
     "permissions": [
@@ -4884,7 +4884,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-17T05:46:50.051Z",
+    "updatedAt": "2026-10-17T06:22:30.148Z",
     "departmentHeadEmail": "it@longkhai.com.vn"
   },
   {
