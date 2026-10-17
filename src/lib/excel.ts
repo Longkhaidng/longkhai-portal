@@ -51,6 +51,9 @@ export function parseEmployeeExcel(file: File): Promise<ParsedEmployeeResult> {
           const phone = String(row['Số điện thoại'] || row['SĐT'] || row['phone'] || '').trim();
           const teamLeaderId = String(row['Mã Tổ trưởng'] || row['Tổ trưởng'] || row['teamLeaderId'] || '').trim();
           const departmentHeadId = String(row['Mã Trưởng BP'] || row['Trưởng BP'] || row['departmentHeadId'] || '').trim();
+          const departmentHeadEmail = String(
+            row['Email Trưởng BP'] || row['Email Trưởng bộ phận'] || row['departmentHeadEmail'] || ''
+          ).trim();
           const password = String(row['Mật khẩu'] || row['password'] || 'LK@123456').trim();
           const permissionsRaw = String(row['Phân quyền'] || row['Quyền'] || row['permissions'] || '').trim();
 
@@ -109,6 +112,7 @@ export function parseEmployeeExcel(file: File): Promise<ParsedEmployeeResult> {
             phone: phone || undefined,
             teamLeaderId: teamLeaderId || undefined,
             departmentHeadId: departmentHeadId || undefined,
+            departmentHeadEmail: departmentHeadEmail || undefined,
             permissions,
             isActive: true,
             password: password || 'LK@123456',
@@ -143,6 +147,7 @@ export function generateEmployeeTemplateExcel() {
     'Số điện thoại',
     'Mã Tổ trưởng',
     'Mã Trưởng BP',
+    'Email Trưởng BP',
     'Mật khẩu',
     'Phân quyền',
   ];
@@ -158,6 +163,7 @@ export function generateEmployeeTemplateExcel() {
       'Số điện thoại': '0901234567',
       'Mã Tổ trưởng': 'LK-050',
       'Mã Trưởng BP': 'LK-010',
+      'Email Trưởng BP': 'cuong.le@longkhai.vn',
       'Mật khẩu': 'LK@123456',
       'Phân quyền': 'dashboard,leave,attendance,gate_pass,announcements',
     },
@@ -171,6 +177,7 @@ export function generateEmployeeTemplateExcel() {
       'Số điện thoại': '0912345678',
       'Mã Tổ trưởng': '',
       'Mã Trưởng BP': 'LK-010',
+      'Email Trưởng BP': 'cuong.le@longkhai.vn',
       'Mật khẩu': 'LK@123456',
       'Phân quyền': 'dashboard,leave,attendance,gate_pass,announcements,reports',
     },
@@ -184,6 +191,7 @@ export function generateEmployeeTemplateExcel() {
       'Số điện thoại': '0923456789',
       'Mã Tổ trưởng': '',
       'Mã Trưởng BP': '',
+      'Email Trưởng BP': 'giamdoc@longkhai.vn',
       'Mật khẩu': 'LK@123456',
       'Phân quyền': 'all',
     },
@@ -197,6 +205,7 @@ export function generateEmployeeTemplateExcel() {
       'Số điện thoại': '0934567890',
       'Mã Tổ trưởng': '',
       'Mã Trưởng BP': 'LK-002',
+      'Email Trưởng BP': 'hr.manager@longkhai.vn',
       'Mật khẩu': 'LK@123456',
       'Phân quyền': 'dashboard,leave,attendance,users,departments,reports',
     },
@@ -210,6 +219,7 @@ export function generateEmployeeTemplateExcel() {
       'Số điện thoại': '0945678901',
       'Mã Tổ trưởng': '',
       'Mã Trưởng BP': 'LK-002',
+      'Email Trưởng BP': 'an.ninh@longkhai.vn',
       'Mật khẩu': 'LK@123456',
       'Phân quyền': 'dashboard,gate_pass,attendance,announcements',
     },
@@ -228,6 +238,7 @@ export function generateEmployeeTemplateExcel() {
     { wch: 15 }, // SĐT
     { wch: 14 }, // Tổ trưởng
     { wch: 14 }, // Trưởng BP
+    { wch: 26 }, // Email Trưởng BP
     { wch: 14 }, // Mật khẩu
     { wch: 45 }, // Phân quyền
   ];
@@ -239,7 +250,7 @@ export function generateEmployeeTemplateExcel() {
   const instructions = [
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '1. Cột "Mã nhân viên" là DUY NHẤT trong toàn công ty và dùng làm Tên đăng nhập.' },
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '2. Cột "Vai trò": employee (Nhân viên), team_leader (Tổ trưởng), manager (Trưởng BP), hr (Nhân sự), security (Bảo vệ), accountant (Kế toán), it (CNTT), admin (Quản trị).' },
-    { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '3. Cột "Mã Tổ trưởng" và "Mã Trưởng BP": Điền Mã NV của cấp trên trực tiếp để hệ thống tự động định tuyến luồng duyệt đơn phép & công.' },
+    { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '3. Cột "Mã Trưởng BP" & "Email Trưởng BP": Điền thông tin Trưởng BP để hệ thống tự động đẩy email phê duyệt khi nhân viên tạo đơn nghỉ phép/ra vào cổng.' },
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '4. Cột "Phân quyền": Điền "all" để cấp toàn quyền, hoặc liệt kê các mã cách nhau bằng dấu phẩy:' },
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '   - dashboard: Tổng quan điều hành' },
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '   - departments: Quản lý phòng ban (Thêm, sửa, xóa phòng ban)' },

@@ -6,6 +6,7 @@ import { Announcement } from '@/types/announcement';
 import { DynamicFormSchema, DynamicFormSubmission } from '@/types/dynamicForm';
 import { PluginModule, INITIAL_PLUGINS } from '@/types/plugin';
 import { GitHubConfig, AuditLog, SyncStatus } from '@/types/github';
+import { EmailConfig } from '@/types/email';
 import {
   INITIAL_ROOT_ADMIN,
   INITIAL_DEPARTMENTS,
@@ -27,6 +28,7 @@ const STORAGE_KEYS = {
   FORM_SUBMISSIONS: 'lk_portal_form_submissions',
   PLUGINS: 'lk_portal_plugins',
   GITHUB_CONFIG: 'lk_portal_github_config',
+  EMAIL_CONFIG: 'lk_portal_email_config',
   AUDIT_LOGS: 'lk_portal_audit_logs',
   CURRENT_USER_SESSION: 'lk_portal_current_user_session',
 };
@@ -68,6 +70,45 @@ class StorageService {
       return new GitHubService(config);
     }
     return null;
+  }
+
+  // --- EMAIL CONFIG ---
+  getEmailConfig(): EmailConfig {
+    const defaultConfig: EmailConfig = {
+      provider: 'gmail',
+      smtpHost: 'smtp.gmail.com',
+      smtpPort: 465,
+      smtpSecure: true,
+      smtpUser: '',
+      smtpPassword: '',
+      senderName: 'Cổng Thông Tin Long Khai',
+      senderEmail: '',
+      isEnabled: true,
+      portalBaseUrl: typeof window !== 'undefined' ? window.location.origin : '',
+    };
+    if (!this.isClient()) return defaultConfig;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.EMAIL_CONFIG);
+      if (data) {
+        const parsed = JSON.parse(data);
+        return { ...defaultConfig, ...parsed };
+      }
+    } catch {}
+    return defaultConfig;
+  }
+
+  saveEmailConfig(config: EmailConfig, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    localStorage.setItem(STORAGE_KEYS.EMAIL_CONFIG, JSON.stringify(config));
+    this.addAuditLog(
+      'update',
+      'settings',
+      'email_config',
+      byUser?.id || 'ADMIN',
+      byUser?.name || 'Quản trị viên',
+      'Cập nhật cấu hình gửi email thông báo phê duyệt'
+    );
+    this.syncFileToGitHub('settings/email-config.json', JSON.stringify(config, null, 2), 'Update email configuration');
   }
 
   // --- AUDIT LOGS ---

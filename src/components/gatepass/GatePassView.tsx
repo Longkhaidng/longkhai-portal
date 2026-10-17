@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import { formatDate, formatDateTime, generateDocId } from '@/lib/utils';
 import { generateQrDataUrl } from '@/lib/qr';
+import { dispatchApprovalEmail } from '@/lib/email';
 
 export function GatePassView() {
   const { currentUser } = useAuth();
@@ -41,6 +42,8 @@ export function GatePassView() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedPass, setSelectedPass] = useState<GatePass | null>(null);
   const [qrModalUrl, setQrModalUrl] = useState<string | null>(null);
+  const [isRejecting, setIsRejecting] = useState(false);
+  const [passRejectionReason, setPassRejectionReason] = useState('');
 
   // Security Gate scan input
   const [scanCode, setScanCode] = useState('');
@@ -175,6 +178,76 @@ export function GatePassView() {
     setPasses(storage.getGatePasses());
     setShowCreateModal(false);
 
+    // Look up manager's email to dispatch approval email
+    const allUsers = storage.getUsers();
+    let managerEmail = currentUser.departmentHeadEmail;
+    let managerName = 'Trưởng bộ phận';
+
+    if (!managerEmail && currentUser.departmentHeadId) {
+      const mgr = allUsers.find((u) => u.id.toLowerCase() === currentUser.departmentHeadId?.toLowerCase());
+      if (mgr?.email) {
+        managerEmail = mgr.email;
+        managerName = mgr.name;
+      }
+    }
+
+    if (!managerEmail) {
+      const allDepts = storage.getDepartments();
+      const myDept = allDepts.find((d) => d.name === currentUser.department);
+      if (myDept?.managerId) {
+        const mgr = allUsers.find((u) => u.id.toLowerCase() === myDept.managerId?.toLowerCase());
+        if (mgr?.email) {
+          managerEmail = mgr.email;
+          managerName = mgr.name;
+        }
+      }
+    }
+
+    if (managerEmail) {
+      const timeDesc =
+        timeType === 'nghi_dau_gio'
+          ? `Nghỉ đầu giờ (Vào cổng: ${formatDateTime(returnTime)})`
+          : timeType === 'nghi_cuoi_gio'
+          ? `Nghỉ cuối giờ (Ra cổng: ${formatDateTime(departureTime)})`
+          : `Nghỉ giữa giờ (Ra: ${formatDateTime(departureTime)} - Vào: ${formatDateTime(returnTime)})`;
+
+      dispatchApprovalEmail({
+        toEmail: managerEmail,
+        managerName,
+        type: 'gate_pass',
+        docId,
+        employeeId: currentUser.id,
+        employeeName: currentUser.name,
+        department: currentUser.department,
+        details: {
+          title: 'Chi tiết Phiếu Ra - Vào Cổng',
+          items: [
+            {
+              label: 'Hình thức',
+              value:
+                timeType === 'nghi_dau_gio'
+                  ? 'Nghỉ đầu giờ'
+                  : timeType === 'nghi_cuoi_gio'
+                  ? 'Nghỉ cuối giờ'
+                  : 'Nghỉ giữa giờ',
+            },
+            { label: 'Thời gian dự kiến', value: timeDesc },
+            { label: 'Lý do ra cổng', value: finalPurpose },
+            {
+              label: 'Tài sản mang theo',
+              value: hasAssets && assets.length > 0 ? `${assets.length} món tài sản` : 'Không mang theo',
+            },
+          ],
+        },
+      })
+        .then((res) => {
+          if (res.success) {
+            alert(`✓ Đã tạo phiếu thành công và gửi email thông báo duyệt đến Trưởng bộ phận (${managerEmail})!`);
+          }
+        })
+        .catch(console.error);
+    }
+
     // Reset
     setTimeType('nghi_giua_gio');
     setDepartureTime(getTodayDateTimeStr('11', '30'));
@@ -201,6 +274,29 @@ export function GatePassView() {
     storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
     setPasses(storage.getGatePasses());
     setSelectedPass(updated);
+  };
+
+  // Manager Reject
+  const handleManagerReject = async (pass: GatePass) => {
+    if (!currentUser) return;
+    if (!passRejectionReason.trim()) {
+      alert('Vui lòng nhập lý do từ chối phiếu!');
+      return;
+    }
+    const updated: GatePass = {
+      ...pass,
+      status: 'rejected',
+      managerApproverId: currentUser.id,
+      managerApproverName: currentUser.name,
+      managerApprovedAt: new Date().toISOString(),
+      rejectionReason: passRejectionReason.trim(),
+      updatedAt: new Date().toISOString(),
+    };
+    storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
+    setPasses(storage.getGatePasses());
+    setSelectedPass(updated);
+    setIsRejecting(false);
+    setPassRejectionReason('');
   };
 
   // Show QR modal
@@ -1065,6 +1161,13 @@ export function GatePassView() {
                 )}
               </div>
 
+              {selectedPass.rejectionReason && (
+                <div className="p-3 bg-rose-50 dark:bg-rose-950/40 rounded-xl border border-rose-200 dark:border-rose-900/40 text-rose-800 dark:text-rose-300">
+                  <span className="font-bold">Lý do từ chối: </span>
+                  <span>{selectedPass.rejectionReason}</span>
+                </div>
+              )}
+
               <div>
                 Trạng thái:{' '}
                 <span className="font-bold uppercase tracking-wider">
@@ -1072,6 +1175,8 @@ export function GatePassView() {
                     ? 'Chờ duyệt'
                     : selectedPass.status === 'approved'
                     ? 'Đã duyệt'
+                    : selectedPass.status === 'rejected'
+                    ? 'Bị từ chối'
                     : selectedPass.status === 'departed'
                     ? 'Đang ở ngoài'
                     : 'Hoàn tất'}
@@ -1079,18 +1184,64 @@ export function GatePassView() {
               </div>
             </div>
 
-            {/* Manager approval button */}
+            {/* Manager approval / reject actions */}
             {selectedPass.status === 'pending' && (
               <div className="p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-200 dark:border-amber-900/40 space-y-2">
                 <span className="text-xs font-bold text-amber-900 dark:text-amber-300 block">
                   Phê duyệt phiếu ra cổng:
                 </span>
-                <button
-                  onClick={() => handleManagerApprove(selectedPass)}
-                  className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm"
-                >
-                  ✓ Quản lý đồng ý duyệt phiếu (Sinh mã QR)
-                </button>
+                {!isRejecting ? (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleManagerApprove(selectedPass)}
+                      className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5"
+                    >
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>✓ Quản lý đồng ý duyệt phiếu</span>
+                    </button>
+                    <button
+                      onClick={() => setIsRejecting(true)}
+                      className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5"
+                    >
+                      <XCircle className="w-4 h-4" />
+                      <span>✕ Từ chối</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-2 pt-1">
+                    <label className="block text-xs font-bold text-rose-700 dark:text-rose-400">
+                      Lý do từ chối: *
+                    </label>
+                    <textarea
+                      rows={2}
+                      autoFocus
+                      required
+                      value={passRejectionReason}
+                      onChange={(e) => setPassRejectionReason(e.target.value)}
+                      placeholder="Ghi rõ lý do từ chối phiếu ra cổng..."
+                      className="w-full p-2 bg-white dark:bg-slate-900 border border-rose-300 dark:border-rose-800 rounded-xl text-xs text-slate-800 dark:text-slate-100"
+                    />
+                    <div className="flex justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsRejecting(false);
+                          setPassRejectionReason('');
+                        }}
+                        className="px-3 py-1.5 text-slate-600 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg text-xs font-semibold"
+                      >
+                        Hủy
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleManagerReject(selectedPass)}
+                        className="px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-lg shadow-sm"
+                      >
+                        Xác nhận từ chối
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

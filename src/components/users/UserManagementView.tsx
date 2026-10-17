@@ -63,6 +63,7 @@ export function UserManagementView() {
   const [newEmpPhone, setNewEmpPhone] = useState('');
   const [newEmpTeamLeader, setNewEmpTeamLeader] = useState('');
   const [newEmpDeptHead, setNewEmpDeptHead] = useState('');
+  const [newEmpDeptHeadEmail, setNewEmpDeptHeadEmail] = useState('');
   const [newEmpPassword, setNewEmpPassword] = useState('LK@123456');
   const [newEmpPerms, setNewEmpPerms] = useState<CategoryPermission[]>([
     'dashboard',
@@ -84,6 +85,7 @@ export function UserManagementView() {
   const [editPhone, setEditPhone] = useState('');
   const [editTeamLeader, setEditTeamLeader] = useState('');
   const [editDeptHead, setEditDeptHead] = useState('');
+  const [editDeptHeadEmail, setEditDeptHeadEmail] = useState('');
   const [editIsActive, setEditIsActive] = useState(true);
   const [editError, setEditError] = useState<string | null>(null);
 
@@ -110,6 +112,7 @@ export function UserManagementView() {
     setNewEmpPhone('');
     setNewEmpTeamLeader('');
     setNewEmpDeptHead('');
+    setNewEmpDeptHeadEmail('');
     setNewEmpPassword('LK@123456');
     setNewEmpPerms(['dashboard', 'leave', 'attendance', 'gate_pass', 'announcements']);
     setNewEmpWebIntegrations([]);
@@ -150,6 +153,7 @@ export function UserManagementView() {
       phone: newEmpPhone.trim() || undefined,
       teamLeaderId: newEmpTeamLeader.trim() || undefined,
       departmentHeadId: newEmpDeptHead.trim() || undefined,
+      departmentHeadEmail: newEmpDeptHeadEmail.trim() || undefined,
       permissions: newEmpRole === 'admin' ? CATEGORY_DEFINITIONS.map((c) => c.id) : newEmpPerms,
       allowedWebIntegrations: newEmpWebIntegrations,
       isActive: true,
@@ -176,6 +180,15 @@ export function UserManagementView() {
     setEditPhone(user.phone || '');
     setEditTeamLeader(user.teamLeaderId || '');
     setEditDeptHead(user.departmentHeadId || '');
+    
+    // Auto lookup manager's email if not already set on user
+    let defaultHeadEmail = user.departmentHeadEmail || '';
+    if (!defaultHeadEmail && user.departmentHeadId) {
+      const mgr = users.find((u) => u.id.toLowerCase() === user.departmentHeadId?.toLowerCase());
+      if (mgr?.email) defaultHeadEmail = mgr.email;
+    }
+    setEditDeptHeadEmail(defaultHeadEmail);
+
     setEditIsActive(user.isActive);
     setEditError(null);
   };
@@ -204,6 +217,7 @@ export function UserManagementView() {
           phone: editPhone.trim() || undefined,
           teamLeaderId: editTeamLeader.trim() || undefined,
           departmentHeadId: editDeptHead.trim() || undefined,
+          departmentHeadEmail: editDeptHeadEmail.trim() || undefined,
           isActive: editIsActive,
           updatedAt: new Date().toISOString(),
         };
@@ -751,11 +765,31 @@ export function UserManagementView() {
                   <input
                     type="text"
                     value={newEmpDeptHead}
-                    onChange={(e) => setNewEmpDeptHead(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setNewEmpDeptHead(val);
+                      if (!newEmpDeptHeadEmail) {
+                        const mgr = users.find((u) => u.id.toLowerCase() === val.trim().toLowerCase());
+                        if (mgr?.email) setNewEmpDeptHeadEmail(mgr.email);
+                      }
+                    }}
                     placeholder="Mã NV của Trưởng BP..."
                     className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono uppercase"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Email Trưởng bộ phận (Nhận email phê duyệt):
+                </label>
+                <input
+                  type="email"
+                  value={newEmpDeptHeadEmail}
+                  onChange={(e) => setNewEmpDeptHeadEmail(e.target.value)}
+                  placeholder="truongbophan@longkhai.com.vn..."
+                  className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                />
               </div>
 
               {/* Category Permissions checkbox */}
@@ -1313,7 +1347,14 @@ export function UserManagementView() {
                   <input
                     type="text"
                     value={editDeptHead}
-                    onChange={(e) => setEditDeptHead(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setEditDeptHead(val);
+                      if (!editDeptHeadEmail) {
+                        const mgr = users.find((u) => u.id.toLowerCase() === val.trim().toLowerCase());
+                        if (mgr?.email) setEditDeptHeadEmail(mgr.email);
+                      }
+                    }}
                     placeholder="Mã NV của Trưởng BP..."
                     className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono uppercase"
                   />
@@ -1321,6 +1362,18 @@ export function UserManagementView() {
               </div>
 
               <div className="grid grid-cols-2 gap-3 pt-1">
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Email Trưởng bộ phận:
+                  </label>
+                  <input
+                    type="email"
+                    value={editDeptHeadEmail}
+                    onChange={(e) => setEditDeptHeadEmail(e.target.value)}
+                    placeholder="truongbophan@longkhai.com.vn..."
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                  />
+                </div>
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Trạng thái tài khoản:

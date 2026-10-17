@@ -84,6 +84,7 @@ export interface User {
   allowedWebIntegrations?: string[]; // Danh sách ID các trang web tích hợp nhân viên được phép truy cập
   teamLeaderId?: string; // Mã NV Tổ trưởng (nếu có)
   departmentHeadId?: string; // Mã NV Trưởng bộ phận
+  departmentHeadEmail?: string; // Email Trưởng bộ phận (nhận thông báo & duyệt đơn)
   isActive: boolean;
   password?: string;
   createdAt: string;
@@ -100,6 +101,7 @@ export interface UserExcelRow {
   phone?: string;
   teamLeaderId?: string; // Mã Tổ trưởng
   departmentHeadId?: string; // Mã Trưởng BP
+  departmentHeadEmail?: string; // Email Trưởng BP
   password?: string; // Mật khẩu ban đầu
   permissions?: string; // Chuỗi phân quyền, ví dụ: "dashboard,leave,attendance" hoặc "all"
 }

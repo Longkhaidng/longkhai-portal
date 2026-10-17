@@ -19,6 +19,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { formatDate, generateDocId } from '@/lib/utils';
+import { dispatchApprovalEmail } from '@/lib/email';
 
 export function LeaveView() {
   const { currentUser } = useAuth();
@@ -32,6 +33,7 @@ export function LeaveView() {
   const [approvalComment, setApprovalComment] = useState('');
   const [rejectionReason, setRejectionReason] = useState('');
   const [isApproving, setIsApproving] = useState(false);
+  const [isRejectingModal, setIsRejectingModal] = useState(false);
 
   // Form states for new Leave Request
   const [leaveType, setLeaveType] = useState<LeaveType>('phep_nam');
@@ -119,6 +121,62 @@ export function LeaveView() {
     storage.saveLeaveRequest(newRequest, { id: currentUser.id, name: currentUser.name });
     setLeaves(storage.getLeaveRequests());
     setShowCreateModal(false);
+
+    // Look up manager's email to dispatch approval email
+    const allUsers = storage.getUsers();
+    let managerEmail = currentUser.departmentHeadEmail;
+    let managerName = deptHeadUser?.name || 'Trưởng bộ phận';
+
+    if (!managerEmail && currentUser.departmentHeadId) {
+      const mgr = allUsers.find((u) => u.id.toLowerCase() === currentUser.departmentHeadId?.toLowerCase());
+      if (mgr?.email) {
+        managerEmail = mgr.email;
+        managerName = mgr.name;
+      }
+    }
+
+    if (!managerEmail) {
+      const allDepts = storage.getDepartments();
+      const myDept = allDepts.find((d) => d.name === currentUser.department);
+      if (myDept?.managerId) {
+        const mgr = allUsers.find((u) => u.id.toLowerCase() === myDept.managerId?.toLowerCase());
+        if (mgr?.email) {
+          managerEmail = mgr.email;
+          managerName = mgr.name;
+        }
+      }
+    }
+
+    if (managerEmail) {
+      dispatchApprovalEmail({
+        toEmail: managerEmail,
+        managerName,
+        type: 'leave',
+        docId,
+        employeeId: currentUser.id,
+        employeeName: currentUser.name,
+        department: currentUser.department,
+        details: {
+          title: 'Chi tiết Đơn Xin Nghỉ Phép',
+          items: [
+            { label: 'Loại nghỉ phép', value: LEAVE_TYPE_LABELS[leaveType] || leaveType },
+            {
+              label: 'Thời gian nghỉ',
+              value: `${formatDate(fromDate)} đến ${formatDate(toDate)} (${calculatedDays} ngày)`,
+            },
+            { label: 'Lý do xin nghỉ', value: reason },
+            { label: 'Người bàn giao công việc', value: handoverPerson || 'Không có' },
+            { label: 'SĐT liên hệ khẩn cấp', value: emergencyContact || currentUser.phone || 'Không có' },
+          ],
+        },
+      })
+        .then((res) => {
+          if (res.success) {
+            alert(`✓ Đã gửi email thông báo phê duyệt tới Trưởng bộ phận (${managerEmail})!`);
+          }
+        })
+        .catch(console.error);
+    }
 
     // Reset fields
     setReason('');
@@ -647,26 +705,61 @@ export function LeaveView() {
                   />
                 </div>
 
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleApproveStep}
-                    className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm"
-                  >
-                    ✓ Phê duyệt đơn
-                  </button>
-                  <button
-                    onClick={() => {
-                      const reason = prompt('Nhập lý do từ chối đơn:');
-                      if (reason) {
-                        setRejectionReason(reason);
-                        setTimeout(() => handleRejectStep(), 100);
-                      }
-                    }}
-                    className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-sm"
-                  >
-                    ✕ Từ chối
-                  </button>
-                </div>
+                {!isRejectingModal ? (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleApproveStep}
+                      className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5"
+                    >
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>✓ Phê duyệt đơn</span>
+                    </button>
+                    <button
+                      onClick={() => setIsRejectingModal(true)}
+                      className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5"
+                    >
+                      <XCircle className="w-4 h-4" />
+                      <span>✕ Từ chối đơn</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-2 pt-1">
+                    <label className="block text-xs font-bold text-rose-700 dark:text-rose-400">
+                      Lý do từ chối đơn: *
+                    </label>
+                    <textarea
+                      rows={2}
+                      autoFocus
+                      required
+                      value={rejectionReason}
+                      onChange={(e) => setRejectionReason(e.target.value)}
+                      placeholder="Ghi rõ lý do từ chối đơn nghỉ phép..."
+                      className="w-full p-2 bg-white dark:bg-slate-900 border border-rose-300 dark:border-rose-800 rounded-xl text-xs text-slate-800 dark:text-slate-100"
+                    />
+                    <div className="flex justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsRejectingModal(false);
+                          setRejectionReason('');
+                        }}
+                        className="px-3 py-1.5 text-slate-600 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg text-xs font-semibold"
+                      >
+                        Hủy
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleRejectStep();
+                          setIsRejectingModal(false);
+                        }}
+                        className="px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-lg shadow-sm"
+                      >
+                        Xác nhận từ chối
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
