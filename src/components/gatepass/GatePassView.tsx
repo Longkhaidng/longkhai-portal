@@ -3,7 +3,14 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
-import { GatePass, GatePassAsset, GatePassStatus } from '@/types/gatePass';
+import {
+  GatePass,
+  GatePassAsset,
+  GatePassStatus,
+  GatePassTimeType,
+  GatePassReasonCategory,
+  PERSONAL_REASONS,
+} from '@/types/gatePass';
 import {
   QrCode,
   Plus,
@@ -40,16 +47,40 @@ export function GatePassView() {
   const [scannedPass, setScannedPass] = useState<GatePass | null>(null);
   const [scanMessage, setScanMessage] = useState<string | null>(null);
 
+  // Helper for datetime-local
+  const getTodayDateTimeStr = (hour = '08', minute = '00') => {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}T${hour}:${minute}`;
+  };
+
   // New GatePass Form State
-  const [purpose, setPurpose] = useState('');
-  const [passType, setPassType] = useState<'business' | 'personal'>('business');
-  const [departureTime, setDepartureTime] = useState('');
-  const [returnTime, setReturnTime] = useState('');
+  const [timeType, setTimeType] = useState<GatePassTimeType>('nghi_giua_gio');
+  const [departureTime, setDepartureTime] = useState(() => getTodayDateTimeStr('11', '30'));
+  const [returnTime, setReturnTime] = useState(() => getTodayDateTimeStr('13', '00'));
+  const [reasonCategory, setReasonCategory] = useState<GatePassReasonCategory>('ca_nhan');
+  const [specificReason, setSpecificReason] = useState<string>('');
+  const [companyReason, setCompanyReason] = useState('');
+  const [otherReason, setOtherReason] = useState('');
   const [hasAssets, setHasAssets] = useState(false);
   const [assets, setAssets] = useState<GatePassAsset[]>([]);
   const [newAssetName, setNewAssetName] = useState('');
   const [newAssetQty, setNewAssetQty] = useState(1);
   const [newAssetSerial, setNewAssetSerial] = useState('');
+
+  const handleSelectTimeType = (type: GatePassTimeType) => {
+    setTimeType(type);
+    if (type === 'nghi_dau_gio') {
+      if (!returnTime) setReturnTime(getTodayDateTimeStr('09', '00'));
+    } else if (type === 'nghi_cuoi_gio') {
+      if (!departureTime) setDepartureTime(getTodayDateTimeStr('15', '00'));
+    } else if (type === 'nghi_giua_gio') {
+      if (!departureTime) setDepartureTime(getTodayDateTimeStr('11', '30'));
+      if (!returnTime) setReturnTime(getTodayDateTimeStr('13', '00'));
+    }
+  };
 
   // Add Asset item to list
   const handleAddAsset = () => {
@@ -75,20 +106,65 @@ export function GatePassView() {
     e.preventDefault();
     if (!currentUser) return;
 
+    if (reasonCategory === 'ca_nhan' && !specificReason) {
+      alert('Vui lòng chọn lý do cụ thể trong danh sách.');
+      return;
+    }
+    if (reasonCategory === 'cong_ty' && !companyReason.trim()) {
+      alert('Vui lòng nhập nội dung công việc hoặc địa điểm công tác.');
+      return;
+    }
+    if (reasonCategory === 'khac' && !otherReason.trim()) {
+      alert('Vui lòng nhập lý do ra - vào cổng.');
+      return;
+    }
+
+    if (timeType === 'nghi_dau_gio' && !returnTime) {
+      alert('Vui lòng chọn thời gian vào cổng.');
+      return;
+    }
+    if (timeType === 'nghi_cuoi_gio' && !departureTime) {
+      alert('Vui lòng chọn thời gian ra cổng.');
+      return;
+    }
+    if (timeType === 'nghi_giua_gio' && (!departureTime || !returnTime)) {
+      alert('Vui lòng chọn thời gian ra và thời gian vào.');
+      return;
+    }
+
+    let finalPurpose = '';
+    let calculatedPassType: 'business' | 'personal' = 'personal';
+
+    if (reasonCategory === 'ca_nhan') {
+      finalPurpose = specificReason;
+      calculatedPassType = 'personal';
+    } else if (reasonCategory === 'cong_ty') {
+      finalPurpose = `Công tác: ${companyReason.trim()}`;
+      calculatedPassType = 'business';
+    } else {
+      finalPurpose = `Khác: ${otherReason.trim()}`;
+      calculatedPassType = 'personal';
+    }
+
     const docId = generateDocId('GP', passes.length);
-    const qrPayload = `LONGKHAI_GATEPASS:${docId}:${currentUser.id}:${departureTime}`;
+    const timeRef = departureTime || returnTime || new Date().toISOString();
+    const qrPayload = `LONGKHAI_GATEPASS:${docId}:${currentUser.id}:${timeRef}`;
 
     const newPass: GatePass = {
       id: docId,
       employeeId: currentUser.id,
       employeeName: currentUser.name,
       department: currentUser.department,
-      purpose,
-      passType,
+      purpose: finalPurpose,
+      passType: calculatedPassType,
+      timeType,
+      reasonCategory,
+      specificReason: reasonCategory === 'ca_nhan' ? specificReason : undefined,
+      customReason: reasonCategory === 'cong_ty' ? companyReason.trim() : reasonCategory === 'khac' ? otherReason.trim() : undefined,
       hasAssets: hasAssets && assets.length > 0,
       assets: hasAssets ? assets : [],
-      estimatedDepartureTime: departureTime,
-      estimatedReturnTime: returnTime || undefined,
+      estimatedDepartureTime: (timeType === 'nghi_giua_gio' || timeType === 'nghi_cuoi_gio') ? departureTime : undefined,
+      estimatedReturnTime: (timeType === 'nghi_dau_gio' || timeType === 'nghi_giua_gio') ? returnTime : undefined,
       status: 'pending',
       qrCodeData: qrPayload,
       createdAt: new Date().toISOString(),
@@ -100,7 +176,13 @@ export function GatePassView() {
     setShowCreateModal(false);
 
     // Reset
-    setPurpose('');
+    setTimeType('nghi_giua_gio');
+    setDepartureTime(getTodayDateTimeStr('11', '30'));
+    setReturnTime(getTodayDateTimeStr('13', '00'));
+    setReasonCategory('ca_nhan');
+    setSpecificReason('');
+    setCompanyReason('');
+    setOtherReason('');
     setAssets([]);
     setHasAssets(false);
   };
@@ -143,13 +225,31 @@ export function GatePassView() {
     }
   };
 
-  // Security Confirm Departure (Ra cổng)
-  const handleConfirmDeparture = (pass: GatePass) => {
+  // Security Confirm Entry for Nghỉ đầu giờ (Vào cổng đầu ca)
+  const handleConfirmEntry = (pass: GatePass) => {
     if (!currentUser) return;
     const now = new Date().toISOString();
     const updated: GatePass = {
       ...pass,
-      status: 'departed',
+      status: 'completed',
+      actualReturnTime: now,
+      securityReturnGuardId: currentUser.id,
+      updatedAt: now,
+    };
+    storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
+    setPasses(storage.getGatePasses());
+    setScannedPass(updated);
+    setScanMessage(`✓ Đã ghi nhận giờ VÀO CỔNG cho nhân viên ${pass.employeeName} lúc ${formatDateTime(now)}. Phiếu hoàn tất!`);
+  };
+
+  // Security Confirm Departure (Ra cổng)
+  const handleConfirmDeparture = (pass: GatePass) => {
+    if (!currentUser) return;
+    const now = new Date().toISOString();
+    const newStatus: GatePassStatus = pass.timeType === 'nghi_cuoi_gio' ? 'completed' : 'departed';
+    const updated: GatePass = {
+      ...pass,
+      status: newStatus,
       actualDepartureTime: now,
       securityDepartureGuardId: currentUser.id,
       updatedAt: now,
@@ -157,7 +257,11 @@ export function GatePassView() {
     storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
     setPasses(storage.getGatePasses());
     setScannedPass(updated);
-    setScanMessage(`✓ Đã ghi nhận giờ RA CỔNG cho nhân viên ${pass.employeeName} lúc ${formatDateTime(now)}`);
+    setScanMessage(
+      pass.timeType === 'nghi_cuoi_gio'
+        ? `✓ Đã ghi nhận giờ RA CỔNG (Nghỉ cuối giờ) cho nhân viên ${pass.employeeName} lúc ${formatDateTime(now)}. Phiếu hoàn tất!`
+        : `✓ Đã ghi nhận giờ RA CỔNG cho nhân viên ${pass.employeeName} lúc ${formatDateTime(now)}`
+    );
   };
 
   // Security Confirm Return (Vào cổng lại)
@@ -282,9 +386,9 @@ export function GatePassView() {
                   <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-bold uppercase tracking-wider">
                     <th className="py-3.5 px-4">Mã phiếu</th>
                     <th className="py-3.5 px-4">Người yêu cầu</th>
-                    <th className="py-3.5 px-4">Mục đích</th>
+                    <th className="py-3.5 px-4">Lý do ra - vào cổng</th>
                     <th className="py-3.5 px-4">Tài sản mang theo</th>
-                    <th className="py-3.5 px-4">Thời gian ra / vào</th>
+                    <th className="py-3.5 px-4">Thời gian dự kiến</th>
                     <th className="py-3.5 px-4">Trạng thái</th>
                     <th className="py-3.5 px-4 text-right">Mã QR</th>
                   </tr>
@@ -315,12 +419,27 @@ export function GatePassView() {
                           </div>
                         </td>
                         <td className="py-3 px-4">
-                          <div className="font-medium text-slate-800 dark:text-slate-200 truncate max-w-[200px]">
+                          <div className="font-medium text-slate-800 dark:text-slate-200 line-clamp-2 max-w-[260px]">
                             {item.purpose}
                           </div>
-                          <span className="text-[10px] text-slate-400 capitalize">
-                            {item.passType === 'business' ? 'Đi công tác' : 'Việc riêng'}
-                          </span>
+                          <div className="flex items-center gap-1.5 mt-1">
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-md font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                              {item.reasonCategory === 'cong_ty'
+                                ? 'Công ty'
+                                : item.reasonCategory === 'khac'
+                                ? 'Lý do khác'
+                                : 'Cá nhân'}
+                            </span>
+                            {item.timeType && (
+                              <span className="text-[10px] px-1.5 py-0.5 rounded-md font-semibold bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-blue-900/60">
+                                {item.timeType === 'nghi_dau_gio'
+                                  ? 'Đầu giờ'
+                                  : item.timeType === 'nghi_cuoi_gio'
+                                  ? 'Cuối giờ'
+                                  : 'Giữa giờ'}
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="py-3 px-4">
                           {item.hasAssets ? (
@@ -333,13 +452,25 @@ export function GatePassView() {
                           )}
                         </td>
                         <td className="py-3 px-4">
-                          <div className="text-[11px] font-medium text-slate-700 dark:text-slate-300">
-                            Ra: {formatDateTime(item.estimatedDepartureTime)}
-                          </div>
-                          {item.estimatedReturnTime && (
-                            <div className="text-[10px] text-slate-400">
+                          {item.timeType === 'nghi_dau_gio' ? (
+                            <div className="text-[11px] font-medium text-blue-600 dark:text-blue-400">
                               Vào: {formatDateTime(item.estimatedReturnTime)}
                             </div>
+                          ) : item.timeType === 'nghi_cuoi_gio' ? (
+                            <div className="text-[11px] font-medium text-amber-600 dark:text-amber-400">
+                              Ra: {formatDateTime(item.estimatedDepartureTime)}
+                            </div>
+                          ) : (
+                            <>
+                              <div className="text-[11px] font-medium text-slate-700 dark:text-slate-300">
+                                Ra: {formatDateTime(item.estimatedDepartureTime)}
+                              </div>
+                              {item.estimatedReturnTime && (
+                                <div className="text-[10px] text-slate-400">
+                                  Vào: {formatDateTime(item.estimatedReturnTime)}
+                                </div>
+                              )}
+                            </>
                           )}
                         </td>
                         <td className="py-3 px-4">
@@ -445,8 +576,20 @@ export function GatePassView() {
               </div>
 
               <div className="space-y-1 text-xs text-slate-700 dark:text-slate-300">
-                <div>Mục đích ra ngoài: <b>{scannedPass.purpose}</b></div>
-                <div>Giờ dự kiến ra: <b>{formatDateTime(scannedPass.estimatedDepartureTime)}</b></div>
+                <div>Lý do ra - vào: <b>{scannedPass.purpose}</b></div>
+                <div>Hình thức: <b>{
+                  scannedPass.timeType === 'nghi_dau_gio'
+                    ? 'Nghỉ đầu giờ'
+                    : scannedPass.timeType === 'nghi_cuoi_gio'
+                    ? 'Nghỉ cuối giờ'
+                    : 'Nghỉ giữa giờ'
+                }</b></div>
+                {scannedPass.estimatedDepartureTime && (
+                  <div>Giờ dự kiến ra: <b>{formatDateTime(scannedPass.estimatedDepartureTime)}</b></div>
+                )}
+                {scannedPass.estimatedReturnTime && (
+                  <div>Giờ dự kiến vào: <b>{formatDateTime(scannedPass.estimatedReturnTime)}</b></div>
+                )}
                 <div>Giờ ra thực tế: <b>{formatDateTime(scannedPass.actualDepartureTime)}</b></div>
                 <div>Giờ vào thực tế: <b>{formatDateTime(scannedPass.actualReturnTime)}</b></div>
                 <div>Quản lý duyệt: <b>{scannedPass.managerApproverName || 'Chưa duyệt'}</b></div>
@@ -471,13 +614,27 @@ export function GatePassView() {
 
               {/* Action Buttons for Security Guard */}
               <div className="pt-2 flex gap-3">
-                {scannedPass.status === 'approved' && (
+                {scannedPass.status === 'approved' && scannedPass.timeType === 'nghi_dau_gio' && (
+                  <button
+                    onClick={() => handleConfirmEntry(scannedPass)}
+                    className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-2"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    <span>Xác nhận CHO VÀO CỔNG (Nghỉ đầu giờ)</span>
+                  </button>
+                )}
+
+                {scannedPass.status === 'approved' && scannedPass.timeType !== 'nghi_dau_gio' && (
                   <button
                     onClick={() => handleConfirmDeparture(scannedPass)}
                     className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-2"
                   >
                     <LogOut className="w-4 h-4" />
-                    <span>Xác nhận CHO RA CỔNG</span>
+                    <span>
+                      {scannedPass.timeType === 'nghi_cuoi_gio'
+                        ? 'Xác nhận CHO RA CỔNG (Nghỉ cuối giờ)'
+                        : 'Xác nhận CHO RA CỔNG'}
+                    </span>
                   </button>
                 )}
 
@@ -493,7 +650,7 @@ export function GatePassView() {
 
                 {scannedPass.status === 'completed' && (
                   <div className="w-full text-center py-2 text-xs font-bold text-slate-500">
-                    Phiếu này đã hoàn tất vào cổng lại!
+                    Phiếu này đã hoàn tất vào/ra cổng!
                   </div>
                 )}
               </div>
@@ -524,69 +681,201 @@ export function GatePassView() {
             </div>
 
             <form onSubmit={handleCreate} className="space-y-3.5 text-xs">
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setPassType('business')}
-                  className={`py-2 text-center rounded-xl border font-semibold ${
-                    passType === 'business'
-                      ? 'bg-emerald-600 text-white border-emerald-600'
-                      : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
-                  }`}
-                >
-                  Ra ngoài công tác
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPassType('personal')}
-                  className={`py-2 text-center rounded-xl border font-semibold ${
-                    passType === 'personal'
-                      ? 'bg-emerald-600 text-white border-emerald-600'
-                      : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
-                  }`}
-                >
-                  Ra việc riêng
-                </button>
-              </div>
-
+              {/* Lý do ra – vào cổng */}
               <div>
                 <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Mục đích ra ngoài:
+                  Lý do ra – vào cổng:
                 </label>
-                <textarea
-                  rows={2}
-                  required
-                  value={purpose}
-                  onChange={(e) => setPurpose(e.target.value)}
-                  placeholder="Ghi rõ lý do / địa điểm đến..."
-                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                />
+                <div className="grid grid-cols-3 gap-2 mb-2">
+                  <button
+                    type="button"
+                    onClick={() => setReasonCategory('ca_nhan')}
+                    className={`py-2 text-center rounded-xl border font-semibold transition-all ${
+                      reasonCategory === 'ca_nhan'
+                        ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                        : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                    }`}
+                  >
+                    Cá nhân
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setReasonCategory('cong_ty')}
+                    className={`py-2 text-center rounded-xl border font-semibold transition-all ${
+                      reasonCategory === 'cong_ty'
+                        ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                        : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                    }`}
+                  >
+                    Công ty
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setReasonCategory('khac')}
+                    className={`py-2 text-center rounded-xl border font-semibold transition-all ${
+                      reasonCategory === 'khac'
+                        ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                        : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                    }`}
+                  >
+                    Lý do khác
+                  </button>
+                </div>
+
+                {reasonCategory === 'ca_nhan' && (
+                  <div>
+                    <label className="block font-medium text-slate-600 dark:text-slate-400 mb-1">
+                      Chọn lý do cụ thể: *
+                    </label>
+                    <select
+                      required
+                      value={specificReason}
+                      onChange={(e) => setSpecificReason(e.target.value)}
+                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                    >
+                      <option value="">-- Chọn lý do --</option>
+                      {PERSONAL_REASONS.map((r) => (
+                        <option key={r} value={r}>
+                          {r}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {reasonCategory === 'cong_ty' && (
+                  <div>
+                    <label className="block font-medium text-slate-600 dark:text-slate-400 mb-1">
+                      Nội dung công tác / Địa điểm đến: *
+                    </label>
+                    <textarea
+                      rows={2}
+                      required
+                      value={companyReason}
+                      onChange={(e) => setCompanyReason(e.target.value)}
+                      placeholder="Ghi rõ nội dung công việc công tác hoặc địa điểm..."
+                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                    />
+                  </div>
+                )}
+
+                {reasonCategory === 'khac' && (
+                  <div>
+                    <label className="block font-medium text-slate-600 dark:text-slate-400 mb-1">
+                      Nhập lý do cụ thể: *
+                    </label>
+                    <textarea
+                      rows={2}
+                      required
+                      value={otherReason}
+                      onChange={(e) => setOtherReason(e.target.value)}
+                      placeholder="Ghi rõ lý do ra - vào cổng..."
+                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                    />
+                  </div>
+                )}
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Thời gian ra dự kiến:
-                  </label>
-                  <input
-                    type="datetime-local"
-                    required
-                    value={departureTime}
-                    onChange={(e) => setDepartureTime(e.target.value)}
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
+              {/* Thời gian ra – vào dự kiến */}
+              <div>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Thời gian ra – vào dự kiến:
+                </label>
+                <div className="grid grid-cols-3 gap-2 mb-2">
+                  <button
+                    type="button"
+                    onClick={() => handleSelectTimeType('nghi_dau_gio')}
+                    className={`py-2 px-1 text-center rounded-xl border font-semibold transition-all ${
+                      timeType === 'nghi_dau_gio'
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                        : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                    }`}
+                  >
+                    Nghỉ đầu giờ
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleSelectTimeType('nghi_giua_gio')}
+                    className={`py-2 px-1 text-center rounded-xl border font-semibold transition-all ${
+                      timeType === 'nghi_giua_gio'
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                        : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                    }`}
+                  >
+                    Nghỉ giữa giờ
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleSelectTimeType('nghi_cuoi_gio')}
+                    className={`py-2 px-1 text-center rounded-xl border font-semibold transition-all ${
+                      timeType === 'nghi_cuoi_gio'
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                        : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                    }`}
+                  >
+                    Nghỉ cuối giờ
+                  </button>
                 </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Thời gian vào lại dự kiến:
-                  </label>
-                  <input
-                    type="datetime-local"
-                    value={returnTime}
-                    onChange={(e) => setReturnTime(e.target.value)}
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
-                </div>
+
+                {/* Conditional inputs */}
+                {timeType === 'nghi_dau_gio' && (
+                  <div>
+                    <label className="block font-medium text-slate-600 dark:text-slate-400 mb-1">
+                      Thời gian vào cổng: *
+                    </label>
+                    <input
+                      type="datetime-local"
+                      required
+                      value={returnTime}
+                      onChange={(e) => setReturnTime(e.target.value)}
+                      className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                    />
+                  </div>
+                )}
+
+                {timeType === 'nghi_giua_gio' && (
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block font-medium text-slate-600 dark:text-slate-400 mb-1">
+                        Thời gian ra: *
+                      </label>
+                      <input
+                        type="datetime-local"
+                        required
+                        value={departureTime}
+                        onChange={(e) => setDepartureTime(e.target.value)}
+                        className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-medium text-slate-600 dark:text-slate-400 mb-1">
+                        Thời gian vào: *
+                      </label>
+                      <input
+                        type="datetime-local"
+                        required
+                        value={returnTime}
+                        onChange={(e) => setReturnTime(e.target.value)}
+                        className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {timeType === 'nghi_cuoi_gio' && (
+                  <div>
+                    <label className="block font-medium text-slate-600 dark:text-slate-400 mb-1">
+                      Thời gian ra cổng: *
+                    </label>
+                    <input
+                      type="datetime-local"
+                      required
+                      value={departureTime}
+                      onChange={(e) => setDepartureTime(e.target.value)}
+                      className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Assets Declaration */}
@@ -723,13 +1012,71 @@ export function GatePassView() {
               </button>
             </div>
 
-            <div className="space-y-2 text-xs text-slate-700 dark:text-slate-300">
-              <div>Nhân viên: <b>{selectedPass.employeeName}</b> ({selectedPass.employeeId})</div>
-              <div>Phòng ban: <b>{selectedPass.department}</b></div>
-              <div>Mục đích: <b>{selectedPass.purpose}</b></div>
-              <div>Thời gian ra dự kiến: <b>{formatDateTime(selectedPass.estimatedDepartureTime)}</b></div>
-              <div>Thời gian vào dự kiến: <b>{formatDateTime(selectedPass.estimatedReturnTime)}</b></div>
-              <div>Trạng thái: <b>{selectedPass.status}</b></div>
+            <div className="space-y-2.5 text-xs text-slate-700 dark:text-slate-300">
+              <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                <span>Nhân viên: <b className="text-slate-900 dark:text-white">{selectedPass.employeeName}</b> ({selectedPass.employeeId})</span>
+                <span>Phòng ban: <b>{selectedPass.department}</b></span>
+              </div>
+              <div>
+                <span className="text-slate-400">Hình thức ra - vào:</span>{' '}
+                <b className="text-blue-600 dark:text-blue-400">
+                  {selectedPass.timeType === 'nghi_dau_gio'
+                    ? 'Nghỉ đầu giờ'
+                    : selectedPass.timeType === 'nghi_cuoi_gio'
+                    ? 'Nghỉ cuối giờ'
+                    : 'Nghỉ giữa giờ'}
+                </b>
+              </div>
+              <div>
+                <span className="text-slate-400">Phân loại:</span>{' '}
+                <b>
+                  {selectedPass.reasonCategory === 'cong_ty'
+                    ? 'Công việc / Công tác'
+                    : selectedPass.reasonCategory === 'khac'
+                    ? 'Lý do khác'
+                    : 'Việc cá nhân'}
+                </b>
+              </div>
+              <div>
+                <span className="text-slate-400">Lý do cụ thể:</span>{' '}
+                <b className="text-slate-900 dark:text-white">{selectedPass.purpose}</b>
+              </div>
+
+              <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700/60 space-y-1">
+                {selectedPass.timeType !== 'nghi_dau_gio' && (
+                  <div>
+                    Thời gian ra dự kiến: <b>{formatDateTime(selectedPass.estimatedDepartureTime)}</b>
+                  </div>
+                )}
+                {selectedPass.timeType !== 'nghi_cuoi_gio' && (
+                  <div>
+                    Thời gian vào dự kiến: <b>{formatDateTime(selectedPass.estimatedReturnTime)}</b>
+                  </div>
+                )}
+                {selectedPass.actualDepartureTime && (
+                  <div className="text-emerald-600 dark:text-emerald-400">
+                    Bảo vệ xác nhận ra cổng: <b>{formatDateTime(selectedPass.actualDepartureTime)}</b>
+                  </div>
+                )}
+                {selectedPass.actualReturnTime && (
+                  <div className="text-emerald-600 dark:text-emerald-400">
+                    Bảo vệ xác nhận vào cổng: <b>{formatDateTime(selectedPass.actualReturnTime)}</b>
+                  </div>
+                )}
+              </div>
+
+              <div>
+                Trạng thái:{' '}
+                <span className="font-bold uppercase tracking-wider">
+                  {selectedPass.status === 'pending'
+                    ? 'Chờ duyệt'
+                    : selectedPass.status === 'approved'
+                    ? 'Đã duyệt'
+                    : selectedPass.status === 'departed'
+                    ? 'Đang ở ngoài'
+                    : 'Hoàn tất'}
+                </span>
+              </div>
             </div>
 
             {/* Manager approval button */}

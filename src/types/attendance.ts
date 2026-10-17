@@ -23,7 +23,7 @@ export interface AttendanceConfirm {
 }
 
 export const ISSUE_TYPE_LABELS: Record<AttendanceIssueType, { text: string; badge: string }> = {
-  mat_the: { text: 'Mất thẻ nhân viên', badge: 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300' },
+  mat_the: { text: 'Mất thẻ', badge: 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300' },
   quen_the: { text: 'Quên mang thẻ', badge: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' },
-  the_hong: { text: 'Thẻ hỏng / Không quét được', badge: 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300' },
+  the_hong: { text: 'Thẻ hỏng / lỗi', badge: 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300' },
 };

@@ -40,11 +40,30 @@ export function AttendanceView() {
   // Form states
   const [issueType, setIssueType] = useState<AttendanceIssueType>('quen_the');
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
-  const [checkInTime, setCheckInTime] = useState('07:30');
+  const [checkInTime, setCheckInTime] = useState('08:00');
   const [checkOutTime, setCheckOutTime] = useState('16:30');
-  const [shift, setShift] = useState('Ca Hành chính (07:30 - 16:30)');
+  const [shift, setShift] = useState('Ca Hành chính (08:00 - 16:30)');
+  const [customShift, setCustomShift] = useState('');
   const [reason, setReason] = useState('');
   const [approvalComment, setApprovalComment] = useState('');
+
+  // Auto-fill times when selecting shift
+  const handleShiftChange = (newShift: string) => {
+    setShift(newShift);
+    if (newShift === 'Ca Hành chính (08:00 - 16:30)') {
+      setCheckInTime('08:00');
+      setCheckOutTime('16:30');
+    } else if (newShift === 'Ca 1 (06:00 - 14:00)') {
+      setCheckInTime('06:00');
+      setCheckOutTime('14:00');
+    } else if (newShift === 'Ca 2 (14:00 - 22:00)') {
+      setCheckInTime('14:00');
+      setCheckOutTime('22:00');
+    } else if (newShift === 'Ca 3 (22:00 - 06:00)') {
+      setCheckInTime('22:00');
+      setCheckOutTime('06:00');
+    }
+  };
 
   // Handle submit form
   const handleCreate = (e: React.FormEvent) => {
@@ -87,6 +106,8 @@ export function AttendanceView() {
       status: 'pending',
     });
 
+    const finalShift = shift === 'Ca khác' ? (customShift.trim() || 'Ca khác') : shift;
+
     const newConfirm: AttendanceConfirm = {
       id: docId,
       employeeId: currentUser.id,
@@ -96,7 +117,7 @@ export function AttendanceView() {
       date,
       checkInTime,
       checkOutTime,
-      shift,
+      shift: finalShift,
       reason,
       status: 'pending',
       currentStepIndex: 0,
@@ -109,6 +130,7 @@ export function AttendanceView() {
     setAttendances(storage.getAttendanceConfirms());
     setShowCreateModal(false);
     setReason('');
+    setCustomShift('');
   };
 
   // Check if current user can approve current step
@@ -422,7 +444,7 @@ export function AttendanceView() {
                         : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
                     }`}
                   >
-                    Mất thẻ nhân viên
+                    Mất thẻ
                   </button>
                 </div>
               </div>
@@ -473,14 +495,31 @@ export function AttendanceView() {
                 </label>
                 <select
                   value={shift}
-                  onChange={(e) => setShift(e.target.value)}
+                  onChange={(e) => handleShiftChange(e.target.value)}
                   className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
                 >
-                  <option value="Ca Hành chính (07:30 - 16:30)">Ca Hành chính (07:30 - 16:30)</option>
+                  <option value="Ca Hành chính (08:00 - 16:30)">Ca Hành chính (08:00 - 16:30)</option>
                   <option value="Ca 1 (06:00 - 14:00)">Ca 1 (06:00 - 14:00)</option>
                   <option value="Ca 2 (14:00 - 22:00)">Ca 2 (14:00 - 22:00)</option>
                   <option value="Ca 3 (22:00 - 06:00)">Ca 3 (22:00 - 06:00)</option>
+                  <option value="Ca khác">Ca khác (Tự nhập)</option>
                 </select>
+
+                {shift === 'Ca khác' && (
+                  <div className="mt-2.5">
+                    <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      Nhập ca làm việc của bạn: *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={customShift}
+                      onChange={(e) => setCustomShift(e.target.value)}
+                      placeholder="VD: Ca gãy (08:00 - 12:00 & 14:00 - 18:00)..."
+                      className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                    />
+                  </div>
+                )}
               </div>
 
               <div>
