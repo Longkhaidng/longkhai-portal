@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
 import { GitHubConfig, AuditLog } from '@/types/github';
@@ -17,12 +17,9 @@ import {
   Key,
   FolderGit2,
   History,
-  Mail,
-  Send,
 } from 'lucide-react';
 import { formatDateTime } from '@/lib/utils';
 import { GitHubService } from '@/lib/github-api';
-import { EmailConfig } from '@/types/email';
 
 export function SettingsView() {
   const { currentUser } = useAuth();
@@ -32,13 +29,6 @@ export function SettingsView() {
   const [syncMessage, setSyncMessage] = useState<{ success: boolean; text: string } | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>(() => storage.getAuditLogs());
-
-  // Email Config State
-  const [emailConfig, setEmailConfig] = useState<EmailConfig>(() => storage.getEmailConfig());
-  const [emailSaveMsg, setEmailSaveMsg] = useState<{ success: boolean; text: string } | null>(null);
-  const [testEmailTo, setTestEmailTo] = useState('');
-  const [isSendingTest, setIsSendingTest] = useState(false);
-  const [testEmailResult, setTestEmailResult] = useState<{ success: boolean; text: string } | null>(null);
 
   const handleSaveConfig = (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,69 +75,6 @@ export function SettingsView() {
       setSyncMessage({ success: false, text: err.message || 'Lỗi kéo dữ liệu từ GitHub' });
     } finally {
       setIsSyncing(false);
-    }
-  };
-
-  useEffect(() => {
-    fetch('/api/email-config')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && data.smtpHost) {
-          setEmailConfig((prev) => ({ ...prev, ...data }));
-        }
-      })
-      .catch(() => {});
-  }, []);
-
-  const handleSaveEmailConfig = async (e: React.FormEvent) => {
-    e.preventDefault();
-    storage.saveEmailConfig(emailConfig, {
-      id: currentUser?.id || 'ADMIN',
-      name: currentUser?.name || 'Quản trị viên',
-    });
-    try {
-      await fetch('/api/email-config', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(emailConfig),
-      });
-    } catch (err) {
-      console.warn('Could not persist email config to server:', err);
-    }
-    setEmailSaveMsg({ success: true, text: 'Đã lưu cấu hình dịch vụ gửi Email thông báo thành công!' });
-    setTimeout(() => setEmailSaveMsg(null), 4000);
-  };
-
-  const handleSendTestEmail = async () => {
-    if (!testEmailTo.trim()) {
-      alert('Vui lòng nhập địa chỉ email nhận thư thử nghiệm!');
-      return;
-    }
-    setIsSendingTest(true);
-    setTestEmailResult(null);
-    try {
-      const res = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          toEmail: testEmailTo.trim(),
-          subject: '[Long Khai Portal] Thư kiểm tra kết nối hệ thống gửi Email',
-          html: `
-            <div style="font-family: sans-serif; padding: 20px; color: #1e293b;">
-              <h2 style="color: #0284c7;">Xin chào Quản trị viên,</h2>
-              <p>Đây là email kiểm tra kết nối từ hệ thống <strong>Cổng Thông Tin Long Khai Portal</strong>.</p>
-              <p>✓ Cấu hình máy chủ gửi email của bạn đã hoạt động thành công!</p>
-            </div>
-          `,
-          emailConfig,
-        }),
-      });
-      const data = await res.json();
-      setTestEmailResult({ success: data.success, text: data.message });
-    } catch (err: any) {
-      setTestEmailResult({ success: false, text: `Lỗi kết nối: ${err.message}` });
-    } finally {
-      setIsSendingTest(false);
     }
   };
 
@@ -338,203 +265,6 @@ export function SettingsView() {
                 <DownloadCloud className="w-5 h-5" />
                 <span>Kéo dữ liệu từ GitHub về máy (Pull)</span>
               </button>
-            </div>
-          </div>
-
-          {/* Email Notification & Approval Settings Card */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-              <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold text-sm">
-                <Mail className="w-4 h-4 text-blue-600" />
-                <span>Cấu hình Gửi Email Phê Duyệt Tự Động (SMTP / Gmail)</span>
-              </div>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300">
-                Phê duyệt qua Email
-              </span>
-            </div>
-
-            <p className="text-xs text-slate-500">
-              Khi nhân viên tạo đơn nghỉ phép hoặc phiếu ra vào cổng, hệ thống sẽ tự động gửi email thông báo kèm 2 nút <b>[Duyệt đơn]</b> và <b>[Từ chối đơn]</b> đến Email của Trưởng bộ phận.
-            </p>
-
-            {emailSaveMsg && (
-              <div className="p-3 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>{emailSaveMsg.text}</span>
-              </div>
-            )}
-
-            <form onSubmit={handleSaveEmailConfig} className="space-y-3.5 text-xs">
-              {/* Quick Preset Selector */}
-              <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-2">
-                <span className="font-bold text-xs text-slate-800 dark:text-slate-200 block">
-                  ⚡ Chọn mẫu cấu hình nhanh theo dịch vụ thư của bạn:
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setEmailConfig((prev) => ({
-                        ...prev,
-                        provider: 'smtp',
-                        smtpHost: 'smtp.office365.com',
-                        smtpPort: 587,
-                        smtpSecure: false,
-                        senderName: prev.senderName || 'Cổng Thông Tin Long Khai',
-                      }))
-                    }
-                    className="px-3 py-1.5 rounded-xl border border-blue-300 dark:border-blue-700 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-bold text-xs hover:bg-blue-100 transition-colors flex items-center gap-1.5"
-                  >
-                    🏢 Mẫu Microsoft 365 (Khuyên dùng cho @longkhai.com.vn)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setEmailConfig((prev) => ({
-                        ...prev,
-                        provider: 'gmail',
-                        smtpHost: 'smtp.gmail.com',
-                        smtpPort: 465,
-                        smtpSecure: true,
-                        senderName: prev.senderName || 'Cổng Thông Tin Long Khai',
-                      }))
-                    }
-                    className="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold text-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5"
-                  >
-                    ✉️ Mẫu Gmail (smtp.gmail.com:465)
-                  </button>
-                </div>
-                <p className="text-[11px] text-slate-500 leading-relaxed">
-                  <b>Khuyên dùng cho Long Khai:</b> Chọn mẫu <b>Microsoft 365</b> (Host: <code className="font-mono text-blue-600">smtp.office365.com</code>, Cổng: <code className="font-mono text-blue-600">587</code>), sau đó nhập tài khoản email gửi thư (ví dụ: <code className="font-mono text-blue-600">it@longkhai.com.vn</code> hoặc email thông báo công ty) và mật khẩu tài khoản (hoặc App Password).
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Máy chủ SMTP (SMTP Host):
-                  </label>
-                  <input
-                    type="text"
-                    value={emailConfig.smtpHost || ''}
-                    onChange={(e) => setEmailConfig({ ...emailConfig, smtpHost: e.target.value.trim() })}
-                    placeholder="VD: smtp.gmail.com"
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Cổng SMTP (Port):
-                  </label>
-                  <input
-                    type="number"
-                    value={emailConfig.smtpPort || 465}
-                    onChange={(e) => setEmailConfig({ ...emailConfig, smtpPort: Number(e.target.value) })}
-                    placeholder="465 hoặc 587"
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Tài khoản gửi (Email / User):
-                  </label>
-                  <input
-                    type="email"
-                    value={emailConfig.smtpUser || ''}
-                    onChange={(e) => setEmailConfig({ ...emailConfig, smtpUser: e.target.value.trim() })}
-                    placeholder="portal.longkhai@gmail.com..."
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Mật khẩu ứng dụng (App Password):
-                  </label>
-                  <input
-                    type="password"
-                    value={emailConfig.smtpPassword || ''}
-                    onChange={(e) => setEmailConfig({ ...emailConfig, smtpPassword: e.target.value.trim() })}
-                    placeholder="Mật khẩu ứng dụng 16 ký tự của Gmail..."
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Tên hiển thị người gửi:
-                  </label>
-                  <input
-                    type="text"
-                    value={emailConfig.senderName || ''}
-                    onChange={(e) => setEmailConfig({ ...emailConfig, senderName: e.target.value })}
-                    placeholder="Cổng Thông Tin Long Khai"
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Địa chỉ Website Cổng Thông Tin (Base URL):
-                  </label>
-                  <input
-                    type="text"
-                    value={emailConfig.portalBaseUrl || ''}
-                    onChange={(e) => setEmailConfig({ ...emailConfig, portalBaseUrl: e.target.value.trim() })}
-                    placeholder="VD: https://longkhai-portal.vercel.app"
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
-                </div>
-              </div>
-
-              <div className="pt-1 flex justify-end">
-                <button
-                  type="submit"
-                  className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs shadow-md"
-                >
-                  Lưu cấu hình Email
-                </button>
-              </div>
-            </form>
-
-            {/* Test Email Section */}
-            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
-              <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
-                Kiểm tra gửi email thử nghiệm:
-              </span>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  value={testEmailTo}
-                  onChange={(e) => setTestEmailTo(e.target.value)}
-                  placeholder="Nhập email của bạn để nhận thử..."
-                  className="flex-1 p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs"
-                />
-                <button
-                  type="button"
-                  onClick={handleSendTestEmail}
-                  disabled={isSendingTest}
-                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors disabled:opacity-50"
-                >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>{isSendingTest ? 'Đang gửi...' : 'Gửi thử'}</span>
-                </button>
-              </div>
-
-              {testEmailResult && (
-                <div
-                  className={`p-3 rounded-xl text-xs ${
-                    testEmailResult.success
-                      ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                      : 'bg-rose-50 text-rose-800 border border-rose-200'
-                  }`}
-                >
-                  {testEmailResult.text}
-                </div>
-              )}
             </div>
           </div>
         </div>

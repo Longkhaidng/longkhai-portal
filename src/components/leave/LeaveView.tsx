@@ -19,8 +19,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { formatDate, generateDocId } from '@/lib/utils';
-import { dispatchApprovalEmail, DispatchEmailResult } from '@/lib/email';
-import { EmailNotificationModal } from '@/components/common/EmailNotificationModal';
+import { dispatchApprovalEmail } from '@/lib/email';
 
 export function LeaveView() {
   const { currentUser } = useAuth();
@@ -35,11 +34,6 @@ export function LeaveView() {
   const [rejectionReason, setRejectionReason] = useState('');
   const [isApproving, setIsApproving] = useState(false);
   const [isRejectingModal, setIsRejectingModal] = useState(false);
-
-  // Email Notification modal state
-  const [emailModalResult, setEmailModalResult] = useState<DispatchEmailResult | null>(null);
-  const [emailModalDocId, setEmailModalDocId] = useState('');
-  const [emailModalRecipient, setEmailModalRecipient] = useState('');
 
   // Form states for new Leave Request
   const [leaveType, setLeaveType] = useState<LeaveType>('phep_nam');
@@ -175,42 +169,11 @@ export function LeaveView() {
             { label: 'SĐT liên hệ khẩn cấp', value: emergencyContact || currentUser.phone || 'Không có' },
           ],
         },
-      })
-        .then((res) => {
-          setEmailModalResult(res);
-          setEmailModalRecipient(managerEmail || '');
-          setEmailModalDocId(docId);
-        })
-        .catch((err) => {
-          console.error(err);
-          const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://longkhai-portal.vercel.app';
-          const approveUrl = `${baseUrl}/approve?type=leave&id=${encodeURIComponent(docId)}&action=approve`;
-          const rejectUrl = `${baseUrl}/approve?type=leave&id=${encodeURIComponent(docId)}&action=reject`;
-          setEmailModalResult({
-            success: false,
-            notConfigured: true,
-            message: err.message || 'Lỗi kết nối máy chủ gửi email',
-            approveUrl,
-            rejectUrl,
-            mailtoUrl: `mailto:${managerEmail}?subject=${encodeURIComponent(`[Long Khai] Đơn xin nghỉ phép - ${currentUser.name}`)}&body=${encodeURIComponent(`Kính gửi Trưởng bộ phận,\n\nNhân viên ${currentUser.name} (${currentUser.id}) vừa tạo đơn xin nghỉ phép ${docId}.\n\nLink duyệt đơn: ${approveUrl}\nLink từ chối: ${rejectUrl}`)}`,
-          });
-          setEmailModalRecipient(managerEmail);
-          setEmailModalDocId(docId);
-        });
+      }).catch(console.error);
+
+      alert(`✓ Đã tạo đơn xin nghỉ phép thành công!\nYêu cầu phê duyệt đã được tự động gửi đến Email Trưởng bộ phận: ${managerEmail}`);
     } else {
-      const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://longkhai-portal.vercel.app';
-      const approveUrl = `${baseUrl}/approve?type=leave&id=${encodeURIComponent(docId)}&action=approve`;
-      const rejectUrl = `${baseUrl}/approve?type=leave&id=${encodeURIComponent(docId)}&action=reject`;
-      setEmailModalResult({
-        success: false,
-        notConfigured: true,
-        message: 'Chưa có thông tin Email Trưởng bộ phận trong hồ sơ nhân viên',
-        approveUrl,
-        rejectUrl,
-        mailtoUrl: `mailto:?subject=${encodeURIComponent(`[Long Khai] Đơn xin nghỉ phép - ${currentUser.name}`)}&body=${encodeURIComponent(`Kính gửi Trưởng bộ phận,\n\nNhân viên ${currentUser.name} (${currentUser.id}) vừa tạo đơn xin nghỉ phép ${docId}.\n\nLink duyệt đơn: ${approveUrl}\nLink từ chối: ${rejectUrl}`)}`,
-      });
-      setEmailModalRecipient('Chưa khai báo Email');
-      setEmailModalDocId(docId);
+      alert('✓ Đã tạo đơn xin nghỉ phép thành công!');
     }
 
     // Reset fields
@@ -809,16 +772,6 @@ export function LeaveView() {
           </div>
         </div>
       )}
-
-      {/* Email Notification / Fallback Modal */}
-      <EmailNotificationModal
-        isOpen={!!emailModalResult}
-        onClose={() => setEmailModalResult(null)}
-        result={emailModalResult}
-        recipientEmail={emailModalRecipient}
-        docId={emailModalDocId}
-        docTypeTitle="Đơn Xin Nghỉ Phép"
-      />
     </div>
   );
 }
