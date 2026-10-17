@@ -154,9 +154,9 @@
   {
     "id": "106",
     "name": "26-21 Trần Văn Phát Huy",
-    "department": "Bảo vệ",
+    "department": "Đội Bảo Vệ & An Ninh",
     "position": "Bảo vệ",
-    "role": "employee",
+    "role": "security",
     "permissions": [
       "dashboard",
       "leave",
@@ -167,7 +167,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T08:00:33.636Z"
+    "updatedAt": "2026-10-17T03:09:17.197Z"
   },
   {
     "id": "107",
