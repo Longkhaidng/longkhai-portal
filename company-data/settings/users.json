@@ -1870,7 +1870,7 @@
   {
     "id": "1912",
     "name": "Trương Hồ Kim Huyền",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Nhân viên kinh tế - kế hoạch HT",
     "role": "employee",
     "permissions": [
@@ -1883,7 +1883,10 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:50:58.164Z",
+    "email": "finishing04@longkhai.com.vn",
+    "departmentHeadId": "1051",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn"
   },
   {
     "id": "1924",
