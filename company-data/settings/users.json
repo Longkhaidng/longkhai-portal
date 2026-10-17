@@ -314,7 +314,7 @@
   {
     "id": "1014",
     "name": "Nguyễn Thị Cẩm Hương",
-    "department": "PX Dệt",
+    "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
     "permissions": [
@@ -327,7 +327,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:04:06.276Z",
+    "departmentHeadId": "1554"
   },
   {
     "id": "1015",
