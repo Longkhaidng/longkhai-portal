@@ -1725,7 +1725,7 @@
   {
     "id": "1778",
     "name": "Trần Quang Vinh",
-    "department": "PXHT",
+    "department": "Phòng Cơ Điện & Bảo Trì",
     "position": "Nhân viên Kỹ thuật",
     "role": "employee",
     "permissions": [
@@ -1738,7 +1738,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:47:35.750Z",
+    "departmentHeadId": "2409"
   },
   {
     "id": "1785",
