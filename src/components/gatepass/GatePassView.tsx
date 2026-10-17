@@ -31,7 +31,8 @@ import {
 } from 'lucide-react';
 import { formatDate, formatDateTime, generateDocId } from '@/lib/utils';
 import { generateQrDataUrl } from '@/lib/qr';
-import { dispatchApprovalEmail } from '@/lib/email';
+import { dispatchApprovalEmail, DispatchEmailResult } from '@/lib/email';
+import { EmailNotificationModal } from '@/components/common/EmailNotificationModal';
 
 export function GatePassView() {
   const { currentUser } = useAuth();
@@ -44,6 +45,11 @@ export function GatePassView() {
   const [qrModalUrl, setQrModalUrl] = useState<string | null>(null);
   const [isRejecting, setIsRejecting] = useState(false);
   const [passRejectionReason, setPassRejectionReason] = useState('');
+
+  // Email Notification modal state
+  const [emailModalResult, setEmailModalResult] = useState<DispatchEmailResult | null>(null);
+  const [emailModalDocId, setEmailModalDocId] = useState('');
+  const [emailModalRecipient, setEmailModalRecipient] = useState('');
 
   // Security Gate scan input
   const [scanCode, setScanCode] = useState('');
@@ -203,14 +209,14 @@ export function GatePassView() {
       }
     }
 
-    if (managerEmail) {
-      const timeDesc =
-        timeType === 'nghi_dau_gio'
-          ? `Nghỉ đầu giờ (Vào cổng: ${formatDateTime(returnTime)})`
-          : timeType === 'nghi_cuoi_gio'
-          ? `Nghỉ cuối giờ (Ra cổng: ${formatDateTime(departureTime)})`
-          : `Nghỉ giữa giờ (Ra: ${formatDateTime(departureTime)} - Vào: ${formatDateTime(returnTime)})`;
+    const timeDesc =
+      timeType === 'nghi_dau_gio'
+        ? `Nghỉ đầu giờ (Vào cổng: ${formatDateTime(returnTime)})`
+        : timeType === 'nghi_cuoi_gio'
+        ? `Nghỉ cuối giờ (Ra cổng: ${formatDateTime(departureTime)})`
+        : `Nghỉ giữa giờ (Ra: ${formatDateTime(departureTime)} - Vào: ${formatDateTime(returnTime)})`;
 
+    if (managerEmail) {
       dispatchApprovalEmail({
         toEmail: managerEmail,
         managerName,
@@ -241,11 +247,40 @@ export function GatePassView() {
         },
       })
         .then((res) => {
-          if (res.success) {
-            alert(`✓ Đã tạo phiếu thành công và gửi email thông báo duyệt đến Trưởng bộ phận (${managerEmail})!`);
-          }
+          setEmailModalResult(res);
+          setEmailModalRecipient(managerEmail || '');
+          setEmailModalDocId(docId);
         })
-        .catch(console.error);
+        .catch((err) => {
+          console.error(err);
+          const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://longkhai-portal.vercel.app';
+          const approveUrl = `${baseUrl}/approve?type=gate_pass&id=${encodeURIComponent(docId)}&action=approve`;
+          const rejectUrl = `${baseUrl}/approve?type=gate_pass&id=${encodeURIComponent(docId)}&action=reject`;
+          setEmailModalResult({
+            success: false,
+            notConfigured: true,
+            message: err.message || 'Lỗi kết nối máy chủ gửi email',
+            approveUrl,
+            rejectUrl,
+            mailtoUrl: `mailto:${managerEmail}?subject=${encodeURIComponent(`[Long Khai] Phiếu ra vào cổng - ${currentUser.name}`)}&body=${encodeURIComponent(`Kính gửi Trưởng bộ phận,\n\nNhân viên ${currentUser.name} (${currentUser.id}) vừa tạo phiếu ra vào cổng ${docId}.\nThời gian: ${timeDesc}\nLý do: ${finalPurpose}\n\nLink duyệt đơn: ${approveUrl}\nLink từ chối: ${rejectUrl}`)}`,
+          });
+          setEmailModalRecipient(managerEmail);
+          setEmailModalDocId(docId);
+        });
+    } else {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://longkhai-portal.vercel.app';
+      const approveUrl = `${baseUrl}/approve?type=gate_pass&id=${encodeURIComponent(docId)}&action=approve`;
+      const rejectUrl = `${baseUrl}/approve?type=gate_pass&id=${encodeURIComponent(docId)}&action=reject`;
+      setEmailModalResult({
+        success: false,
+        notConfigured: true,
+        message: 'Chưa có thông tin Email Trưởng bộ phận trong hồ sơ nhân viên',
+        approveUrl,
+        rejectUrl,
+        mailtoUrl: `mailto:?subject=${encodeURIComponent(`[Long Khai] Phiếu ra vào cổng - ${currentUser.name}`)}&body=${encodeURIComponent(`Kính gửi Trưởng bộ phận,\n\nNhân viên ${currentUser.name} (${currentUser.id}) vừa tạo phiếu ra vào cổng ${docId}.\nThời gian: ${timeDesc}\nLý do: ${finalPurpose}\n\nLink duyệt đơn: ${approveUrl}\nLink từ chối: ${rejectUrl}`)}`,
+      });
+      setEmailModalRecipient('Chưa khai báo Email');
+      setEmailModalDocId(docId);
     }
 
     // Reset
@@ -1263,6 +1298,16 @@ export function GatePassView() {
           </div>
         </div>
       )}
+
+      {/* Email Notification / Fallback Modal */}
+      <EmailNotificationModal
+        isOpen={!!emailModalResult}
+        onClose={() => setEmailModalResult(null)}
+        result={emailModalResult}
+        recipientEmail={emailModalRecipient}
+        docId={emailModalDocId}
+        docTypeTitle="Phiếu Ra Vào Cổng"
+      />
     </div>
   );
 }

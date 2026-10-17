@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
 import { GitHubConfig, AuditLog } from '@/types/github';
@@ -88,12 +88,32 @@ export function SettingsView() {
     }
   };
 
-  const handleSaveEmailConfig = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetch('/api/email-config')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.smtpHost) {
+          setEmailConfig((prev) => ({ ...prev, ...data }));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleSaveEmailConfig = async (e: React.FormEvent) => {
     e.preventDefault();
     storage.saveEmailConfig(emailConfig, {
       id: currentUser?.id || 'ADMIN',
       name: currentUser?.name || 'Quản trị viên',
     });
+    try {
+      await fetch('/api/email-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(emailConfig),
+      });
+    } catch (err) {
+      console.warn('Could not persist email config to server:', err);
+    }
     setEmailSaveMsg({ success: true, text: 'Đã lưu cấu hình dịch vụ gửi Email thông báo thành công!' });
     setTimeout(() => setEmailSaveMsg(null), 4000);
   };
@@ -344,7 +364,51 @@ export function SettingsView() {
               </div>
             )}
 
-            <form onSubmit={handleSaveEmailConfig} className="space-y-3 text-xs">
+            <form onSubmit={handleSaveEmailConfig} className="space-y-3.5 text-xs">
+              {/* Quick Preset Selector */}
+              <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-2">
+                <span className="font-bold text-xs text-slate-800 dark:text-slate-200 block">
+                  ⚡ Chọn mẫu cấu hình nhanh theo dịch vụ thư của bạn:
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setEmailConfig((prev) => ({
+                        ...prev,
+                        provider: 'smtp',
+                        smtpHost: 'smtp.office365.com',
+                        smtpPort: 587,
+                        smtpSecure: false,
+                        senderName: prev.senderName || 'Cổng Thông Tin Long Khai',
+                      }))
+                    }
+                    className="px-3 py-1.5 rounded-xl border border-blue-300 dark:border-blue-700 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-bold text-xs hover:bg-blue-100 transition-colors flex items-center gap-1.5"
+                  >
+                    🏢 Mẫu Microsoft 365 (Khuyên dùng cho @longkhai.com.vn)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setEmailConfig((prev) => ({
+                        ...prev,
+                        provider: 'gmail',
+                        smtpHost: 'smtp.gmail.com',
+                        smtpPort: 465,
+                        smtpSecure: true,
+                        senderName: prev.senderName || 'Cổng Thông Tin Long Khai',
+                      }))
+                    }
+                    className="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-bold text-xs hover:bg-slate-100 transition-colors flex items-center gap-1.5"
+                  >
+                    ✉️ Mẫu Gmail (smtp.gmail.com:465)
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-500 leading-relaxed">
+                  <b>Khuyên dùng cho Long Khai:</b> Chọn mẫu <b>Microsoft 365</b> (Host: <code className="font-mono text-blue-600">smtp.office365.com</code>, Cổng: <code className="font-mono text-blue-600">587</code>), sau đó nhập tài khoản email gửi thư (ví dụ: <code className="font-mono text-blue-600">it@longkhai.com.vn</code> hoặc email thông báo công ty) và mật khẩu tài khoản (hoặc App Password).
+                </p>
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">

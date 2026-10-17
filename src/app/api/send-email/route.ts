@@ -1,6 +1,51 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import fs from 'fs';
+import path from 'path';
 import { EmailConfig } from '@/types/email';
+
+const CONFIG_PATH = path.join(process.cwd(), 'company-data', 'settings', 'email-config.json');
+
+function resolveServerEmailConfig(clientConfig?: EmailConfig): EmailConfig {
+  const envConfig: EmailConfig = {
+    provider: 'smtp',
+    smtpHost: process.env.SMTP_HOST || '',
+    smtpPort: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : undefined,
+    smtpSecure: process.env.SMTP_PORT === '465',
+    smtpUser: process.env.SMTP_USER || '',
+    smtpPassword: process.env.SMTP_PASSWORD || '',
+    senderName: process.env.SMTP_FROM_NAME || 'Cổng Thông Tin Long Khai',
+    senderEmail: process.env.SMTP_FROM_EMAIL || '',
+    resendApiKey: process.env.RESEND_API_KEY || '',
+    isEnabled: true,
+  };
+
+  // 1. If payload provides credentials, use them
+  if (clientConfig?.smtpUser && clientConfig?.smtpPassword) {
+    return { ...envConfig, ...clientConfig };
+  }
+
+  // 2. Read from company-data/settings/email-config.json on disk
+  try {
+    if (fs.existsSync(CONFIG_PATH)) {
+      const fileData = fs.readFileSync(CONFIG_PATH, 'utf-8');
+      const parsed = JSON.parse(fileData);
+      return {
+        ...envConfig,
+        ...parsed,
+        // Override with any non-empty client config values
+        ...(clientConfig?.smtpHost ? { smtpHost: clientConfig.smtpHost } : {}),
+        ...(clientConfig?.smtpPort ? { smtpPort: clientConfig.smtpPort } : {}),
+        ...(clientConfig?.smtpUser ? { smtpUser: clientConfig.smtpUser } : {}),
+        ...(clientConfig?.smtpPassword && clientConfig.smtpPassword !== '********' ? { smtpPassword: clientConfig.smtpPassword } : {}),
+      };
+    }
+  } catch (err: any) {
+    console.warn('Lỗi đọc email-config.json trên máy chủ:', err.message);
+  }
+
+  return { ...envConfig, ...(clientConfig || {}) };
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,23 +67,29 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Determine SMTP configuration (From payload, or from environment variables)
-    const host = emailConfig?.smtpHost || process.env.SMTP_HOST || 'smtp.gmail.com';
-    const port = Number(emailConfig?.smtpPort || process.env.SMTP_PORT || 465);
-    const user = emailConfig?.smtpUser || process.env.SMTP_USER || '';
-    const pass = emailConfig?.smtpPassword || process.env.SMTP_PASSWORD || '';
-    const senderName = emailConfig?.senderName || 'Cổng Thông Tin Long Khai';
-    const senderEmail = emailConfig?.senderEmail || user || 'no-reply@longkhai.vn';
+    const activeConfig = resolveServerEmailConfig(emailConfig);
+    const host = activeConfig.smtpHost || 'smtp.office365.com';
+    const port = Number(activeConfig.smtpPort || 587);
+    const user = activeConfig.smtpUser?.trim();
+    const pass = activeConfig.smtpPassword?.trim();
+    const senderName = activeConfig.senderName || 'Cổng Thông Tin Long Khai';
+    const senderEmail = activeConfig.senderEmail || user || 'no-reply@longkhai.vn';
 
-    // If SMTP credentials are provided, send through nodemailer
-    if (user && pass) {
+    // 1. If SMTP credentials (user and password) are provided
+    if (user && pass && pass !== '********') {
+      const isPort465 = port === 465;
+
       const transporter = nodemailer.createTransport({
         host,
         port,
-        secure: port === 465, // true for 465, false for other ports
+        secure: isPort465, // true for 465, false for 587 / 25
         auth: {
           user,
           pass,
+        },
+        tls: {
+          ciphers: 'SSLv3',
+          rejectUnauthorized: false,
         },
       });
 
@@ -55,13 +106,13 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // If Resend API Key is provided
-    const resendKey = emailConfig?.resendApiKey || process.env.RESEND_API_KEY;
+    // 2. If Resend API Key is provided
+    const resendKey = activeConfig.resendApiKey || process.env.RESEND_API_KEY;
     if (resendKey) {
       const resendRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${resendKey}`,
+          Authorization: `Bearer ${resendKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -83,19 +134,19 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // If no credentials configured yet -> simulated success with note
-    console.log(`[SIMULATED EMAIL] To: ${toEmail} | Subject: ${subject}`);
+    // 3. Neither SMTP nor Resend key is configured -> Return notConfigured
+    console.log(`[EMAIL NOT CONFIGURED] Cannot send to: ${toEmail} | Subject: ${subject}`);
     return NextResponse.json({
-      success: true,
-      simulated: true,
-      message: `Đã ghi nhận yêu cầu gửi email tới Trưởng BP (${toEmail}). (Ghi chú: Cần nhập tài khoản & mật khẩu ứng dụng Gmail / SMTP trong mục 'Cài đặt hệ thống' để hệ thống gửi thư thực tế ra hòm thư Internet).`,
+      success: false,
+      notConfigured: true,
+      message: `Hệ thống chưa được thiết lập tài khoản gửi Email (SMTP). Vui lòng vào Cài Đặt Hệ Thống -> Cấu hình Email để cài đặt tài khoản gửi thư (Gmail hoặc Microsoft 365 / Office 365).`,
     });
   } catch (error: any) {
     console.error('Lỗi API send-email:', error);
     return NextResponse.json(
       {
         success: false,
-        message: `Lỗi máy chủ gửi email: ${error.message || 'Không xác định'}`,
+        message: `Lỗi kết nối máy chủ gửi mail: ${error.message || 'Không xác định'}`,
       },
       { status: 500 }
     );

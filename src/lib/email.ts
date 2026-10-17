@@ -1,7 +1,39 @@
 import { storage } from './storage';
 import { SendEmailPayload, EmailConfig } from '@/types/email';
 
-export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: string): { subject: string; html: string } {
+export function generateMailtoUrl(payload: SendEmailPayload, baseUrl: string): string {
+  const isLeave = payload.type === 'leave';
+  const typeTitle = isLeave ? 'ĐƠN XIN NGHỈ PHÉP' : 'PHIẾU RA - VÀO CỔNG';
+  const subject = `[Long Khai Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
+
+  const approveUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=approve`;
+  const rejectUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=reject`;
+
+  const detailsText = payload.details.items.map((i) => `• ${i.label}: ${i.value}`).join('\n');
+
+  const body = `Kính gửi ${payload.managerName || 'Trưởng bộ phận'},
+
+Nhân viên ${payload.employeeName} (Mã NV: ${payload.employeeId}) thuộc ${payload.department} vừa gửi yêu cầu: ${typeTitle} (Mã: ${payload.docId}).
+
+CHI TIẾT YÊU CẦU:
+${detailsText}
+
+--------------------------------------------------
+👉 BẤM VÀO ĐÂY ĐỂ PHÊ DUYỆT ĐƠN:
+${approveUrl}
+
+👉 BẤM VÀO ĐÂY ĐỂ TỪ CHỐI ĐƠN:
+${rejectUrl}
+--------------------------------------------------
+
+Trân trọng,
+Cổng Thông Tin Long Khai Portal
+${baseUrl}`;
+
+  return `mailto:${payload.toEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: string): { subject: string; html: string; approveUrl: string; rejectUrl: string } {
   const isLeave = payload.type === 'leave';
   const typeTitle = isLeave ? 'ĐƠN XIN NGHỈ PHÉP' : 'PHIẾU RA - VÀO CỔNG';
   const subject = `[Long Khai Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
@@ -122,20 +154,30 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
 </html>
   `;
 
-  return { subject, html };
+  return { subject, html, approveUrl, rejectUrl };
+}
+
+export interface DispatchEmailResult {
+  success: boolean;
+  notConfigured?: boolean;
+  message: string;
+  approveUrl: string;
+  rejectUrl: string;
+  mailtoUrl: string;
 }
 
 /**
  * Dispatch email via Next.js API route /api/send-email
  */
-export async function dispatchApprovalEmail(payload: SendEmailPayload): Promise<{ success: boolean; message: string }> {
+export async function dispatchApprovalEmail(payload: SendEmailPayload): Promise<DispatchEmailResult> {
+  const config = storage.getEmailConfig();
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const baseUrl = config.portalBaseUrl || origin || 'https://longkhai-portal.vercel.app';
+
+  const { subject, html, approveUrl, rejectUrl } = generateApprovalEmailHtml(payload, baseUrl);
+  const mailtoUrl = generateMailtoUrl(payload, baseUrl);
+
   try {
-    const config = storage.getEmailConfig();
-    const origin = typeof window !== 'undefined' ? window.location.origin : '';
-    const baseUrl = config.portalBaseUrl || origin || 'http://localhost:3000';
-
-    const { subject, html } = generateApprovalEmailHtml(payload, baseUrl);
-
     const res = await fetch('/api/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -151,12 +193,23 @@ export async function dispatchApprovalEmail(payload: SendEmailPayload): Promise<
     });
 
     const data = await res.json();
-    return data;
+    return {
+      success: data.success === true,
+      notConfigured: data.notConfigured,
+      message: data.message || (data.success ? 'Đã gửi email thành công' : 'Không thể gửi email'),
+      approveUrl,
+      rejectUrl,
+      mailtoUrl,
+    };
   } catch (err: any) {
     console.error('Lỗi dispatch email:', err);
     return {
       success: false,
+      notConfigured: false,
       message: err.message || 'Không thể kết nối đến máy chủ gửi email',
+      approveUrl,
+      rejectUrl,
+      mailtoUrl,
     };
   }
 }
