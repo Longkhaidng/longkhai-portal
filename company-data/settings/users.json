@@ -159,7 +159,6 @@
     "role": "security",
     "permissions": [
       "dashboard",
-      "leave",
       "attendance",
       "gate_pass",
       "announcements"
@@ -167,7 +166,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-17T03:09:17.197Z"
+    "updatedAt": "2026-10-17T03:22:43.723Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "107",
