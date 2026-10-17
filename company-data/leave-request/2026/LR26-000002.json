@@ -1,0 +1,25 @@
+{
+  "id": "LR26-000002",
+  "employeeId": "2265",
+  "employeeName": "Trần Lê Hữu Lực",
+  "department": "Phòng Hành Chính Nhân Sự",
+  "leaveType": "phep_nam",
+  "fromDate": "2026-10-19",
+  "toDate": "2026-10-20",
+  "totalDays": 2,
+  "reason": "bận việc",
+  "emergencyContact": "0935198776",
+  "status": "pending",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận phê duyệt",
+      "roleRequired": "manager",
+      "approverId": "1139",
+      "approverName": "Võ Thị Tuyết",
+      "status": "pending"
+    }
+  ],
+  "createdAt": "2026-10-17T05:35:34.584Z",
+  "updatedAt": "2026-10-17T05:35:34.584Z"
+}
