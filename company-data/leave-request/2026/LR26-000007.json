@@ -1,0 +1,23 @@
+{
+  "id": "LR26-000007",
+  "employeeId": "1051",
+  "employeeName": "Ngô Thị Cường",
+  "department": "Phân xưởng hoàn thành",
+  "leaveType": "phep_nam",
+  "fromDate": "2026-10-19",
+  "toDate": "2026-10-20",
+  "totalDays": 2,
+  "reason": "bận việc",
+  "status": "pending",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận phê duyệt",
+      "roleRequired": "manager",
+      "approverName": "Trưởng phòng / Quản lý",
+      "status": "pending"
+    }
+  ],
+  "createdAt": "2026-10-17T06:50:09.352Z",
+  "updatedAt": "2026-10-17T06:50:09.352Z"
+}
