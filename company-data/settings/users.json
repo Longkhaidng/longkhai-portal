@@ -830,7 +830,7 @@
   {
     "id": "1139",
     "name": "Võ Thị Tuyết",
-    "department": "HCNS",
+    "department": "Phòng Hành Chính Nhân Sự",
     "position": "Chuyên viên hành chính nhân sự",
     "role": "employee",
     "permissions": [
@@ -843,7 +843,10 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:26:14.920Z",
+    "email": "tuyet.vo@longkhai.com.vn",
+    "departmentHeadId": "1867",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn"
   },
   {
     "id": "1147",
