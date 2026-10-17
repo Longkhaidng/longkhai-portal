@@ -229,8 +229,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-17T05:39:46.053Z",
-    "departmentHeadEmail": "it@longkhai.com.vn"
+    "updatedAt": "2026-10-17T05:44:03.427Z",
+    "departmentHeadEmail": "it@longkhai.com.vn",
+    "departmentHeadId": "1867"
   },
   {
     "id": "1005",
