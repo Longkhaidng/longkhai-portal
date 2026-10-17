@@ -1012,7 +1012,7 @@
   {
     "id": "1253",
     "name": "Trần Dy Khanh",
-    "department": "PX Dệt",
+    "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -KTD",
     "role": "employee",
     "permissions": [
@@ -1025,7 +1025,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:30:41.543Z",
+    "departmentHeadId": "1030",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn"
   },
   {
     "id": "1255",
