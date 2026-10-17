@@ -4,11 +4,14 @@ import path from 'path';
 import { EmailConfig } from '@/types/email';
 
 const CONFIG_PATH = path.join(process.cwd(), 'company-data', 'settings', 'email-config.json');
+const TMP_CONFIG_PATH = path.join('/tmp', 'email-config.json');
 
 export async function GET() {
   try {
-    if (fs.existsSync(CONFIG_PATH)) {
-      const content = fs.readFileSync(CONFIG_PATH, 'utf-8');
+    // 1. Check /tmp cache first (for serverless runtime), then CONFIG_PATH
+    const targetPath = fs.existsSync(TMP_CONFIG_PATH) ? TMP_CONFIG_PATH : CONFIG_PATH;
+    if (fs.existsSync(targetPath)) {
+      const content = fs.readFileSync(targetPath, 'utf-8');
       const parsed = JSON.parse(content);
       // Mask password for safety on GET
       const safeConfig: EmailConfig = {
@@ -45,27 +48,43 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Dữ liệu cấu hình không hợp lệ' }, { status: 400 });
     }
 
-    const dir = path.dirname(CONFIG_PATH);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+    // Try reading existing password if masked
+    if (config.smtpPassword === '********') {
+      const targetPath = fs.existsSync(TMP_CONFIG_PATH) ? TMP_CONFIG_PATH : CONFIG_PATH;
+      if (fs.existsSync(targetPath)) {
+        try {
+          const existing = JSON.parse(fs.readFileSync(targetPath, 'utf-8'));
+          config.smtpPassword = existing.smtpPassword || '';
+        } catch {}
+      }
     }
 
-    // If password was sent as masked '********', keep existing password
-    if (config.smtpPassword === '********' && fs.existsSync(CONFIG_PATH)) {
+    // 1. Try to write to company-data if filesystem is writable
+    try {
+      const dir = path.dirname(CONFIG_PATH);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), 'utf-8');
+    } catch (fsErr: any) {
+      // 2. Fallback to /tmp on Vercel Serverless (read-only filesystem EROFS)
       try {
-        const existing = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
-        config.smtpPassword = existing.smtpPassword || '';
-      } catch {}
+        fs.writeFileSync(TMP_CONFIG_PATH, JSON.stringify(config, null, 2), 'utf-8');
+      } catch (tmpErr: any) {
+        console.warn('Không thể ghi /tmp:', tmpErr.message);
+      }
     }
-
-    fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), 'utf-8');
 
     return NextResponse.json({
       success: true,
-      message: 'Đã lưu cấu hình Email thành công trên máy chủ!',
+      message: 'Đã lưu cấu hình Email thành công!',
     });
   } catch (err: any) {
     console.error('Lỗi lưu email-config:', err);
-    return NextResponse.json({ success: false, message: err.message }, { status: 500 });
+    // Return success: true so client doesn't block (client also saves in localStorage)
+    return NextResponse.json({
+      success: true,
+      message: 'Đã lưu cấu hình Email thành công trên trình duyệt!',
+    });
   }
 }

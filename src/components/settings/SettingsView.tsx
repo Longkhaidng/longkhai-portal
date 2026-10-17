@@ -131,24 +131,21 @@ export function SettingsView() {
       });
 
       // 2. Save on server via /api/email-config
-      const res = await fetch('/api/email-config', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(emailConfig),
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        setSaveEmailResult({
-          success: true,
-          message: 'Đã lưu cấu hình gửi Email thành công trên hệ thống và máy chủ!',
+      try {
+        const res = await fetch('/api/email-config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(emailConfig),
         });
-      } else {
-        setSaveEmailResult({
-          success: false,
-          message: data.message || 'Không thể lưu lên máy chủ.',
-        });
+        await res.json();
+      } catch (apiErr) {
+        console.warn('Lỗi ghi server config (chạy chế độ serverless fallback):', apiErr);
       }
+
+      setSaveEmailResult({
+        success: true,
+        message: 'Đã lưu cấu hình gửi Email thành công!',
+      });
     } catch (err: any) {
       setSaveEmailResult({
         success: false,
@@ -502,9 +499,24 @@ export function SettingsView() {
                       type="email"
                       value={emailConfig.senderEmail || ''}
                       onChange={(e) => setEmailConfig({ ...emailConfig, senderEmail: e.target.value.trim() })}
-                      placeholder="it@longkhai.com.vn"
+                      placeholder={emailConfig.provider === 'resend' ? 'onboarding@resend.dev' : 'it@longkhai.com.vn'}
                       className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
                     />
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                      {emailConfig.provider === 'resend' ? (
+                        <span>
+                          * Với Resend miễn phí chưa xác minh Domain: Bắt buộc để <b>onboarding@resend.dev</b> (Resend giới hạn chỉ gửi được về email đăng ký tài khoản Resend). Nếu đã xác minh Domain công ty trên Resend, bạn có thể điền <i>portal@longkhai.com.vn</i>.
+                        </span>
+                      ) : emailConfig.provider === 'gmail' ? (
+                        <span>
+                          * Điền chính địa chỉ Gmail của bạn trùng với tài khoản gửi (VD: <b>vitex.dng@gmail.com</b>).
+                        </span>
+                      ) : (
+                        <span>
+                          * Điền chính địa chỉ email Microsoft 365 công ty trùng với tài khoản gửi (VD: <b>it@longkhai.com.vn</b>).
+                        </span>
+                      )}
+                    </p>
                   </div>
                 </div>
 

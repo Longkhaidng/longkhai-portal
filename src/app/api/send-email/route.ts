@@ -5,6 +5,7 @@ import path from 'path';
 import { EmailConfig } from '@/types/email';
 
 const CONFIG_PATH = path.join(process.cwd(), 'company-data', 'settings', 'email-config.json');
+const TMP_CONFIG_PATH = path.join('/tmp', 'email-config.json');
 
 function resolveServerEmailConfig(clientConfig?: EmailConfig): EmailConfig {
   const envConfig: EmailConfig = {
@@ -20,24 +21,25 @@ function resolveServerEmailConfig(clientConfig?: EmailConfig): EmailConfig {
     isEnabled: true,
   };
 
-  // 1. If payload provides credentials, use them
-  if (clientConfig?.smtpUser && clientConfig?.smtpPassword) {
+  // 1. If payload provides credentials or Resend API key directly from client, prioritize it!
+  if (clientConfig?.resendApiKey || (clientConfig?.smtpUser && clientConfig?.smtpPassword)) {
     return { ...envConfig, ...clientConfig };
   }
 
-  // 2. Read from company-data/settings/email-config.json on disk
+  // 2. Read from /tmp or company-data/settings/email-config.json on disk
   try {
-    if (fs.existsSync(CONFIG_PATH)) {
-      const fileData = fs.readFileSync(CONFIG_PATH, 'utf-8');
+    const targetFile = fs.existsSync(TMP_CONFIG_PATH) ? TMP_CONFIG_PATH : CONFIG_PATH;
+    if (fs.existsSync(targetFile)) {
+      const fileData = fs.readFileSync(targetFile, 'utf-8');
       const parsed = JSON.parse(fileData);
       return {
         ...envConfig,
         ...parsed,
-        // Override with any non-empty client config values
-        ...(clientConfig?.smtpHost ? { smtpHost: clientConfig.smtpHost } : {}),
-        ...(clientConfig?.smtpPort ? { smtpPort: clientConfig.smtpPort } : {}),
-        ...(clientConfig?.smtpUser ? { smtpUser: clientConfig.smtpUser } : {}),
-        ...(clientConfig?.smtpPassword && clientConfig.smtpPassword !== '********' ? { smtpPassword: clientConfig.smtpPassword } : {}),
+        ...(clientConfig || {}),
+        smtpPassword:
+          clientConfig?.smtpPassword && clientConfig.smtpPassword !== '********'
+            ? clientConfig.smtpPassword
+            : parsed.smtpPassword || '',
       };
     }
   } catch (err: any) {
