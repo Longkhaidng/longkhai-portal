@@ -526,8 +526,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-17T04:16:22.018Z",
-    "teamLeaderId": "2830"
+    "updatedAt": "2026-10-17T04:16:56.513Z",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051"
   },
   {
     "id": "1061",
