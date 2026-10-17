@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { storage } from '@/lib/storage';
 import { LeaveRequest } from '@/types/leave';
 import { GatePass } from '@/types/gatePass';
+import { AttendanceConfirm, ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { formatDateTime, formatDate } from '@/lib/utils';
 import {
   CheckCircle2,
@@ -22,7 +23,7 @@ import {
 
 function QuickApprovalContent() {
   const searchParams = useSearchParams();
-  const type = searchParams.get('type') as 'leave' | 'gate_pass' | null;
+  const type = searchParams.get('type') as 'leave' | 'gate_pass' | 'attendance' | null;
   const id = searchParams.get('id');
   const initialAction = searchParams.get('action') as 'approve' | 'reject' | null;
 
@@ -35,6 +36,7 @@ function QuickApprovalContent() {
 
   const [leave, setLeave] = useState<LeaveRequest | null>(null);
   const [gatePass, setGatePass] = useState<GatePass | null>(null);
+  const [attendance, setAttendance] = useState<AttendanceConfirm | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,6 +53,10 @@ function QuickApprovalContent() {
       const all = storage.getGatePasses();
       const found = all.find((g) => g.id.toUpperCase() === id.toUpperCase());
       setGatePass(found || null);
+    } else if (type === 'attendance') {
+      const all = storage.getAttendanceConfirms();
+      const found = all.find((a) => a.id.toUpperCase() === id.toUpperCase());
+      setAttendance(found || null);
     }
     setLoading(false);
   }, [id, type]);
@@ -93,6 +99,26 @@ function QuickApprovalContent() {
       setGatePass(updated);
       setIsSubmitted(true);
       setSubmitMessage(`✓ Đã phê duyệt Phiếu ra - vào cổng ${updated.id} thành công!`);
+    } else if (type === 'attendance' && attendance) {
+      const updated: AttendanceConfirm = { ...attendance };
+      const step = updated.steps[updated.currentStepIndex];
+      if (step) {
+        step.status = 'approved';
+        step.approverName = 'Trưởng bộ phận (Phê duyệt qua Email)';
+        step.comment = approvalNote.trim() || 'Đồng ý phê duyệt';
+        step.actionAt = now;
+      }
+      if (updated.currentStepIndex + 1 < updated.steps.length) {
+        updated.currentStepIndex += 1;
+      } else {
+        updated.status = 'approved';
+      }
+      updated.updatedAt = now;
+
+      storage.saveAttendanceConfirm(updated, { id: 'MGR_EMAIL', name: 'Trưởng bộ phận' });
+      setAttendance(updated);
+      setIsSubmitted(true);
+      setSubmitMessage(`✓ Đã phê duyệt Phiếu xác nhận công ${updated.id} thành công!`);
     }
   };
 
@@ -135,6 +161,22 @@ function QuickApprovalContent() {
       setGatePass(updated);
       setIsSubmitted(true);
       setSubmitMessage(`✕ Đã từ chối Phiếu ra - vào cổng ${updated.id}. Lý do từ chối đã được gửi đến nhân viên.`);
+    } else if (type === 'attendance' && attendance) {
+      const updated: AttendanceConfirm = { ...attendance };
+      const step = updated.steps[updated.currentStepIndex];
+      if (step) {
+        step.status = 'rejected';
+        step.approverName = 'Trưởng bộ phận (Từ chối qua Email)';
+        step.comment = rejectionReason.trim();
+        step.actionAt = now;
+      }
+      updated.status = 'rejected';
+      updated.updatedAt = now;
+
+      storage.saveAttendanceConfirm(updated, { id: 'MGR_EMAIL', name: 'Trưởng bộ phận' });
+      setAttendance(updated);
+      setIsSubmitted(true);
+      setSubmitMessage(`✕ Đã từ chối Phiếu xác nhận công ${updated.id}. Lý do từ chối đã được gửi đến nhân viên.`);
     }
   };
 
@@ -146,7 +188,7 @@ function QuickApprovalContent() {
     );
   }
 
-  const record = type === 'leave' ? leave : gatePass;
+  const record = type === 'leave' ? leave : type === 'attendance' ? attendance : gatePass;
 
   if (!record || !id || !type) {
     return (
@@ -240,7 +282,7 @@ function QuickApprovalContent() {
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-lg bg-blue-100 text-blue-800 font-bold text-[10px] uppercase">
-                {type === 'leave' ? 'Nghỉ phép' : 'Ra vào cổng'}
+                {type === 'leave' ? 'Nghỉ phép' : type === 'attendance' ? 'Xác nhận công' : 'Ra vào cổng'}
               </span>
             </div>
 
@@ -274,6 +316,37 @@ function QuickApprovalContent() {
                       <span className="font-semibold text-slate-800">{leave.handoverPerson}</span>
                     </div>
                   )}
+                </>
+              )}
+
+              {type === 'attendance' && attendance && (
+                <>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Sự cố chấm công:</span>
+                    <span className="font-bold text-amber-700">
+                      {ISSUE_TYPE_LABELS[attendance.issueType]?.text || attendance.issueType}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Ngày làm việc:</span>
+                    <span className="font-semibold text-slate-800">{formatDate(attendance.date)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Ca làm việc:</span>
+                    <span className="font-semibold text-slate-800">{attendance.shift}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Giờ vào - ra thực tế:</span>
+                    <span className="font-semibold text-slate-800">
+                      Vào: {attendance.checkInTime} - Ra: {attendance.checkOutTime}
+                    </span>
+                  </div>
+                  <div className="pt-1">
+                    <span className="text-slate-400 block mb-0.5">Lý do giải trình:</span>
+                    <p className="bg-white p-2.5 rounded-xl border border-slate-200 text-slate-800 font-medium italic">
+                      "{attendance.reason}"
+                    </p>
+                  </div>
                 </>
               )}
 

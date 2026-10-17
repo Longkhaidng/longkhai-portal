@@ -2,8 +2,12 @@ import { storage } from './storage';
 import { SendEmailPayload, EmailConfig } from '@/types/email';
 
 export function generateMailtoUrl(payload: SendEmailPayload, baseUrl: string): string {
-  const isLeave = payload.type === 'leave';
-  const typeTitle = isLeave ? 'ĐƠN XIN NGHỈ PHÉP' : 'PHIẾU RA - VÀO CỔNG';
+  const typeTitle =
+    payload.type === 'leave'
+      ? 'ĐƠN XIN NGHỈ PHÉP'
+      : payload.type === 'attendance'
+      ? 'PHIẾU XÁC NHẬN CÔNG'
+      : 'PHIẾU RA - VÀO CỔNG';
   const subject = `[Long Khai Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
 
   const approveUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=approve`;
@@ -34,8 +38,12 @@ ${baseUrl}`;
 }
 
 export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: string): { subject: string; html: string; approveUrl: string; rejectUrl: string } {
-  const isLeave = payload.type === 'leave';
-  const typeTitle = isLeave ? 'ĐƠN XIN NGHỈ PHÉP' : 'PHIẾU RA - VÀO CỔNG';
+  const typeTitle =
+    payload.type === 'leave'
+      ? 'ĐƠN XIN NGHỈ PHÉP'
+      : payload.type === 'attendance'
+      ? 'PHIẾU XÁC NHẬN CÔNG'
+      : 'PHIẾU RA - VÀO CỔNG';
   const subject = `[Long Khai Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
 
   const approveUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=approve`;

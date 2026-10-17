@@ -180,11 +180,13 @@ export function GatePassView() {
 
     // Look up manager's email to dispatch approval email
     const allUsers = storage.getUsers();
-    let managerEmail = currentUser.departmentHeadEmail;
+    const freshUser = allUsers.find((u) => u.id.toLowerCase() === currentUser.id.toLowerCase()) || currentUser;
+    let managerEmail = freshUser.departmentHeadEmail || currentUser.departmentHeadEmail;
     let managerName = 'Trưởng bộ phận';
 
-    if (!managerEmail && currentUser.departmentHeadId) {
-      const mgr = allUsers.find((u) => u.id.toLowerCase() === currentUser.departmentHeadId?.toLowerCase());
+    const targetHeadId = freshUser.departmentHeadId || currentUser.departmentHeadId;
+    if (!managerEmail && targetHeadId) {
+      const mgr = allUsers.find((u) => u.id.toLowerCase() === targetHeadId.toLowerCase());
       if (mgr?.email) {
         managerEmail = mgr.email;
         managerName = mgr.name;
@@ -193,7 +195,7 @@ export function GatePassView() {
 
     if (!managerEmail) {
       const allDepts = storage.getDepartments();
-      const myDept = allDepts.find((d) => d.name === currentUser.department);
+      const myDept = allDepts.find((d) => d.name === (freshUser.department || currentUser.department));
       if (myDept?.managerId) {
         const mgr = allUsers.find((u) => u.id.toLowerCase() === myDept.managerId?.toLowerCase());
         if (mgr?.email) {
@@ -239,9 +241,18 @@ export function GatePassView() {
             },
           ],
         },
+      }).then((res) => {
+        if (res.success) {
+          alert(`✓ Đã tạo phiếu ra vào cổng thành công!\nĐã gửi email thông báo phê duyệt đến Trưởng bộ phận: ${managerEmail}`);
+        } else {
+          const openMail = confirm(
+            `✓ Đã tạo phiếu ra vào cổng ${docId} thành công trên hệ thống!\n\nLưu ý: Máy chủ gửi email chưa được cấu hình tài khoản gửi (SMTP / Resend) nên chưa chuyển email tự động được.\n\nBạn có muốn mở Outlook / Ứng dụng Mail trên máy để gửi ngay đường link phê duyệt đến Trưởng bộ phận (${managerEmail}) không?`
+          );
+          if (openMail && res.mailtoUrl) {
+            window.location.href = res.mailtoUrl;
+          }
+        }
       }).catch(console.error);
-
-      alert(`✓ Đã tạo phiếu ra vào cổng thành công!\nYêu cầu phê duyệt đã được tự động gửi đến Email Trưởng bộ phận: ${managerEmail}`);
     } else {
       alert('✓ Đã tạo phiếu ra vào cổng thành công!');
     }
@@ -258,9 +269,27 @@ export function GatePassView() {
     setHasAssets(false);
   };
 
+  // Check if current user can approve this gate pass
+  const canApproveGatePass = (pass: GatePass): boolean => {
+    if (!currentUser || pass.status !== 'pending') return false;
+
+    // 1. Employee cannot self-approve their own pass
+    if (pass.employeeId.toLowerCase() === currentUser.id.toLowerCase()) return false;
+
+    // 2. Only team leader, department head (manager), or admin (Ban giám đốc) can approve
+    const isApproverRole = currentUser.role === 'admin' || currentUser.role === 'manager' || currentUser.role === 'team_leader';
+    if (!isApproverRole) return false;
+
+    return true;
+  };
+
   // Manager Approve
   const handleManagerApprove = async (pass: GatePass) => {
     if (!currentUser) return;
+    if (!canApproveGatePass(pass)) {
+      alert('Bạn không có quyền phê duyệt phiếu này! (Người tạo phiếu không được tự phê duyệt; chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền phê duyệt).');
+      return;
+    }
     const updated: GatePass = {
       ...pass,
       status: 'approved',
@@ -277,6 +306,10 @@ export function GatePassView() {
   // Manager Reject
   const handleManagerReject = async (pass: GatePass) => {
     if (!currentUser) return;
+    if (!canApproveGatePass(pass)) {
+      alert('Bạn không có quyền từ chối phiếu này! (Chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền xử lý).');
+      return;
+    }
     if (!passRejectionReason.trim()) {
       alert('Vui lòng nhập lý do từ chối phiếu!');
       return;
@@ -1183,7 +1216,7 @@ export function GatePassView() {
             </div>
 
             {/* Manager approval / reject actions */}
-            {selectedPass.status === 'pending' && (
+            {selectedPass.status === 'pending' && canApproveGatePass(selectedPass) && (
               <div className="p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-200 dark:border-amber-900/40 space-y-2">
                 <span className="text-xs font-bold text-amber-900 dark:text-amber-300 block">
                   Phê duyệt phiếu ra cổng:
@@ -1240,6 +1273,18 @@ export function GatePassView() {
                     </div>
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Waiting Notice for employees or non-approvers */}
+            {selectedPass.status === 'pending' && !canApproveGatePass(selectedPass) && (
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 text-xs text-slate-500 flex items-center gap-2">
+                <Clock className="w-4 h-4 text-amber-500 shrink-0" />
+                <span>
+                  {selectedPass.employeeId.toLowerCase() === currentUser?.id.toLowerCase()
+                    ? 'Phiếu đang chờ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc phê duyệt (Người tạo phiếu không được tự phê duyệt phiếu của chính mình).'
+                    : 'Phiếu đang chờ phê duyệt từ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc.'}
+                </span>
               </div>
             )}
 

@@ -82,13 +82,12 @@ export async function POST(req: NextRequest) {
       const transporter = nodemailer.createTransport({
         host,
         port,
-        secure: isPort465, // true for 465, false for 587 / 25
+        secure: isPort465, // true for 465, false for 587
         auth: {
           user,
           pass,
         },
         tls: {
-          ciphers: 'SSLv3',
           rejectUnauthorized: false,
         },
       });
@@ -109,6 +108,10 @@ export async function POST(req: NextRequest) {
     // 2. If Resend API Key is provided
     const resendKey = activeConfig.resendApiKey || process.env.RESEND_API_KEY;
     if (resendKey) {
+      const fromAddress = activeConfig.senderEmail && activeConfig.senderEmail.includes('@')
+        ? `"${senderName}" <${activeConfig.senderEmail}>`
+        : `"${senderName}" <onboarding@resend.dev>`;
+
       const resendRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -116,7 +119,7 @@ export async function POST(req: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: `${senderName} <onboarding@resend.dev>`,
+          from: fromAddress,
           to: [toEmail],
           subject,
           html,
@@ -174,14 +177,14 @@ export async function POST(req: NextRequest) {
         });
       }
     } catch (mxErr: any) {
-      console.warn(`[DIRECT MX FAILED/FALLBACK] To: ${toEmail} - ${mxErr.message}`);
+      console.warn(`[DIRECT MX FAILED] To: ${toEmail} - ${mxErr.message}`);
     }
 
-    // 4. Fallback: Log and acknowledge delivery without interrupting user
-    console.log(`[AUTO-EMAIL DISPATCHED] To: ${toEmail} | Subject: ${subject}`);
+    // 4. If neither SMTP, Resend, nor MX succeeded: notify client accurately
     return NextResponse.json({
-      success: true,
-      message: `Đã tự động ghi nhận và chuyển tiếp thông báo đến Trưởng bộ phận (${toEmail})`,
+      success: false,
+      notConfigured: true,
+      message: `Chưa cấu hình tài khoản gửi Email (SMTP/Resend) trong Cài đặt hệ thống, hoặc máy chủ không thể gửi trực tiếp qua cổng 25 (môi trường máy chủ Vercel chặn cổng 25). Vui lòng cấu hình tài khoản gửi email trong mục Cài Đặt.`,
     });
   } catch (error: any) {
     console.error('Lỗi API send-email:', error);

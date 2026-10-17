@@ -124,11 +124,13 @@ export function LeaveView() {
 
     // Look up manager's email to dispatch approval email
     const allUsers = storage.getUsers();
-    let managerEmail = currentUser.departmentHeadEmail;
+    const freshUser = allUsers.find((u) => u.id.toLowerCase() === currentUser.id.toLowerCase()) || currentUser;
+    let managerEmail = freshUser.departmentHeadEmail || currentUser.departmentHeadEmail;
     let managerName = deptHeadUser?.name || 'Trưởng bộ phận';
 
-    if (!managerEmail && currentUser.departmentHeadId) {
-      const mgr = allUsers.find((u) => u.id.toLowerCase() === currentUser.departmentHeadId?.toLowerCase());
+    const targetHeadId = freshUser.departmentHeadId || currentUser.departmentHeadId;
+    if (!managerEmail && targetHeadId) {
+      const mgr = allUsers.find((u) => u.id.toLowerCase() === targetHeadId.toLowerCase());
       if (mgr?.email) {
         managerEmail = mgr.email;
         managerName = mgr.name;
@@ -137,7 +139,7 @@ export function LeaveView() {
 
     if (!managerEmail) {
       const allDepts = storage.getDepartments();
-      const myDept = allDepts.find((d) => d.name === currentUser.department);
+      const myDept = allDepts.find((d) => d.name === (freshUser.department || currentUser.department));
       if (myDept?.managerId) {
         const mgr = allUsers.find((u) => u.id.toLowerCase() === myDept.managerId?.toLowerCase());
         if (mgr?.email) {
@@ -169,9 +171,18 @@ export function LeaveView() {
             { label: 'SĐT liên hệ khẩn cấp', value: emergencyContact || currentUser.phone || 'Không có' },
           ],
         },
+      }).then((res) => {
+        if (res.success) {
+          alert(`✓ Đã tạo đơn xin nghỉ phép thành công!\nĐã gửi email thông báo phê duyệt đến Trưởng bộ phận: ${managerEmail}`);
+        } else {
+          const openMail = confirm(
+            `✓ Đã tạo đơn xin nghỉ phép ${docId} thành công trên hệ thống!\n\nLưu ý: Máy chủ gửi email chưa được cấu hình tài khoản gửi (SMTP / Resend) nên chưa chuyển email tự động được.\n\nBạn có muốn mở Outlook / Ứng dụng Mail trên máy để gửi ngay đường link phê duyệt đến Trưởng bộ phận (${managerEmail}) không?`
+          );
+          if (openMail && res.mailtoUrl) {
+            window.location.href = res.mailtoUrl;
+          }
+        }
       }).catch(console.error);
-
-      alert(`✓ Đã tạo đơn xin nghỉ phép thành công!\nYêu cầu phê duyệt đã được tự động gửi đến Email Trưởng bộ phận: ${managerEmail}`);
     } else {
       alert('✓ Đã tạo đơn xin nghỉ phép thành công!');
     }
@@ -184,13 +195,22 @@ export function LeaveView() {
   // Check if current user can approve the current step of this leave request
   const canApprove = (leave: LeaveRequest): boolean => {
     if (!currentUser || leave.status !== 'pending') return false;
-    if (currentUser.role === 'admin') return true; // Admin can always approve
+
+    // 1. Employee cannot self-approve their own request
+    if (leave.employeeId.toLowerCase() === currentUser.id.toLowerCase()) return false;
+
+    // 2. Only team leader, department head (manager), or admin (Ban giám đốc) can approve
+    const isApproverRole = currentUser.role === 'admin' || currentUser.role === 'manager' || currentUser.role === 'team_leader';
+    if (!isApproverRole) return false;
+
+    // Admin / Ban giám đốc can approve any step
+    if (currentUser.role === 'admin') return true;
 
     const currentStep = leave.steps[leave.currentStepIndex];
     if (!currentStep || currentStep.status !== 'pending') return false;
 
     // Match specifically by assigned approver ID, or matching role
-    if (currentStep.approverId && currentStep.approverId === currentUser.id) {
+    if (currentStep.approverId && currentStep.approverId.toLowerCase() === currentUser.id.toLowerCase()) {
       return true;
     }
     if (currentUser.role === 'manager' && currentStep.roleRequired === 'manager') {
@@ -205,6 +225,10 @@ export function LeaveView() {
   // Execute Approval
   const handleApproveStep = () => {
     if (!selectedLeave || !currentUser) return;
+    if (!canApprove(selectedLeave)) {
+      alert('Bạn không có quyền phê duyệt đơn này! (Không được tự phê duyệt đơn của chính mình; chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền phê duyệt).');
+      return;
+    }
     const updated = { ...selectedLeave };
     const currentStep = updated.steps[updated.currentStepIndex];
 
@@ -232,6 +256,10 @@ export function LeaveView() {
   // Execute Rejection
   const handleRejectStep = () => {
     if (!selectedLeave || !currentUser) return;
+    if (!canApprove(selectedLeave)) {
+      alert('Bạn không có quyền từ chối đơn này! (Chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền xử lý).');
+      return;
+    }
     if (!rejectionReason.trim()) {
       alert('Vui lòng nhập lý do từ chối!');
       return;
@@ -758,6 +786,17 @@ export function LeaveView() {
                     </div>
                   </div>
                 )}
+              </div>
+            )}
+
+            {selectedLeave.status === 'pending' && !canApprove(selectedLeave) && (
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 text-xs text-slate-500 flex items-center gap-2">
+                <Clock className="w-4 h-4 text-amber-500 shrink-0" />
+                <span>
+                  {selectedLeave.employeeId.toLowerCase() === currentUser?.id.toLowerCase()
+                    ? 'Đơn đang chờ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc phê duyệt (Người tạo đơn không được tự phê duyệt đơn của chính mình).'
+                    : 'Đơn đang chờ phê duyệt từ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc.'}
+                </span>
               </div>
             )}
 

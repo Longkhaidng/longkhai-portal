@@ -25,6 +25,7 @@ import {
   Building,
 } from 'lucide-react';
 import { formatDate, generateDocId } from '@/lib/utils';
+import { dispatchApprovalEmail } from '@/lib/email';
 
 export function AttendanceView() {
   const { currentUser } = useAuth();
@@ -129,6 +130,69 @@ export function AttendanceView() {
     storage.saveAttendanceConfirm(newConfirm, { id: currentUser.id, name: currentUser.name });
     setAttendances(storage.getAttendanceConfirms());
     setShowCreateModal(false);
+
+    // Look up manager's email to dispatch approval email
+    const allUsers = storage.getUsers();
+    const freshUser = allUsers.find((u) => u.id.toLowerCase() === currentUser.id.toLowerCase()) || currentUser;
+    let managerEmail = freshUser.departmentHeadEmail || currentUser.departmentHeadEmail;
+    let managerName = 'Trưởng bộ phận';
+
+    const targetHeadId = freshUser.departmentHeadId || currentUser.departmentHeadId;
+    if (!managerEmail && targetHeadId) {
+      const mgr = allUsers.find((u) => u.id.toLowerCase() === targetHeadId.toLowerCase());
+      if (mgr?.email) {
+        managerEmail = mgr.email;
+        managerName = mgr.name;
+      }
+    }
+
+    if (!managerEmail) {
+      const allDepts = storage.getDepartments();
+      const myDept = allDepts.find((d) => d.name === (freshUser.department || currentUser.department));
+      if (myDept?.managerId) {
+        const mgr = allUsers.find((u) => u.id.toLowerCase() === myDept.managerId?.toLowerCase());
+        if (mgr?.email) {
+          managerEmail = mgr.email;
+          managerName = mgr.name;
+        }
+      }
+    }
+
+    if (managerEmail) {
+      dispatchApprovalEmail({
+        toEmail: managerEmail,
+        managerName,
+        type: 'attendance',
+        docId,
+        employeeId: currentUser.id,
+        employeeName: currentUser.name,
+        department: currentUser.department,
+        details: {
+          title: 'Chi tiết Phiếu Xác Nhận Công Vào - Ra',
+          items: [
+            { label: 'Sự cố chấm công', value: ISSUE_TYPE_LABELS[issueType]?.text || issueType },
+            { label: 'Ngày cần xác nhận', value: formatDate(date) },
+            { label: 'Ca làm việc', value: finalShift },
+            { label: 'Thời gian vào - ra thực tế', value: `Vào: ${checkInTime} - Ra: ${checkOutTime}` },
+            { label: 'Lý do giải trình', value: reason },
+          ],
+        },
+      }).then((res) => {
+        if (res.success) {
+          alert(`✓ Đã tạo phiếu xác nhận công thành công!\nĐã gửi email thông báo phê duyệt đến Trưởng bộ phận: ${managerEmail}`);
+        } else {
+          const openMail = confirm(
+            `✓ Đã tạo phiếu xác nhận công ${docId} thành công trên hệ thống!\n\nLưu ý: Máy chủ gửi email chưa được cấu hình tài khoản gửi (SMTP / Resend) nên chưa chuyển email tự động được.\n\nBạn có muốn mở Outlook / Ứng dụng Mail trên máy để gửi ngay đường link phê duyệt đến Trưởng bộ phận (${managerEmail}) không?`
+          );
+          if (openMail && res.mailtoUrl) {
+            window.location.href = res.mailtoUrl;
+          }
+        }
+      }).catch(console.error);
+    } else {
+      alert('✓ Đã tạo phiếu xác nhận công thành công!');
+    }
+
     setReason('');
     setCustomShift('');
   };
@@ -136,17 +200,38 @@ export function AttendanceView() {
   // Check if current user can approve current step
   const canApprove = (att: AttendanceConfirm): boolean => {
     if (!currentUser || att.status !== 'pending') return false;
+
+    // 1. Employee cannot self-approve their own request
+    if (att.employeeId.toLowerCase() === currentUser.id.toLowerCase()) return false;
+
+    // 2. Only team leader, department head (manager), or admin (Ban giám đốc) can approve
+    const isApproverRole = currentUser.role === 'admin' || currentUser.role === 'manager' || currentUser.role === 'team_leader';
+    if (!isApproverRole) return false;
+
+    // Admin / Ban giám đốc can approve any step
     if (currentUser.role === 'admin') return true;
 
     const currentStep = att.steps[att.currentStepIndex];
     if (!currentStep || currentStep.status !== 'pending') return false;
 
-    return currentUser.role === currentStep.roleRequired;
+    // Manager can approve steps
+    if (currentUser.role === 'manager') return true;
+
+    // Team leader can approve
+    if (currentUser.role === 'team_leader') {
+      return true;
+    }
+
+    return false;
   };
 
   // Approve action
   const handleApprove = () => {
     if (!selectedItem || !currentUser) return;
+    if (!canApprove(selectedItem)) {
+      alert('Bạn không có quyền phê duyệt phiếu này! (Người tạo phiếu không được tự phê duyệt; chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền phê duyệt).');
+      return;
+    }
     const updated = { ...selectedItem };
     const step = updated.steps[updated.currentStepIndex];
 
@@ -172,6 +257,10 @@ export function AttendanceView() {
   // Reject action
   const handleReject = () => {
     if (!selectedItem || !currentUser) return;
+    if (!canApprove(selectedItem)) {
+      alert('Bạn không có quyền từ chối phiếu này! (Chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền xử lý).');
+      return;
+    }
     const reasonText = prompt('Nhập lý do từ chối:');
     if (!reasonText) return;
 
@@ -702,6 +791,17 @@ export function AttendanceView() {
                     ✕ Từ chối
                   </button>
                 </div>
+              </div>
+            )}
+
+            {selectedItem.status === 'pending' && !canApprove(selectedItem) && (
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 text-xs text-slate-500 flex items-center gap-2">
+                <Clock className="w-4 h-4 text-amber-500 shrink-0" />
+                <span>
+                  {selectedItem.employeeId.toLowerCase() === currentUser?.id.toLowerCase()
+                    ? 'Phiếu đang chờ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc phê duyệt (Người tạo phiếu không được tự phê duyệt phiếu của chính mình).'
+                    : 'Phiếu đang chờ phê duyệt từ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc.'}
+                </span>
               </div>
             )}
 
