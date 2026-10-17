@@ -375,7 +375,7 @@
   {
     "id": "1022",
     "name": "Phạm Thị Thư",
-    "department": "PX Dệt",
+    "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
     "permissions": [
@@ -388,7 +388,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T04:10:00.283Z",
+    "teamLeaderId": "2645",
+    "departmentHeadId": "1030"
   },
   {
     "id": "1025",
