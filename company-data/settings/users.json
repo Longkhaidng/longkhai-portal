@@ -1,5 +1,29 @@
 [
   {
+    "id": "2864",
+    "name": "Nguyễn Đình Linh",
+    "department": "Ban Giám Đốc",
+    "position": "Phụ trách sản xuất",
+    "role": "manager",
+    "phone": "0969050873",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn",
+    "permissions": [
+      "dashboard",
+      "leave",
+      "attendance",
+      "gate_pass",
+      "announcements",
+      "reports",
+      "forms",
+      "users"
+    ],
+    "allowedWebIntegrations": [],
+    "isActive": true,
+    "password": "LK@123456",
+    "createdAt": "2026-10-17T03:58:08.847Z",
+    "updatedAt": "2026-10-17T03:58:08.847Z"
+  },
+  {
     "id": "1867",
     "name": "Trương Anh Như Quỳnh",
     "department": "Ban Giám Đốc",
