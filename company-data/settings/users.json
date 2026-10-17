@@ -209,7 +209,7 @@
   {
     "id": "1005",
     "name": "Dương Thị Thanh",
-    "department": "HCNS",
+    "department": "Phòng Hành Chính Nhân Sự",
     "position": "Nhân viên dọn dẹp",
     "role": "employee",
     "permissions": [
@@ -222,7 +222,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-17T03:09:53.172Z",
+    "departmentHeadId": "1867"
   },
   {
     "id": "1008",
