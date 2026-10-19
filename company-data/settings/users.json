@@ -83,7 +83,8 @@
     "isActive": true,
     "password": "admin@123",
     "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-10-19T02:15:56.779Z"
+    "updatedAt": "2026-10-19T08:06:40.928Z",
+    "departmentHeadId": "1867"
   },
   {
     "id": "101",
