@@ -4997,7 +4997,7 @@
   {
     "id": "2855",
     "name": "Võ Thanh Hà",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
     "permissions": [
@@ -5010,7 +5010,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:16:20.876Z",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051"
   },
   {
     "id": "2856",
