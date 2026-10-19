@@ -4701,9 +4701,9 @@
   {
     "id": "2831",
     "name": "Trần Thị Thanh Diệu",
-    "department": "KCS",
+    "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Phụ trách KCS",
-    "role": "employee",
+    "role": "manager",
     "permissions": [
       "dashboard",
       "leave",
@@ -4714,7 +4714,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:12:29.980Z",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn"
   },
   {
     "id": "2834",
