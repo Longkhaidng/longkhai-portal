@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
 import {
@@ -33,6 +33,7 @@ import { formatDate, formatDateTime, generateDocId } from '@/lib/utils';
 import { generateQrDataUrl } from '@/lib/qr';
 import { dispatchApprovalEmail } from '@/lib/email';
 import { ToastContainer, useToast } from '@/components/common/Toast';
+import { filterUserGatePasses, isApproverRole, DocumentScope } from '@/lib/permissions';
 
 export function GatePassView() {
   const { currentUser } = useAuth();
@@ -41,11 +42,14 @@ export function GatePassView() {
   const [activeTab, setActiveTab] = useState<'list' | 'security_gate'>('list');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [scopeFilter, setScopeFilter] = useState<DocumentScope>('my');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedPass, setSelectedPass] = useState<GatePass | null>(null);
   const [qrModalUrl, setQrModalUrl] = useState<string | null>(null);
   const [isRejecting, setIsRejecting] = useState(false);
   const [passRejectionReason, setPassRejectionReason] = useState('');
+
+  const canManageOthers = isApproverRole(currentUser?.role);
 
   // Security Gate scan input
   const [scanCode, setScanCode] = useState('');
@@ -471,8 +475,12 @@ export function GatePassView() {
     setScanMessage(`✓ Đã ghi nhận giờ VÀO CỔNG LẠI cho nhân viên ${pass.employeeName} lúc ${formatDateTime(now)}. Phiếu hoàn tất!`);
   };
 
-  // Filter
-  const filtered = passes.filter((p) => {
+  // Filter strictly based on user permissions
+  const userVisiblePasses = useMemo(() => {
+    return filterUserGatePasses(passes, currentUser, scopeFilter);
+  }, [passes, currentUser, scopeFilter]);
+
+  const filtered = userVisiblePasses.filter((p) => {
     const matchesSearch =
       p.employeeName.toLowerCase().includes(search.toLowerCase()) ||
       p.employeeId.toLowerCase().includes(search.toLowerCase()) ||
@@ -496,7 +504,9 @@ export function GatePassView() {
             </h1>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Quản lý nhân viên ra cổng, kiểm soát tài sản mang theo và quét mã QR Code an ninh
+            {!canManageOthers
+              ? `Chỉ hiển thị các phiếu ra vào cổng của bạn (${currentUser?.name || ''})`
+              : 'Quản lý nhân viên ra cổng, kiểm soát tài sản mang theo và quét mã QR Code an ninh'}
           </p>
         </div>
 
@@ -513,17 +523,19 @@ export function GatePassView() {
             >
               Danh sách phiếu
             </button>
-            <button
-              onClick={() => setActiveTab('security_gate')}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all ${
-                activeTab === 'security_gate'
-                  ? 'bg-emerald-600 text-white shadow-xs'
-                  : 'text-slate-500 hover:text-slate-900'
-              }`}
-            >
-              <ScanLine className="w-3.5 h-3.5" />
-              <span>Bảo vệ cổng quét QR</span>
-            </button>
+            {(currentUser?.role === 'security' || currentUser?.role === 'admin') && (
+              <button
+                onClick={() => setActiveTab('security_gate')}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all ${
+                  activeTab === 'security_gate'
+                    ? 'bg-emerald-600 text-white shadow-xs'
+                    : 'text-slate-500 hover:text-slate-900'
+                }`}
+              >
+                <ScanLine className="w-3.5 h-3.5" />
+                <span>Bảo vệ cổng quét QR</span>
+              </button>
+            )}
           </div>
 
           <button
@@ -535,6 +547,44 @@ export function GatePassView() {
           </button>
         </div>
       </div>
+
+      {/* Scope Switcher for Approvers / Managers */}
+      {canManageOthers && activeTab === 'list' && (
+        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+          <button
+            onClick={() => setScopeFilter('my')}
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+              scopeFilter === 'my'
+                ? 'bg-emerald-600 text-white shadow-xs'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            Phiếu của tôi
+          </button>
+          <button
+            onClick={() => setScopeFilter('approver')}
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+              scopeFilter === 'approver'
+                ? 'bg-emerald-600 text-white shadow-xs'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            Phiếu cấp dưới cần duyệt
+          </button>
+          {currentUser?.role === 'admin' && (
+            <button
+              onClick={() => setScopeFilter('all')}
+              className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+                scopeFilter === 'all'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+              }`}
+            >
+              Tất cả phiếu toàn công ty
+            </button>
+          )}
+        </div>
+      )}
 
       {/* TAB 1: LIST VIEW */}
       {activeTab === 'list' && (

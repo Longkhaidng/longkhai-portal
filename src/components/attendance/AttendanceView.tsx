@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
 import {
@@ -27,6 +27,7 @@ import {
 import { formatDate, generateDocId } from '@/lib/utils';
 import { dispatchApprovalEmail } from '@/lib/email';
 import { ToastContainer, useToast } from '@/components/common/Toast';
+import { filterUserAttendances, isApproverRole, DocumentScope } from '@/lib/permissions';
 
 export function AttendanceView() {
   const { currentUser } = useAuth();
@@ -37,8 +38,11 @@ export function AttendanceView() {
   const [search, setSearch] = useState('');
   const [issueFilter, setIssueFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [scopeFilter, setScopeFilter] = useState<DocumentScope>('my');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<AttendanceConfirm | null>(null);
+
+  const canManageOthers = isApproverRole(currentUser?.role);
 
   // Form states
   const [issueType, setIssueType] = useState<AttendanceIssueType>('quen_the');
@@ -326,8 +330,12 @@ export function AttendanceView() {
     });
   };
 
-  // Filter
-  const filtered = attendances.filter((item) => {
+  // Filter list strictly based on user permissions
+  const userVisibleAttendances = useMemo(() => {
+    return filterUserAttendances(attendances, currentUser, scopeFilter);
+  }, [attendances, currentUser, scopeFilter]);
+
+  const filtered = userVisibleAttendances.filter((item) => {
     const matchesSearch =
       item.employeeName.toLowerCase().includes(search.toLowerCase()) ||
       item.employeeId.toLowerCase().includes(search.toLowerCase()) ||
@@ -351,7 +359,9 @@ export function AttendanceView() {
             </h1>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Giải quyết các trường hợp quên thẻ, thẻ hỏng, mất thẻ với luồng phê duyệt tự động
+            {!canManageOthers
+              ? `Chỉ hiển thị các phiếu xác nhận công của bạn (${currentUser?.name || ''})`
+              : 'Giải quyết các trường hợp quên thẻ, thẻ hỏng, mất thẻ với luồng phê duyệt tự động'}
           </p>
         </div>
 
@@ -363,6 +373,44 @@ export function AttendanceView() {
           <span>Tạo phiếu xác nhận công</span>
         </button>
       </div>
+
+      {/* Scope Switcher for Approvers / Managers */}
+      {canManageOthers && (
+        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+          <button
+            onClick={() => setScopeFilter('my')}
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+              scopeFilter === 'my'
+                ? 'bg-amber-600 text-white shadow-xs'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            Phiếu của tôi
+          </button>
+          <button
+            onClick={() => setScopeFilter('approver')}
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+              scopeFilter === 'approver'
+                ? 'bg-amber-600 text-white shadow-xs'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            Phiếu cấp dưới cần duyệt
+          </button>
+          {currentUser?.role === 'admin' && (
+            <button
+              onClick={() => setScopeFilter('all')}
+              className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+                scopeFilter === 'all'
+                  ? 'bg-amber-600 text-white shadow-xs'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+              }`}
+            >
+              Tất cả phiếu toàn công ty
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Filter bar */}
       <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center gap-3">

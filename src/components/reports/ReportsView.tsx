@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
 import { exportDataToExcel } from '@/lib/excel';
 import {
@@ -18,16 +19,18 @@ import {
 import { formatDate } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
+import { filterUserLeaves, filterUserAttendances, filterUserGatePasses } from '@/lib/permissions';
 
 export function ReportsView() {
+  const { currentUser } = useAuth();
   const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'departments'>('leave');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('all');
 
-  const leaves = storage.getLeaveRequests();
-  const attendances = storage.getAttendanceConfirms();
-  const gatePasses = storage.getGatePasses();
+  const leaves = filterUserLeaves(storage.getLeaveRequests(), currentUser, 'all');
+  const attendances = filterUserAttendances(storage.getAttendanceConfirms(), currentUser, 'all');
+  const gatePasses = filterUserGatePasses(storage.getGatePasses(), currentUser, 'all');
   const departments = storage.getDepartments();
   const users = storage.getUsers();
 

@@ -21,6 +21,7 @@ import {
 import { formatDate, generateDocId } from '@/lib/utils';
 import { dispatchApprovalEmail } from '@/lib/email';
 import { ToastContainer, useToast } from '@/components/common/Toast';
+import { filterUserLeaves, isApproverRole, DocumentScope } from '@/lib/permissions';
 
 export function LeaveView() {
   const { currentUser } = useAuth();
@@ -28,8 +29,11 @@ export function LeaveView() {
   const [leaves, setLeaves] = useState<LeaveRequest[]>(() => storage.getLeaveRequests());
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [scopeFilter, setScopeFilter] = useState<DocumentScope>('my');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState<LeaveRequest | null>(null);
+
+  const canManageOthers = isApproverRole(currentUser?.role);
 
   // Approval action states
   const [approvalComment, setApprovalComment] = useState('');
@@ -326,8 +330,12 @@ export function LeaveView() {
     });
   };
 
-  // Filter list
-  const filteredLeaves = leaves.filter((item) => {
+  // Filter list strictly based on user permissions
+  const userVisibleLeaves = useMemo(() => {
+    return filterUserLeaves(leaves, currentUser, scopeFilter);
+  }, [leaves, currentUser, scopeFilter]);
+
+  const filteredLeaves = userVisibleLeaves.filter((item) => {
     const matchesSearch =
       item.employeeName.toLowerCase().includes(search.toLowerCase()) ||
       item.employeeId.toLowerCase().includes(search.toLowerCase()) ||
@@ -350,7 +358,9 @@ export function LeaveView() {
             </h1>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Quy trình phê duyệt tự động: Nhân viên → Tổ trưởng (nếu có) → Trưởng bộ phận
+            {!canManageOthers
+              ? `Chỉ hiển thị các đơn xin nghỉ phép của bạn (${currentUser?.name || ''})`
+              : 'Quy trình phê duyệt tự động: Nhân viên → Tổ trưởng (nếu có) → Trưởng bộ phận'}
           </p>
         </div>
 
@@ -362,6 +372,44 @@ export function LeaveView() {
           <span>Tạo đơn xin nghỉ phép</span>
         </button>
       </div>
+
+      {/* Scope Switcher for Approvers / Managers */}
+      {canManageOthers && (
+        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+          <button
+            onClick={() => setScopeFilter('my')}
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+              scopeFilter === 'my'
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            Đơn của tôi
+          </button>
+          <button
+            onClick={() => setScopeFilter('approver')}
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+              scopeFilter === 'approver'
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            Đơn cấp dưới cần duyệt
+          </button>
+          {currentUser?.role === 'admin' && (
+            <button
+              onClick={() => setScopeFilter('all')}
+              className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+                scopeFilter === 'all'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+              }`}
+            >
+              Tất cả đơn toàn công ty
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Filter and search */}
       <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center gap-3">

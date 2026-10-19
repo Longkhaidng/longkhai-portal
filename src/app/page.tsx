@@ -22,6 +22,7 @@ import { DeploymentGuideView } from '@/components/guide/DeploymentGuideView';
 import { CategoryPermission, WebIntegration } from '@/types/user';
 import { ShieldAlert, Lock } from 'lucide-react';
 import { storage } from '@/lib/storage';
+import { filterUserLeaves, filterUserAttendances, filterUserGatePasses, isApproverRole } from '@/lib/permissions';
 
 function PortalAppContent() {
   const { currentUser, isLoading, hasPermission } = useAuth();
@@ -46,10 +47,15 @@ function PortalAppContent() {
     return <LoginForm />;
   }
 
-  // Calculate pending counts for badges
-  const pendingLeaves = storage.getLeaveRequests().filter((l) => l.status === 'pending').length;
-  const pendingAtts = storage.getAttendanceConfirms().filter((a) => a.status === 'pending').length;
-  const activeGps = storage.getGatePasses().filter((g) => g.status === 'approved' || g.status === 'departed').length;
+  // Calculate pending counts for badges based on user role and permissions
+  const canManageOthers = isApproverRole(currentUser.role);
+  const userLeaves = filterUserLeaves(storage.getLeaveRequests(), currentUser, canManageOthers ? 'approver' : 'my');
+  const userAtts = filterUserAttendances(storage.getAttendanceConfirms(), currentUser, canManageOthers ? 'approver' : 'my');
+  const userGps = filterUserGatePasses(storage.getGatePasses(), currentUser, canManageOthers ? 'approver' : 'my');
+
+  const pendingLeaves = userLeaves.filter((l) => l.status === 'pending').length;
+  const pendingAtts = userAtts.filter((a) => a.status === 'pending').length;
+  const activeGps = userGps.filter((g) => g.status === 'approved' || g.status === 'departed').length;
 
   // Render view by tab with RBAC Guard
   const renderActiveView = () => {

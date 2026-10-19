@@ -21,6 +21,7 @@ import {
 import { formatDate } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
+import { filterUserLeaves, filterUserGatePasses, filterUserAttendances, isApproverRole } from '@/lib/permissions';
 
 interface DashboardViewProps {
   onNavigateTab: (tabId: string) => void;
@@ -28,14 +29,28 @@ interface DashboardViewProps {
 
 export function DashboardView({ onNavigateTab }: DashboardViewProps) {
   const { currentUser } = useAuth();
+  const canManageOthers = isApproverRole(currentUser?.role);
 
-  const leaves = storage.getLeaveRequests();
-  const attendances = storage.getAttendanceConfirms();
-  const gatePasses = storage.getGatePasses();
+  const rawLeaves = storage.getLeaveRequests();
+  const rawAttendances = storage.getAttendanceConfirms();
+  const rawGatePasses = storage.getGatePasses();
   const formSubs = storage.getFormSubmissions();
   const departments = storage.getDepartments();
   const users = storage.getUsers();
   const webIntegrations = storage.getWebIntegrations();
+
+  // Filter documents based on user permissions
+  const leaves = useMemo(() => {
+    return filterUserLeaves(rawLeaves, currentUser, canManageOthers ? 'all' : 'my');
+  }, [rawLeaves, currentUser, canManageOthers]);
+
+  const attendances = useMemo(() => {
+    return filterUserAttendances(rawAttendances, currentUser, canManageOthers ? 'all' : 'my');
+  }, [rawAttendances, currentUser, canManageOthers]);
+
+  const gatePasses = useMemo(() => {
+    return filterUserGatePasses(rawGatePasses, currentUser, canManageOthers ? 'all' : 'my');
+  }, [rawGatePasses, currentUser, canManageOthers]);
 
   // Metrics
   const currentMonth = new Date().getMonth();
@@ -62,11 +77,11 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
   // Department Stats for Leave Requests
   const deptStats = useMemo(() => {
     const stats: Record<string, number> = {};
-    leaves.forEach((l) => {
+    rawLeaves.forEach((l) => {
       stats[l.department] = (stats[l.department] || 0) + 1;
     });
     return Object.entries(stats).sort((a, b) => b[1] - a[1]).slice(0, 5);
-  }, [leaves]);
+  }, [rawLeaves]);
 
   return (
     <div className="space-y-6">
@@ -226,9 +241,11 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider">
-                  Đơn nghỉ phép chờ phê duyệt ({pendingLeaves.length})
+                  {!canManageOthers ? 'Đơn nghỉ phép của bạn chờ duyệt' : 'Đơn nghỉ phép chờ phê duyệt'} ({pendingLeaves.length})
                 </h2>
-                <p className="text-xs text-slate-400">Yêu cầu nghỉ phép từ các bộ phận</p>
+                <p className="text-xs text-slate-400">
+                  {!canManageOthers ? 'Đơn do bạn nộp đang chờ cấp trên xử lý' : 'Yêu cầu nghỉ phép từ các bộ phận'}
+                </p>
               </div>
               <button
                 onClick={() => onNavigateTab('leave')}
@@ -282,9 +299,11 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider">
-                  Xác nhận công vào - ra chờ duyệt ({pendingAttendances.length})
+                  {!canManageOthers ? 'Xác nhận công của bạn chờ duyệt' : 'Xác nhận công vào - ra chờ duyệt'} ({pendingAttendances.length})
                 </h2>
-                <p className="text-xs text-slate-400">Giải trình quên thẻ, mất thẻ hoặc thẻ lỗi</p>
+                <p className="text-xs text-slate-400">
+                  {!canManageOthers ? 'Phiếu do bạn nộp đang chờ cấp trên xác nhận' : 'Giải trình quên thẻ, mất thẻ hoặc thẻ lỗi'}
+                </p>
               </div>
               <button
                 onClick={() => onNavigateTab('attendance')}

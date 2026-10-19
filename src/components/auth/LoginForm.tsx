@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
-import { Factory, Lock, User, AlertCircle, ShieldCheck, Download, ArrowRight, Eye, EyeOff } from 'lucide-react';
-import { generateEmployeeTemplateExcel } from '@/lib/excel';
+import { Factory, Lock, User, AlertCircle, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 export function LoginForm() {
   const { login } = useAuth();
@@ -128,32 +127,6 @@ export function LoginForm() {
               )}
             </button>
           </form>
-
-          {/* Initial Super Admin Hint */}
-          <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800/80">
-            <div className="bg-blue-50/80 dark:bg-blue-950/40 rounded-xl p-3 border border-blue-100 dark:border-blue-900/40">
-              <div className="flex items-center gap-2 text-blue-900 dark:text-blue-300 font-semibold text-xs mb-1">
-                <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                <span>Tài khoản Quản trị viên khởi tạo:</span>
-              </div>
-              <div className="text-[11px] text-slate-600 dark:text-slate-300 space-y-0.5">
-                <div>Mã NV: <code className="font-mono font-bold text-blue-700 dark:text-blue-300 bg-white dark:bg-slate-800 px-1 py-0.5 rounded">ADMIN01</code></div>
-                <div>Mật khẩu: <code className="font-mono font-bold text-blue-700 dark:text-blue-300 bg-white dark:bg-slate-800 px-1 py-0.5 rounded">admin@123</code></div>
-              </div>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1.5 italic">
-                (Đăng nhập để vào trang <b>Quản lý nhân viên</b> và tải file Excel danh sách toàn công ty)
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={generateEmployeeTemplateExcel}
-              className="w-full mt-3 text-xs text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 flex items-center justify-center gap-1.5 py-1.5 transition-colors"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Tải file Excel mẫu danh sách nhân viên (.xlsx)</span>
-            </button>
-          </div>
         </div>
 
         {/* Footer info */}
