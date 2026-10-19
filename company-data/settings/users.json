@@ -4603,7 +4603,7 @@
   {
     "id": "2820",
     "name": "Phạm Duy An",
-    "department": "KCS",
+    "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS Hoàn Thành",
     "role": "employee",
     "permissions": [
@@ -4616,7 +4616,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:11:14.860Z",
+    "departmentHeadId": "2831"
   },
   {
     "id": "2822",
