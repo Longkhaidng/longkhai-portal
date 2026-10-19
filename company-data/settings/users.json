@@ -3501,7 +3501,7 @@
   {
     "id": "2576",
     "name": "Trần Thị Thanh Hiền",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Nhân viên kinh tế - kế hoạch HT",
     "role": "employee",
     "permissions": [
@@ -3514,7 +3514,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:46:17.469Z",
+    "departmentHeadId": "1051"
   },
   {
     "id": "2598",
