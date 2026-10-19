@@ -40,7 +40,7 @@
       "forms",
       "reports",
       "web_integrations",
-      "plugins"
+      "users"
     ],
     "allowedWebIntegrations": [
       "WEB-001",
@@ -49,7 +49,7 @@
     "isActive": true,
     "password": "Quynh1",
     "createdAt": "2026-10-16T07:48:21.879Z",
-    "updatedAt": "2026-10-17T03:49:21.881Z",
+    "updatedAt": "2026-10-19T07:06:50.010Z",
     "email": "Quynh.truong@longkhai.com.vn",
     "departmentHeadEmail": "buithuanh@vitex.com.vn"
   },
