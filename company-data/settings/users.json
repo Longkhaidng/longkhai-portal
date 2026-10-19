@@ -4880,7 +4880,7 @@
   {
     "id": "2848",
     "name": "Lâm Thị Ngọc Thắm",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Nhân viên phục vụ kiểm hàng",
     "role": "employee",
     "permissions": [
@@ -4893,7 +4893,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:14:54.267Z",
+    "departmentHeadId": "1051"
   },
   {
     "id": "2849",
