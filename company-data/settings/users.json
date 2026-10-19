@@ -2885,7 +2885,7 @@
   {
     "id": "2399",
     "name": "Trần Khánh Phúc",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy in trên trục - Máy trưởng",
     "role": "employee",
     "permissions": [
@@ -2898,7 +2898,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:31:24.205Z",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051"
   },
   {
     "id": "2409",
