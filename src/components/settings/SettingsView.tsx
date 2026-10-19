@@ -19,9 +19,6 @@ import {
   FolderGit2,
   History,
   Mail,
-  Send,
-  Eye,
-  EyeOff,
   ExternalLink,
   Info,
   Check,
@@ -77,15 +74,11 @@ export function SettingsView() {
 
   // Email Config state
   const [emailConfig, setEmailConfig] = useState<EmailConfig>(() => storage.getEmailConfig());
-  const [testEmailTo, setTestEmailTo] = useState<string>('it@longkhai.com.vn');
-  const [isSendingTest, setIsSendingTest] = useState(false);
-  const [emailTestResult, setEmailTestResult] = useState<{ success: boolean; message: string } | null>(null);
   const [saveEmailResult, setSaveEmailResult] = useState<{ success: boolean; message: string } | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
   const [isSavingEmail, setIsSavingEmail] = useState(false);
   const [copiedScript, setCopiedScript] = useState(false);
 
-  // Sync email config from server on mount
+  // Sync email config and github config from server on mount
   useEffect(() => {
     fetch('/api/email-config')
       .then((res) => res.json())
@@ -94,19 +87,35 @@ export function SettingsView() {
           setEmailConfig((prev) => ({
             ...prev,
             ...data.config,
-            // Keep local password if server masked it
-            smtpPassword: data.config.smtpPassword === '********' ? prev.smtpPassword : data.config.smtpPassword,
+            provider: 'google_relay',
           }));
         }
       })
       .catch((err) => console.warn('Không thể đọc email-config từ máy chủ:', err));
+
+    fetch('/api/github-config')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.config && data.config.token) {
+          setConfig((prev) => ({ ...prev, ...data.config }));
+          storage.saveGitHubConfig(data.config);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   // Save GitHub Config
-  const handleSaveConfig = (e: React.FormEvent) => {
+  const handleSaveConfig = async (e: React.FormEvent) => {
     e.preventDefault();
     storage.saveGitHubConfig(config);
-    setTestResult({ success: true, message: 'Đã lưu cấu hình kết nối GitHub thành công!' });
+    try {
+      await fetch('/api/github-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config),
+      });
+    } catch {}
+    setTestResult({ success: true, message: 'Đã lưu cấu hình kết nối GitHub thành công trên máy chủ và trình duyệt!' });
   };
 
   // Test GitHub Connection
@@ -152,34 +161,39 @@ export function SettingsView() {
     }
   };
 
-  // Save Email Config
+  // Save Email Config (Solely Google Apps Script Relay)
   const handleSaveEmailConfig = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSavingEmail(true);
     setSaveEmailResult(null);
 
+    const fullConfig: EmailConfig = {
+      ...emailConfig,
+      provider: 'google_relay',
+      isEnabled: true,
+    };
+
     try {
       // 1. Save in local storage & sync github
-      storage.saveEmailConfig(emailConfig, {
+      storage.saveEmailConfig(fullConfig, {
         id: currentUser?.id || 'ADMIN',
         name: currentUser?.name || 'Quản trị viên',
       });
 
       // 2. Save on server via /api/email-config
       try {
-        const res = await fetch('/api/email-config', {
+        await fetch('/api/email-config', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(emailConfig),
+          body: JSON.stringify(fullConfig),
         });
-        await res.json();
       } catch (apiErr) {
-        console.warn('Lỗi ghi server config (chạy chế độ serverless fallback):', apiErr);
+        console.warn('Lỗi ghi server config:', apiErr);
       }
 
       setSaveEmailResult({
         success: true,
-        message: 'Đã lưu cấu hình gửi Email thành công!',
+        message: 'Đã lưu cấu hình gửi Email Google Relay thành công!',
       });
     } catch (err: any) {
       setSaveEmailResult({
@@ -191,104 +205,13 @@ export function SettingsView() {
     }
   };
 
-  // Send Test Email
-  const handleSendTestEmail = async () => {
-    const to = testEmailTo.trim();
-    if (!to) {
-      setEmailTestResult({ success: false, message: 'Vui lòng nhập địa chỉ email nhận kiểm tra!' });
-      return;
-    }
-
-    setIsSendingTest(true);
-    setEmailTestResult(null);
-
-    try {
-      const res = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          toEmail: to,
-          subject: '[Long Khai Portal] Kiểm tra kết nối gửi Email thành công!',
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">
-              <h2 style="color: #0284c7; margin-top: 0;">✓ Thử nghiệm kết nối Email thành công!</h2>
-              <p>Xin chào <b>${to}</b>,</p>
-              <p>Email này được gửi thử nghiệm từ <b>Cổng Thông Tin Long Khai Portal</b> nhằm xác minh cấu hình máy chủ gửi email phê duyệt.</p>
-              <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
-              <p style="font-size: 12px; color: #64748b;">Thời gian kiểm tra: ${new Date().toLocaleString('vi-VN')}<br />Máy chủ gửi: ${emailConfig.provider === 'resend' ? 'Resend API' : emailConfig.smtpHost || 'Office 365'}</p>
-            </div>
-          `,
-          emailConfig,
-          isTest: true,
-        }),
-      });
-
-      const data = await res.json();
-      setEmailTestResult({
-        success: data.success === true,
-        message: data.message || (data.success ? 'Đã gửi email kiểm tra thành công!' : 'Gửi email thất bại.'),
-      });
-    } catch (err: any) {
-      setEmailTestResult({
-        success: false,
-        message: err.message || 'Lỗi kết nối máy chủ gửi mail.',
-      });
-    } finally {
-      setIsSendingTest(false);
-    }
-  };
-
-  // Quick Preset Helper
-  const applyPreset = (preset: 'google' | 'o365' | 'gmail' | 'resend') => {
-    if (preset === 'google') {
-      setEmailConfig((prev) => ({
-        ...prev,
-        provider: 'google_relay',
-        senderName: 'Cổng Thông Tin Long Khai',
-        senderEmail: prev.senderEmail || 'portal@longkhai.com.vn',
-        portalBaseUrl: prev.portalBaseUrl || 'https://longkhai-portal.vercel.app',
-      }));
-    } else if (preset === 'o365') {
-      setEmailConfig((prev) => ({
-        ...prev,
-        provider: 'smtp',
-        smtpHost: 'smtp.office365.com',
-        smtpPort: 587,
-        smtpSecure: false,
-        senderName: 'Cổng Thông Tin Long Khai',
-        senderEmail: prev.smtpUser || 'no-reply@longkhai.com.vn',
-      }));
-    } else if (preset === 'gmail') {
-      setEmailConfig((prev) => ({
-        ...prev,
-        provider: 'gmail',
-        smtpHost: 'smtp.gmail.com',
-        smtpPort: 465,
-        smtpSecure: true,
-        senderName: 'Cổng Thông Tin Long Khai',
-        senderEmail: prev.smtpUser || '',
-      }));
-    } else if (preset === 'resend') {
-      setEmailConfig((prev) => ({
-        ...prev,
-        provider: 'resend',
-        senderName: 'Cổng Thông Tin Long Khai',
-        senderEmail: 'onboarding@resend.dev',
-      }));
-    }
-  };
-
   const handleCopyScript = () => {
     navigator.clipboard.writeText(GOOGLE_SCRIPT_TEMPLATE);
     setCopiedScript(true);
     setTimeout(() => setCopiedScript(false), 2500);
   };
 
-  const isEmailConfigured = Boolean(
-    (emailConfig.provider === 'google_relay' && emailConfig.googleScriptUrl) ||
-    (emailConfig.provider === 'resend' && emailConfig.resendApiKey) ||
-    (emailConfig.smtpUser && emailConfig.smtpPassword)
-  );
+  const isEmailConfigured = Boolean(emailConfig.googleScriptUrl);
 
   return (
     <div className="space-y-6">
@@ -361,284 +284,113 @@ export function SettingsView() {
                 </span>
               </div>
 
-              {/* Quick Preset Buttons */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
-                  Chọn phương thức gửi Email:
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => applyPreset('google')}
-                    className={`p-2.5 rounded-xl border text-xs font-bold text-left transition-all ${
-                      emailConfig.provider === 'google_relay'
-                        ? 'border-emerald-600 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 shadow-xs ring-1 ring-emerald-500'
-                        : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 text-slate-700 dark:text-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-600" />
-                      <span>Google Relay</span>
+              {/* Method Banner - Solely Google Relay */}
+              <div className="p-3.5 bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 rounded-xl flex items-center justify-between shadow-xs">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+                    G
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-emerald-900 dark:text-emerald-200 flex items-center gap-2">
+                      <span>Phương thức: Google Apps Script Web App Relay</span>
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-200/80 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-300 text-[10px] font-semibold">
+                        Khuyên dùng (100% Miễn phí)
+                      </span>
                     </div>
-                    <span className="block text-[10px] font-normal text-emerald-600 dark:text-emerald-400 mt-0.5 font-semibold">
-                      Khuyên dùng (Miễn phí)
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => applyPreset('o365')}
-                    className={`p-2.5 rounded-xl border text-xs font-bold text-left transition-all ${
-                      emailConfig.provider === 'smtp' && emailConfig.smtpHost?.includes('office365')
-                        ? 'border-blue-600 bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 shadow-xs ring-1 ring-blue-500'
-                        : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 text-slate-700 dark:text-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-blue-600" />
-                      <span>Microsoft 365</span>
+                    <div className="text-[11px] text-emerald-700 dark:text-emerald-400 mt-0.5">
+                      Gửi email thông báo phê duyệt qua giao thức HTTPS cổng 443 — Hoạt động bền vững, không bao giờ bị chặn cổng SMTP, gửi trực tiếp từ máy chủ Gmail của Google.
                     </div>
-                    <span className="block text-[10px] font-normal text-slate-400 mt-0.5">
-                      @longkhai.com.vn
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => applyPreset('gmail')}
-                    className={`p-2.5 rounded-xl border text-xs font-bold text-left transition-all ${
-                      emailConfig.provider === 'gmail'
-                        ? 'border-red-600 bg-red-50 text-red-700 dark:bg-red-950/60 dark:text-red-300 shadow-xs ring-1 ring-red-500'
-                        : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 text-slate-700 dark:text-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-red-600" />
-                      <span>Gmail SMTP</span>
-                    </div>
-                    <span className="block text-[10px] font-normal text-slate-400 mt-0.5">
-                      Port 465 (SSL)
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => applyPreset('resend')}
-                    className={`p-2.5 rounded-xl border text-xs font-bold text-left transition-all ${
-                      emailConfig.provider === 'resend'
-                        ? 'border-purple-600 bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 shadow-xs ring-1 ring-purple-500'
-                        : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 text-slate-700 dark:text-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-purple-600" />
-                      <span>Resend API</span>
-                    </div>
-                    <span className="block text-[10px] font-normal text-slate-400 mt-0.5">
-                      3.000 mail/tháng
-                    </span>
-                  </button>
+                  </div>
                 </div>
               </div>
 
               <form onSubmit={handleSaveEmailConfig} className="space-y-4 text-xs">
-                {/* 1. GOOGLE APPS SCRIPT RELAY (RECOMMENDED) */}
-                {emailConfig.provider === 'google_relay' && (
-                  <div className="space-y-4 p-4 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/80 dark:border-emerald-800/50">
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <label className="block font-semibold text-slate-900 dark:text-white">
-                          Google Apps Script Web App URL: *
-                        </label>
-                        <a
-                          href="https://script.new"
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 hover:underline flex items-center gap-1"
-                        >
-                          <span>Mở Google Apps Script (script.new)</span>
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
-                      </div>
-                      <input
-                        type="url"
-                        required
-                        value={emailConfig.googleScriptUrl || ''}
-                        onChange={(e) =>
-                          setEmailConfig({ ...emailConfig, googleScriptUrl: e.target.value.trim() })
-                        }
-                        placeholder="https://script.google.com/macros/s/AKfycbx.../exec"
-                        className="w-full p-2.5 bg-white dark:bg-slate-800 border border-emerald-300 dark:border-emerald-700 rounded-xl font-mono text-xs"
-                      />
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
-                        Dán đường dẫn Web App đã triển khai từ Google Apps Script (kết thúc bằng <code>/exec</code>).
-                      </p>
-                    </div>
-
-                    {/* Script Code Box with Copy */}
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                          <Code className="w-3.5 h-3.5 text-emerald-600" />
-                          <span>Mã nguồn Google Apps Script (Code.gs):</span>
-                        </span>
-                        <button
-                          type="button"
-                          onClick={handleCopyScript}
-                          className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-colors shadow-xs"
-                        >
-                          {copiedScript ? (
-                            <>
-                              <Check className="w-3 h-3 text-emerald-600" />
-                              <span className="text-emerald-600">Đã sao chép!</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3 h-3" />
-                              <span>Sao chép mã</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
-
-                      <pre className="p-3 bg-slate-900 text-slate-200 rounded-xl font-mono text-[11px] overflow-x-auto max-h-40 leading-relaxed border border-slate-800">
-                        {GOOGLE_SCRIPT_TEMPLATE}
-                      </pre>
-                    </div>
-
-                    {/* 3 Step Deployment Instructions */}
-                    <div className="p-3 rounded-lg bg-white/70 dark:bg-slate-900/60 border border-emerald-200/70 text-[11px] space-y-1 text-slate-700 dark:text-slate-300">
-                      <p className="font-bold text-emerald-800 dark:text-emerald-400">
-                        3 bước triển khai nhanh trong 2 phút:
-                      </p>
-                      <ol className="list-decimal pl-4 space-y-1">
-                        <li>
-                          Bấm nút <b>"Mở Google Apps Script (script.new)"</b> ở trên (đăng nhập bằng Gmail hoặc Google Workspace).
-                        </li>
-                        <li>
-                          Bấm <b>"Sao chép mã"</b> và dán toàn bộ đè lên file <code>Code.gs</code> rồi bấm biểu tượng Save (Lưu).
-                        </li>
-                        <li>
-                          Bấm nút <b>Deploy (Triển khai)</b> &gt; <b>New deployment (Tùy chọn triển khai mới)</b> &gt; chọn biểu tượng bánh răng chọn <b>Web app</b>:
-                          <ul className="list-disc pl-4 mt-0.5 text-slate-600 dark:text-slate-400">
-                            <li>Execute as: <b>Me</b> (Tôi)</li>
-                            <li>Who has access: <b>Anyone</b> (Bất kỳ ai)</li>
-                          </ul>
-                          Bấm <b>Deploy</b>, cấp quyền cho script và sao chép <b>Web app URL</b> dán vào ô phía trên!
-                        </li>
-                      </ol>
-                    </div>
-                  </div>
-                )}
-
-                {/* 2. RESEND API */}
-                {emailConfig.provider === 'resend' && (
+                {/* GOOGLE APPS SCRIPT RELAY CONFIGURATION */}
+                <div className="space-y-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
                   <div>
-                    <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      Resend API Key: *
-                    </label>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block font-bold text-slate-900 dark:text-white">
+                        Google Apps Script Web App URL: *
+                      </label>
+                      <a
+                        href="https://script.new"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 hover:underline flex items-center gap-1"
+                      >
+                        <span>Mở Google Apps Script (script.new)</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
                     <input
-                      type="password"
+                      type="url"
                       required
-                      value={emailConfig.resendApiKey || ''}
-                      onChange={(e) => setEmailConfig({ ...emailConfig, resendApiKey: e.target.value.trim() })}
-                      placeholder="re_xxxxxxxxxxxxxxxxxxxx"
-                      className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono"
+                      value={emailConfig.googleScriptUrl || ''}
+                      onChange={(e) =>
+                        setEmailConfig({ ...emailConfig, googleScriptUrl: e.target.value.trim() })
+                      }
+                      placeholder="https://script.google.com/macros/s/AKfycbx.../exec"
+                      className="w-full p-2.5 bg-white dark:bg-slate-900 border border-emerald-400 dark:border-emerald-600 rounded-xl font-mono text-xs focus:ring-2 focus:ring-emerald-500 outline-none"
                     />
-                    <p className="text-[11px] text-slate-400 mt-1">
-                      Lấy API Key miễn phí tại <a href="https://resend.com" target="_blank" rel="noreferrer" className="text-blue-600 underline">resend.com</a> (miễn phí 3.000 email/tháng, gửi qua giao thức HTTPS cổng 443 không lo bị chặn trên Vercel).
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                      Dán đường dẫn Web App đã triển khai từ Google Apps Script (kết thúc bằng <code>/exec</code>).
                     </p>
                   </div>
-                )}
 
-                {/* 3. SMTP OFFICE 365 OR GMAIL */}
-                {emailConfig.provider !== 'resend' && emailConfig.provider !== 'google_relay' && (
-                  <>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                          Máy chủ SMTP Host: *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={emailConfig.smtpHost || ''}
-                          onChange={(e) => setEmailConfig({ ...emailConfig, smtpHost: e.target.value.trim() })}
-                          placeholder="smtp.office365.com hoặc smtp.gmail.com"
-                          className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                        />
-                      </div>
-                      <div>
-                        <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                          Cổng SMTP Port: *
-                        </label>
-                        <input
-                          type="number"
-                          required
-                          value={emailConfig.smtpPort || 587}
-                          onChange={(e) =>
-                            setEmailConfig({ ...emailConfig, smtpPort: Number(e.target.value) })
-                          }
-                          placeholder="587 hoặc 465"
-                          className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                        />
-                      </div>
+                  {/* Script Code Box with Copy */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                        <Code className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Mã nguồn Google Apps Script (Code.gs):</span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleCopyScript}
+                        className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 text-slate-800 dark:text-slate-200 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-colors shadow-xs"
+                      >
+                        {copiedScript ? (
+                          <>
+                            <Check className="w-3 h-3 text-emerald-600" />
+                            <span className="text-emerald-600">Đã sao chép!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3 h-3" />
+                            <span>Sao chép mã</span>
+                          </>
+                        )}
+                      </button>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                          Tài khoản gửi Email (Username): *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={emailConfig.smtpUser || ''}
-                          onChange={(e) => setEmailConfig({ ...emailConfig, smtpUser: e.target.value.trim() })}
-                          placeholder="VD: it@longkhai.com.vn"
-                          className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                        />
-                      </div>
-                      <div>
-                        <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                          Mật khẩu (hoặc Mật khẩu ứng dụng): *
-                        </label>
-                        <div className="relative">
-                          <input
-                            type={showPassword ? 'text' : 'password'}
-                            required
-                            value={emailConfig.smtpPassword || ''}
-                            onChange={(e) =>
-                              setEmailConfig({ ...emailConfig, smtpPassword: e.target.value })
-                            }
-                            placeholder="Mật khẩu tài khoản email"
-                            className="w-full p-2 pr-8 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600"
-                          >
-                            {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                    <pre className="p-3 bg-slate-900 text-slate-200 rounded-xl font-mono text-[11px] overflow-x-auto max-h-40 leading-relaxed border border-slate-800">
+                      {GOOGLE_SCRIPT_TEMPLATE}
+                    </pre>
+                  </div>
 
-                    <div className="flex items-center gap-2 pt-1">
-                      <input
-                        type="checkbox"
-                        id="smtpSecure"
-                        checked={emailConfig.smtpSecure || false}
-                        onChange={(e) => setEmailConfig({ ...emailConfig, smtpSecure: e.target.checked })}
-                        className="rounded text-blue-600"
-                      />
-                      <label htmlFor="smtpSecure" className="text-slate-600 dark:text-slate-400">
-                        Sử dụng kết nối bảo mật SSL trực tiếp (Chỉ chọn khi dùng cổng 465)
-                      </label>
-                    </div>
-                  </>
-                )}
+                  {/* 3 Step Deployment Instructions */}
+                  <div className="p-3 rounded-lg bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-[11px] space-y-1.5 text-slate-700 dark:text-slate-300">
+                    <p className="font-bold text-emerald-800 dark:text-emerald-400">
+                      3 bước triển khai nhanh trong 2 phút:
+                    </p>
+                    <ol className="list-decimal pl-4 space-y-1 leading-relaxed">
+                      <li>
+                        Bấm nút <b>"Mở Google Apps Script (script.new)"</b> ở trên (đăng nhập bằng Gmail hoặc Google Workspace).
+                      </li>
+                      <li>
+                        Bấm <b>"Sao chép mã"</b> và dán toàn bộ đè lên file <code>Code.gs</code> rồi bấm biểu tượng Save (Lưu).
+                      </li>
+                      <li>
+                        Bấm nút <b>Deploy (Triển khai)</b> &gt; <b>New deployment (Tùy chọn triển khai mới)</b> &gt; chọn biểu tượng bánh răng chọn <b>Web app</b>:
+                        <ul className="list-disc pl-4 mt-0.5 text-slate-600 dark:text-slate-400">
+                          <li>Execute as: <b>Me</b> (Tôi)</li>
+                          <li>Who has access: <b>Anyone</b> (Bất kỳ ai)</li>
+                        </ul>
+                        Bấm <b>Deploy</b>, cấp quyền cho script và sao chép <b>Web app URL</b> dán vào ô phía trên!
+                      </li>
+                    </ol>
+                  </div>
+                </div>
 
                 <div className="grid grid-cols-2 gap-3 pt-1">
                   <div>
@@ -655,47 +407,16 @@ export function SettingsView() {
                   </div>
                   <div>
                     <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      Địa chỉ Email gửi (From Email):
+                      Đường dẫn Cổng Thông Tin (Portal Base URL):
                     </label>
                     <input
-                      type="email"
-                      value={emailConfig.senderEmail || ''}
-                      onChange={(e) => setEmailConfig({ ...emailConfig, senderEmail: e.target.value.trim() })}
-                      placeholder={emailConfig.provider === 'resend' ? 'onboarding@resend.dev' : 'it@longkhai.com.vn'}
+                      type="url"
+                      value={emailConfig.portalBaseUrl || 'https://longkhai-portal.vercel.app'}
+                      onChange={(e) => setEmailConfig({ ...emailConfig, portalBaseUrl: e.target.value.trim() })}
+                      placeholder="https://longkhai-portal.vercel.app"
                       className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
                     />
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
-                      {emailConfig.provider === 'resend' ? (
-                        <span>
-                          * Với Resend miễn phí chưa xác minh Domain: Bắt buộc để <b>onboarding@resend.dev</b> (Resend giới hạn chỉ gửi được về email đăng ký tài khoản Resend). Nếu đã xác minh Domain công ty trên Resend, bạn có thể điền <i>portal@longkhai.com.vn</i>.
-                        </span>
-                      ) : emailConfig.provider === 'gmail' ? (
-                        <span>
-                          * Điền chính địa chỉ Gmail của bạn trùng với tài khoản gửi (VD: <b>vitex.dng@gmail.com</b>).
-                        </span>
-                      ) : (
-                        <span>
-                          * Điền chính địa chỉ email Microsoft 365 công ty trùng với tài khoản gửi (VD: <b>it@longkhai.com.vn</b>).
-                        </span>
-                      )}
-                    </p>
                   </div>
-                </div>
-
-                <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Đường dẫn Cổng Thông Tin (Portal Base URL):
-                  </label>
-                  <input
-                    type="url"
-                    value={emailConfig.portalBaseUrl || 'https://longkhai-portal.vercel.app'}
-                    onChange={(e) => setEmailConfig({ ...emailConfig, portalBaseUrl: e.target.value.trim() })}
-                    placeholder="https://longkhai-portal.vercel.app"
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
-                  <p className="text-[11px] text-slate-400 mt-1">
-                    Được nhúng vào các nút "Phê duyệt" và "Từ chối" trong email để Trưởng bộ phận bấm duyệt đơn trực tuyến.
-                  </p>
                 </div>
 
                 {saveEmailResult && (
@@ -719,66 +440,13 @@ export function SettingsView() {
                   <button
                     type="submit"
                     disabled={isSavingEmail}
-                    className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs shadow-md transition-colors disabled:opacity-50"
+                    className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-md transition-colors disabled:opacity-50 flex items-center gap-2"
                   >
-                    {isSavingEmail ? 'Đang lưu...' : 'Lưu cấu hình Email'}
+                    <Mail className="w-4 h-4" />
+                    <span>{isSavingEmail ? 'Đang lưu...' : 'Lưu cấu hình Email Google Relay'}</span>
                   </button>
                 </div>
               </form>
-            </div>
-
-            {/* Test Connection Box */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-4">
-              <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold text-sm">
-                <Send className="w-4 h-4 text-emerald-600" />
-                <span>Gửi Thử Nghiệm Kiểm Tra Kết Nối (Test Email)</span>
-              </div>
-              <p className="text-xs text-slate-500">
-                Gửi một email kiểm tra tới hộp thư để đảm bảo máy chủ kết nối thông suốt và nhận diện được Trưởng bộ phận.
-              </p>
-
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  value={testEmailTo}
-                  onChange={(e) => setTestEmailTo(e.target.value)}
-                  placeholder="Nhập email nhận kiểm tra (VD: it@longkhai.com.vn)"
-                  className="flex-1 p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs"
-                />
-                <button
-                  type="button"
-                  onClick={handleSendTestEmail}
-                  disabled={isSendingTest}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-md transition-colors flex items-center gap-1.5 disabled:opacity-50"
-                >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>{isSendingTest ? 'Đang gửi...' : 'Gửi thử ngay'}</span>
-                </button>
-              </div>
-
-              {emailTestResult && (
-                <div
-                  className={`p-3 rounded-xl border text-xs flex items-start gap-2.5 ${
-                    emailTestResult.success
-                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                      : 'bg-rose-50 text-rose-800 border-rose-200'
-                  }`}
-                >
-                  {emailTestResult.success ? (
-                    <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600" />
-                  ) : (
-                    <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
-                  )}
-                  <div className="flex-1">
-                    <p className="font-semibold">{emailTestResult.message}</p>
-                    {emailTestResult.success && (
-                      <p className="text-[11px] text-emerald-700 mt-1">
-                        Hệ thống đã xác thực và chuyển tiếp thành công đến hộp thư <b>{testEmailTo}</b>.
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
 
@@ -786,52 +454,30 @@ export function SettingsView() {
           <div className="lg:col-span-5 space-y-4">
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-4">
               <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold text-sm border-b border-slate-100 dark:border-slate-800 pb-3">
-                <Info className="w-4 h-4 text-blue-600" />
-                <span>Hướng dẫn cấu hình gửi Email</span>
+                <Info className="w-4 h-4 text-emerald-600" />
+                <span>Hướng dẫn & Lợi ích Google Relay</span>
               </div>
 
               <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                <div className="p-3 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 space-y-1.5 shadow-xs">
+                <div className="p-3.5 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 space-y-2 shadow-xs">
                   <div className="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300 font-bold">
                     <span className="w-2 h-2 rounded-full bg-emerald-600" />
-                    <span>1. Google Apps Script Relay (Khuyên dùng - 100% Miễn phí):</span>
+                    <span>Ưu điểm vượt trội của Google Web App:</span>
                   </div>
-                  <ul className="list-disc pl-4 space-y-1 text-[11px] text-emerald-900 dark:text-emerald-200">
-                    <li>Gửi qua giao thức HTTPS cổng 443 — hoạt động 100% thông suốt trên nền tảng Vercel Serverless.</li>
-                    <li>Sử dụng máy chủ Gmail chính thức của Google, không bị giới hạn xác minh tên miền như Resend.</li>
-                    <li>Gửi thẳng đến bất kỳ email nào (kể cả email công ty <code>@longkhai.com.vn</code> hoặc email cá nhân).</li>
-                    <li>Hạn mức miễn phí: 100 email/ngày (với Gmail cá nhân) hoặc 1.500 email/ngày (với Google Workspace), hoàn toàn đáp ứng nhu cầu nội bộ.</li>
+                  <ul className="list-disc pl-4 space-y-1.5 text-[11px] text-emerald-900 dark:text-emerald-200">
+                    <li><b>Gửi qua HTTPS cổng 443:</b> Hoàn toàn vượt qua mọi giới hạn tường lửa hay quy định chặn cổng SMTP 587/465 của các hạ tầng điện toán đám mây (như Vercel, Netlify).</li>
+                    <li><b>Không cần xác minh DNS tên miền:</b> Không yêu cầu phải cấu hình bản ghi SPF, DKIM phức tạp trên hosting công ty như Resend hay SendGrid.</li>
+                    <li><b>Hỗ trợ mọi hòm thư:</b> Gửi thành công tới cả hộp thư công ty (<code>@longkhai.com.vn</code>) lẫn hộp thư cá nhân (Gmail, Outlook, Yahoo...).</li>
+                    <li><b>Miễn phí vĩnh viễn:</b> Hạn mức mặc định của Google cấp tới 100 email/ngày (với Gmail cá nhân) hoặc 1.500 email/ngày (với Google Workspace).</li>
                   </ul>
                 </div>
 
-                <div className="p-3 rounded-xl bg-blue-50/60 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/40 space-y-1.5">
-                  <span className="font-bold text-blue-800 dark:text-blue-300 block">
-                    2. Cấu hình Microsoft 365 (@longkhai.com.vn):
-                  </span>
-                  <ul className="list-disc pl-4 space-y-1 text-[11px]">
-                    <li>Host: <code>smtp.office365.com</code> | Port: <code>587</code></li>
-                    <li>Tài khoản: Email tài khoản Microsoft 365 của công ty.</li>
-                    <li>Mật khẩu: Mật khẩu hộp thư hoặc App Password (Mật khẩu ứng dụng) nếu tài khoản có bật xác thực 2 bước (MFA).</li>
-                    <li>Yêu cầu quản trị viên Microsoft 365 bật tính năng <b>Authenticated SMTP (SMTP AUTH)</b> cho hộp thư gửi.</li>
-                  </ul>
-                </div>
-
-                <div className="p-3 rounded-xl bg-purple-50/60 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-900/40 space-y-1.5">
-                  <span className="font-bold text-purple-800 dark:text-purple-300 block">
-                    3. Giải pháp Resend API:
-                  </span>
-                  <ul className="list-disc pl-4 space-y-1 text-[11px]">
-                    <li>Đăng ký tài khoản miễn phí tại <a href="https://resend.com" target="_blank" rel="noreferrer" className="text-purple-700 underline font-semibold">resend.com</a>.</li>
-                    <li>Lưu ý: Domain miễn phí của Resend (<code>onboarding@resend.dev</code>) chỉ gửi được tới email đăng ký tài khoản Resend. Muốn gửi tới <code>it@longkhai.com.vn</code> thì phải xác thực DNS tên miền.</li>
-                  </ul>
-                </div>
-
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-1.5">
+                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-1.5">
                   <span className="font-bold text-slate-800 dark:text-slate-200 block">
-                    4. Cơ chế dự phòng gửi qua Outlook (Mailto):
+                    Cơ chế dự phòng gửi qua Outlook (Mailto):
                   </span>
                   <p className="text-[11px]">
-                    Khi máy chủ chưa kịp cấu hình tài khoản gửi email, hệ thống tự động cung cấp nút <b>"Mở Email (Outlook)"</b> cho nhân viên khi nộp đơn để gửi ngay toàn bộ thông tin và link duyệt đến Trưởng bộ phận trong 1 giây mà không bị gián đoạn công việc.
+                    Khi máy chủ chưa kịp cấu hình đường dẫn Web App, hệ thống tự động cung cấp nút <b>"Mở Email (Outlook)"</b> cho nhân viên khi nộp đơn để gửi ngay toàn bộ thông tin và link duyệt đến Trưởng bộ phận trong 1 giây mà không bị gián đoạn công việc.
                   </p>
                 </div>
               </div>

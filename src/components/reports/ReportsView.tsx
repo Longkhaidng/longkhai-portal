@@ -188,7 +188,7 @@ export function ReportsView() {
         <div className="border-b-2 border-slate-800 pb-4 flex flex-col md:flex-row justify-between items-start md:items-center text-xs">
           <div>
             <div className="font-black text-sm uppercase text-slate-900 dark:text-white tracking-wider">
-              CÔNG TY CỔ PHẦN CÔNG NGHIỆP LONG KHAI
+              CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG
             </div>
             <div className="text-slate-500 text-[11px] mt-0.5">
               Hệ thống Quản trị & Điều hành Sản xuất Nội bộ

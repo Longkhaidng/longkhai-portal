@@ -76,14 +76,14 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
   <div style="max-width: 600px; margin: 30px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0;">
     
     <!-- Header -->
-    <div style="background: linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%); padding: 28px 24px; text-align: center; color: #ffffff;">
-      <div style="font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #bae6fd; margin-bottom: 6px;">
-        CÔNG TY CỔ PHẦN CÔNG NGHIỆP LONG KHAI
+    <div style="background: linear-gradient(135deg, #090e1f 0%, #1e3a8a 100%); padding: 30px 24px; text-align: center; color: #ffffff; border-bottom: 2px solid #3b82f6;">
+      <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff; margin-bottom: 8px;">
+        CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG
       </div>
-      <h1 style="margin: 0; font-size: 22px; font-weight: 800; color: #ffffff;">
+      <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #f8fafc; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
         YÊU CẦU PHÊ DUYỆT ${typeTitle}
       </h1>
-      <div style="display: inline-block; margin-top: 10px; background-color: rgba(255, 255, 255, 0.2); padding: 4px 14px; border-radius: 20px; font-size: 12px; font-family: monospace; font-weight: 700;">
+      <div style="display: inline-block; margin-top: 12px; background-color: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); padding: 4px 16px; border-radius: 20px; font-size: 12px; font-family: monospace; font-weight: 700; color: #ffffff;">
         MÃ HỒ SƠ: ${payload.docId}
       </div>
     </div>
@@ -144,7 +144,7 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
         </table>
 
         <div style="font-size: 11px; color: #64748b; margin-top: 14px; line-height: 1.5;">
-          * Nếu chọn <strong>"Từ chối đơn"</strong>, hệ thống sẽ mở trang để Quý Trưởng bộ phận nhập <strong>Lý do từ chối</strong> thông báo lại cho nhân viên.
+          * Khi bấm phê duyệt hoặc từ chối, hệ thống sẽ tự động ghi nhận kết quả và cập nhật ngay cho người lao động.
         </div>
       </div>
 

@@ -45,7 +45,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    loadSession();
+    storage.syncFromServer().finally(() => {
+      loadSession();
+    });
   }, []);
 
   const login = async (
@@ -60,10 +62,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { success: false, message: 'Vui lòng nhập Mật khẩu.' };
     }
 
-    const users = storage.getUsers();
-    const user = users.find(
+    let users = storage.getUsers();
+    let user = users.find(
       (u) => u.id.toLowerCase() === cleanId.toLowerCase()
     );
+
+    // If not found in local cache, sync from server first!
+    if (!user) {
+      await storage.syncFromServer();
+      users = storage.getUsers();
+      user = users.find(
+        (u) => u.id.toLowerCase() === cleanId.toLowerCase()
+      );
+    }
 
     if (!user) {
       return {

@@ -228,6 +228,11 @@ class StorageService {
       `Cập nhật danh sách người dùng (${users.length} tài khoản)`
     );
     this.syncFileToGitHub('settings/users.json', JSON.stringify(users, null, 2), `Update users list (${users.length} accounts)`);
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'users', data: users }),
+    }).catch(() => {});
   }
 
   // --- LEAVE REQUESTS ---
@@ -264,6 +269,11 @@ class StorageService {
 
     const year = new Date().getFullYear();
     this.syncFileToGitHub(`leave-request/${year}/${request.id}.json`, JSON.stringify(request, null, 2), `Update Leave Request ${request.id}`);
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'leave_request', data: request }),
+    }).catch(() => {});
   }
 
   // --- ATTENDANCE CONFIRMS ---
@@ -300,6 +310,11 @@ class StorageService {
 
     const year = new Date().getFullYear();
     this.syncFileToGitHub(`attendance/${year}/${confirm.id}.json`, JSON.stringify(confirm, null, 2), `Update Attendance Confirm ${confirm.id}`);
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'attendance', data: confirm }),
+    }).catch(() => {});
   }
 
   // --- GATE PASSES ---
@@ -336,6 +351,11 @@ class StorageService {
 
     const year = new Date().getFullYear();
     this.syncFileToGitHub(`gate-pass/${year}/${pass.id}.json`, JSON.stringify(pass, null, 2), `Update Gate Pass ${pass.id}`);
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'gate_pass', data: pass }),
+    }).catch(() => {});
   }
 
   // --- ANNOUNCEMENTS ---
@@ -605,6 +625,73 @@ class StorageService {
       };
     } catch (err: any) {
       return { success: false, message: `Lỗi đẩy dữ liệu lên GitHub: ${err.message}` };
+    }
+  }
+
+  /**
+   * Automatically fetch latest server data and populate localStorage
+   * (Solves multi-browser and multi-computer synchronization)
+   */
+  async syncFromServer(): Promise<boolean> {
+    if (!this.isClient()) return false;
+    try {
+      const res = await fetch('/api/sync', { cache: 'no-store' });
+      if (!res.ok) return false;
+      const json = await res.json();
+      if (!json.success || !json.data) return false;
+
+      const {
+        users,
+        departments,
+        webIntegrations,
+        leaveRequests,
+        gatePasses,
+        attendanceConfirms,
+        emailConfig,
+        githubConfig,
+      } = json.data;
+
+      if (Array.isArray(users) && users.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+      }
+      if (Array.isArray(departments) && departments.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.DEPARTMENTS, JSON.stringify(departments));
+      }
+      if (Array.isArray(webIntegrations) && webIntegrations.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.WEB_INTEGRATIONS, JSON.stringify(webIntegrations));
+      }
+      if (Array.isArray(leaveRequests)) {
+        const local = this.getLeaveRequests();
+        const map = new Map<string, LeaveRequest>();
+        local.forEach((r) => map.set(r.id, r));
+        leaveRequests.forEach((r) => map.set(r.id, r));
+        localStorage.setItem(STORAGE_KEYS.LEAVE_REQUESTS, JSON.stringify(Array.from(map.values())));
+      }
+      if (Array.isArray(gatePasses)) {
+        const local = this.getGatePasses();
+        const map = new Map<string, GatePass>();
+        local.forEach((p) => map.set(p.id, p));
+        gatePasses.forEach((p) => map.set(p.id, p));
+        localStorage.setItem(STORAGE_KEYS.GATE_PASSES, JSON.stringify(Array.from(map.values())));
+      }
+      if (Array.isArray(attendanceConfirms)) {
+        const local = this.getAttendanceConfirms();
+        const map = new Map<string, AttendanceConfirm>();
+        local.forEach((a) => map.set(a.id, a));
+        attendanceConfirms.forEach((a) => map.set(a.id, a));
+        localStorage.setItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS, JSON.stringify(Array.from(map.values())));
+      }
+      if (emailConfig && emailConfig.googleScriptUrl) {
+        localStorage.setItem(STORAGE_KEYS.EMAIL_CONFIG, JSON.stringify(emailConfig));
+      }
+      if (githubConfig && githubConfig.token) {
+        localStorage.setItem(STORAGE_KEYS.GITHUB_CONFIG, JSON.stringify(githubConfig));
+      }
+
+      return true;
+    } catch (e) {
+      console.warn('syncFromServer error:', e);
+      return false;
     }
   }
 }
