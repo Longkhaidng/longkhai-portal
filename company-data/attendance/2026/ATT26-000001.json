@@ -9,7 +9,7 @@
   "checkOutTime": "16:30",
   "shift": "Ca Hành chính (08:00 - 16:30)",
   "reason": "quên mang thẻ",
-  "status": "pending",
+  "status": "approved",
   "currentStepIndex": 2,
   "steps": [
     {
@@ -33,10 +33,13 @@
     {
       "stepName": "IT cập nhật dữ liệu máy chấm công",
       "roleRequired": "it",
-      "approverName": "Bộ phận CNTT (IT)",
-      "status": "pending"
+      "approverName": "Trần Lê Hữu Lực",
+      "status": "approved",
+      "approverId": "ADMIN01",
+      "comment": "Đã xác nhận kiểm tra hợp lệ",
+      "actionAt": "2026-10-19T07:17:25.374Z"
     }
   ],
   "createdAt": "2026-10-19T06:56:41.649Z",
-  "updatedAt": "2026-10-19T07:16:06.667Z"
+  "updatedAt": "2026-10-19T07:17:25.374Z"
 }
