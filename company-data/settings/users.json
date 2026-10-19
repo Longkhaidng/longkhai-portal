@@ -1371,9 +1371,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-17T04:35:34.398Z",
-    "departmentHeadId": "1241",
-    "departmentHeadEmail": "dung.vo@longkhai.com.vn"
+    "updatedAt": "2026-10-19T08:05:37.921Z",
+    "departmentHeadId": "1241"
   },
   {
     "id": "1491",
