@@ -2,14 +2,14 @@
   {
     "id": "WEB-001",
     "title": "Kiểm tra thực phẩm 3 bước",
-    "url": "https://script.google.com/macros/s/AKfycbzKZiFvK7KB",
+    "url": "https://script.google.com/macros/s/AKfycbzKZiFvK7KBxZg3A0vM68G928B_8Yr8AOZrnvS-pBkJy6rCqT_uUpW1dVg4nTtOPDxD/exec",
     "description": "Quy trình kiểm thực 3 bước và vệ sinh an toàn thực phẩm bếp ăn / nhà xưởng",
     "iconName": "Globe",
     "displayMode": "new_tab",
     "order": 1,
     "isActive": true,
     "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
+    "updatedAt": "2026-10-19T09:26:31.177Z"
   },
   {
     "id": "WEB-002",
