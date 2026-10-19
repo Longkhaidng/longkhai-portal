@@ -4311,7 +4311,7 @@
   {
     "id": "2777",
     "name": "Nguyễn Thị Kiều Diễm",
-    "department": "PX Dệt",
+    "department": "Phân xưởng dệt",
     "position": "Nhân viên kinh tế",
     "role": "employee",
     "permissions": [
@@ -4324,7 +4324,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:06:52.126Z",
+    "departmentHeadId": "2864"
   },
   {
     "id": "2778",
