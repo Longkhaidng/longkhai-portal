@@ -2010,7 +2010,7 @@
   {
     "id": "2043",
     "name": "Trần Thị Thu Thảo",
-    "department": "PX Dệt",
+    "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
     "permissions": [
@@ -2023,7 +2023,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:12:59.026Z",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030"
   },
   {
     "id": "2102",
