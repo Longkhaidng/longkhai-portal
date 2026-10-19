@@ -5037,7 +5037,7 @@
   {
     "id": "1386",
     "name": "Nguyễn Thanh Hải",
-    "department": "HCNS",
+    "department": "Phòng Hành Chính Nhân Sự",
     "position": "Giám sát nhà máy",
     "role": "employee",
     "permissions": [
@@ -5050,7 +5050,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:17:32.179Z",
+    "departmentHeadId": "1867"
   },
   {
     "id": "2424",
