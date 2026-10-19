@@ -32,6 +32,7 @@ import {
   isApproverRole,
   isSuperAdminOrBOD,
   isSameDepartment,
+  isSecurityRole,
   DocumentScope,
 } from '@/lib/permissions';
 
@@ -45,9 +46,10 @@ export function AttendanceView() {
   const [issueFilter, setIssueFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const isBOD = isSuperAdminOrBOD(currentUser);
-  const canManageOthers = isApproverRole(currentUser);
+  const isSecurity = isSecurityRole(currentUser);
+  const canManageOthers = isApproverRole(currentUser) || isSecurity;
   const [scopeFilter, setScopeFilter] = useState<DocumentScope>(() =>
-    isApproverRole(currentUser) ? 'all' : 'my'
+    isApproverRole(currentUser) || isSecurity ? 'all' : 'my'
   );
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<AttendanceConfirm | null>(null);
@@ -238,16 +240,24 @@ export function AttendanceView() {
     // 2. Admin & Ban Giám Đốc can approve any step across company
     if (isSuperAdminOrBOD(currentUser)) return true;
 
-    // 3. Must be an approver role (Manager, Team leader)
-    if (!isApproverRole(currentUser)) return false;
-
     const currentStep = att.steps[att.currentStepIndex];
     if (!currentStep || currentStep.status !== 'pending') return false;
 
-    // Manager / Team leader can approve steps for their department or assigned
+    // 3. Security guard can approve Step 1 (Bảo vệ cổng xác nhận vào/ra thực tế)
+    if (isSecurityRole(currentUser) && currentStep.roleRequired === 'security') {
+      return true;
+    }
+
+    // 4. Manager / Team leader can approve steps for their department or assigned
     if (currentUser.role === 'manager' || currentUser.role === 'team_leader') {
       if (isSameDepartment(currentUser.department, att.department)) return true;
       if (currentStep.approverId && currentStep.approverId.toLowerCase() === currentUser.id.toLowerCase()) return true;
+      if (currentStep.roleRequired === 'manager' && isSameDepartment(currentUser.department, att.department)) return true;
+    }
+
+    // 5. Accountant / IT roles for their specific steps
+    if (currentStep.roleRequired && currentUser.role === currentStep.roleRequired) {
+      return true;
     }
 
     return false;
@@ -260,7 +270,7 @@ export function AttendanceView() {
       showToast({
         type: 'error',
         title: 'Không thể phê duyệt',
-        message: 'Bạn không có quyền phê duyệt phiếu này! (Người tạo phiếu không được tự phê duyệt; chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền phê duyệt).',
+        message: 'Bạn không có quyền phê duyệt phiếu này! (Người tạo phiếu không được tự phê duyệt; chỉ Tổ trưởng, Trưởng bộ phận, Bảo vệ hoặc Ban giám đốc mới có quyền phê duyệt/xác nhận).',
       });
       return;
     }
@@ -298,7 +308,7 @@ export function AttendanceView() {
       showToast({
         type: 'error',
         title: 'Không thể từ chối',
-        message: 'Bạn không có quyền từ chối phiếu này! (Chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền xử lý).',
+        message: 'Bạn không có quyền từ chối phiếu này! (Chỉ Tổ trưởng, Trưởng bộ phận, Bảo vệ hoặc Ban giám đốc mới có quyền xử lý).',
       });
       return;
     }
@@ -366,6 +376,8 @@ export function AttendanceView() {
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {!canManageOthers
               ? `Chỉ hiển thị các phiếu xác nhận công của bạn (${currentUser?.name || ''})`
+              : isSecurity
+              ? 'Xác nhận giờ vào/ra thực tế tại cổng cho các trường hợp quên thẻ, mất thẻ, thẻ lỗi'
               : isBOD
               ? 'Quản lý phiếu xác nhận công toàn công ty (quên thẻ, thẻ hỏng, mất thẻ)'
               : `Quản lý phiếu xác nhận công của nhân viên bộ phận ${currentUser?.department || ''}`}
@@ -381,7 +393,7 @@ export function AttendanceView() {
         </button>
       </div>
 
-      {/* Scope Switcher for Approvers / Managers */}
+      {/* Scope Switcher for Approvers / Managers / Security */}
       {canManageOthers && (
         <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
           <button
@@ -392,7 +404,11 @@ export function AttendanceView() {
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
-            {isBOD ? 'Tất cả phiếu toàn công ty' : `Phiếu nhân viên ${currentUser?.department || 'bộ phận'}`}
+            {isSecurity
+              ? 'Tất cả phiếu xác nhận công'
+              : isBOD
+              ? 'Tất cả phiếu toàn công ty'
+              : `Phiếu nhân viên ${currentUser?.department || 'bộ phận'}`}
           </button>
           <button
             onClick={() => setScopeFilter('approver')}
@@ -402,7 +418,7 @@ export function AttendanceView() {
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
-            Phiếu cần tôi duyệt
+            {isSecurity ? 'Phiếu cần bảo vệ xác nhận' : 'Phiếu cần tôi duyệt'}
           </button>
           <button
             onClick={() => setScopeFilter('my')}

@@ -48,6 +48,19 @@ export function isSameDepartment(deptA?: string, deptB?: string): boolean {
 }
 
 /**
+ * Check if the user is a Security Guard / An ninh
+ */
+export function isSecurityRole(user?: User | null): boolean {
+  if (!user) return false;
+  if (user.role === 'security') return true;
+  const dept = (user.department || '').toLowerCase();
+  if (dept.includes('bảo vệ') || dept.includes('bao ve') || dept.includes('an ninh')) return true;
+  const pos = (user.position || '').toLowerCase();
+  if (pos.includes('bảo vệ') || pos.includes('bao ve')) return true;
+  return false;
+}
+
+/**
  * Filter Leave Requests based on user permissions:
  * - Regular employee: Strictly can only see their own requests.
  * - Team Leader & Department Head (Tổ trưởng, Trưởng bộ phận): Can see all requests of employees in their department + their own.
@@ -107,10 +120,10 @@ export function filterUserLeaves(
 
 /**
  * Filter Gate Passes based on user permissions:
+ * - Security (Bảo vệ): Can see all gate passes they are authorized to confirm / monitor across the company.
  * - Regular employee: Strictly can only see their own gate passes.
  * - Team Leader & Department Head: Can see all gate passes of employees in their department + their own.
  * - Admin & Ban Giám Đốc: Can see all gate passes across the entire company.
- * - Security: Can access security gate scanning tab.
  */
 export function filterUserGatePasses(
   passes: GatePass[],
@@ -120,23 +133,35 @@ export function filterUserGatePasses(
   if (!user) return [];
   const uid = user.id.toLowerCase();
 
-  if (user.role === 'security' && scope === 'all') {
+  // 1. Security role (Bảo vệ)
+  // "bảo vệ sẽ thấy được tất cả các phiếu ra vào cổng mà mình được phép phê duyệt hoặc xác nhận"
+  if (isSecurityRole(user)) {
+    if (scope === 'my') {
+      return passes.filter((p) => p.employeeId.toLowerCase() === uid);
+    }
+    if (scope === 'approver') {
+      // Passes waiting for security confirmation (approved by manager to leave/enter, or currently departed waiting to return)
+      return passes.filter(
+        (p) => (p.status === 'approved' || p.status === 'departed') && p.employeeId.toLowerCase() !== uid
+      );
+    }
+    // scope === 'all': all passes that security can check/confirm/monitor across company
     return passes;
   }
 
-  // 1. Regular employees strictly only see their own gate passes
+  // 2. Regular employees strictly only see their own gate passes
   if (!isApproverRole(user)) {
     return passes.filter((p) => p.employeeId.toLowerCase() === uid);
   }
 
-  // 2. Admin & Ban Giám Đốc can see all
+  // 3. Admin & Ban Giám Đốc can see all
   if (isSuperAdminOrBOD(user)) {
     if (scope === 'my') return passes.filter((p) => p.employeeId.toLowerCase() === uid);
     if (scope === 'approver') return passes.filter((p) => p.status === 'pending' && p.employeeId.toLowerCase() !== uid);
     return passes;
   }
 
-  // 3. Team Leader & Department Head
+  // 4. Team Leader & Department Head
   if (user.role === 'manager' || user.role === 'team_leader') {
     if (scope === 'my') return passes.filter((p) => p.employeeId.toLowerCase() === uid);
 
@@ -162,6 +187,7 @@ export function filterUserGatePasses(
 
 /**
  * Filter Attendance Confirmations based on user permissions:
+ * - Security (Bảo vệ): Can see all attendance slips that they are authorized to confirm / approve (Step 1: Bảo vệ cổng xác nhận vào/ra thực tế).
  * - Regular employee: Strictly can only see their own attendance confirmations.
  * - Team Leader & Department Head: Can see all attendance confirmations of employees in their department + their own.
  * - Admin & Ban Giám Đốc: Can see all attendance confirmations across the company.
@@ -174,19 +200,37 @@ export function filterUserAttendances(
   if (!user) return [];
   const uid = user.id.toLowerCase();
 
-  // 1. Regular employees strictly only see their own
+  // 1. Security role (Bảo vệ)
+  // "bảo vệ sẽ thấy được tất cả các phiếu xác nhận công mà mình được phép phê duyệt hoặc xác nhận"
+  if (isSecurityRole(user)) {
+    if (scope === 'my') {
+      return attendances.filter((a) => a.employeeId.toLowerCase() === uid);
+    }
+    if (scope === 'approver') {
+      // Pending slips where current step is waiting for security confirmation (Step 1: roleRequired === 'security')
+      return attendances.filter((a) => {
+        if (a.status !== 'pending' || a.employeeId.toLowerCase() === uid) return false;
+        const currentStep = a.steps[a.currentStepIndex];
+        return currentStep?.roleRequired === 'security' || currentStep?.approverId?.toLowerCase() === uid;
+      });
+    }
+    // scope === 'all': all attendance slips involving security or across company
+    return attendances;
+  }
+
+  // 2. Regular employees strictly only see their own
   if (!isApproverRole(user)) {
     return attendances.filter((a) => a.employeeId.toLowerCase() === uid);
   }
 
-  // 2. Admin & Ban Giám Đốc can see all
+  // 3. Admin & Ban Giám Đốc can see all
   if (isSuperAdminOrBOD(user)) {
     if (scope === 'my') return attendances.filter((a) => a.employeeId.toLowerCase() === uid);
     if (scope === 'approver') return attendances.filter((a) => a.status === 'pending' && a.employeeId.toLowerCase() !== uid);
     return attendances;
   }
 
-  // 3. Team Leader & Department Head
+  // 4. Team Leader & Department Head
   if (user.role === 'manager' || user.role === 'team_leader') {
     if (scope === 'my') return attendances.filter((a) => a.employeeId.toLowerCase() === uid);
 

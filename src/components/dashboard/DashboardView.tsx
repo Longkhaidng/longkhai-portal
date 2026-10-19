@@ -27,6 +27,7 @@ import {
   filterUserAttendances,
   isApproverRole,
   isSuperAdminOrBOD,
+  isSecurityRole,
 } from '@/lib/permissions';
 
 interface DashboardViewProps {
@@ -36,7 +37,8 @@ interface DashboardViewProps {
 export function DashboardView({ onNavigateTab }: DashboardViewProps) {
   const { currentUser } = useAuth();
   const isBOD = isSuperAdminOrBOD(currentUser);
-  const canManageOthers = isApproverRole(currentUser);
+  const isSecurity = isSecurityRole(currentUser);
+  const canManageOthers = isApproverRole(currentUser) || isSecurity;
 
   const rawLeaves = storage.getLeaveRequests();
   const rawAttendances = storage.getAttendanceConfirms();
@@ -48,8 +50,8 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
 
   // Filter documents based on user permissions
   const leaves = useMemo(() => {
-    return filterUserLeaves(rawLeaves, currentUser, canManageOthers ? 'all' : 'my');
-  }, [rawLeaves, currentUser, canManageOthers]);
+    return filterUserLeaves(rawLeaves, currentUser, isApproverRole(currentUser) ? 'all' : 'my');
+  }, [rawLeaves, currentUser]);
 
   const attendances = useMemo(() => {
     return filterUserAttendances(rawAttendances, currentUser, canManageOthers ? 'all' : 'my');
@@ -316,6 +318,8 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
                 <h2 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider">
                   {!canManageOthers
                     ? 'Xác nhận công của bạn chờ duyệt'
+                    : isSecurity
+                    ? 'Phiếu xác nhận công chờ bảo vệ xác nhận'
                     : isBOD
                     ? 'Xác nhận công vào - ra toàn công ty chờ duyệt'
                     : `Xác nhận công nhân viên ${currentUser?.department || 'bộ phận'} chờ duyệt`} ({pendingAttendances.length})
@@ -323,6 +327,8 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
                 <p className="text-xs text-slate-400">
                   {!canManageOthers
                     ? 'Phiếu do bạn nộp đang chờ cấp trên xác nhận'
+                    : isSecurity
+                    ? 'Xác nhận giờ vào/ra thực tế tại cổng cho các trường hợp quên thẻ, mất thẻ'
                     : isBOD
                     ? 'Giải trình quên thẻ, mất thẻ hoặc thẻ lỗi toàn công ty'
                     : `Giải trình quên thẻ, mất thẻ từ nhân viên bộ phận ${currentUser?.department || ''}`}

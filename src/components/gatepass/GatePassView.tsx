@@ -38,6 +38,7 @@ import {
   isApproverRole,
   isSuperAdminOrBOD,
   isSameDepartment,
+  isSecurityRole,
   DocumentScope,
 } from '@/lib/permissions';
 
@@ -49,9 +50,10 @@ export function GatePassView() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const isBOD = isSuperAdminOrBOD(currentUser);
-  const canManageOthers = isApproverRole(currentUser);
+  const isSecurity = isSecurityRole(currentUser);
+  const canManageOthers = isApproverRole(currentUser) || isSecurity;
   const [scopeFilter, setScopeFilter] = useState<DocumentScope>(() =>
-    isApproverRole(currentUser) ? 'all' : 'my'
+    isApproverRole(currentUser) || isSecurity ? 'all' : 'my'
   );
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedPass, setSelectedPass] = useState<GatePass | null>(null);
@@ -447,7 +449,14 @@ export function GatePassView() {
     storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
     setPasses(storage.getGatePasses());
     setScannedPass(updated);
-    setScanMessage(`✓ Đã ghi nhận giờ VÀO CỔNG cho nhân viên ${pass.employeeName} lúc ${formatDateTime(now)}. Phiếu hoàn tất!`);
+    setSelectedPass(updated);
+    const msg = `✓ Đã ghi nhận giờ VÀO CỔNG cho nhân viên ${pass.employeeName} lúc ${formatDateTime(now)}. Phiếu hoàn tất!`;
+    setScanMessage(msg);
+    showToast({
+      type: 'success',
+      title: 'Bảo vệ xác nhận thành công',
+      message: msg,
+    });
   };
 
   // Security Confirm Departure (Ra cổng)
@@ -465,11 +474,17 @@ export function GatePassView() {
     storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
     setPasses(storage.getGatePasses());
     setScannedPass(updated);
-    setScanMessage(
+    setSelectedPass(updated);
+    const msg =
       pass.timeType === 'nghi_cuoi_gio'
         ? `✓ Đã ghi nhận giờ RA CỔNG (Nghỉ cuối giờ) cho nhân viên ${pass.employeeName} lúc ${formatDateTime(now)}. Phiếu hoàn tất!`
-        : `✓ Đã ghi nhận giờ RA CỔNG cho nhân viên ${pass.employeeName} lúc ${formatDateTime(now)}`
-    );
+        : `✓ Đã ghi nhận giờ RA CỔNG cho nhân viên ${pass.employeeName} lúc ${formatDateTime(now)}`;
+    setScanMessage(msg);
+    showToast({
+      type: 'success',
+      title: 'Bảo vệ xác nhận thành công',
+      message: msg,
+    });
   };
 
   // Security Confirm Return (Vào cổng lại)
@@ -486,7 +501,14 @@ export function GatePassView() {
     storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
     setPasses(storage.getGatePasses());
     setScannedPass(updated);
-    setScanMessage(`✓ Đã ghi nhận giờ VÀO CỔNG LẠI cho nhân viên ${pass.employeeName} lúc ${formatDateTime(now)}. Phiếu hoàn tất!`);
+    setSelectedPass(updated);
+    const msg = `✓ Đã ghi nhận giờ VÀO CỔNG LẠI cho nhân viên ${pass.employeeName} lúc ${formatDateTime(now)}. Phiếu hoàn tất!`;
+    setScanMessage(msg);
+    showToast({
+      type: 'success',
+      title: 'Bảo vệ xác nhận thành công',
+      message: msg,
+    });
   };
 
   // Filter strictly based on user permissions
@@ -520,6 +542,8 @@ export function GatePassView() {
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {!canManageOthers
               ? `Chỉ hiển thị các phiếu ra vào cổng của bạn (${currentUser?.name || ''})`
+              : isSecurity
+              ? 'Kiểm soát nhân viên ra vào cổng, kiểm tra tài sản mang theo và quét mã QR Code an ninh'
               : isBOD
               ? 'Quản lý phiếu ra cổng toàn công ty, kiểm soát tài sản mang theo và quét mã QR Code an ninh'
               : `Quản lý phiếu ra cổng của nhân viên bộ phận ${currentUser?.department || ''}`}
@@ -539,7 +563,7 @@ export function GatePassView() {
             >
               Danh sách phiếu
             </button>
-            {(currentUser?.role === 'security' || currentUser?.role === 'admin') && (
+            {(isSecurity || isBOD) && (
               <button
                 onClick={() => setActiveTab('security_gate')}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all ${
@@ -564,7 +588,7 @@ export function GatePassView() {
         </div>
       </div>
 
-      {/* Scope Switcher for Approvers / Managers */}
+      {/* Scope Switcher for Approvers / Managers / Security */}
       {canManageOthers && activeTab === 'list' && (
         <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
           <button
@@ -575,7 +599,11 @@ export function GatePassView() {
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
-            {isBOD ? 'Tất cả phiếu toàn công ty' : `Phiếu nhân viên ${currentUser?.department || 'bộ phận'}`}
+            {isSecurity
+              ? 'Tất cả phiếu ra vào cổng'
+              : isBOD
+              ? 'Tất cả phiếu toàn công ty'
+              : `Phiếu nhân viên ${currentUser?.department || 'bộ phận'}`}
           </button>
           <button
             onClick={() => setScopeFilter('approver')}
@@ -585,7 +613,7 @@ export function GatePassView() {
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
-            Phiếu cần tôi duyệt
+            {isSecurity ? 'Phiếu cần bảo vệ xác nhận' : 'Phiếu cần tôi duyệt'}
           </button>
           <button
             onClick={() => setScopeFilter('my')}
@@ -1400,6 +1428,46 @@ export function GatePassView() {
                     </div>
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Security Confirmation action block in modal */}
+            {(isSecurity || isBOD) && (selectedPass.status === 'approved' || selectedPass.status === 'departed') && (
+              <div className="p-3 bg-blue-50 dark:bg-blue-950/40 rounded-xl border border-blue-200 dark:border-blue-900/40 space-y-2">
+                <span className="text-xs font-bold text-blue-900 dark:text-blue-300 block">
+                  Bảo vệ cổng xác nhận thực tế:
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {selectedPass.status === 'approved' && selectedPass.timeType === 'nghi_dau_gio' && (
+                    <button
+                      onClick={() => handleConfirmEntry(selectedPass)}
+                      className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5"
+                    >
+                      <LogIn className="w-4 h-4" />
+                      <span>✓ Xác nhận nhân viên vào cổng (Đầu ca)</span>
+                    </button>
+                  )}
+
+                  {selectedPass.status === 'approved' && selectedPass.timeType !== 'nghi_dau_gio' && (
+                    <button
+                      onClick={() => handleConfirmDeparture(selectedPass)}
+                      className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>✓ Xác nhận nhân viên ra cổng</span>
+                    </button>
+                  )}
+
+                  {selectedPass.status === 'departed' && (
+                    <button
+                      onClick={() => handleConfirmReturn(selectedPass)}
+                      className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5"
+                    >
+                      <LogIn className="w-4 h-4" />
+                      <span>✓ Xác nhận nhân viên đã vào cổng lại (Hoàn tất)</span>
+                    </button>
+                  )}
+                </div>
               </div>
             )}
 
