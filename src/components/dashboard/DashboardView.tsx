@@ -21,7 +21,13 @@ import {
 import { formatDate } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
-import { filterUserLeaves, filterUserGatePasses, filterUserAttendances, isApproverRole } from '@/lib/permissions';
+import {
+  filterUserLeaves,
+  filterUserGatePasses,
+  filterUserAttendances,
+  isApproverRole,
+  isSuperAdminOrBOD,
+} from '@/lib/permissions';
 
 interface DashboardViewProps {
   onNavigateTab: (tabId: string) => void;
@@ -29,7 +35,8 @@ interface DashboardViewProps {
 
 export function DashboardView({ onNavigateTab }: DashboardViewProps) {
   const { currentUser } = useAuth();
-  const canManageOthers = isApproverRole(currentUser?.role);
+  const isBOD = isSuperAdminOrBOD(currentUser);
+  const canManageOthers = isApproverRole(currentUser);
 
   const rawLeaves = storage.getLeaveRequests();
   const rawAttendances = storage.getAttendanceConfirms();
@@ -241,10 +248,18 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider">
-                  {!canManageOthers ? 'Đơn nghỉ phép của bạn chờ duyệt' : 'Đơn nghỉ phép chờ phê duyệt'} ({pendingLeaves.length})
+                  {!canManageOthers
+                    ? 'Đơn nghỉ phép của bạn chờ duyệt'
+                    : isBOD
+                    ? 'Đơn nghỉ phép toàn công ty chờ phê duyệt'
+                    : `Đơn nghỉ phép nhân viên ${currentUser?.department || 'bộ phận'} chờ duyệt`} ({pendingLeaves.length})
                 </h2>
                 <p className="text-xs text-slate-400">
-                  {!canManageOthers ? 'Đơn do bạn nộp đang chờ cấp trên xử lý' : 'Yêu cầu nghỉ phép từ các bộ phận'}
+                  {!canManageOthers
+                    ? 'Đơn do bạn nộp đang chờ cấp trên xử lý'
+                    : isBOD
+                    ? 'Yêu cầu nghỉ phép từ các bộ phận toàn công ty'
+                    : `Yêu cầu nghỉ phép từ nhân viên bộ phận ${currentUser?.department || ''}`}
                 </p>
               </div>
               <button
@@ -299,10 +314,18 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider">
-                  {!canManageOthers ? 'Xác nhận công của bạn chờ duyệt' : 'Xác nhận công vào - ra chờ duyệt'} ({pendingAttendances.length})
+                  {!canManageOthers
+                    ? 'Xác nhận công của bạn chờ duyệt'
+                    : isBOD
+                    ? 'Xác nhận công vào - ra toàn công ty chờ duyệt'
+                    : `Xác nhận công nhân viên ${currentUser?.department || 'bộ phận'} chờ duyệt`} ({pendingAttendances.length})
                 </h2>
                 <p className="text-xs text-slate-400">
-                  {!canManageOthers ? 'Phiếu do bạn nộp đang chờ cấp trên xác nhận' : 'Giải trình quên thẻ, mất thẻ hoặc thẻ lỗi'}
+                  {!canManageOthers
+                    ? 'Phiếu do bạn nộp đang chờ cấp trên xác nhận'
+                    : isBOD
+                    ? 'Giải trình quên thẻ, mất thẻ hoặc thẻ lỗi toàn công ty'
+                    : `Giải trình quên thẻ, mất thẻ từ nhân viên bộ phận ${currentUser?.department || ''}`}
                 </p>
               </div>
               <button

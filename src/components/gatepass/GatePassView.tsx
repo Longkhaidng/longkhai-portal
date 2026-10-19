@@ -33,7 +33,13 @@ import { formatDate, formatDateTime, generateDocId } from '@/lib/utils';
 import { generateQrDataUrl } from '@/lib/qr';
 import { dispatchApprovalEmail } from '@/lib/email';
 import { ToastContainer, useToast } from '@/components/common/Toast';
-import { filterUserGatePasses, isApproverRole, DocumentScope } from '@/lib/permissions';
+import {
+  filterUserGatePasses,
+  isApproverRole,
+  isSuperAdminOrBOD,
+  isSameDepartment,
+  DocumentScope,
+} from '@/lib/permissions';
 
 export function GatePassView() {
   const { currentUser } = useAuth();
@@ -42,14 +48,16 @@ export function GatePassView() {
   const [activeTab, setActiveTab] = useState<'list' | 'security_gate'>('list');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [scopeFilter, setScopeFilter] = useState<DocumentScope>('my');
+  const isBOD = isSuperAdminOrBOD(currentUser);
+  const canManageOthers = isApproverRole(currentUser);
+  const [scopeFilter, setScopeFilter] = useState<DocumentScope>(() =>
+    isApproverRole(currentUser) ? 'all' : 'my'
+  );
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedPass, setSelectedPass] = useState<GatePass | null>(null);
   const [qrModalUrl, setQrModalUrl] = useState<string | null>(null);
   const [isRejecting, setIsRejecting] = useState(false);
   const [passRejectionReason, setPassRejectionReason] = useState('');
-
-  const canManageOthers = isApproverRole(currentUser?.role);
 
   // Security Gate scan input
   const [scanCode, setScanCode] = useState('');
@@ -321,11 +329,17 @@ export function GatePassView() {
     // 1. Employee cannot self-approve their own pass
     if (pass.employeeId.toLowerCase() === currentUser.id.toLowerCase()) return false;
 
-    // 2. Only team leader, department head (manager), or admin (Ban giám đốc) can approve
-    const isApproverRole = currentUser.role === 'admin' || currentUser.role === 'manager' || currentUser.role === 'team_leader';
-    if (!isApproverRole) return false;
+    // 2. Admin & BOD can approve any pass across company
+    if (isSuperAdminOrBOD(currentUser)) return true;
 
-    return true;
+    // 3. Manager and Team Leader can approve for their department or assigned pass
+    if (currentUser.role === 'manager' || currentUser.role === 'team_leader') {
+      if (isSameDepartment(currentUser.department, pass.department)) return true;
+      if (pass.managerApproverId && pass.managerApproverId.toLowerCase() === currentUser.id.toLowerCase()) return true;
+      return false;
+    }
+
+    return false;
   };
 
   // Manager Approve
@@ -506,7 +520,9 @@ export function GatePassView() {
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {!canManageOthers
               ? `Chỉ hiển thị các phiếu ra vào cổng của bạn (${currentUser?.name || ''})`
-              : 'Quản lý nhân viên ra cổng, kiểm soát tài sản mang theo và quét mã QR Code an ninh'}
+              : isBOD
+              ? 'Quản lý phiếu ra cổng toàn công ty, kiểm soát tài sản mang theo và quét mã QR Code an ninh'
+              : `Quản lý phiếu ra cổng của nhân viên bộ phận ${currentUser?.department || ''}`}
           </p>
         </div>
 
@@ -552,14 +568,14 @@ export function GatePassView() {
       {canManageOthers && activeTab === 'list' && (
         <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
           <button
-            onClick={() => setScopeFilter('my')}
+            onClick={() => setScopeFilter('all')}
             className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
-              scopeFilter === 'my'
+              scopeFilter === 'all'
                 ? 'bg-emerald-600 text-white shadow-xs'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
-            Phiếu của tôi
+            {isBOD ? 'Tất cả phiếu toàn công ty' : `Phiếu nhân viên ${currentUser?.department || 'bộ phận'}`}
           </button>
           <button
             onClick={() => setScopeFilter('approver')}
@@ -569,20 +585,18 @@ export function GatePassView() {
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
-            Phiếu cấp dưới cần duyệt
+            Phiếu cần tôi duyệt
           </button>
-          {currentUser?.role === 'admin' && (
-            <button
-              onClick={() => setScopeFilter('all')}
-              className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
-                scopeFilter === 'all'
-                  ? 'bg-emerald-600 text-white shadow-xs'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
-              }`}
-            >
-              Tất cả phiếu toàn công ty
-            </button>
-          )}
+          <button
+            onClick={() => setScopeFilter('my')}
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+              scopeFilter === 'my'
+                ? 'bg-emerald-600 text-white shadow-xs'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            Phiếu của tôi
+          </button>
         </div>
       )}
 

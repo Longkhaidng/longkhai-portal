@@ -27,7 +27,13 @@ import {
 import { formatDate, generateDocId } from '@/lib/utils';
 import { dispatchApprovalEmail } from '@/lib/email';
 import { ToastContainer, useToast } from '@/components/common/Toast';
-import { filterUserAttendances, isApproverRole, DocumentScope } from '@/lib/permissions';
+import {
+  filterUserAttendances,
+  isApproverRole,
+  isSuperAdminOrBOD,
+  isSameDepartment,
+  DocumentScope,
+} from '@/lib/permissions';
 
 export function AttendanceView() {
   const { currentUser } = useAuth();
@@ -38,11 +44,13 @@ export function AttendanceView() {
   const [search, setSearch] = useState('');
   const [issueFilter, setIssueFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [scopeFilter, setScopeFilter] = useState<DocumentScope>('my');
+  const isBOD = isSuperAdminOrBOD(currentUser);
+  const canManageOthers = isApproverRole(currentUser);
+  const [scopeFilter, setScopeFilter] = useState<DocumentScope>(() =>
+    isApproverRole(currentUser) ? 'all' : 'my'
+  );
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<AttendanceConfirm | null>(null);
-
-  const canManageOthers = isApproverRole(currentUser?.role);
 
   // Form states
   const [issueType, setIssueType] = useState<AttendanceIssueType>('quen_the');
@@ -227,22 +235,19 @@ export function AttendanceView() {
     // 1. Employee cannot self-approve their own request
     if (att.employeeId.toLowerCase() === currentUser.id.toLowerCase()) return false;
 
-    // 2. Only team leader, department head (manager), or admin (Ban giám đốc) can approve
-    const isApproverRole = currentUser.role === 'admin' || currentUser.role === 'manager' || currentUser.role === 'team_leader';
-    if (!isApproverRole) return false;
+    // 2. Admin & Ban Giám Đốc can approve any step across company
+    if (isSuperAdminOrBOD(currentUser)) return true;
 
-    // Admin / Ban giám đốc can approve any step
-    if (currentUser.role === 'admin') return true;
+    // 3. Must be an approver role (Manager, Team leader)
+    if (!isApproverRole(currentUser)) return false;
 
     const currentStep = att.steps[att.currentStepIndex];
     if (!currentStep || currentStep.status !== 'pending') return false;
 
-    // Manager can approve steps
-    if (currentUser.role === 'manager') return true;
-
-    // Team leader can approve
-    if (currentUser.role === 'team_leader') {
-      return true;
+    // Manager / Team leader can approve steps for their department or assigned
+    if (currentUser.role === 'manager' || currentUser.role === 'team_leader') {
+      if (isSameDepartment(currentUser.department, att.department)) return true;
+      if (currentStep.approverId && currentStep.approverId.toLowerCase() === currentUser.id.toLowerCase()) return true;
     }
 
     return false;
@@ -361,7 +366,9 @@ export function AttendanceView() {
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {!canManageOthers
               ? `Chỉ hiển thị các phiếu xác nhận công của bạn (${currentUser?.name || ''})`
-              : 'Giải quyết các trường hợp quên thẻ, thẻ hỏng, mất thẻ với luồng phê duyệt tự động'}
+              : isBOD
+              ? 'Quản lý phiếu xác nhận công toàn công ty (quên thẻ, thẻ hỏng, mất thẻ)'
+              : `Quản lý phiếu xác nhận công của nhân viên bộ phận ${currentUser?.department || ''}`}
           </p>
         </div>
 
@@ -378,14 +385,14 @@ export function AttendanceView() {
       {canManageOthers && (
         <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
           <button
-            onClick={() => setScopeFilter('my')}
+            onClick={() => setScopeFilter('all')}
             className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
-              scopeFilter === 'my'
+              scopeFilter === 'all'
                 ? 'bg-amber-600 text-white shadow-xs'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
-            Phiếu của tôi
+            {isBOD ? 'Tất cả phiếu toàn công ty' : `Phiếu nhân viên ${currentUser?.department || 'bộ phận'}`}
           </button>
           <button
             onClick={() => setScopeFilter('approver')}
@@ -395,20 +402,18 @@ export function AttendanceView() {
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
-            Phiếu cấp dưới cần duyệt
+            Phiếu cần tôi duyệt
           </button>
-          {currentUser?.role === 'admin' && (
-            <button
-              onClick={() => setScopeFilter('all')}
-              className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
-                scopeFilter === 'all'
-                  ? 'bg-amber-600 text-white shadow-xs'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
-              }`}
-            >
-              Tất cả phiếu toàn công ty
-            </button>
-          )}
+          <button
+            onClick={() => setScopeFilter('my')}
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+              scopeFilter === 'my'
+                ? 'bg-amber-600 text-white shadow-xs'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            Phiếu của tôi
+          </button>
         </div>
       )}
 

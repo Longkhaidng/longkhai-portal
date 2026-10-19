@@ -21,7 +21,7 @@ import {
 import { formatDate, generateDocId } from '@/lib/utils';
 import { dispatchApprovalEmail } from '@/lib/email';
 import { ToastContainer, useToast } from '@/components/common/Toast';
-import { filterUserLeaves, isApproverRole, DocumentScope } from '@/lib/permissions';
+import { filterUserLeaves, isApproverRole, isSuperAdminOrBOD, isSameDepartment, DocumentScope } from '@/lib/permissions';
 
 export function LeaveView() {
   const { currentUser } = useAuth();
@@ -29,11 +29,12 @@ export function LeaveView() {
   const [leaves, setLeaves] = useState<LeaveRequest[]>(() => storage.getLeaveRequests());
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [scopeFilter, setScopeFilter] = useState<DocumentScope>('my');
+  const [scopeFilter, setScopeFilter] = useState<DocumentScope>(() => isApproverRole(currentUser) ? 'all' : 'my');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState<LeaveRequest | null>(null);
 
-  const canManageOthers = isApproverRole(currentUser?.role);
+  const canManageOthers = isApproverRole(currentUser);
+  const isBOD = isSuperAdminOrBOD(currentUser);
 
   // Approval action states
   const [approvalComment, setApprovalComment] = useState('');
@@ -225,23 +226,23 @@ export function LeaveView() {
     if (leave.employeeId.toLowerCase() === currentUser.id.toLowerCase()) return false;
 
     // 2. Only team leader, department head (manager), or admin (Ban giám đốc) can approve
-    const isApproverRole = currentUser.role === 'admin' || currentUser.role === 'manager' || currentUser.role === 'team_leader';
-    if (!isApproverRole) return false;
+    if (!isApproverRole(currentUser)) return false;
 
     // Admin / Ban giám đốc can approve any step
-    if (currentUser.role === 'admin') return true;
+    if (isSuperAdminOrBOD(currentUser)) return true;
 
     const currentStep = leave.steps[leave.currentStepIndex];
     if (!currentStep || currentStep.status !== 'pending') return false;
 
-    // Match specifically by assigned approver ID, or matching role
+    // Match specifically by assigned approver ID
     if (currentStep.approverId && currentStep.approverId.toLowerCase() === currentUser.id.toLowerCase()) {
       return true;
     }
-    if (currentUser.role === 'manager' && currentStep.roleRequired === 'manager') {
+    const isSameDept = isSameDepartment(leave.department, currentUser.department);
+    if (currentUser.role === 'manager' && currentStep.roleRequired === 'manager' && isSameDept) {
       return true;
     }
-    if (currentUser.role === 'team_leader' && currentStep.roleRequired === 'team_leader') {
+    if (currentUser.role === 'team_leader' && currentStep.roleRequired === 'team_leader' && isSameDept) {
       return true;
     }
     return false;
@@ -377,14 +378,16 @@ export function LeaveView() {
       {canManageOthers && (
         <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
           <button
-            onClick={() => setScopeFilter('my')}
+            onClick={() => setScopeFilter('all')}
             className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
-              scopeFilter === 'my'
+              scopeFilter === 'all'
                 ? 'bg-blue-600 text-white shadow-xs'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
-            Đơn của tôi
+            {isBOD
+              ? 'Tất cả đơn toàn công ty'
+              : `Đơn nhân viên ${currentUser?.department || 'bộ phận'}`}
           </button>
           <button
             onClick={() => setScopeFilter('approver')}
@@ -394,20 +397,18 @@ export function LeaveView() {
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
-            Đơn cấp dưới cần duyệt
+            Đơn cần tôi duyệt
           </button>
-          {currentUser?.role === 'admin' && (
-            <button
-              onClick={() => setScopeFilter('all')}
-              className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
-                scopeFilter === 'all'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
-              }`}
-            >
-              Tất cả đơn toàn công ty
-            </button>
-          )}
+          <button
+            onClick={() => setScopeFilter('my')}
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+              scopeFilter === 'my'
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            Đơn của tôi
+          </button>
         </div>
       )}
 

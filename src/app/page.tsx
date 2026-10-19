@@ -48,7 +48,7 @@ function PortalAppContent() {
   }
 
   // Calculate pending counts for badges based on user role and permissions
-  const canManageOthers = isApproverRole(currentUser.role);
+  const canManageOthers = isApproverRole(currentUser);
   const userLeaves = filterUserLeaves(storage.getLeaveRequests(), currentUser, canManageOthers ? 'approver' : 'my');
   const userAtts = filterUserAttendances(storage.getAttendanceConfirms(), currentUser, canManageOthers ? 'approver' : 'my');
   const userGps = filterUserGatePasses(storage.getGatePasses(), currentUser, canManageOthers ? 'approver' : 'my');
