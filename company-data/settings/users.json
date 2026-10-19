@@ -602,9 +602,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-17T04:19:16.569Z",
-    "departmentHeadId": "1030",
-    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn"
+    "updatedAt": "2026-10-19T07:58:11.128Z",
+    "departmentHeadId": "1030"
   },
   {
     "id": "1094",
