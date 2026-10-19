@@ -841,14 +841,19 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T07:56:03.099Z",
+    "updatedAt": "2026-10-19T09:23:52.000Z",
     "email": "tuyet.vo@longkhai.com.vn",
-    "departmentHeadId": "1867"
+    "departmentHeadId": "1867",
+    "allowedWebIntegrations": [
+      "WEB-001"
+    ]
   },
   {
     "id": "1147",
