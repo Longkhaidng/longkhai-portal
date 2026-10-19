@@ -4882,8 +4882,10 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-17T06:54:35.589Z",
-    "departmentHeadEmail": "it@longkhai.com.vn"
+    "updatedAt": "2026-10-19T02:18:10.267Z",
+    "departmentHeadEmail": "it@longkhai.com.vn",
+    "email": "itphuonggia@gmail.com",
+    "departmentHeadId": "2265"
   },
   {
     "id": "1142",
