@@ -841,10 +841,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-17T04:26:14.920Z",
+    "updatedAt": "2026-10-19T07:56:03.099Z",
     "email": "tuyet.vo@longkhai.com.vn",
-    "departmentHeadId": "1867",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn"
+    "departmentHeadId": "1867"
   },
   {
     "id": "1147",
