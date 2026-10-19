@@ -4271,7 +4271,7 @@
   {
     "id": "2765",
     "name": "Đỗ Thị Thuý Ngọc",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
     "permissions": [
@@ -4284,7 +4284,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:05:59.958Z",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051"
   },
   {
     "id": "2772",
