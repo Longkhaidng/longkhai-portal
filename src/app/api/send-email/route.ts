@@ -9,7 +9,7 @@ const TMP_CONFIG_PATH = path.join('/tmp', 'email-config.json');
 
 function resolveServerEmailConfig(clientConfig?: EmailConfig): EmailConfig {
   const envConfig: EmailConfig = {
-    provider: 'smtp',
+    provider: 'google_relay',
     smtpHost: process.env.SMTP_HOST || '',
     smtpPort: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : undefined,
     smtpSecure: process.env.SMTP_PORT === '465',
@@ -18,11 +18,12 @@ function resolveServerEmailConfig(clientConfig?: EmailConfig): EmailConfig {
     senderName: process.env.SMTP_FROM_NAME || 'Cổng Thông Tin Long Khai',
     senderEmail: process.env.SMTP_FROM_EMAIL || '',
     resendApiKey: process.env.RESEND_API_KEY || '',
+    googleScriptUrl: process.env.GOOGLE_SCRIPT_URL || '',
     isEnabled: true,
   };
 
-  // 1. If payload provides credentials or Resend API key directly from client, prioritize it!
-  if (clientConfig?.resendApiKey || (clientConfig?.smtpUser && clientConfig?.smtpPassword)) {
+  // 1. If payload provides credentials or Resend API key or Google Script URL directly from client, prioritize it!
+  if (clientConfig?.googleScriptUrl || clientConfig?.resendApiKey || (clientConfig?.smtpUser && clientConfig?.smtpPassword)) {
     return { ...envConfig, ...clientConfig };
   }
 
@@ -77,7 +78,45 @@ export async function POST(req: NextRequest) {
     const senderName = activeConfig.senderName || 'Cổng Thông Tin Long Khai';
     const senderEmail = activeConfig.senderEmail || user || 'no-reply@longkhai.vn';
 
-    // 1. If SMTP credentials (user and password) are provided
+    // 1. If Google Apps Script Relay is provided (Phương án 1 - Khuyên dùng)
+    const googleScriptUrl = activeConfig.googleScriptUrl || process.env.GOOGLE_SCRIPT_URL;
+    if (googleScriptUrl && googleScriptUrl.trim()) {
+      try {
+        const scriptRes = await fetch(googleScriptUrl.trim(), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8',
+          },
+          body: JSON.stringify({
+            toEmail,
+            subject,
+            html,
+            senderName,
+          }),
+          redirect: 'follow',
+        });
+
+        const scriptText = await scriptRes.text();
+        let scriptData: any = null;
+        try {
+          scriptData = JSON.parse(scriptText);
+        } catch {}
+
+        if (scriptRes.ok && (!scriptData || scriptData.success !== false)) {
+          return NextResponse.json({
+            success: true,
+            message: scriptData?.message || `Đã chuyển tiếp và gửi email thành công tới ${toEmail} qua Google Apps Script Relay!`,
+          });
+        } else if (scriptData?.message) {
+          throw new Error(scriptData.message);
+        }
+      } catch (scriptErr: any) {
+        console.error('Lỗi gửi qua Google Script:', scriptErr);
+        throw new Error(`Lỗi kết nối Google Apps Script Relay: ${scriptErr.message || 'Không thể gửi'}`);
+      }
+    }
+
+    // 2. If SMTP credentials (user and password) are provided
     if (user && pass && pass !== '********') {
       const isPort465 = port === 465;
 

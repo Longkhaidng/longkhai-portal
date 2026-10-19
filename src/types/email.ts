@@ -1,5 +1,5 @@
 export interface EmailConfig {
-  provider: 'smtp' | 'resend' | 'gmail';
+  provider: 'smtp' | 'resend' | 'gmail' | 'google_relay';
   smtpHost?: string;
   smtpPort?: number;
   smtpSecure?: boolean;
@@ -8,6 +8,7 @@ export interface EmailConfig {
   senderName?: string;
   senderEmail?: string;
   resendApiKey?: string;
+  googleScriptUrl?: string; // Web App URL của Google Apps Script
   isEnabled: boolean;
   portalBaseUrl?: string; // Ví dụ: https://longkhai-portal.vercel.app
 }

@@ -150,30 +150,15 @@ export function Sidebar({
       icon: Globe,
     },
     {
-      id: 'plugins',
-      permission: 'plugins',
-      label: 'Tiện ích mở rộng (5S, ISO)',
-      icon: Boxes,
-    },
-    {
       id: 'settings',
       permission: 'settings',
-      label: 'Cài đặt & GitHub Data',
+      label: 'Cài đặt hệ thống',
       icon: Settings,
-    },
-    {
-      id: 'guide',
-      label: 'Hướng dẫn triển khai GitHub',
-      icon: BookOpen,
     },
   ];
 
   // Filter items based on user permissions
   const accessibleMenuItems = menuItems.filter((item) => {
-    // Only Admin can see the deployment guide
-    if (item.id === 'guide') {
-      return currentUser?.role === 'admin';
-    }
     if (!item.permission) return true;
     return hasPermission(item.permission);
   });

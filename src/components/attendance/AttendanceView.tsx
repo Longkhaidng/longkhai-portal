@@ -26,9 +26,11 @@ import {
 } from 'lucide-react';
 import { formatDate, generateDocId } from '@/lib/utils';
 import { dispatchApprovalEmail } from '@/lib/email';
+import { ToastContainer, useToast } from '@/components/common/Toast';
 
 export function AttendanceView() {
   const { currentUser } = useAuth();
+  const { toasts, showToast, dismissToast } = useToast();
   const [attendances, setAttendances] = useState<AttendanceConfirm[]>(() =>
     storage.getAttendanceConfirms()
   );
@@ -47,6 +49,8 @@ export function AttendanceView() {
   const [customShift, setCustomShift] = useState('');
   const [reason, setReason] = useState('');
   const [approvalComment, setApprovalComment] = useState('');
+  const [isRejecting, setIsRejecting] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState('');
 
   // Auto-fill times when selecting shift
   const handleShiftChange = (newShift: string) => {
@@ -179,18 +183,33 @@ export function AttendanceView() {
         },
       }).then((res) => {
         if (res.success) {
-          alert(`✓ Đã tạo phiếu xác nhận công thành công!\nĐã gửi email thông báo phê duyệt đến Trưởng bộ phận: ${managerEmail}`);
+          showToast({
+            type: 'success',
+            title: 'Tạo phiếu xác nhận công thành công',
+            message: `Đã gửi email thông báo phê duyệt đến Trưởng bộ phận: ${managerEmail}`,
+          });
         } else {
-          const openMail = confirm(
-            `✓ Đã tạo phiếu xác nhận công ${docId} thành công trên hệ thống!\n\nLưu ý: Máy chủ gửi email chưa được cấu hình tài khoản gửi (SMTP / Resend) nên chưa chuyển email tự động được.\n\nBạn có muốn mở Outlook / Ứng dụng Mail trên máy để gửi ngay đường link phê duyệt đến Trưởng bộ phận (${managerEmail}) không?`
-          );
-          if (openMail && res.mailtoUrl) {
-            window.location.href = res.mailtoUrl;
-          }
+          showToast({
+            type: 'warning',
+            title: `Đã lưu phiếu ${docId} thành công`,
+            message: `Chưa gửi email tự động được. Bạn có thể bấm nút bên dưới để mở ứng dụng Email/Outlook gửi thông tin cho Trưởng bộ phận (${managerEmail}).`,
+            action: res.mailtoUrl
+              ? {
+                  label: 'Mở Outlook gửi ngay',
+                  onClick: () => {
+                    window.location.href = res.mailtoUrl!;
+                  },
+                }
+              : undefined,
+          });
         }
       }).catch(console.error);
     } else {
-      alert('✓ Đã tạo phiếu xác nhận công thành công!');
+      showToast({
+        type: 'success',
+        title: 'Tạo phiếu xác nhận công thành công',
+        message: 'Đã lưu phiếu trên hệ thống.',
+      });
     }
 
     setReason('');
@@ -229,7 +248,11 @@ export function AttendanceView() {
   const handleApprove = () => {
     if (!selectedItem || !currentUser) return;
     if (!canApprove(selectedItem)) {
-      alert('Bạn không có quyền phê duyệt phiếu này! (Người tạo phiếu không được tự phê duyệt; chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền phê duyệt).');
+      showToast({
+        type: 'error',
+        title: 'Không thể phê duyệt',
+        message: 'Bạn không có quyền phê duyệt phiếu này! (Người tạo phiếu không được tự phê duyệt; chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền phê duyệt).',
+      });
       return;
     }
     const updated = { ...selectedItem };
@@ -252,17 +275,32 @@ export function AttendanceView() {
     setAttendances(storage.getAttendanceConfirms());
     setSelectedItem(updated);
     setApprovalComment('');
+    showToast({
+      type: 'success',
+      title: 'Đã phê duyệt thành công',
+      message: `Phiếu ${updated.id} đã được xác nhận.`,
+    });
   };
 
   // Reject action
   const handleReject = () => {
     if (!selectedItem || !currentUser) return;
     if (!canApprove(selectedItem)) {
-      alert('Bạn không có quyền từ chối phiếu này! (Chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền xử lý).');
+      showToast({
+        type: 'error',
+        title: 'Không thể từ chối',
+        message: 'Bạn không có quyền từ chối phiếu này! (Chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền xử lý).',
+      });
       return;
     }
-    const reasonText = prompt('Nhập lý do từ chối:');
-    if (!reasonText) return;
+    if (!rejectionReason.trim()) {
+      showToast({
+        type: 'warning',
+        title: 'Thiếu lý do từ chối',
+        message: 'Vui lòng nhập lý do từ chối phiếu!',
+      });
+      return;
+    }
 
     const updated = { ...selectedItem };
     const step = updated.steps[updated.currentStepIndex];
@@ -270,7 +308,7 @@ export function AttendanceView() {
     step.status = 'rejected';
     step.approverId = currentUser.id;
     step.approverName = currentUser.name;
-    step.comment = reasonText;
+    step.comment = rejectionReason.trim();
     step.actionAt = new Date().toISOString();
 
     updated.status = 'rejected';
@@ -279,6 +317,13 @@ export function AttendanceView() {
     storage.saveAttendanceConfirm(updated, { id: currentUser.id, name: currentUser.name });
     setAttendances(storage.getAttendanceConfirms());
     setSelectedItem(updated);
+    setIsRejecting(false);
+    setRejectionReason('');
+    showToast({
+      type: 'info',
+      title: 'Đã từ chối phiếu',
+      message: `Phiếu ${updated.id} đã chuyển sang trạng thái từ chối.`,
+    });
   };
 
   // Filter
@@ -769,28 +814,62 @@ export function AttendanceView() {
                   <span>Xác nhận duyệt bước này ({selectedItem.steps[selectedItem.currentStepIndex]?.stepName}):</span>
                 </div>
 
-                <input
-                  type="text"
-                  value={approvalComment}
-                  onChange={(e) => setApprovalComment(e.target.value)}
-                  placeholder="Ghi chú xác nhận / kiểm tra..."
-                  className="w-full p-2 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-slate-900 dark:text-white"
-                />
+                {!isRejecting ? (
+                  <>
+                    <input
+                      type="text"
+                      value={approvalComment}
+                      onChange={(e) => setApprovalComment(e.target.value)}
+                      placeholder="Ghi chú xác nhận / kiểm tra..."
+                      className="w-full p-2 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-slate-900 dark:text-white"
+                    />
 
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleApprove}
-                    className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm"
-                  >
-                    ✓ Xác nhận & Chuyển bước tiếp theo
-                  </button>
-                  <button
-                    onClick={handleReject}
-                    className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-sm"
-                  >
-                    ✕ Từ chối
-                  </button>
-                </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleApprove}
+                        className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm"
+                      >
+                        ✓ Xác nhận & Chuyển bước tiếp theo
+                      </button>
+                      <button
+                        onClick={() => setIsRejecting(true)}
+                        className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-sm"
+                      >
+                        ✕ Từ chối
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="space-y-2 pt-1 border-t border-rose-200 dark:border-rose-900/60">
+                    <label className="block text-xs font-bold text-rose-700 dark:text-rose-400">
+                      Lý do từ chối phiếu: *
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={rejectionReason}
+                      onChange={(e) => setRejectionReason(e.target.value)}
+                      placeholder="Nhập lý do không chấp thuận..."
+                      className="w-full p-2 bg-white dark:bg-slate-800 border border-rose-300 dark:border-rose-700 rounded-xl text-xs text-slate-900 dark:text-white"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleReject}
+                        className="flex-1 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-xs"
+                      >
+                        Xác nhận từ chối phiếu
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsRejecting(false);
+                          setRejectionReason('');
+                        }}
+                        className="px-3 py-1.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-xl"
+                      >
+                        Hủy
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -816,6 +895,9 @@ export function AttendanceView() {
           </div>
         </div>
       )}
+
+      {/* Modern In-App Toast Container */}
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
 }

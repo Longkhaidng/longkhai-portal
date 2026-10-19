@@ -61,21 +61,8 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
         </div>
       </div>
 
-      {/* Right: GitHub status, Theme toggle, Notifications, User profile */}
+      {/* Right: Theme toggle, User profile */}
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* GitHub Database Status Badge */}
-        <button
-          onClick={onOpenGitHubSettings}
-          className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
-            hasGitToken
-              ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/60 hover:bg-emerald-100'
-              : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/60 hover:bg-amber-100'
-          }`}
-          title="Nhấp để cấu hình GitHub Data Repository"
-        >
-          <Database className="w-3.5 h-3.5" />
-          <span>{hasGitToken ? 'GitHub Data: Đã kết nối' : 'Dữ liệu: Cục bộ (Chưa cấu hình GitHub)'}</span>
-        </button>
 
         {/* Theme Toggle */}
         <button

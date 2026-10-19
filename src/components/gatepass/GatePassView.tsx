@@ -32,9 +32,11 @@ import {
 import { formatDate, formatDateTime, generateDocId } from '@/lib/utils';
 import { generateQrDataUrl } from '@/lib/qr';
 import { dispatchApprovalEmail } from '@/lib/email';
+import { ToastContainer, useToast } from '@/components/common/Toast';
 
 export function GatePassView() {
   const { currentUser } = useAuth();
+  const { toasts, showToast, dismissToast } = useToast();
   const [passes, setPasses] = useState<GatePass[]>(() => storage.getGatePasses());
   const [activeTab, setActiveTab] = useState<'list' | 'security_gate'>('list');
   const [search, setSearch] = useState('');
@@ -110,28 +112,52 @@ export function GatePassView() {
     if (!currentUser) return;
 
     if (reasonCategory === 'ca_nhan' && !specificReason) {
-      alert('Vui lòng chọn lý do cụ thể trong danh sách.');
+      showToast({
+        type: 'warning',
+        title: 'Chưa chọn lý do',
+        message: 'Vui lòng chọn lý do cụ thể trong danh sách.',
+      });
       return;
     }
     if (reasonCategory === 'cong_ty' && !companyReason.trim()) {
-      alert('Vui lòng nhập nội dung công việc hoặc địa điểm công tác.');
+      showToast({
+        type: 'warning',
+        title: 'Chưa nhập công việc',
+        message: 'Vui lòng nhập nội dung công việc hoặc địa điểm công tác.',
+      });
       return;
     }
     if (reasonCategory === 'khac' && !otherReason.trim()) {
-      alert('Vui lòng nhập lý do ra - vào cổng.');
+      showToast({
+        type: 'warning',
+        title: 'Chưa nhập lý do',
+        message: 'Vui lòng nhập lý do ra - vào cổng.',
+      });
       return;
     }
 
     if (timeType === 'nghi_dau_gio' && !returnTime) {
-      alert('Vui lòng chọn thời gian vào cổng.');
+      showToast({
+        type: 'warning',
+        title: 'Chưa chọn thời gian',
+        message: 'Vui lòng chọn thời gian vào cổng.',
+      });
       return;
     }
     if (timeType === 'nghi_cuoi_gio' && !departureTime) {
-      alert('Vui lòng chọn thời gian ra cổng.');
+      showToast({
+        type: 'warning',
+        title: 'Chưa chọn thời gian',
+        message: 'Vui lòng chọn thời gian ra cổng.',
+      });
       return;
     }
     if (timeType === 'nghi_giua_gio' && (!departureTime || !returnTime)) {
-      alert('Vui lòng chọn thời gian ra và thời gian vào.');
+      showToast({
+        type: 'warning',
+        title: 'Chưa chọn thời gian',
+        message: 'Vui lòng chọn cả thời gian ra và thời gian vào.',
+      });
       return;
     }
 
@@ -243,18 +269,33 @@ export function GatePassView() {
         },
       }).then((res) => {
         if (res.success) {
-          alert(`✓ Đã tạo phiếu ra vào cổng thành công!\nĐã gửi email thông báo phê duyệt đến Trưởng bộ phận: ${managerEmail}`);
+          showToast({
+            type: 'success',
+            title: 'Tạo phiếu ra vào cổng thành công',
+            message: `Đã gửi email thông báo phê duyệt đến Trưởng bộ phận: ${managerEmail}`,
+          });
         } else {
-          const openMail = confirm(
-            `✓ Đã tạo phiếu ra vào cổng ${docId} thành công trên hệ thống!\n\nLưu ý: Máy chủ gửi email chưa được cấu hình tài khoản gửi (SMTP / Resend) nên chưa chuyển email tự động được.\n\nBạn có muốn mở Outlook / Ứng dụng Mail trên máy để gửi ngay đường link phê duyệt đến Trưởng bộ phận (${managerEmail}) không?`
-          );
-          if (openMail && res.mailtoUrl) {
-            window.location.href = res.mailtoUrl;
-          }
+          showToast({
+            type: 'warning',
+            title: `Đã lưu phiếu ${docId} thành công`,
+            message: `Chưa gửi email tự động được. Bạn có thể bấm nút bên dưới để mở ứng dụng Email/Outlook gửi thông tin cho Trưởng bộ phận (${managerEmail}).`,
+            action: res.mailtoUrl
+              ? {
+                  label: 'Mở Outlook gửi ngay',
+                  onClick: () => {
+                    window.location.href = res.mailtoUrl!;
+                  },
+                }
+              : undefined,
+          });
         }
       }).catch(console.error);
     } else {
-      alert('✓ Đã tạo phiếu ra vào cổng thành công!');
+      showToast({
+        type: 'success',
+        title: 'Tạo phiếu ra vào cổng thành công',
+        message: 'Đã lưu phiếu trên hệ thống.',
+      });
     }
 
     // Reset
@@ -287,7 +328,11 @@ export function GatePassView() {
   const handleManagerApprove = async (pass: GatePass) => {
     if (!currentUser) return;
     if (!canApproveGatePass(pass)) {
-      alert('Bạn không có quyền phê duyệt phiếu này! (Người tạo phiếu không được tự phê duyệt; chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền phê duyệt).');
+      showToast({
+        type: 'error',
+        title: 'Không thể phê duyệt',
+        message: 'Bạn không có quyền phê duyệt phiếu này! (Người tạo phiếu không được tự phê duyệt; chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền phê duyệt).',
+      });
       return;
     }
     const updated: GatePass = {
@@ -301,17 +346,30 @@ export function GatePassView() {
     storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
     setPasses(storage.getGatePasses());
     setSelectedPass(updated);
+    showToast({
+      type: 'success',
+      title: 'Đã phê duyệt thành công',
+      message: `Phiếu ra vào cổng ${updated.id} đã được phê duyệt.`,
+    });
   };
 
   // Manager Reject
   const handleManagerReject = async (pass: GatePass) => {
     if (!currentUser) return;
     if (!canApproveGatePass(pass)) {
-      alert('Bạn không có quyền từ chối phiếu này! (Chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền xử lý).');
+      showToast({
+        type: 'error',
+        title: 'Không thể từ chối',
+        message: 'Bạn không có quyền từ chối phiếu này! (Chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền xử lý).',
+      });
       return;
     }
     if (!passRejectionReason.trim()) {
-      alert('Vui lòng nhập lý do từ chối phiếu!');
+      showToast({
+        type: 'warning',
+        title: 'Thiếu lý do từ chối',
+        message: 'Vui lòng nhập lý do từ chối phiếu!',
+      });
       return;
     }
     const updated: GatePass = {
@@ -328,6 +386,11 @@ export function GatePassView() {
     setSelectedPass(updated);
     setIsRejecting(false);
     setPassRejectionReason('');
+    showToast({
+      type: 'info',
+      title: 'Đã từ chối phiếu',
+      message: `Phiếu ra vào cổng ${updated.id} đã chuyển sang trạng thái từ chối.`,
+    });
   };
 
   // Show QR modal
@@ -1306,6 +1369,9 @@ export function GatePassView() {
           </div>
         </div>
       )}
+
+      {/* Modern In-App Toast Container */}
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
 }

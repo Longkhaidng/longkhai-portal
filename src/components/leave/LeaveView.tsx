@@ -20,9 +20,11 @@ import {
 } from 'lucide-react';
 import { formatDate, generateDocId } from '@/lib/utils';
 import { dispatchApprovalEmail } from '@/lib/email';
+import { ToastContainer, useToast } from '@/components/common/Toast';
 
 export function LeaveView() {
   const { currentUser } = useAuth();
+  const { toasts, showToast, dismissToast } = useToast();
   const [leaves, setLeaves] = useState<LeaveRequest[]>(() => storage.getLeaveRequests());
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -60,7 +62,11 @@ export function LeaveView() {
     if (!currentUser) return;
 
     if (calculatedDays <= 0) {
-      alert('Ngày bắt đầu không được lớn hơn ngày kết thúc!');
+      showToast({
+        type: 'warning',
+        title: 'Ngày nghỉ không hợp lệ',
+        message: 'Ngày bắt đầu không được lớn hơn ngày kết thúc!',
+      });
       return;
     }
 
@@ -173,18 +179,33 @@ export function LeaveView() {
         },
       }).then((res) => {
         if (res.success) {
-          alert(`✓ Đã tạo đơn xin nghỉ phép thành công!\nĐã gửi email thông báo phê duyệt đến Trưởng bộ phận: ${managerEmail}`);
+          showToast({
+            type: 'success',
+            title: 'Tạo đơn xin nghỉ phép thành công',
+            message: `Đã gửi email thông báo phê duyệt đến Trưởng bộ phận: ${managerEmail}`,
+          });
         } else {
-          const openMail = confirm(
-            `✓ Đã tạo đơn xin nghỉ phép ${docId} thành công trên hệ thống!\n\nLưu ý: Máy chủ gửi email chưa được cấu hình tài khoản gửi (SMTP / Resend) nên chưa chuyển email tự động được.\n\nBạn có muốn mở Outlook / Ứng dụng Mail trên máy để gửi ngay đường link phê duyệt đến Trưởng bộ phận (${managerEmail}) không?`
-          );
-          if (openMail && res.mailtoUrl) {
-            window.location.href = res.mailtoUrl;
-          }
+          showToast({
+            type: 'warning',
+            title: `Đã lưu đơn ${docId} thành công`,
+            message: `Chưa gửi email tự động được. Bạn có thể bấm nút bên dưới để mở ứng dụng Email/Outlook gửi thông tin cho Trưởng bộ phận (${managerEmail}).`,
+            action: res.mailtoUrl
+              ? {
+                  label: 'Mở Outlook gửi ngay',
+                  onClick: () => {
+                    window.location.href = res.mailtoUrl!;
+                  },
+                }
+              : undefined,
+          });
         }
       }).catch(console.error);
     } else {
-      alert('✓ Đã tạo đơn xin nghỉ phép thành công!');
+      showToast({
+        type: 'success',
+        title: 'Tạo đơn xin nghỉ phép thành công',
+        message: 'Đã lưu đơn trên hệ thống.',
+      });
     }
 
     // Reset fields
@@ -226,7 +247,11 @@ export function LeaveView() {
   const handleApproveStep = () => {
     if (!selectedLeave || !currentUser) return;
     if (!canApprove(selectedLeave)) {
-      alert('Bạn không có quyền phê duyệt đơn này! (Không được tự phê duyệt đơn của chính mình; chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền phê duyệt).');
+      showToast({
+        type: 'error',
+        title: 'Không thể phê duyệt',
+        message: 'Bạn không có quyền phê duyệt đơn này! (Không được tự phê duyệt đơn của chính mình; chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền phê duyệt).',
+      });
       return;
     }
     const updated = { ...selectedLeave };
@@ -251,17 +276,30 @@ export function LeaveView() {
     setSelectedLeave(updated);
     setIsApproving(false);
     setApprovalComment('');
+    showToast({
+      type: 'success',
+      title: 'Đã phê duyệt thành công',
+      message: `Đơn ${updated.id} đã được phê duyệt.`,
+    });
   };
 
   // Execute Rejection
   const handleRejectStep = () => {
     if (!selectedLeave || !currentUser) return;
     if (!canApprove(selectedLeave)) {
-      alert('Bạn không có quyền từ chối đơn này! (Chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền xử lý).');
+      showToast({
+        type: 'error',
+        title: 'Không thể từ chối',
+        message: 'Bạn không có quyền từ chối đơn này! (Chỉ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc mới có quyền xử lý).',
+      });
       return;
     }
     if (!rejectionReason.trim()) {
-      alert('Vui lòng nhập lý do từ chối!');
+      showToast({
+        type: 'warning',
+        title: 'Thiếu lý do từ chối',
+        message: 'Vui lòng nhập lý do từ chối!',
+      });
       return;
     }
 
@@ -281,6 +319,11 @@ export function LeaveView() {
     setLeaves(storage.getLeaveRequests());
     setSelectedLeave(updated);
     setRejectionReason('');
+    showToast({
+      type: 'info',
+      title: 'Đã từ chối đơn',
+      message: `Đơn ${updated.id} đã được chuyển sang trạng thái từ chối.`,
+    });
   };
 
   // Filter list
@@ -811,6 +854,9 @@ export function LeaveView() {
           </div>
         </div>
       )}
+
+      {/* Modern In-App Toast Container */}
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
 }
