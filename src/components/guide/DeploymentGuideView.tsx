@@ -104,7 +104,7 @@ git push -u origin main`,
       details: [
         '1. Truy cập vào website vừa deploy.',
         '2. Đăng nhập bằng tài khoản Quản trị viên khởi tạo:',
-        '   - Tên đăng nhập: ADMIN01',
+        '   - Tên đăng nhập: 2265',
         '   - Mật khẩu: admin@123',
         '3. Nhấp vào mục "Quản lý nhân viên & Phân quyền".',
         '4. Tải file Excel mẫu: "Tải file Excel mẫu (.xlsx)".',

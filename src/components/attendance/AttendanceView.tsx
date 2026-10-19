@@ -90,6 +90,14 @@ export function AttendanceView() {
     if (!currentUser) return;
 
     const docId = generateDocId('ATT', attendances.length);
+    const allUsers = storage.getUsers();
+    const freshUser = allUsers.find((u) => u.id.toLowerCase() === currentUser.id.toLowerCase()) || currentUser;
+    const targetHeadId = freshUser.departmentHeadId || currentUser.departmentHeadId;
+    const deptHeadUser = targetHeadId
+      ? allUsers.find((u) => u.id.toLowerCase() === targetHeadId.toLowerCase())
+      : null;
+    const managerName = deptHeadUser?.name || 'Trưởng bộ phận';
+
     const steps: ApprovalStep[] = [];
 
     // Luồng duyệt:
@@ -105,7 +113,8 @@ export function AttendanceView() {
     steps.push({
       stepName: 'Trưởng bộ phận phê duyệt giải trình',
       roleRequired: 'manager',
-      approverName: 'Quản lý / Trưởng bộ phận',
+      approverId: targetHeadId || undefined,
+      approverName: deptHeadUser?.name || 'Quản lý / Trưởng bộ phận',
       status: 'pending',
     });
 
@@ -149,32 +158,8 @@ export function AttendanceView() {
     setAttendances(storage.getAttendanceConfirms());
     setShowCreateModal(false);
 
-    // Look up manager's email to dispatch approval email
-    const allUsers = storage.getUsers();
-    const freshUser = allUsers.find((u) => u.id.toLowerCase() === currentUser.id.toLowerCase()) || currentUser;
-    let managerEmail = freshUser.departmentHeadEmail || currentUser.departmentHeadEmail;
-    let managerName = 'Trưởng bộ phận';
-
-    const targetHeadId = freshUser.departmentHeadId || currentUser.departmentHeadId;
-    if (!managerEmail && targetHeadId) {
-      const mgr = allUsers.find((u) => u.id.toLowerCase() === targetHeadId.toLowerCase());
-      if (mgr?.email) {
-        managerEmail = mgr.email;
-        managerName = mgr.name;
-      }
-    }
-
-    if (!managerEmail) {
-      const allDepts = storage.getDepartments();
-      const myDept = allDepts.find((d) => d.name === (freshUser.department || currentUser.department));
-      if (myDept?.managerId) {
-        const mgr = allUsers.find((u) => u.id.toLowerCase() === myDept.managerId?.toLowerCase());
-        if (mgr?.email) {
-          managerEmail = mgr.email;
-          managerName = mgr.name;
-        }
-      }
-    }
+    // Only dispatch email if employee has explicit departmentHeadEmail configured
+    const managerEmail = (freshUser.departmentHeadEmail || currentUser.departmentHeadEmail || '').trim();
 
     if (managerEmail) {
       dispatchApprovalEmail({
@@ -222,7 +207,9 @@ export function AttendanceView() {
       showToast({
         type: 'success',
         title: 'Tạo phiếu xác nhận công thành công',
-        message: 'Đã lưu phiếu trên hệ thống.',
+        message: targetHeadId
+          ? `Phiếu ${docId} đã được chuyển đến Trưởng bộ phận (${managerName} - Mã NV: ${targetHeadId}) phê duyệt trên hệ thống.`
+          : `Phiếu ${docId} đã được lưu và gửi đến cấp quản lý phê duyệt trên hệ thống.`,
       });
     }
 

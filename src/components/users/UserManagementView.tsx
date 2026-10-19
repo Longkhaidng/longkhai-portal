@@ -181,13 +181,8 @@ export function UserManagementView() {
     setEditTeamLeader(user.teamLeaderId || '');
     setEditDeptHead(user.departmentHeadId || '');
     
-    // Auto lookup manager's email if not already set on user
-    let defaultHeadEmail = user.departmentHeadEmail || '';
-    if (!defaultHeadEmail && user.departmentHeadId) {
-      const mgr = users.find((u) => u.id.toLowerCase() === user.departmentHeadId?.toLowerCase());
-      if (mgr?.email) defaultHeadEmail = mgr.email;
-    }
-    setEditDeptHeadEmail(defaultHeadEmail);
+    // Do not auto-lookup manager's email; default to empty if not explicitly set
+    setEditDeptHeadEmail(user.departmentHeadEmail || '');
 
     setEditIsActive(user.isActive);
     setEditError(null);
@@ -234,8 +229,8 @@ export function UserManagementView() {
   // Handle Delete User
   const handleDeleteUser = (target: User) => {
     if (!currentUser) return;
-    if (target.id === 'ADMIN01') {
-      alert('Không thể xóa tài khoản Quản trị viên khởi tạo (Root Admin)!');
+    if (target.id === '2265' || target.id === 'ADMIN01') {
+      alert('Không thể xóa tài khoản Quản trị viên khởi tạo (Root Admin 2265)!');
       return;
     }
     if (confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn nhân viên "${target.name}" (${target.id}) khỏi hệ thống?`)) {
@@ -348,8 +343,8 @@ export function UserManagementView() {
   // Toggle User Active / Inactive Status
   const handleToggleStatus = (target: User) => {
     if (!currentUser) return;
-    if (target.id === 'ADMIN01') {
-      alert('Không thể khóa tài khoản Root Admin!');
+    if (target.id === '2265' || target.id === 'ADMIN01') {
+      alert('Không thể khóa tài khoản Root Admin 2265!');
       return;
     }
 
@@ -498,7 +493,7 @@ export function UserManagementView() {
                 </tr>
               ) : (
                 filteredUsers.map((u) => {
-                  const isRoot = u.id === 'ADMIN01';
+                  const isRoot = u.id === '2265' || u.id === 'ADMIN01';
                   const permCount = u.role === 'admin' ? CATEGORY_DEFINITIONS.length : u.permissions?.length || 0;
 
                   return (
@@ -765,14 +760,7 @@ export function UserManagementView() {
                   <input
                     type="text"
                     value={newEmpDeptHead}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setNewEmpDeptHead(val);
-                      if (!newEmpDeptHeadEmail) {
-                        const mgr = users.find((u) => u.id.toLowerCase() === val.trim().toLowerCase());
-                        if (mgr?.email) setNewEmpDeptHeadEmail(mgr.email);
-                      }
-                    }}
+                    onChange={(e) => setNewEmpDeptHead(e.target.value)}
                     placeholder="Mã NV của Trưởng BP..."
                     className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono uppercase"
                   />
@@ -781,13 +769,13 @@ export function UserManagementView() {
 
               <div>
                 <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Email Trưởng bộ phận (Nhận email phê duyệt):
+                  Email Trưởng bộ phận (Nếu không nhập thì mặc định để trống):
                 </label>
                 <input
                   type="email"
                   value={newEmpDeptHeadEmail}
                   onChange={(e) => setNewEmpDeptHeadEmail(e.target.value)}
-                  placeholder="truongbophan@longkhai.com.vn..."
+                  placeholder="Để trống nếu duyệt qua Cổng Portal theo Mã NV..."
                   className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
                 />
               </div>
@@ -1288,7 +1276,7 @@ export function UserManagementView() {
                   <select
                     value={editRole}
                     onChange={(e) => setEditRole(e.target.value as UserRole)}
-                    disabled={editingUser.id === 'ADMIN01'}
+                    disabled={editingUser.id === '2265' || editingUser.id === 'ADMIN01'}
                     className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl disabled:opacity-60"
                   >
                     <option value="employee">Nhân viên / Công nhân</option>
@@ -1347,14 +1335,7 @@ export function UserManagementView() {
                   <input
                     type="text"
                     value={editDeptHead}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setEditDeptHead(val);
-                      if (!editDeptHeadEmail) {
-                        const mgr = users.find((u) => u.id.toLowerCase() === val.trim().toLowerCase());
-                        if (mgr?.email) setEditDeptHeadEmail(mgr.email);
-                      }
-                    }}
+                    onChange={(e) => setEditDeptHead(e.target.value)}
                     placeholder="Mã NV của Trưởng BP..."
                     className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono uppercase"
                   />
@@ -1364,13 +1345,13 @@ export function UserManagementView() {
               <div className="grid grid-cols-2 gap-3 pt-1">
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Email Trưởng bộ phận:
+                    Email Trưởng bộ phận (Nếu không nhập thì để trống):
                   </label>
                   <input
                     type="email"
                     value={editDeptHeadEmail}
                     onChange={(e) => setEditDeptHeadEmail(e.target.value)}
-                    placeholder="truongbophan@longkhai.com.vn..."
+                    placeholder="Để trống nếu duyệt qua Cổng Portal theo Mã NV..."
                     className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
                   />
                 </div>
@@ -1381,7 +1362,7 @@ export function UserManagementView() {
                   <select
                     value={editIsActive ? 'active' : 'inactive'}
                     onChange={(e) => setEditIsActive(e.target.value === 'active')}
-                    disabled={editingUser.id === 'ADMIN01'}
+                    disabled={editingUser.id === '2265' || editingUser.id === 'ADMIN01'}
                     className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold disabled:opacity-60"
                   >
                     <option value="active">🟢 Đang hoạt động (Active)</option>
@@ -1392,7 +1373,7 @@ export function UserManagementView() {
 
               <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
                 <div>
-                  {editingUser.id !== 'ADMIN01' && (
+                  {(editingUser.id !== '2265' && editingUser.id !== 'ADMIN01') && (
                     <button
                       type="button"
                       onClick={() => handleDeleteUser(editingUser)}

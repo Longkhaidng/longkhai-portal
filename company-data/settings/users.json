@@ -54,12 +54,12 @@
     "departmentHeadEmail": "buithuanh@vitex.com.vn"
   },
   {
-    "id": "ADMIN01",
+    "id": "2265",
     "name": "Trần Lê Hữu Lực",
     "email": "it@longkhai.com.vn",
     "phone": "0935198776",
     "department": "Bộ Phận Công Nghệ Thông Tin (IT)",
-    "position": "Nhân viên IT",
+    "position": "Quản trị viên CNTT (Admin)",
     "role": "admin",
     "permissions": [
       "dashboard",
@@ -83,8 +83,7 @@
     "isActive": true,
     "password": "admin@123",
     "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-10-19T02:15:56.779Z",
-    "departmentHeadId": "2265"
+    "updatedAt": "2026-10-19T02:15:56.779Z"
   },
   {
     "id": "101",

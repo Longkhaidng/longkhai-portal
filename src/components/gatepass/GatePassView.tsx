@@ -193,6 +193,14 @@ export function GatePassView() {
     const timeRef = departureTime || returnTime || new Date().toISOString();
     const qrPayload = `LONGKHAI_GATEPASS:${docId}:${currentUser.id}:${timeRef}`;
 
+    const allUsers = storage.getUsers();
+    const freshUser = allUsers.find((u) => u.id.toLowerCase() === currentUser.id.toLowerCase()) || currentUser;
+    const targetHeadId = freshUser.departmentHeadId || currentUser.departmentHeadId;
+    const deptHeadUser = targetHeadId
+      ? allUsers.find((u) => u.id.toLowerCase() === targetHeadId.toLowerCase())
+      : null;
+    const managerName = deptHeadUser?.name || 'Trưởng bộ phận';
+
     const newPass: GatePass = {
       id: docId,
       employeeId: currentUser.id,
@@ -208,6 +216,8 @@ export function GatePassView() {
       assets: hasAssets ? assets : [],
       estimatedDepartureTime: (timeType === 'nghi_giua_gio' || timeType === 'nghi_cuoi_gio') ? departureTime : undefined,
       estimatedReturnTime: (timeType === 'nghi_dau_gio' || timeType === 'nghi_giua_gio') ? returnTime : undefined,
+      managerApproverId: targetHeadId || undefined,
+      managerApproverName: deptHeadUser?.name || undefined,
       status: 'pending',
       qrCodeData: qrPayload,
       createdAt: new Date().toISOString(),
@@ -218,32 +228,8 @@ export function GatePassView() {
     setPasses(storage.getGatePasses());
     setShowCreateModal(false);
 
-    // Look up manager's email to dispatch approval email
-    const allUsers = storage.getUsers();
-    const freshUser = allUsers.find((u) => u.id.toLowerCase() === currentUser.id.toLowerCase()) || currentUser;
-    let managerEmail = freshUser.departmentHeadEmail || currentUser.departmentHeadEmail;
-    let managerName = 'Trưởng bộ phận';
-
-    const targetHeadId = freshUser.departmentHeadId || currentUser.departmentHeadId;
-    if (!managerEmail && targetHeadId) {
-      const mgr = allUsers.find((u) => u.id.toLowerCase() === targetHeadId.toLowerCase());
-      if (mgr?.email) {
-        managerEmail = mgr.email;
-        managerName = mgr.name;
-      }
-    }
-
-    if (!managerEmail) {
-      const allDepts = storage.getDepartments();
-      const myDept = allDepts.find((d) => d.name === (freshUser.department || currentUser.department));
-      if (myDept?.managerId) {
-        const mgr = allUsers.find((u) => u.id.toLowerCase() === myDept.managerId?.toLowerCase());
-        if (mgr?.email) {
-          managerEmail = mgr.email;
-          managerName = mgr.name;
-        }
-      }
-    }
+    // Only dispatch email if employee has explicit departmentHeadEmail configured
+    const managerEmail = (freshUser.departmentHeadEmail || currentUser.departmentHeadEmail || '').trim();
 
     const timeDesc =
       timeType === 'nghi_dau_gio'
@@ -308,7 +294,9 @@ export function GatePassView() {
       showToast({
         type: 'success',
         title: 'Tạo phiếu ra vào cổng thành công',
-        message: 'Đã lưu phiếu trên hệ thống.',
+        message: targetHeadId
+          ? `Phiếu ${docId} đã được chuyển đến Trưởng bộ phận (${managerName} - Mã NV: ${targetHeadId}) phê duyệt trên hệ thống.`
+          : `Phiếu ${docId} đã được lưu và gửi đến cấp quản lý phê duyệt trên hệ thống.`,
       });
     }
 

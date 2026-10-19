@@ -9,11 +9,11 @@ import { INITIAL_PLUGINS } from '@/types/plugin';
  * sau đó tải toàn bộ nhân viên công ty bằng file Excel hoặc tạo thủ công.
  */
 export const INITIAL_ROOT_ADMIN: User = {
-  id: 'ADMIN01',
-  name: 'Quản trị viên Hệ thống',
-  email: 'admin@longkhai.vn',
-  phone: '0988888888',
-  department: 'Ban Giám Đốc / CNTT',
+  id: '2265',
+  name: 'Trần Lê Hữu Lực',
+  email: 'it@longkhai.com.vn',
+  phone: '0935198776',
+  department: 'Bộ Phận Công Nghệ Thông Tin (IT)',
   position: 'Quản trị viên Cổng thông tin',
   role: 'admin',
   permissions: CATEGORY_DEFINITIONS.map((c) => c.id),
@@ -173,7 +173,7 @@ export const INITIAL_ANNOUNCEMENTS: Announcement[] = [
 - Kiểm tra nút dừng khẩn cấp (Emergency Stop) trước khi khởi động chuyền.
 - Không để vật tư, hàng hóa cản trở lối đi và cửa thoát nạn.`,
     authorName: 'Ban An Toàn EHS',
-    authorId: 'ADMIN01',
+    authorId: '2265',
     isPinned: true,
     publishedAt: '2026-01-05T08:00:00.000Z',
     updatedAt: '2026-01-05T08:00:00.000Z',
@@ -195,7 +195,7 @@ Nhằm hiện đại hóa công tác quản trị và giảm thiểu thủ tục
    - Khi được Quản lý duyệt, hệ thống tự động sinh **Mã QR Code**.
    - Nhân viên xuất trình QR Code tại bốt bảo vệ để quét máy ghi nhận giờ ra và giờ vào thực tế.`,
     authorName: 'Phòng Hành Chính Nhân Sự',
-    authorId: 'ADMIN01',
+    authorId: '2265',
     isPinned: true,
     publishedAt: '2026-02-01T08:00:00.000Z',
     updatedAt: '2026-02-01T08:00:00.000Z',

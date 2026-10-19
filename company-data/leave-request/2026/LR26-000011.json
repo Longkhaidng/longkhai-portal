@@ -14,12 +14,12 @@
     {
       "stepName": "Trưởng bộ phận phê duyệt",
       "roleRequired": "manager",
-      "approverId": "ADMIN01",
+      "approverId": "2265",
       "approverName": "Trần Lê Hữu Lực",
       "status": "approved",
       "comment": "Đồng ý phê duyệt",
       "actionAt": "2026-10-19T07:02:26.258Z",
-      "signature": "Trần Lê Hữu Lực (ADMIN01)"
+      "signature": "Trần Lê Hữu Lực (2265)"
     }
   ],
   "createdAt": "2026-10-19T03:47:16.465Z",

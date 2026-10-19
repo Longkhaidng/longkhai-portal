@@ -24,11 +24,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loadSession = () => {
     try {
-      const savedEmpId = localStorage.getItem(SESSION_KEY);
+      let savedEmpId = localStorage.getItem(SESSION_KEY);
       if (savedEmpId) {
+        if (savedEmpId.toUpperCase() === 'ADMIN01') {
+          savedEmpId = '2265';
+          localStorage.setItem(SESSION_KEY, '2265');
+        }
         const users = storage.getUsers();
         const found = users.find(
-          (u) => u.id.toLowerCase() === savedEmpId.toLowerCase() && u.isActive
+          (u) => u.id.toLowerCase() === savedEmpId!.toLowerCase() && u.isActive
         );
         if (found) {
           setCurrentUser(found);
@@ -54,10 +58,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     employeeId: string,
     password: string
   ): Promise<{ success: boolean; message: string }> => {
-    const cleanId = employeeId.trim();
-    if (!cleanId) {
+    const rawCleanId = employeeId.trim();
+    if (!rawCleanId) {
       return { success: false, message: 'Vui lòng nhập Mã số nhân viên.' };
     }
+    const cleanId = rawCleanId.toUpperCase() === 'ADMIN01' ? '2265' : rawCleanId;
     if (!password) {
       return { success: false, message: 'Vui lòng nhập Mật khẩu.' };
     }
