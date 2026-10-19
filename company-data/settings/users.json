@@ -2436,24 +2436,6 @@
     "updatedAt": "2026-10-16T07:59:12.466Z"
   },
   {
-    "id": "2265",
-    "name": "Trần Lê Hữu Lực",
-    "department": "Phòng Hành Chính Nhân Sự",
-    "position": "Chuyên viên IT",
-    "role": "employee",
-    "permissions": [
-      "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements"
-    ],
-    "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-17T05:46:14.723Z"
-  },
-  {
     "id": "2267",
     "name": "Võ Thị Bích Liên",
     "department": "PXHT",
