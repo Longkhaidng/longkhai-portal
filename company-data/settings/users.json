@@ -2644,7 +2644,7 @@
   {
     "id": "2341",
     "name": "Nguyễn Thị Như Ái",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
     "permissions": [
@@ -2657,7 +2657,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:27:04.864Z",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051"
   },
   {
     "id": "2342",
