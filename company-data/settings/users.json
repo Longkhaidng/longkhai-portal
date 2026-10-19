@@ -5151,7 +5151,7 @@
   {
     "id": "1141",
     "name": "Villagonza Alberto Cutanda",
-    "department": "Vitex QN",
+    "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Công nhân vận hành máy dệt kim tròn -KTD",
     "role": "employee",
     "permissions": [
@@ -5164,6 +5164,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:18:26.835Z",
+    "departmentHeadId": "2831"
   }
 ]
