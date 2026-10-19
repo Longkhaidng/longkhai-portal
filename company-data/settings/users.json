@@ -2945,7 +2945,7 @@
   {
     "id": "2415",
     "name": "Nguyễn Thị Ngọc Mỹ",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Nhân viên kinh tế - kế hoạch HT",
     "role": "employee",
     "permissions": [
@@ -2958,7 +2958,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:36:41.314Z",
+    "email": "finishing05@longkhai.com.vn",
+    "departmentHeadId": "1051"
   },
   {
     "id": "2421",
