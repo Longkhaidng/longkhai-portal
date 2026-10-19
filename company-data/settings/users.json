@@ -1705,9 +1705,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-17T04:47:50.205Z",
-    "departmentHeadId": "2409",
-    "departmentHeadEmail": "tai.trinh@longkhai.com.vn"
+    "updatedAt": "2026-10-19T08:04:57.730Z",
+    "departmentHeadId": "2409"
   },
   {
     "id": "1785",
