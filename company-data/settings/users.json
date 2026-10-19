@@ -2469,7 +2469,7 @@
   {
     "id": "2268",
     "name": "Ngô Thị Lan Thanh",
-    "department": "PX Dệt",
+    "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên công nghệ dệt",
     "role": "employee",
     "permissions": [
@@ -2482,7 +2482,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:24:28.338Z",
+    "departmentHeadId": "1241"
   },
   {
     "id": "2277",
