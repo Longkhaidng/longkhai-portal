@@ -3617,7 +3617,7 @@
   {
     "id": "2620",
     "name": "Phan Trung Vĩnh",
-    "department": "PX Dệt",
+    "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
     "permissions": [
@@ -3630,7 +3630,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:47:53.837Z",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1051"
   },
   {
     "id": "2625",
