@@ -4798,24 +4798,6 @@
     "departmentHeadId": "1051"
   },
   {
-    "id": "2840",
-    "name": "Nguyễn Thị Hậu",
-    "department": "HCNS",
-    "position": "Chuyên viên hành chính nhân sự",
-    "role": "employee",
-    "permissions": [
-      "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements"
-    ],
-    "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
-  },
-  {
     "id": "2841",
     "name": "Nguyễn Thị Thanh Huệ",
     "department": "PXHT",
