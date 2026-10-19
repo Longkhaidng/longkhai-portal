@@ -3185,7 +3185,7 @@
   {
     "id": "2486",
     "name": "Phan Trọng Nghĩa",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy in trên trục - Máy trưởng",
     "role": "employee",
     "permissions": [
@@ -3198,7 +3198,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:41:21.032Z",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051"
   },
   {
     "id": "2489",
