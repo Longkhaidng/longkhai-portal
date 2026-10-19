@@ -4918,7 +4918,7 @@
   {
     "id": "2850",
     "name": "Nguyễn Hồng Hạnh",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
     "permissions": [
@@ -4931,7 +4931,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:15:24.051Z",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051"
   },
   {
     "id": "2851",
