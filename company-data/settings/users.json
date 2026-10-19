@@ -581,13 +581,16 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T07:59:45.903Z",
-    "departmentHeadId": "1051"
+    "updatedAt": "2026-10-19T09:21:24.049Z",
+    "departmentHeadId": "1051",
+    "allowedWebIntegrations": []
   },
   {
     "id": "1085",
