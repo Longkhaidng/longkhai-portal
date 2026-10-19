@@ -5075,7 +5075,7 @@
   {
     "id": "1142",
     "name": "Ada Bongalonta Garcia",
-    "department": "KCS",
+    "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS dệt",
     "role": "employee",
     "permissions": [
@@ -5088,7 +5088,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:17:51.643Z",
+    "departmentHeadId": "2831"
   },
   {
     "id": "1310",
