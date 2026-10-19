@@ -10,7 +10,7 @@
   "shift": "Ca Hành chính (08:00 - 16:30)",
   "reason": "quên mang thẻ",
   "status": "pending",
-  "currentStepIndex": 1,
+  "currentStepIndex": 2,
   "steps": [
     {
       "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
@@ -24,8 +24,11 @@
     {
       "stepName": "Trưởng bộ phận phê duyệt giải trình",
       "roleRequired": "manager",
-      "approverName": "Quản lý / Trưởng bộ phận",
-      "status": "pending"
+      "approverName": "Trương Anh Như Quỳnh",
+      "status": "approved",
+      "approverId": "1867",
+      "comment": "Đã xác nhận kiểm tra hợp lệ",
+      "actionAt": "2026-10-19T07:16:06.667Z"
     },
     {
       "stepName": "IT cập nhật dữ liệu máy chấm công",
@@ -35,5 +38,5 @@
     }
   ],
   "createdAt": "2026-10-19T06:56:41.649Z",
-  "updatedAt": "2026-10-19T07:15:38.723Z"
+  "updatedAt": "2026-10-19T07:16:06.667Z"
 }
