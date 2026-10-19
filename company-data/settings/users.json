@@ -1921,8 +1921,11 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T08:11:23.597Z",
-    "departmentHeadId": "2409"
+    "updatedAt": "2026-10-19T09:24:04.784Z",
+    "departmentHeadId": "2409",
+    "allowedWebIntegrations": [
+      "WEB-002"
+    ]
   },
   {
     "id": "1975",
