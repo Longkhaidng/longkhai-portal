@@ -3424,7 +3424,7 @@
   {
     "id": "2529",
     "name": "Nguyễn Văn Trí Tâm",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Nhân viên phục vụ HT",
     "role": "employee",
     "permissions": [
@@ -3437,7 +3437,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:45:05.502Z",
+    "departmentHeadId": "1051"
   },
   {
     "id": "2535",
