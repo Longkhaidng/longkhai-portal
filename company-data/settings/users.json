@@ -4682,7 +4682,7 @@
   {
     "id": "2830",
     "name": "Hồ Cao Bằng",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 5 - ĐK",
     "role": "employee",
     "permissions": [
@@ -4695,7 +4695,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:12:09.197Z",
+    "departmentHeadId": "1051"
   },
   {
     "id": "2831",
