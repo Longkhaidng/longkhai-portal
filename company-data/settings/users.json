@@ -2566,7 +2566,7 @@
   {
     "id": "2297",
     "name": "Lê Văn Tình",
-    "department": "Cơ điện",
+    "department": "Phòng Cơ Điện & Bảo Trì",
     "position": "Chuyên viên kỹ thuật cơ điện",
     "role": "employee",
     "permissions": [
@@ -2579,7 +2579,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:25:50.698Z",
+    "departmentHeadId": "2409"
   },
   {
     "id": "2320",
