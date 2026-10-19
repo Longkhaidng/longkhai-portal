@@ -1,0 +1,36 @@
+{
+  "id": "ATT26-000001",
+  "employeeId": "1002",
+  "employeeName": "Trần Thị Kim Loan",
+  "department": "Phòng Hành Chính Nhân Sự",
+  "issueType": "quen_the",
+  "date": "2026-10-19",
+  "checkInTime": "08:00",
+  "checkOutTime": "16:30",
+  "shift": "Ca Hành chính (08:00 - 16:30)",
+  "reason": "quên mang thẻ",
+  "status": "pending",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
+      "roleRequired": "security",
+      "approverName": "Tổ trưởng / Nhân viên Bảo vệ Cổng",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng bộ phận phê duyệt giải trình",
+      "roleRequired": "manager",
+      "approverName": "Quản lý / Trưởng bộ phận",
+      "status": "pending"
+    },
+    {
+      "stepName": "IT cập nhật dữ liệu máy chấm công",
+      "roleRequired": "it",
+      "approverName": "Bộ phận CNTT (IT)",
+      "status": "pending"
+    }
+  ],
+  "createdAt": "2026-10-19T06:56:41.649Z",
+  "updatedAt": "2026-10-19T06:56:41.649Z"
+}
