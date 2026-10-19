@@ -2823,9 +2823,9 @@
   {
     "id": "2380",
     "name": "Hoàng Văn Tường",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Tổ trưởng kiêm kỹ thuật in",
-    "role": "employee",
+    "role": "team_leader",
     "permissions": [
       "dashboard",
       "leave",
@@ -2836,7 +2836,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:29:46.390Z",
+    "departmentHeadId": "1051"
   },
   {
     "id": "2388",
