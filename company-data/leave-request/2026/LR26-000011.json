@@ -8,17 +8,20 @@
   "toDate": "2026-10-21",
   "totalDays": 2,
   "reason": "bận việc",
-  "status": "pending",
+  "status": "approved",
   "currentStepIndex": 0,
   "steps": [
     {
       "stepName": "Trưởng bộ phận phê duyệt",
       "roleRequired": "manager",
-      "approverId": "2265",
+      "approverId": "ADMIN01",
       "approverName": "Trần Lê Hữu Lực",
-      "status": "pending"
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-10-19T07:02:26.258Z",
+      "signature": "Trần Lê Hữu Lực (ADMIN01)"
     }
   ],
   "createdAt": "2026-10-19T03:47:16.465Z",
-  "updatedAt": "2026-10-19T03:47:16.465Z"
+  "updatedAt": "2026-10-19T07:02:26.258Z"
 }
