@@ -4192,7 +4192,7 @@
   {
     "id": "2752",
     "name": "Huỳnh Thị Thu Thảo",
-    "department": "PX Dệt",
+    "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
     "permissions": [
@@ -4205,7 +4205,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:02:19.447Z",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030"
   },
   {
     "id": "2754",
