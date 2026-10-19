@@ -4153,9 +4153,9 @@
   {
     "id": "2745",
     "name": "Bùi Ngọc Phúc",
-    "department": "Kho",
+    "department": "Phòng Kho Vận & Vật Tư",
     "position": "Phụ trách kho",
-    "role": "employee",
+    "role": "manager",
     "permissions": [
       "dashboard",
       "leave",
@@ -4166,7 +4166,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:01:30.416Z",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn"
   },
   {
     "id": "2747",
