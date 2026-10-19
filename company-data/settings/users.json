@@ -2547,7 +2547,7 @@
   {
     "id": "2293",
     "name": "Võ Thị Muội",
-    "department": "KCS",
+    "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS dệt",
     "role": "employee",
     "permissions": [
@@ -2560,7 +2560,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:25:39.929Z",
+    "departmentHeadId": "2831"
   },
   {
     "id": "2297",
