@@ -498,14 +498,17 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "forms",
+      "reports"
     ],
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T09:20:33.066Z",
+    "updatedAt": "2026-10-19T09:20:54.578Z",
     "email": "cuong.ngo@longkhai.com.vn",
-    "departmentHeadEmail": "tu.pham@vitex.com.vn"
+    "departmentHeadEmail": "tu.pham@vitex.com.vn",
+    "allowedWebIntegrations": []
   },
   {
     "id": "1056",
