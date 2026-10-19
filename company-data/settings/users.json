@@ -4387,24 +4387,6 @@
     "departmentHeadId": "1051"
   },
   {
-    "id": "2792",
-    "name": "Trần Văn Tươi",
-    "department": "PX Dệt",
-    "position": "Công nhân vận hành máy dệt kim tròn -TD",
-    "role": "employee",
-    "permissions": [
-      "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements"
-    ],
-    "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
-  },
-  {
     "id": "2793",
     "name": "Nguyễn Mai Kha",
     "department": "Kho",
