@@ -4330,7 +4330,7 @@
   {
     "id": "2778",
     "name": "Nguyễn Ngọc Ý Vy",
-    "department": "KCS",
+    "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS Hoàn Thành",
     "role": "employee",
     "permissions": [
@@ -4343,7 +4343,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:07:21.269Z",
+    "departmentHeadId": "2831"
   },
   {
     "id": "2781",
