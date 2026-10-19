@@ -15,14 +15,13 @@
       "gate_pass",
       "announcements",
       "reports",
-      "forms",
-      "users"
+      "forms"
     ],
     "allowedWebIntegrations": [],
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-17T03:58:08.847Z",
-    "updatedAt": "2026-10-17T03:58:33.369Z"
+    "updatedAt": "2026-10-19T07:06:27.730Z"
   },
   {
     "id": "1867",
