@@ -2704,7 +2704,7 @@
   {
     "id": "2351",
     "name": "Lê Quốc Nghĩa",
-    "department": "PX Dệt",
+    "department": "Phân xưởng dệt",
     "position": "Nhân viên phục vụ dệt",
     "role": "employee",
     "permissions": [
@@ -2717,7 +2717,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:27:39.343Z",
+    "departmentHeadId": "1030"
   },
   {
     "id": "2359",
