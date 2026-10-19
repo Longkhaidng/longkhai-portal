@@ -1412,10 +1412,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-17T04:40:50.678Z",
+    "updatedAt": "2026-10-19T08:03:05.571Z",
     "teamLeaderId": "1079",
-    "departmentHeadId": "1051",
-    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn"
+    "departmentHeadId": "1051"
   },
   {
     "id": "1527",
