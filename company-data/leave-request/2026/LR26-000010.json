@@ -8,7 +8,7 @@
   "toDate": "2026-10-20",
   "totalDays": 1,
   "reason": "bận việc",
-  "status": "pending",
+  "status": "approved",
   "currentStepIndex": 0,
   "steps": [
     {
@@ -16,9 +16,12 @@
       "roleRequired": "manager",
       "approverId": "2265",
       "approverName": "Trần Lê Hữu Lực",
-      "status": "pending"
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-10-19T02:57:05.089Z",
+      "signature": "Trần Lê Hữu Lực (2265)"
     }
   ],
   "createdAt": "2026-10-19T02:53:04.130Z",
-  "updatedAt": "2026-10-19T02:53:04.130Z"
+  "updatedAt": "2026-10-19T02:57:05.089Z"
 }
