@@ -2905,9 +2905,9 @@
   {
     "id": "2409",
     "name": "Trịnh Anh Tài",
-    "department": "Cơ điện",
+    "department": "Phòng Cơ Điện & Bảo Trì",
     "position": "Trưởng phòng Cơ điện",
-    "role": "employee",
+    "role": "manager",
     "permissions": [
       "dashboard",
       "leave",
@@ -2918,7 +2918,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:32:05.636Z",
+    "email": "tai.trinh@longkhai.com.vn",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn"
   },
   {
     "id": "2410",
