@@ -2349,7 +2349,7 @@
   {
     "id": "2227",
     "name": "Chế Thị Mỹ Dung",
-    "department": "PXHT",
+    "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
     "permissions": [
@@ -2362,7 +2362,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T08:18:16.479Z",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051"
   },
   {
     "id": "2243",
