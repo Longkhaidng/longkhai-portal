@@ -4427,7 +4427,7 @@
   {
     "id": "2800",
     "name": "Trần Thị Lưu",
-    "department": "HCNS",
+    "department": "Phòng Hành Chính Nhân Sự",
     "position": "Phụ bếp",
     "role": "employee",
     "permissions": [
@@ -4440,7 +4440,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-16T07:59:12.466Z"
+    "updatedAt": "2026-10-19T09:09:22.509Z",
+    "departmentHeadId": "1867"
   },
   {
     "id": "2802",
