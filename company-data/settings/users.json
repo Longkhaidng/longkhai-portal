@@ -2934,9 +2934,10 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T08:32:05.636Z",
+    "updatedAt": "2026-10-20T04:15:06.145Z",
     "email": "tai.trinh@longkhai.com.vn",
-    "departmentHeadEmail": "tu.pham@vitex.com.vn"
+    "departmentHeadEmail": "tu.pham@vitex.com.vn",
+    "economicStaffId": "1139"
   },
   {
     "id": "2410",
