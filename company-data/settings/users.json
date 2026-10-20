@@ -4082,7 +4082,7 @@
     "name": "Nguyễn Trâm Bảo Anh",
     "department": "Phòng Kế Toán Tài Chính",
     "position": "Nhân viên kế toán",
-    "role": "employee",
+    "role": "accountant",
     "permissions": [
       "dashboard",
       "leave",
@@ -4093,7 +4093,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-20T04:30:42.899Z",
+    "updatedAt": "2026-10-20T06:16:54.665Z",
     "departmentHeadEmail": "trang.vuong@longkhai.com.vn",
     "economicStaffId": "1139"
   },
