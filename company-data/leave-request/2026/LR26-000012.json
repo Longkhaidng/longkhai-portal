@@ -1,0 +1,23 @@
+{
+  "id": "LR26-000012",
+  "employeeId": "1002",
+  "employeeName": "Trần Thị Kim Loan",
+  "department": "Phòng Hành Chính Nhân Sự",
+  "leaveType": "phep_nam",
+  "fromDate": "2026-10-21",
+  "toDate": "2026-10-21",
+  "totalDays": 1,
+  "reason": "bận việc",
+  "status": "pending",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận phê duyệt",
+      "roleRequired": "manager",
+      "approverName": "Trưởng phòng / Quản lý",
+      "status": "pending"
+    }
+  ],
+  "createdAt": "2026-10-20T01:55:32.994Z",
+  "updatedAt": "2026-10-20T01:55:32.994Z"
+}
