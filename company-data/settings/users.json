@@ -830,7 +830,7 @@
     "name": "Võ Thị Tuyết",
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Chuyên viên hành chính nhân sự",
-    "role": "team_leader",
+    "role": "employee",
     "permissions": [
       "dashboard",
       "leave",
@@ -841,9 +841,10 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-20T02:49:44.902Z",
+    "updatedAt": "2026-10-20T02:54:41.452Z",
     "email": "tuyet.vo@longkhai.com.vn",
-    "departmentHeadId": "1867"
+    "departmentHeadId": "1867",
+    "economicStaffId": "1139"
   },
   {
     "id": "1147",
