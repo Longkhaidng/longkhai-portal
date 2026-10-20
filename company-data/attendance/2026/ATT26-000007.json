@@ -9,7 +9,7 @@
   "checkOutTime": "15:30",
   "shift": "Ca vườn (07:00 - 15:30)",
   "reason": "thẻ không nhận",
-  "status": "pending",
+  "status": "approved",
   "currentStepIndex": 2,
   "steps": [
     {
@@ -32,11 +32,13 @@
     {
       "stepName": "IT cập nhật dữ liệu máy chấm công",
       "roleRequired": "it",
-      "approverName": "Bộ phận CNTT (IT)",
-      "status": "pending"
+      "approverName": "Trưởng bộ phận (Email)",
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt (qua Email)",
+      "actionAt": "2026-10-20T08:08:25.854Z"
     }
   ],
   "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=attendance&id=ATT26-000007",
   "createdAt": "2026-10-20T07:58:59.051Z",
-  "updatedAt": "2026-10-20T08:07:36.480Z"
+  "updatedAt": "2026-10-20T08:08:25.854Z"
 }
