@@ -10,7 +10,7 @@
   "shift": "Ca Hành chính (08:00 - 16:30)",
   "reason": "mất thẻ",
   "status": "pending",
-  "currentStepIndex": 1,
+  "currentStepIndex": 2,
   "steps": [
     {
       "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
@@ -26,7 +26,9 @@
       "roleRequired": "manager",
       "approverId": "1867",
       "approverName": "Trương Anh Như Quỳnh",
-      "status": "pending"
+      "status": "approved",
+      "comment": "Đã xác nhận kiểm tra hợp lệ",
+      "actionAt": "2026-10-20T03:28:22.631Z"
     },
     {
       "stepName": "Kế toán ghi nhận trừ phí phôi thẻ",
@@ -42,5 +44,5 @@
     }
   ],
   "createdAt": "2026-10-20T03:26:40.254Z",
-  "updatedAt": "2026-10-20T03:26:58.933Z"
+  "updatedAt": "2026-10-20T03:28:22.631Z"
 }
