@@ -8,16 +8,20 @@
   "toDate": "2026-10-21",
   "totalDays": 1,
   "reason": "bận việc",
-  "status": "pending",
+  "status": "approved",
   "currentStepIndex": 0,
   "steps": [
     {
       "stepName": "Trưởng bộ phận phê duyệt",
       "roleRequired": "manager",
-      "approverName": "Trưởng phòng / Quản lý",
-      "status": "pending"
+      "approverName": "Trương Anh Như Quỳnh",
+      "status": "approved",
+      "approverId": "1867",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-10-20T02:04:10.187Z",
+      "signature": "Trương Anh Như Quỳnh (1867)"
     }
   ],
   "createdAt": "2026-10-20T01:55:32.994Z",
-  "updatedAt": "2026-10-20T01:55:32.994Z"
+  "updatedAt": "2026-10-20T02:04:10.187Z"
 }
