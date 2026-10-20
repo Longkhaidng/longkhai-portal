@@ -1133,7 +1133,7 @@
     "name": "Nguyễn Thị Nga",
     "department": "Phòng Kế Toán Tài Chính",
     "position": "Kế toán tổng hợp",
-    "role": "employee",
+    "role": "accountant",
     "permissions": [
       "dashboard",
       "leave",
@@ -1144,7 +1144,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-20T04:30:38.044Z",
+    "updatedAt": "2026-10-20T06:16:49.464Z",
     "email": "accounting.01@longkhai.com.vn",
     "departmentHeadEmail": "trang.vuong@longkhai.com.vn",
     "economicStaffId": "1139"
