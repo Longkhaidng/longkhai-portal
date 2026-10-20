@@ -50,10 +50,39 @@ export function AttendanceView() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const isBOD = isSuperAdminOrBOD(currentUser);
   const isSecurity = isSecurityRole(currentUser);
-  const canManageOthers = isApproverRole(currentUser) || isSecurity;
+  const isIT = isITStaff(currentUser);
+  const isAccountant = isAccountantStaff(currentUser);
+  const canManageOthers = isApproverRole(currentUser) || isSecurity || isIT || isAccountant;
   const [scopeFilter, setScopeFilter] = useState<DocumentScope>(() =>
-    isApproverRole(currentUser) || isSecurity ? 'all' : 'my'
+    isApproverRole(currentUser) || isSecurity || isIT || isAccountant ? 'all' : 'my'
   );
+
+  // Auto-switch away from 'my' for accountant/IT users so they see pending slips immediately
+  React.useEffect(() => {
+    if ((isAccountant || isIT) && scopeFilter === 'my' && !isApproverRole(currentUser)) {
+      setScopeFilter('all');
+    }
+  }, [isAccountant, isIT]);
+
+  // Count attendance slips waiting for Accountant to record card fee (Step 3)
+  const pendingAccountantCount = useMemo(() => {
+    if (!currentUser) return 0;
+    return attendances.filter((a) => {
+      if (a.status !== 'pending') return false;
+      const currentStep = a.steps[a.currentStepIndex];
+      return currentStep?.roleRequired === 'accountant';
+    }).length;
+  }, [attendances, currentUser]);
+
+  // Count attendance slips waiting for IT to process card issuance / biometric update
+  const pendingITCount = useMemo(() => {
+    if (!currentUser) return 0;
+    return attendances.filter((a) => {
+      if (a.status !== 'pending') return false;
+      const currentStep = a.steps[a.currentStepIndex];
+      return currentStep?.roleRequired === 'it';
+    }).length;
+  }, [attendances, currentUser]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<AttendanceConfirm | null>(null);
 
@@ -125,7 +154,7 @@ export function AttendanceView() {
       steps.push({
         stepName: 'Kế toán ghi nhận trừ phí phôi thẻ',
         roleRequired: 'accountant',
-        approverName: 'Bộ phận Kế toán Tiền lương',
+        approverName: 'Bộ phận Kế toán Tài chính',
         status: 'pending',
       });
     }
@@ -304,8 +333,10 @@ export function AttendanceView() {
     step.comment = approvalComment || 'Đã xác nhận kiểm tra hợp lệ';
     step.actionAt = new Date().toISOString();
 
+    let nextStep: ApprovalStep | undefined = undefined;
     if (updated.currentStepIndex + 1 < updated.steps.length) {
       updated.currentStepIndex += 1;
+      nextStep = updated.steps[updated.currentStepIndex];
     } else {
       updated.status = 'approved';
     }
@@ -315,11 +346,141 @@ export function AttendanceView() {
     setAttendances(storage.getAttendanceConfirms());
     setSelectedItem(updated);
     setApprovalComment('');
-    showToast({
-      type: 'success',
-      title: 'Đã phê duyệt thành công',
-      message: `Phiếu ${updated.id} đã được xác nhận.`,
-    });
+
+    // Dispatch email notifications when advancing to subsequent steps
+    if (nextStep) {
+      const allUsers = storage.getUsers();
+
+      // Case 1: Next step is Manager (Trưởng bộ phận)
+      if (nextStep.roleRequired === 'manager') {
+        const emp = allUsers.find((u) => u.id.toLowerCase() === updated.employeeId.toLowerCase());
+        const managerId = nextStep.approverId || emp?.departmentHeadId;
+        const managerUser = managerId ? allUsers.find((u) => u.id.toLowerCase() === managerId.toLowerCase()) : null;
+        const managerEmail = (managerUser?.email || emp?.departmentHeadEmail || '').trim();
+
+        if (managerEmail) {
+          dispatchApprovalEmail({
+            toEmail: managerEmail,
+            managerName: managerUser?.name || nextStep.approverName,
+            type: 'attendance',
+            docId: updated.id,
+            employeeId: updated.employeeId,
+            employeeName: updated.employeeName,
+            department: updated.department,
+            details: {
+              title: 'Thông báo Duyệt Phiếu Xác Nhận Công Vào - Ra',
+              items: [
+                { label: 'Sự cố chấm công', value: ISSUE_TYPE_LABELS[updated.issueType]?.text || updated.issueType },
+                { label: 'Nhân viên giải trình', value: `${updated.employeeName} (${updated.employeeId})` },
+                { label: 'Phòng ban / Xưởng', value: updated.department },
+                { label: 'Ngày & Ca làm việc', value: `${formatDate(updated.date)} (${updated.shift})` },
+                { label: 'Giờ vào - ra thực tế', value: `Vào: ${updated.checkInTime} - Ra: ${updated.checkOutTime}` },
+                { label: 'Lý do giải trình', value: updated.reason },
+                { label: 'Bảo vệ cổng', value: `Đã xác nhận thực tế (${currentUser.name})` },
+                { label: 'Yêu cầu', value: 'Vui lòng xem xét và phê duyệt trên Cổng Portal Long Khai.' },
+              ],
+            },
+          }).catch(console.error);
+        }
+
+        showToast({
+          type: 'success',
+          title: 'Đã xác nhận vào/ra thực tế',
+          message: managerEmail
+            ? `Phiếu ${updated.id} đã được chuyển và gửi email đến Trưởng bộ phận (${managerUser?.name || nextStep.approverName} - ${managerEmail}).`
+            : `Phiếu ${updated.id} đã được chuyển đến Trưởng bộ phận (${managerUser?.name || nextStep.approverName}) phê duyệt.`,
+        });
+      }
+
+      // Case 2: Next step is Accountant (Bộ phận Kế toán Tài chính)
+      else if (nextStep.roleRequired === 'accountant') {
+        const accountants = allUsers.filter((u) => isAccountantStaff(u) && u.email);
+        for (const acc of accountants) {
+          dispatchApprovalEmail({
+            toEmail: acc.email!,
+            managerName: acc.name,
+            type: 'attendance',
+            docId: updated.id,
+            employeeId: updated.employeeId,
+            employeeName: updated.employeeName,
+            department: updated.department,
+            details: {
+              title: 'Thông báo Kế toán Tài chính: Ghi nhận trừ phí phôi thẻ (Mất thẻ)',
+              items: [
+                { label: 'Sự cố chấm công', value: ISSUE_TYPE_LABELS[updated.issueType]?.text || updated.issueType },
+                { label: 'Nhân viên mất thẻ', value: `${updated.employeeName} (${updated.employeeId})` },
+                { label: 'Phòng ban / Xưởng', value: updated.department },
+                { label: 'Ngày & Ca làm việc', value: `${formatDate(updated.date)} (${updated.shift})` },
+                { label: 'Lý do giải trình', value: updated.reason },
+                { label: 'Trưởng BP đã duyệt', value: `${currentUser.name} (${currentUser.id})` },
+                { label: 'Bước xử lý', value: 'Bước 3: Kế toán ghi nhận trừ phí phôi thẻ' },
+                { label: 'Yêu cầu', value: 'Vui lòng kiểm tra và ghi nhận trừ phí phôi thẻ trên Cổng Portal Long Khai.' },
+              ],
+            },
+          }).catch(console.error);
+        }
+
+        showToast({
+          type: 'success',
+          title: 'Trưởng bộ phận đã phê duyệt',
+          message: accountants.length > 0
+            ? `Phiếu ${updated.id} đã được chuyển và gửi email thông báo đến Bộ phận Kế toán Tài chính (${accountants.map((a) => a.name).join(', ')}).`
+            : `Phiếu ${updated.id} đã được chuyển đến Bộ phận Kế toán Tài chính để ghi nhận trừ phí phôi thẻ.`,
+        });
+      }
+
+      // Case 3: Next step is IT (Bộ phận CNTT)
+      else if (nextStep.roleRequired === 'it') {
+        const itUsers = allUsers.filter((u) => isITStaff(u) && u.email);
+        for (const itUser of itUsers) {
+          dispatchApprovalEmail({
+            toEmail: itUser.email!,
+            managerName: itUser.name,
+            type: 'attendance',
+            docId: updated.id,
+            employeeId: updated.employeeId,
+            employeeName: updated.employeeName,
+            department: updated.department,
+            details: {
+              title: updated.issueType === 'mat_the'
+                ? 'Thông báo IT: Cấp phôi thẻ mới cho nhân viên'
+                : 'Thông báo IT: Cập nhật dữ liệu máy chấm công',
+              items: [
+                { label: 'Sự cố chấm công', value: ISSUE_TYPE_LABELS[updated.issueType]?.text || updated.issueType },
+                { label: 'Nhân viên', value: `${updated.employeeName} (${updated.employeeId})` },
+                { label: 'Phòng ban / Xưởng', value: updated.department },
+                { label: 'Ngày & Ca làm việc', value: `${formatDate(updated.date)} (${updated.shift})` },
+                { label: 'Lý do giải trình', value: updated.reason },
+                { label: 'Người duyệt trước đó', value: `${currentUser.name} (${currentUser.id})` },
+                { label: 'Yêu cầu', value: updated.issueType === 'mat_the'
+                    ? 'Vui lòng thực hiện cấp phôi thẻ mới trên Cổng Portal Long Khai.'
+                    : 'Vui lòng cập nhật dữ liệu máy chấm công trên Cổng Portal Long Khai.' },
+              ],
+            },
+          }).catch(console.error);
+        }
+
+        showToast({
+          type: 'success',
+          title: 'Đã phê duyệt thành công',
+          message: itUsers.length > 0
+            ? `Phiếu ${updated.id} đã được chuyển và gửi email thông báo đến Bộ phận CNTT (IT).`
+            : `Phiếu ${updated.id} đã được chuyển đến Bộ phận CNTT (IT) để xử lý hoàn tất.`,
+        });
+      } else {
+        showToast({
+          type: 'success',
+          title: 'Đã phê duyệt thành công',
+          message: `Phiếu ${updated.id} đã được xác nhận và chuyển sang bước tiếp theo (${nextStep.stepName}).`,
+        });
+      }
+    } else {
+      showToast({
+        type: 'success',
+        title: 'Hồ sơ đã hoàn tất phê duyệt',
+        message: `Phiếu ${updated.id} đã hoàn thành tất cả các bước xác nhận công.`,
+      });
+    }
   };
 
   // Reject action
@@ -401,7 +562,11 @@ export function AttendanceView() {
             </h1>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            {!canManageOthers
+            {isAccountant && !isApproverRole(currentUser)
+              ? 'Tiếp nhận và ghi nhận trừ phí phôi thẻ cho các trường hợp mất thẻ'
+              : isIT && !isApproverRole(currentUser)
+              ? 'Tiếp nhận xử lý cấp thẻ mới hoặc cập nhật dữ liệu máy chấm công'
+              : !canManageOthers
               ? `Chỉ hiển thị các phiếu xác nhận công của bạn (${currentUser?.name || ''})`
               : isSecurity
               ? 'Xác nhận giờ vào/ra thực tế tại cổng cho các trường hợp quên thẻ, mất thẻ, thẻ lỗi'
@@ -420,7 +585,49 @@ export function AttendanceView() {
         </button>
       </div>
 
-      {/* Scope Switcher for Approvers / Managers / Security */}
+      {/* Notification banner for Accountant Staff when there are pending lost card slips */}
+      {isAccountant && pendingAccountantCount > 0 && (
+        <div className="p-3.5 rounded-2xl bg-amber-500/10 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-xs">
+          <div className="flex items-center gap-2.5 text-amber-900 dark:text-amber-200">
+            <span className="p-1.5 rounded-xl bg-amber-500/20 text-amber-700 dark:text-amber-300 text-base">
+              🔔
+            </span>
+            <div>
+              <span className="font-bold text-sm">Thông báo Kế toán Tài chính: </span>
+              <span>Có <b>{pendingAccountantCount} phiếu xác nhận công (mất thẻ)</b> đang chờ Bộ phận Kế toán Tài chính ghi nhận trừ phí phôi thẻ!</span>
+            </div>
+          </div>
+          <button
+            onClick={() => setScopeFilter('approver')}
+            className="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shrink-0 shadow-xs transition-all"
+          >
+            Xem phiếu chờ kế toán xác nhận ({pendingAccountantCount}) &rarr;
+          </button>
+        </div>
+      )}
+
+      {/* Notification banner for IT Staff when there are pending card/attendance slips */}
+      {isIT && !isBOD && pendingITCount > 0 && (
+        <div className="p-3.5 rounded-2xl bg-blue-500/10 dark:bg-blue-950/40 border border-blue-300 dark:border-blue-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-xs">
+          <div className="flex items-center gap-2.5 text-blue-900 dark:text-blue-200">
+            <span className="p-1.5 rounded-xl bg-blue-500/20 text-blue-700 dark:text-blue-300 text-base">
+              🔔
+            </span>
+            <div>
+              <span className="font-bold text-sm">Thông báo Bộ phận IT: </span>
+              <span>Có <b>{pendingITCount} phiếu xác nhận công</b> đang chờ IT xử lý cấp phôi thẻ / cập nhật máy chấm công!</span>
+            </div>
+          </div>
+          <button
+            onClick={() => setScopeFilter('approver')}
+            className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shrink-0 shadow-xs transition-all"
+          >
+            Xem phiếu chờ IT xử lý ({pendingITCount}) &rarr;
+          </button>
+        </div>
+      )}
+
+      {/* Scope Switcher for Approvers / Managers / Security / Accountant / IT */}
       {canManageOthers && (
         <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
           <button
@@ -433,19 +640,41 @@ export function AttendanceView() {
           >
             {isSecurity
               ? 'Tất cả phiếu xác nhận công'
+              : isAccountant && !isApproverRole(currentUser)
+              ? 'Tất cả phiếu liên quan kế toán'
+              : isIT && !isApproverRole(currentUser)
+              ? 'Tất cả phiếu liên quan IT'
               : isBOD
               ? 'Tất cả phiếu toàn công ty'
               : `Phiếu nhân viên ${currentUser?.department || 'bộ phận'}`}
           </button>
           <button
             onClick={() => setScopeFilter('approver')}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 ${
               scopeFilter === 'approver'
                 ? 'bg-amber-600 text-white shadow-xs'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
-            {isSecurity ? 'Phiếu cần bảo vệ xác nhận' : 'Phiếu cần tôi duyệt'}
+            <span>
+              {isSecurity
+                ? 'Phiếu cần bảo vệ xác nhận'
+                : isAccountant && !isApproverRole(currentUser)
+                ? 'Chờ kế toán xác nhận'
+                : isIT && !isApproverRole(currentUser)
+                ? 'Chờ IT xử lý'
+                : 'Phiếu cần tôi duyệt'}
+            </span>
+            {isAccountant && !isApproverRole(currentUser) && pendingAccountantCount > 0 && (
+              <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-white text-amber-700 font-extrabold">
+                {pendingAccountantCount}
+              </span>
+            )}
+            {isIT && !isApproverRole(currentUser) && pendingITCount > 0 && (
+              <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-white text-amber-700 font-extrabold">
+                {pendingITCount}
+              </span>
+            )}
           </button>
           <button
             onClick={() => setScopeFilter('my')}
@@ -941,6 +1170,8 @@ export function AttendanceView() {
                       >
                         {selectedItem.steps[selectedItem.currentStepIndex]?.roleRequired === 'it'
                           ? '✓ IT xác nhận & Hoàn thành'
+                          : selectedItem.steps[selectedItem.currentStepIndex]?.roleRequired === 'accountant'
+                          ? '✓ Kế toán xác nhận trừ phí & Chuyển IT'
                           : selectedItem.currentStepIndex + 1 === selectedItem.steps.length
                           ? '✓ Xác nhận & Hoàn tất'
                           : '✓ Xác nhận & Chuyển bước tiếp theo'}
@@ -1000,7 +1231,7 @@ export function AttendanceView() {
                     ) : selectedItem.steps[selectedItem.currentStepIndex]?.roleRequired === 'security' ? (
                       <span>Bước này phải do Bảo vệ cổng kiểm tra và xác nhận vào/ra thực tế.</span>
                     ) : selectedItem.steps[selectedItem.currentStepIndex]?.roleRequired === 'accountant' ? (
-                      <span>Bước này phải do Bộ phận Kế toán kiểm tra và ghi nhận trừ phí phôi thẻ.</span>
+                      <span>Bước này phải do Bộ phận Kế toán Tài chính kiểm tra và ghi nhận trừ phí phôi thẻ.</span>
                     ) : selectedItem.employeeId.toLowerCase() === currentUser?.id.toLowerCase() ? (
                       <span>Đang chờ Trưởng bộ phận phê duyệt (Người tạo phiếu không được tự phê duyệt đơn của chính mình).</span>
                     ) : (

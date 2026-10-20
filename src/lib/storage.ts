@@ -281,7 +281,22 @@ class StorageService {
     if (!this.isClient()) return [];
     try {
       const data = localStorage.getItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS);
-      if (data) return JSON.parse(data);
+      if (data) {
+        const parsed: AttendanceConfirm[] = JSON.parse(data);
+        let modified = false;
+        parsed.forEach((c) => {
+          c.steps?.forEach((s) => {
+            if (s.roleRequired === 'accountant' && (s.approverName === 'Bộ phận Kế toán Tiền lương' || !s.approverName)) {
+              s.approverName = 'Bộ phận Kế toán Tài chính';
+              modified = true;
+            }
+          });
+        });
+        if (modified) {
+          localStorage.setItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS, JSON.stringify(parsed));
+        }
+        return parsed;
+      }
     } catch {}
     return [];
   }

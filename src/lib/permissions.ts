@@ -323,13 +323,19 @@ export function filterUserAttendances(
       return attendances.filter((a) => {
         if (a.status !== 'pending') return false;
         const currentStep = a.steps[a.currentStepIndex];
-        return currentStep?.roleRequired === 'accountant';
+        const isAccStep = currentStep?.roleRequired === 'accountant';
+        const isMyDeptPending =
+          (user.role === 'manager' || user.role === 'team_leader') &&
+          a.employeeId.toLowerCase() !== uid &&
+          (isSameDepartment(a.department, user.department) || currentStep?.approverId?.toLowerCase() === uid);
+        return isAccStep || isMyDeptPending;
       });
     }
     return attendances.filter((a) => {
       const isMine = a.employeeId.toLowerCase() === uid;
       const hasAccStep = a.steps?.some((s) => s.roleRequired === 'accountant');
-      return isMine || hasAccStep;
+      const isMyDept = (user.role === 'manager' || user.role === 'team_leader') && isSameDepartment(a.department, user.department);
+      return isMine || hasAccStep || isMyDept;
     });
   }
 
