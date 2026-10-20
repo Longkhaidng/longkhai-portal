@@ -4199,8 +4199,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T09:01:30.416Z",
-    "departmentHeadEmail": "tu.pham@vitex.com.vn"
+    "updatedAt": "2026-10-20T04:31:25.548Z",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn",
+    "economicStaffId": "1139"
   },
   {
     "id": "2747",
