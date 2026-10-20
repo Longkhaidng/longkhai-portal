@@ -91,7 +91,7 @@
   },
   {
     "id": "101",
-    "name": "24-40 Nguyễn Hữu Lập",
+    "name": "Nguyễn Hữu Lập",
     "department": "Đội Bảo Vệ & An Ninh",
     "position": "Bảo vệ",
     "role": "security",
@@ -104,7 +104,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-20T06:48:15.336Z",
+    "updatedAt": "2026-10-20T07:55:07.665Z",
     "allowedWebIntegrations": []
   },
   {
