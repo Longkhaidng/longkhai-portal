@@ -1369,7 +1369,7 @@
   {
     "id": "1466",
     "name": "Nguyễn Thị Thanh Tâm",
-    "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
+    "department": "Phòng công nghệ mẫu",
     "position": "Nhân viên công nghệ mẫu",
     "role": "employee",
     "permissions": [
@@ -1382,8 +1382,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T08:05:37.921Z",
-    "departmentHeadId": "1241"
+    "updatedAt": "2026-10-20T04:27:51.811Z",
+    "departmentHeadId": "1241",
+    "economicStaffId": "1139"
   },
   {
     "id": "1491",
