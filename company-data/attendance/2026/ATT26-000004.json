@@ -10,7 +10,7 @@
   "shift": "Ca Hành chính (08:00 - 16:30)",
   "reason": "mất thẻ",
   "status": "pending",
-  "currentStepIndex": 2,
+  "currentStepIndex": 3,
   "steps": [
     {
       "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
@@ -33,8 +33,11 @@
     {
       "stepName": "Kế toán ghi nhận trừ phí phôi thẻ",
       "roleRequired": "accountant",
-      "approverName": "Bộ phận Kế toán Tiền lương",
-      "status": "pending"
+      "approverName": "Nguyễn Thị Nga",
+      "status": "approved",
+      "approverId": "1282",
+      "comment": "Đã thu tiền thẻ",
+      "actionAt": "2026-10-20T03:59:37.884Z"
     },
     {
       "stepName": "IT cấp phôi thẻ mới",
@@ -44,5 +47,5 @@
     }
   ],
   "createdAt": "2026-10-20T03:26:40.254Z",
-  "updatedAt": "2026-10-20T03:28:22.631Z"
+  "updatedAt": "2026-10-20T03:59:37.884Z"
 }
