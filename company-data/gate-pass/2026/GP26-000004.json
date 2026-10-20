@@ -14,11 +14,13 @@
   "estimatedReturnTime": "2026-10-20T13:00",
   "managerApproverId": "1867",
   "managerApproverName": "Trương Anh Như Quỳnh",
-  "status": "departed",
+  "status": "completed",
   "qrCodeData": "LONGKHAI_GATEPASS:GP26-000004:1005:2026-10-20T11:30",
   "createdAt": "2026-10-20T03:38:23.676Z",
-  "updatedAt": "2026-10-20T03:39:29.748Z",
+  "updatedAt": "2026-10-20T06:43:05.107Z",
   "managerApprovedAt": "2026-10-20T03:38:40.139Z",
   "actualDepartureTime": "2026-10-20T03:39:29.748Z",
-  "securityDepartureGuardId": "102"
+  "securityDepartureGuardId": "102",
+  "actualReturnTime": "2026-10-20T06:43:05.107Z",
+  "securityReturnGuardId": "102"
 }
