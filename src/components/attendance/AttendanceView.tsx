@@ -33,6 +33,8 @@ import {
   isSuperAdminOrBOD,
   isSameDepartment,
   isSecurityRole,
+  isITStaff,
+  isAccountantStaff,
   DocumentScope,
 } from '@/lib/permissions';
 
@@ -218,34 +220,65 @@ export function AttendanceView() {
   };
 
   // Check if current user can approve current step
+  // "tiến trình phê duyệt phải được thực hiện trình tự theo từng bước, mỗi người chỉ được phép phê duyệt đúng chức năng của mình"
   const canApprove = (att: AttendanceConfirm): boolean => {
     if (!currentUser || att.status !== 'pending') return false;
-
-    // 1. Employee cannot self-approve their own request
-    if (att.employeeId.toLowerCase() === currentUser.id.toLowerCase()) return false;
-
-    // 2. Admin & Ban Giám Đốc can approve any step across company
-    if (isSuperAdminOrBOD(currentUser)) return true;
 
     const currentStep = att.steps[att.currentStepIndex];
     if (!currentStep || currentStep.status !== 'pending') return false;
 
-    // 3. Security guard can approve Step 1 (Bảo vệ cổng xác nhận vào/ra thực tế)
-    if (isSecurityRole(currentUser) && currentStep.roleRequired === 'security') {
-      return true;
+    // Sequential step check: All previous steps must be approved
+    for (let i = 0; i < att.currentStepIndex; i++) {
+      if (att.steps[i].status !== 'approved') return false;
     }
 
-    // 4. Manager / Team leader can approve steps for their department or assigned
-    if (currentUser.role === 'manager' || currentUser.role === 'team_leader') {
-      if (isSameDepartment(currentUser.department, att.department)) return true;
-      if (currentStep.approverId && currentStep.approverId.toLowerCase() === currentUser.id.toLowerCase()) return true;
-      if (currentStep.roleRequired === 'manager' && isSameDepartment(currentUser.department, att.department)) return true;
+    const roleReq = currentStep.roleRequired;
+
+    // 1. Step Bảo vệ (Bảo vệ cổng xác nhận vào/ra thực tế)
+    if (roleReq === 'security') {
+      return isSecurityRole(currentUser);
     }
 
-    // 5. Accountant / IT roles for their specific steps
-    if (currentStep.roleRequired && currentUser.role === currentStep.roleRequired) {
-      return true;
+    // 2. Step Trưởng bộ phận (Trưởng bộ phận phê duyệt giải trình)
+    if (roleReq === 'manager') {
+      // Employee cannot self-approve their own request
+      if (att.employeeId.toLowerCase() === currentUser.id.toLowerCase()) return false;
+      // Assigned manager ID
+      if (currentStep.approverId && currentStep.approverId.toLowerCase() === currentUser.id.toLowerCase()) {
+        return true;
+      }
+      // Department head of same department
+      if (currentUser.role === 'manager' && isSameDepartment(currentUser.department, att.department)) {
+        return true;
+      }
+      // BOD acting as Manager
+      if (isSuperAdminOrBOD(currentUser)) {
+        return true;
+      }
+      return false;
     }
+
+    // 3. Step Tổ trưởng (nếu có)
+    if (roleReq === 'team_leader') {
+      if (att.employeeId.toLowerCase() === currentUser.id.toLowerCase()) return false;
+      if (currentStep.approverId && currentStep.approverId.toLowerCase() === currentUser.id.toLowerCase()) {
+        return true;
+      }
+      return currentUser.role === 'team_leader' && isSameDepartment(currentUser.department, att.department);
+    }
+
+    // 4. Step Kế toán (Kế toán ghi nhận trừ phí phôi thẻ)
+    if (roleReq === 'accountant') {
+      return isAccountantStaff(currentUser);
+    }
+
+    // 5. Step IT (IT cập nhật dữ liệu máy chấm công / IT cấp phôi thẻ mới)
+    // "Như trong hình dưới thì bước 3 phải do chính nhân viên IT xác nhận và hoàn thành."
+    if (roleReq === 'it') {
+      return isITStaff(currentUser);
+    }
+
+    if (currentUser.role === roleReq) return true;
 
     return false;
   };
@@ -885,7 +918,11 @@ export function AttendanceView() {
                         onClick={handleApprove}
                         className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm"
                       >
-                        ✓ Xác nhận & Chuyển bước tiếp theo
+                        {selectedItem.steps[selectedItem.currentStepIndex]?.roleRequired === 'it'
+                          ? '✓ IT xác nhận & Hoàn thành'
+                          : selectedItem.currentStepIndex + 1 === selectedItem.steps.length
+                          ? '✓ Xác nhận & Hoàn tất'
+                          : '✓ Xác nhận & Chuyển bước tiếp theo'}
                       </button>
                       <button
                         onClick={() => setIsRejecting(true)}
@@ -930,13 +967,26 @@ export function AttendanceView() {
             )}
 
             {selectedItem.status === 'pending' && !canApprove(selectedItem) && (
-              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 text-xs text-slate-500 flex items-center gap-2">
-                <Clock className="w-4 h-4 text-amber-500 shrink-0" />
-                <span>
-                  {selectedItem.employeeId.toLowerCase() === currentUser?.id.toLowerCase()
-                    ? 'Phiếu đang chờ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc phê duyệt (Người tạo phiếu không được tự phê duyệt phiếu của chính mình).'
-                    : 'Phiếu đang chờ phê duyệt từ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc.'}
-                </span>
+              <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 text-xs text-slate-600 dark:text-slate-400 flex items-start gap-2.5">
+                <Clock className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <div className="font-semibold text-slate-800 dark:text-slate-200">
+                    Bước {selectedItem.currentStepIndex + 1}: {selectedItem.steps[selectedItem.currentStepIndex]?.stepName}
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    {selectedItem.steps[selectedItem.currentStepIndex]?.roleRequired === 'it' ? (
+                      <span>Bước này phải do chính nhân viên IT (Bộ phận CNTT) xác nhận và hoàn thành cập nhật máy chấm công.</span>
+                    ) : selectedItem.steps[selectedItem.currentStepIndex]?.roleRequired === 'security' ? (
+                      <span>Bước này phải do Bảo vệ cổng kiểm tra và xác nhận vào/ra thực tế.</span>
+                    ) : selectedItem.steps[selectedItem.currentStepIndex]?.roleRequired === 'accountant' ? (
+                      <span>Bước này phải do Bộ phận Kế toán kiểm tra và ghi nhận trừ phí phôi thẻ.</span>
+                    ) : selectedItem.employeeId.toLowerCase() === currentUser?.id.toLowerCase() ? (
+                      <span>Đang chờ Trưởng bộ phận phê duyệt (Người tạo phiếu không được tự phê duyệt đơn của chính mình).</span>
+                    ) : (
+                      <span>Đang chờ Trưởng bộ phận ({selectedItem.steps[selectedItem.currentStepIndex]?.approverName}) xem xét và phê duyệt.</span>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
 

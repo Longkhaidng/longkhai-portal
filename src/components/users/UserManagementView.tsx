@@ -63,6 +63,7 @@ export function UserManagementView() {
   const [newEmpPhone, setNewEmpPhone] = useState('');
   const [newEmpTeamLeader, setNewEmpTeamLeader] = useState('');
   const [newEmpDeptHead, setNewEmpDeptHead] = useState('');
+  const [newEmpEconomicStaff, setNewEmpEconomicStaff] = useState('');
   const [newEmpDeptHeadEmail, setNewEmpDeptHeadEmail] = useState('');
   const [newEmpPassword, setNewEmpPassword] = useState('LK@123456');
   const [newEmpPerms, setNewEmpPerms] = useState<CategoryPermission[]>([
@@ -85,6 +86,7 @@ export function UserManagementView() {
   const [editPhone, setEditPhone] = useState('');
   const [editTeamLeader, setEditTeamLeader] = useState('');
   const [editDeptHead, setEditDeptHead] = useState('');
+  const [editEconomicStaff, setEditEconomicStaff] = useState('');
   const [editDeptHeadEmail, setEditDeptHeadEmail] = useState('');
   const [editIsActive, setEditIsActive] = useState(true);
   const [editError, setEditError] = useState<string | null>(null);
@@ -153,6 +155,7 @@ export function UserManagementView() {
       phone: newEmpPhone.trim() || undefined,
       teamLeaderId: newEmpTeamLeader.trim() || undefined,
       departmentHeadId: newEmpDeptHead.trim() || undefined,
+      economicStaffId: newEmpEconomicStaff.trim() || undefined,
       departmentHeadEmail: newEmpDeptHeadEmail.trim() || undefined,
       permissions: newEmpRole === 'admin' ? CATEGORY_DEFINITIONS.map((c) => c.id) : newEmpPerms,
       allowedWebIntegrations: newEmpWebIntegrations,
@@ -180,6 +183,7 @@ export function UserManagementView() {
     setEditPhone(user.phone || '');
     setEditTeamLeader(user.teamLeaderId || '');
     setEditDeptHead(user.departmentHeadId || '');
+    setEditEconomicStaff(user.economicStaffId || '');
     
     // Do not auto-lookup manager's email; default to empty if not explicitly set
     setEditDeptHeadEmail(user.departmentHeadEmail || '');
@@ -212,6 +216,7 @@ export function UserManagementView() {
           phone: editPhone.trim() || undefined,
           teamLeaderId: editTeamLeader.trim() || undefined,
           departmentHeadId: editDeptHead.trim() || undefined,
+          economicStaffId: editEconomicStaff.trim() || undefined,
           departmentHeadEmail: editDeptHeadEmail.trim() || undefined,
           isActive: editIsActive,
           updatedAt: new Date().toISOString(),
@@ -767,17 +772,39 @@ export function UserManagementView() {
                 </div>
               </div>
 
-              <div>
-                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Email Trưởng bộ phận (Nếu không nhập thì mặc định để trống):
-                </label>
-                <input
-                  type="email"
-                  value={newEmpDeptHeadEmail}
-                  onChange={(e) => setNewEmpDeptHeadEmail(e.target.value)}
-                  placeholder="Để trống nếu duyệt qua Cổng Portal theo Mã NV..."
-                  className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Mã nhân viên kinh tế (nếu có):
+                  </label>
+                  <input
+                    type="text"
+                    value={newEmpEconomicStaff}
+                    onChange={(e) => setNewEmpEconomicStaff(e.target.value)}
+                    placeholder="Ví dụ: 1912, 2754... (để chuyển cắt cơm)"
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono uppercase"
+                  />
+                  {newEmpEconomicStaff.trim() && (
+                    <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-1">
+                      {(() => {
+                        const found = users.find((u) => u.id.toLowerCase() === newEmpEconomicStaff.trim().toLowerCase());
+                        return found ? `✓ ${found.name} (${found.position || found.department})` : '⚠️ Chưa tìm thấy mã NV này';
+                      })()}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Email Trưởng bộ phận (Nếu không nhập thì để trống):
+                  </label>
+                  <input
+                    type="email"
+                    value={newEmpDeptHeadEmail}
+                    onChange={(e) => setNewEmpDeptHeadEmail(e.target.value)}
+                    placeholder="Để trống nếu duyệt qua Cổng Portal..."
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                  />
+                </div>
               </div>
 
               {/* Category Permissions checkbox */}
@@ -1345,6 +1372,26 @@ export function UserManagementView() {
               <div className="grid grid-cols-2 gap-3 pt-1">
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Mã nhân viên kinh tế:
+                  </label>
+                  <input
+                    type="text"
+                    value={editEconomicStaff}
+                    onChange={(e) => setEditEconomicStaff(e.target.value)}
+                    placeholder="Mã NV kinh tế để chuyển cắt cơm..."
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono uppercase"
+                  />
+                  {editEconomicStaff.trim() && (
+                    <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-1">
+                      {(() => {
+                        const found = users.find((u) => u.id.toLowerCase() === editEconomicStaff.trim().toLowerCase());
+                        return found ? `✓ ${found.name} (${found.position || found.department})` : '⚠️ Chưa tìm thấy mã NV này';
+                      })()}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Email Trưởng bộ phận (Nếu không nhập thì để trống):
                   </label>
                   <input
@@ -1355,20 +1402,21 @@ export function UserManagementView() {
                     className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
                   />
                 </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Trạng thái tài khoản:
-                  </label>
-                  <select
-                    value={editIsActive ? 'active' : 'inactive'}
-                    onChange={(e) => setEditIsActive(e.target.value === 'active')}
-                    disabled={editingUser.id === '2265' || editingUser.id === 'ADMIN01'}
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold disabled:opacity-60"
-                  >
-                    <option value="active">🟢 Đang hoạt động (Active)</option>
-                    <option value="inactive">🔴 Tạm khóa (Inactive)</option>
-                  </select>
-                </div>
+              </div>
+
+              <div className="pt-1">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Trạng thái tài khoản:
+                </label>
+                <select
+                  value={editIsActive ? 'active' : 'inactive'}
+                  onChange={(e) => setEditIsActive(e.target.value === 'active')}
+                  disabled={editingUser.id === '2265' || editingUser.id === 'ADMIN01'}
+                  className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold disabled:opacity-60"
+                >
+                  <option value="active">🟢 Đang hoạt động (Active)</option>
+                  <option value="inactive">🔴 Tạm khóa (Inactive)</option>
+                </select>
               </div>
 
               <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">

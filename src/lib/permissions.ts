@@ -7,7 +7,7 @@ export type DocumentScope = 'my' | 'approver' | 'all';
 
 /**
  * Check if the user is Admin or Board of Directors (Ban Giám Đốc)
- * Admin and BOD have supreme authority to see and approve all company requests.
+ * Admin and BOD have supreme authority to see and oversee company requests.
  */
 export function isSuperAdminOrBOD(user?: User | null): boolean {
   if (!user) return false;
@@ -61,8 +61,47 @@ export function isSecurityRole(user?: User | null): boolean {
 }
 
 /**
+ * Check if the user is IT personnel (Bộ phận CNTT / IT)
+ */
+export function isITStaff(user?: User | null): boolean {
+  if (!user) return false;
+  if (user.role === 'it') return true;
+  if (user.id === '2265' || user.id === 'ADMIN01') return true;
+  const dept = (user.department || '').toLowerCase();
+  if (dept.includes('it') || dept.includes('công nghệ thông tin') || dept.includes('cong nghe thong tin') || dept.includes('cntt')) return true;
+  const pos = (user.position || '').toLowerCase();
+  if (pos.includes('it') || pos.includes('cntt') || pos.includes('công nghệ thông tin') || pos.includes('quản trị viên cntt')) return true;
+  return false;
+}
+
+/**
+ * Check if the user is Accountant (Kế toán)
+ */
+export function isAccountantStaff(user?: User | null): boolean {
+  if (!user) return false;
+  if (user.role === 'accountant') return true;
+  const dept = (user.department || '').toLowerCase();
+  if (dept.includes('kế toán') || dept.includes('ke toan')) return true;
+  const pos = (user.position || '').toLowerCase();
+  if (pos.includes('kế toán') || pos.includes('ke toan')) return true;
+  return false;
+}
+
+/**
+ * Check if the user is Economic Staff / Phụ trách cắt cơm (Nhân viên kinh tế)
+ */
+export function isEconomicStaff(user?: User | null): boolean {
+  if (!user) return false;
+  if ((user.role as string) === 'economic') return true;
+  const pos = (user.position || '').toLowerCase();
+  if (pos.includes('kinh tế') || pos.includes('kinh te') || pos.includes('cắt cơm') || pos.includes('cat com')) return true;
+  return false;
+}
+
+/**
  * Filter Leave Requests based on user permissions:
  * - Regular employee: Strictly can only see their own requests.
+ * - Economic staff (Nhân viên kinh tế): Can see requests assigned to them for cutting meals once approved by Manager.
  * - Team Leader & Department Head (Tổ trưởng, Trưởng bộ phận): Can see all requests of employees in their department + their own.
  * - Admin & Ban Giám Đốc: Can see all requests across the entire company.
  */
@@ -74,12 +113,34 @@ export function filterUserLeaves(
   if (!user) return [];
   const uid = user.id.toLowerCase();
 
-  // 1. Regular users strictly only see their own requests
+  // 1. Economic staff (Nhân viên kinh tế / Phụ trách cắt cơm)
+  const isEconomic = isEconomicStaff(user) || leaves.some((l) => l.steps?.some((s) => s.roleRequired === 'economic' && s.approverId?.toLowerCase() === uid));
+  if (isEconomic && !isSuperAdminOrBOD(user) && user.role !== 'manager') {
+    if (scope === 'my') {
+      return leaves.filter((l) => l.employeeId.toLowerCase() === uid);
+    }
+    if (scope === 'approver') {
+      // Only requests that reached economic staff's turn (Trưởng BP đã duyệt)
+      return leaves.filter((l) => {
+        if (l.status !== 'pending' || l.employeeId.toLowerCase() === uid) return false;
+        const currentStep = l.steps[l.currentStepIndex];
+        return currentStep?.roleRequired === 'economic' && (currentStep?.approverId?.toLowerCase() === uid || isEconomicStaff(user));
+      });
+    }
+    // scope === 'all': requests assigned to economic staff + their own
+    return leaves.filter((l) => {
+      const isMine = l.employeeId.toLowerCase() === uid;
+      const isAssigned = l.steps?.some((s) => s.roleRequired === 'economic' && (s.approverId?.toLowerCase() === uid || isEconomicStaff(user)));
+      return isMine || isAssigned;
+    });
+  }
+
+  // 2. Regular users strictly only see their own requests
   if (!isApproverRole(user)) {
     return leaves.filter((l) => l.employeeId.toLowerCase() === uid);
   }
 
-  // 2. Admin & Ban Giám Đốc can see all company requests
+  // 3. Admin & Ban Giám Đốc can see all company requests
   if (isSuperAdminOrBOD(user)) {
     if (scope === 'my') {
       return leaves.filter((l) => l.employeeId.toLowerCase() === uid);
@@ -90,8 +151,7 @@ export function filterUserLeaves(
     return leaves; // All company
   }
 
-  // 3. Team Leader (Tổ trưởng) & Department Head (Trưởng bộ phận)
-  // "tổ trưởng, trưởng bộ phận có thể thấy và xem đơn của nhân viên bộ phận mình"
+  // 4. Team Leader (Tổ trưởng) & Department Head (Trưởng bộ phận)
   if (user.role === 'manager' || user.role === 'team_leader') {
     if (scope === 'my') {
       return leaves.filter((l) => l.employeeId.toLowerCase() === uid);
@@ -134,18 +194,15 @@ export function filterUserGatePasses(
   const uid = user.id.toLowerCase();
 
   // 1. Security role (Bảo vệ)
-  // "bảo vệ sẽ thấy được tất cả các phiếu ra vào cổng mà mình được phép phê duyệt hoặc xác nhận"
   if (isSecurityRole(user)) {
     if (scope === 'my') {
       return passes.filter((p) => p.employeeId.toLowerCase() === uid);
     }
     if (scope === 'approver') {
-      // Passes waiting for security confirmation (approved by manager to leave/enter, or currently departed waiting to return)
       return passes.filter(
         (p) => (p.status === 'approved' || p.status === 'departed') && p.employeeId.toLowerCase() !== uid
       );
     }
-    // scope === 'all': all passes that security can check/confirm/monitor across company
     return passes;
   }
 
@@ -187,7 +244,9 @@ export function filterUserGatePasses(
 
 /**
  * Filter Attendance Confirmations based on user permissions:
- * - Security (Bảo vệ): Can see all attendance slips that they are authorized to confirm / approve (Step 1: Bảo vệ cổng xác nhận vào/ra thực tế).
+ * - Security (Bảo vệ): Can see all attendance slips that they are authorized to confirm / approve (Step 1).
+ * - IT staff (Bộ phận CNTT): Can see slips requiring IT machine data updates (Step 3/4).
+ * - Accountant (Kế toán): Can see slips requiring card fee recording (Step 3).
  * - Regular employee: Strictly can only see their own attendance confirmations.
  * - Team Leader & Department Head: Can see all attendance confirmations of employees in their department + their own.
  * - Admin & Ban Giám Đốc: Can see all attendance confirmations across the company.
@@ -201,36 +260,71 @@ export function filterUserAttendances(
   const uid = user.id.toLowerCase();
 
   // 1. Security role (Bảo vệ)
-  // "bảo vệ sẽ thấy được tất cả các phiếu xác nhận công mà mình được phép phê duyệt hoặc xác nhận"
   if (isSecurityRole(user)) {
     if (scope === 'my') {
       return attendances.filter((a) => a.employeeId.toLowerCase() === uid);
     }
     if (scope === 'approver') {
-      // Pending slips where current step is waiting for security confirmation (Step 1: roleRequired === 'security')
       return attendances.filter((a) => {
         if (a.status !== 'pending' || a.employeeId.toLowerCase() === uid) return false;
         const currentStep = a.steps[a.currentStepIndex];
         return currentStep?.roleRequired === 'security' || currentStep?.approverId?.toLowerCase() === uid;
       });
     }
-    // scope === 'all': all attendance slips involving security or across company
     return attendances;
   }
 
-  // 2. Regular employees strictly only see their own
+  // 2. IT staff (Bộ phận CNTT / IT)
+  if (isITStaff(user) && !isSuperAdminOrBOD(user)) {
+    if (scope === 'my') {
+      return attendances.filter((a) => a.employeeId.toLowerCase() === uid);
+    }
+    if (scope === 'approver') {
+      return attendances.filter((a) => {
+        if (a.status !== 'pending') return false;
+        const currentStep = a.steps[a.currentStepIndex];
+        return currentStep?.roleRequired === 'it';
+      });
+    }
+    return attendances.filter((a) => {
+      const isMine = a.employeeId.toLowerCase() === uid;
+      const hasITStep = a.steps?.some((s) => s.roleRequired === 'it');
+      return isMine || hasITStep;
+    });
+  }
+
+  // 3. Accountant (Kế toán)
+  if (isAccountantStaff(user) && !isSuperAdminOrBOD(user)) {
+    if (scope === 'my') {
+      return attendances.filter((a) => a.employeeId.toLowerCase() === uid);
+    }
+    if (scope === 'approver') {
+      return attendances.filter((a) => {
+        if (a.status !== 'pending') return false;
+        const currentStep = a.steps[a.currentStepIndex];
+        return currentStep?.roleRequired === 'accountant';
+      });
+    }
+    return attendances.filter((a) => {
+      const isMine = a.employeeId.toLowerCase() === uid;
+      const hasAccStep = a.steps?.some((s) => s.roleRequired === 'accountant');
+      return isMine || hasAccStep;
+    });
+  }
+
+  // 4. Regular employees strictly only see their own
   if (!isApproverRole(user)) {
     return attendances.filter((a) => a.employeeId.toLowerCase() === uid);
   }
 
-  // 3. Admin & Ban Giám Đốc can see all
+  // 5. Admin & Ban Giám Đốc can see all
   if (isSuperAdminOrBOD(user)) {
     if (scope === 'my') return attendances.filter((a) => a.employeeId.toLowerCase() === uid);
     if (scope === 'approver') return attendances.filter((a) => a.status === 'pending' && a.employeeId.toLowerCase() !== uid);
     return attendances;
   }
 
-  // 4. Team Leader & Department Head
+  // 6. Team Leader & Department Head
   if (user.role === 'manager' || user.role === 'team_leader') {
     if (scope === 'my') return attendances.filter((a) => a.employeeId.toLowerCase() === uid);
 

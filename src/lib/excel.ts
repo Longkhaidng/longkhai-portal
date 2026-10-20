@@ -51,6 +51,9 @@ export function parseEmployeeExcel(file: File): Promise<ParsedEmployeeResult> {
           const phone = String(row['Số điện thoại'] || row['SĐT'] || row['phone'] || '').trim();
           const teamLeaderId = String(row['Mã Tổ trưởng'] || row['Tổ trưởng'] || row['teamLeaderId'] || '').trim();
           const departmentHeadId = String(row['Mã Trưởng BP'] || row['Trưởng BP'] || row['departmentHeadId'] || '').trim();
+          const economicStaffId = String(
+            row['Mã NV kinh tế'] || row['Mã NV Kinh tế'] || row['Mã nhân viên kinh tế'] || row['NV kinh tế'] || row['economicStaffId'] || ''
+          ).trim();
           const departmentHeadEmail = String(
             row['Email Trưởng BP'] || row['Email Trưởng bộ phận'] || row['departmentHeadEmail'] || ''
           ).trim();

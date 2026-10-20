@@ -85,6 +85,7 @@ export interface User {
   teamLeaderId?: string; // Mã NV Tổ trưởng (nếu có)
   departmentHeadId?: string; // Mã NV Trưởng bộ phận
   departmentHeadEmail?: string; // Email Trưởng bộ phận (nhận thông báo & duyệt đơn)
+  economicStaffId?: string; // Mã NV kinh tế (cắt cơm)
   isActive: boolean;
   password?: string;
   createdAt: string;
@@ -102,6 +103,7 @@ export interface UserExcelRow {
   teamLeaderId?: string; // Mã Tổ trưởng
   departmentHeadId?: string; // Mã Trưởng BP
   departmentHeadEmail?: string; // Email Trưởng BP
+  economicStaffId?: string; // Mã NV kinh tế (cắt cơm)
   password?: string; // Mật khẩu ban đầu
   permissions?: string; // Chuỗi phân quyền, ví dụ: "dashboard,leave,attendance" hoặc "all"
 }

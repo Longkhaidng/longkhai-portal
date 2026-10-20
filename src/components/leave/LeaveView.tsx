@@ -21,7 +21,7 @@ import {
 import { formatDate, generateDocId } from '@/lib/utils';
 import { dispatchApprovalEmail } from '@/lib/email';
 import { ToastContainer, useToast } from '@/components/common/Toast';
-import { filterUserLeaves, isApproverRole, isSuperAdminOrBOD, isSameDepartment, DocumentScope } from '@/lib/permissions';
+import { filterUserLeaves, isApproverRole, isSuperAdminOrBOD, isSameDepartment, isEconomicStaff, DocumentScope } from '@/lib/permissions';
 
 export function LeaveView() {
   const { currentUser } = useAuth();
@@ -33,7 +33,7 @@ export function LeaveView() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState<LeaveRequest | null>(null);
 
-  const canManageOthers = isApproverRole(currentUser);
+  const canManageOthers = isApproverRole(currentUser) || isEconomicStaff(currentUser);
   const isBOD = isSuperAdminOrBOD(currentUser);
 
   // Approval action states
@@ -112,6 +112,22 @@ export function LeaveView() {
       approverName: deptHeadUser?.name || 'Trưởng phòng / Quản lý',
       status: 'pending',
     });
+
+    // Check if employee has assigned Economic Staff (Nhân viên kinh tế / Phụ trách cắt cơm)
+    const economicStaffId = freshUser.economicStaffId || currentUser.economicStaffId;
+    const economicUser = economicStaffId
+      ? allUsers.find((u) => u.id.toLowerCase() === economicStaffId.toLowerCase())
+      : null;
+
+    if (economicStaffId) {
+      steps.push({
+        stepName: 'Nhân viên kinh tế xác nhận cắt cơm',
+        roleRequired: 'economic',
+        approverId: economicStaffId,
+        approverName: economicUser?.name || 'Nhân viên kinh tế',
+        status: 'pending',
+      });
+    }
 
     const newRequest: LeaveRequest = {
       id: docId,
@@ -201,32 +217,53 @@ export function LeaveView() {
   };
 
   // Check if current user can approve the current step of this leave request
+  // "tiến trình phê duyệt phải được thực hiện trình tự theo từng bước, mỗi người chỉ được phép phê duyệt đúng chức năng của mình"
   const canApprove = (leave: LeaveRequest): boolean => {
     if (!currentUser || leave.status !== 'pending') return false;
-
-    // 1. Employee cannot self-approve their own request
-    if (leave.employeeId.toLowerCase() === currentUser.id.toLowerCase()) return false;
-
-    // 2. Only team leader, department head (manager), or admin (Ban giám đốc) can approve
-    if (!isApproverRole(currentUser)) return false;
-
-    // Admin / Ban giám đốc can approve any step
-    if (isSuperAdminOrBOD(currentUser)) return true;
 
     const currentStep = leave.steps[leave.currentStepIndex];
     if (!currentStep || currentStep.status !== 'pending') return false;
 
-    // Match specifically by assigned approver ID
-    if (currentStep.approverId && currentStep.approverId.toLowerCase() === currentUser.id.toLowerCase()) {
-      return true;
+    // Sequential step check: All previous steps must be approved
+    for (let i = 0; i < leave.currentStepIndex; i++) {
+      if (leave.steps[i].status !== 'approved') return false;
     }
-    const isSameDept = isSameDepartment(leave.department, currentUser.department);
-    if (currentUser.role === 'manager' && currentStep.roleRequired === 'manager' && isSameDept) {
-      return true;
+
+    const roleReq = currentStep.roleRequired;
+
+    // 1. Step Tổ trưởng
+    if (roleReq === 'team_leader') {
+      if (leave.employeeId.toLowerCase() === currentUser.id.toLowerCase()) return false;
+      if (currentStep.approverId && currentStep.approverId.toLowerCase() === currentUser.id.toLowerCase()) {
+        return true;
+      }
+      return currentUser.role === 'team_leader' && isSameDepartment(leave.department, currentUser.department);
     }
-    if (currentUser.role === 'team_leader' && currentStep.roleRequired === 'team_leader' && isSameDept) {
-      return true;
+
+    // 2. Step Trưởng bộ phận
+    if (roleReq === 'manager') {
+      if (leave.employeeId.toLowerCase() === currentUser.id.toLowerCase()) return false;
+      if (currentStep.approverId && currentStep.approverId.toLowerCase() === currentUser.id.toLowerCase()) {
+        return true;
+      }
+      if (currentUser.role === 'manager' && isSameDepartment(leave.department, currentUser.department)) {
+        return true;
+      }
+      if (isSuperAdminOrBOD(currentUser)) {
+        return true;
+      }
+      return false;
     }
+
+    // 3. Step Nhân viên kinh tế (Cắt cơm)
+    // "để khi các trưởng bộ phận đồng ý cho nhân viên nghỉ phép thì thông tin sẽ được chuyển đến nhân viên kinh tế để cắt cơm"
+    if (roleReq === 'economic') {
+      if (currentStep.approverId && currentStep.approverId.toLowerCase() === currentUser.id.toLowerCase()) {
+        return true;
+      }
+      return isEconomicStaff(currentUser);
+    }
+
     return false;
   };
 
@@ -251,23 +288,48 @@ export function LeaveView() {
     currentStep.actionAt = new Date().toISOString();
     currentStep.signature = `${currentUser.name} (${currentUser.id})`;
 
-    if (updated.currentStepIndex + 1 < updated.steps.length) {
+    const isNext = updated.currentStepIndex + 1 < updated.steps.length;
+    if (isNext) {
       updated.currentStepIndex += 1;
+      const nextStep = updated.steps[updated.currentStepIndex];
+
+      updated.updatedAt = new Date().toISOString();
+      storage.saveLeaveRequest(updated, { id: currentUser.id, name: currentUser.name });
+      setLeaves(storage.getLeaveRequests());
+      setSelectedLeave(updated);
+      setIsApproving(false);
+      setApprovalComment('');
+
+      if (nextStep.roleRequired === 'economic') {
+        showToast({
+          type: 'success',
+          title: 'Trưởng bộ phận đã phê duyệt',
+          message: `Đơn ${updated.id} đã được chuyển đến Nhân viên kinh tế (${nextStep.approverName}) để xác nhận cắt cơm.`,
+        });
+      } else {
+        showToast({
+          type: 'success',
+          title: 'Đã phê duyệt thành công',
+          message: `Đơn ${updated.id} đã chuyển sang bước: ${nextStep.stepName}.`,
+        });
+      }
     } else {
       updated.status = 'approved';
-    }
+      updated.updatedAt = new Date().toISOString();
+      storage.saveLeaveRequest(updated, { id: currentUser.id, name: currentUser.name });
+      setLeaves(storage.getLeaveRequests());
+      setSelectedLeave(updated);
+      setIsApproving(false);
+      setApprovalComment('');
 
-    updated.updatedAt = new Date().toISOString();
-    storage.saveLeaveRequest(updated, { id: currentUser.id, name: currentUser.name });
-    setLeaves(storage.getLeaveRequests());
-    setSelectedLeave(updated);
-    setIsApproving(false);
-    setApprovalComment('');
-    showToast({
-      type: 'success',
-      title: 'Đã phê duyệt thành công',
-      message: `Đơn ${updated.id} đã được phê duyệt.`,
-    });
+      showToast({
+        type: 'success',
+        title: 'Đã hoàn tất phê duyệt',
+        message: currentStep.roleRequired === 'economic'
+          ? `Đã xác nhận cắt cơm thành công cho đơn ${updated.id}. Hồ sơ nghỉ phép hoàn tất.`
+          : `Đơn ${updated.id} đã được phê duyệt hoàn tất.`,
+      });
+    }
   };
 
   // Execute Rejection
@@ -505,9 +567,15 @@ export function LeaveView() {
                     </td>
                     <td className="py-3 px-4">
                       {l.status === 'pending' && (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
-                          Chờ duyệt
-                        </span>
+                        l.steps[l.currentStepIndex]?.roleRequired === 'economic' ? (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                            Chờ cắt cơm
+                          </span>
+                        ) : (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                            Chờ duyệt
+                          </span>
+                        )
                       )}
                       {l.status === 'approved' && (
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
@@ -656,11 +724,11 @@ export function LeaveView() {
                 <div>
                   {currentUser?.teamLeaderId ? (
                     <span>
-                      1. Tổ trưởng (Mã: <b>{currentUser.teamLeaderId}</b>) &rarr; 2. Trưởng bộ phận &rarr; Hoàn thành.
+                      1. Tổ trưởng (Mã: <b>{currentUser.teamLeaderId}</b>) &rarr; 2. Trưởng bộ phận {currentUser?.economicStaffId ? `→ 3. Nhân viên kinh tế (${currentUser.economicStaffId}) cắt cơm` : ''} &rarr; Hoàn thành.
                     </span>
                   ) : (
                     <span>
-                      1. Trưởng bộ phận (Tự động chuyển thẳng vì không có Tổ trưởng) &rarr; Hoàn thành.
+                      1. Trưởng bộ phận {currentUser?.economicStaffId ? `→ 2. Nhân viên kinh tế (${currentUser.economicStaffId}) cắt cơm` : ''} &rarr; Hoàn thành.
                     </span>
                   )}
                 </div>
@@ -812,7 +880,13 @@ export function LeaveView() {
                       className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5"
                     >
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>✓ Phê duyệt đơn</span>
+                      <span>
+                        {selectedLeave.steps[selectedLeave.currentStepIndex]?.roleRequired === 'economic'
+                          ? '✓ Xác nhận đã cắt cơm'
+                          : selectedLeave.currentStepIndex + 1 === selectedLeave.steps.length
+                          ? '✓ Phê duyệt & Hoàn tất'
+                          : '✓ Phê duyệt & Chuyển bước tiếp'}
+                      </span>
                     </button>
                     <button
                       onClick={() => setIsRejectingModal(true)}
@@ -864,13 +938,26 @@ export function LeaveView() {
             )}
 
             {selectedLeave.status === 'pending' && !canApprove(selectedLeave) && (
-              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 text-xs text-slate-500 flex items-center gap-2">
-                <Clock className="w-4 h-4 text-amber-500 shrink-0" />
-                <span>
-                  {selectedLeave.employeeId.toLowerCase() === currentUser?.id.toLowerCase()
-                    ? 'Đơn đang chờ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc phê duyệt (Người tạo đơn không được tự phê duyệt đơn của chính mình).'
-                    : 'Đơn đang chờ phê duyệt từ Tổ trưởng, Trưởng bộ phận hoặc Ban giám đốc.'}
-                </span>
+              <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 text-xs text-slate-600 dark:text-slate-400 flex items-start gap-2.5">
+                <Clock className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <div className="font-semibold text-slate-800 dark:text-slate-200">
+                    Bước {selectedLeave.currentStepIndex + 1}: {selectedLeave.steps[selectedLeave.currentStepIndex]?.stepName}
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    {selectedLeave.steps[selectedLeave.currentStepIndex]?.roleRequired === 'economic' ? (
+                      <span>Đơn đã được Trưởng bộ phận đồng ý duyệt. Đang chờ Nhân viên kinh tế ({selectedLeave.steps[selectedLeave.currentStepIndex]?.approverName}) xác nhận cắt cơm.</span>
+                    ) : selectedLeave.steps[selectedLeave.currentStepIndex]?.roleRequired === 'manager' ? (
+                      selectedLeave.employeeId.toLowerCase() === currentUser?.id.toLowerCase() ? (
+                        <span>Đang chờ Trưởng bộ phận ({selectedLeave.steps[selectedLeave.currentStepIndex]?.approverName}) phê duyệt. Người làm đơn không được tự phê duyệt đơn của chính mình.</span>
+                      ) : (
+                        <span>Đang chờ Trưởng bộ phận ({selectedLeave.steps[selectedLeave.currentStepIndex]?.approverName}) xem xét và phê duyệt.</span>
+                      )
+                    ) : (
+                      <span>Đang chờ Tổ trưởng ({selectedLeave.steps[selectedLeave.currentStepIndex]?.approverName}) xem xét và phê duyệt.</span>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
 
