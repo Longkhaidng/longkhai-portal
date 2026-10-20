@@ -1,0 +1,43 @@
+{
+  "id": "ATT26-000004",
+  "employeeId": "1005",
+  "employeeName": "Dương Thị Thanh",
+  "department": "Phòng Hành Chính Nhân Sự",
+  "issueType": "mat_the",
+  "date": "2026-10-20",
+  "checkInTime": "08:00",
+  "checkOutTime": "16:30",
+  "shift": "Ca Hành chính (08:00 - 16:30)",
+  "reason": "mất thẻ",
+  "status": "pending",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
+      "roleRequired": "security",
+      "approverName": "Tổ trưởng / Nhân viên Bảo vệ Cổng",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng bộ phận phê duyệt giải trình",
+      "roleRequired": "manager",
+      "approverId": "1867",
+      "approverName": "Trương Anh Như Quỳnh",
+      "status": "pending"
+    },
+    {
+      "stepName": "Kế toán ghi nhận trừ phí phôi thẻ",
+      "roleRequired": "accountant",
+      "approverName": "Bộ phận Kế toán Tiền lương",
+      "status": "pending"
+    },
+    {
+      "stepName": "IT cấp phôi thẻ mới",
+      "roleRequired": "it",
+      "approverName": "Bộ phận CNTT (IT)",
+      "status": "pending"
+    }
+  ],
+  "createdAt": "2026-10-20T03:26:40.254Z",
+  "updatedAt": "2026-10-20T03:26:40.254Z"
+}
