@@ -11,11 +11,13 @@
   "hasAssets": false,
   "assets": [],
   "estimatedDepartureTime": "2026-10-17T14:30",
-  "status": "approved",
+  "status": "completed",
   "qrCodeData": "LONGKHAI_GATEPASS:GP26-000001:1051:2026-10-17T14:30",
   "createdAt": "2026-10-17T06:49:28.758Z",
-  "updatedAt": "2026-10-17T06:55:41.102Z",
+  "updatedAt": "2026-10-20T03:39:49.604Z",
   "managerApproverId": "1008",
   "managerApproverName": "Đoàn Thị Thanh Xuân",
-  "managerApprovedAt": "2026-10-17T06:55:41.102Z"
+  "managerApprovedAt": "2026-10-17T06:55:41.102Z",
+  "actualDepartureTime": "2026-10-20T03:39:49.604Z",
+  "securityDepartureGuardId": "102"
 }
