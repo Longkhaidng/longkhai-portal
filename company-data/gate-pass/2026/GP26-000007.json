@@ -13,8 +13,9 @@
   "estimatedDepartureTime": "2026-10-20T15:55",
   "managerApproverId": "1867",
   "managerApproverName": "Trương Anh Như Quỳnh",
-  "status": "pending",
+  "status": "approved",
   "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=gate_pass&id=GP26-000007",
   "createdAt": "2026-10-20T08:53:34.525Z",
-  "updatedAt": "2026-10-20T08:53:34.525Z"
+  "updatedAt": "2026-10-20T08:54:57.572Z",
+  "managerApprovedAt": "2026-10-20T08:54:57.572Z"
 }
