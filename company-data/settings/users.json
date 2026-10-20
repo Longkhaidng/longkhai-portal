@@ -109,7 +109,7 @@
   },
   {
     "id": "102",
-    "name": "24-06 Nguyễn Thanh Ba",
+    "name": "Trần Công Nhân",
     "department": "Đội Bảo Vệ & An Ninh",
     "position": "Bảo vệ",
     "role": "security",
@@ -122,7 +122,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-20T06:48:20.680Z",
+    "updatedAt": "2026-10-20T07:55:40.545Z",
     "allowedWebIntegrations": []
   },
   {
