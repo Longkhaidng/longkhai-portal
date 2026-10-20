@@ -1,0 +1,20 @@
+{
+  "id": "GP26-000003",
+  "employeeId": "1005",
+  "employeeName": "Dương Thị Thanh",
+  "department": "Phòng Hành Chính Nhân Sự",
+  "purpose": "CN - Ra vào trong giờ làm việc",
+  "passType": "personal",
+  "timeType": "nghi_dau_gio",
+  "reasonCategory": "ca_nhan",
+  "specificReason": "CN - Ra vào trong giờ làm việc",
+  "hasAssets": false,
+  "assets": [],
+  "estimatedReturnTime": "2026-10-20T09:00",
+  "managerApproverId": "1867",
+  "managerApproverName": "Trương Anh Như Quỳnh",
+  "status": "pending",
+  "qrCodeData": "LONGKHAI_GATEPASS:GP26-000003:1005:2026-10-20T11:30",
+  "createdAt": "2026-10-20T03:36:32.955Z",
+  "updatedAt": "2026-10-20T03:36:32.955Z"
+}
