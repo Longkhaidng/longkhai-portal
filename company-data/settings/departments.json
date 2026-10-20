@@ -1,0 +1,90 @@
+[
+  {
+    "id": "PB-BGD",
+    "code": "BGD",
+    "name": "Ban Giám Đốc",
+    "description": "Hội đồng quản trị và Ban tổng giám đốc điều hành nhà máy",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "PB-HCNS",
+    "code": "HCNS",
+    "name": "Phòng Hành Chính Nhân Sự",
+    "description": "Quản lý nhân sự, tiền lương, tuyển dụng và đời sống công nhân viên",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "PB-SX1",
+    "code": "PXD",
+    "name": "Phân xưởng dệt",
+    "description": "Xưởng dệt tất",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-10-16T07:11:40.249Z"
+  },
+  {
+    "id": "PB-SX2",
+    "code": "PXHT",
+    "name": "Phân xưởng hoàn thành",
+    "description": "Xưởng hoàn thiện sản phẩm",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-10-16T07:12:15.615Z"
+  },
+  {
+    "id": "PB-CD",
+    "code": "CD",
+    "name": "Phòng Cơ Điện & Bảo Trì",
+    "description": "Bảo trì máy móc thiết bị, hệ thống trạm điện, khí nén và phụ trợ",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "PB-QA",
+    "code": "QA",
+    "name": "Phòng Quản Lý Chất Lượng (QA/QC)",
+    "description": "Kiểm soát chất lượng đầu vào IQC, trên chuyền PQC và xuất xưởng OQC",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "PB-KT",
+    "code": "KT",
+    "name": "Phòng Kế Toán Tài Chính",
+    "description": "Kế toán giá thành, thanh toán công nợ, hóa đơn chứng từ",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "PB-KHO",
+    "code": "KHO",
+    "name": "Phòng Kho Vận & Vật Tư",
+    "description": "Kho nguyên vật liệu, kho thành phẩm và điều vận xe giao nhận hàng",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "PB-BV",
+    "code": "BV",
+    "name": "Đội Bảo Vệ & An Ninh",
+    "description": "Kiểm soát an ninh cổng ra vào, tài sản và trật tự toàn nhà máy",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "PB-IT",
+    "code": "IT",
+    "name": "Bộ Phận Công Nghệ Thông Tin (IT)",
+    "description": "Quản trị mạng, máy tính, hệ thống camera và Cổng thông tin nội bộ",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "PB-MAU",
+    "code": "MAU",
+    "name": "Phòng công nghệ mẫu",
+    "description": "Thiết kế, kiểm tra chất lượng mẫu. Phê duyệt mẫu trước khi đưa vào sản xuất đại trà",
+    "createdAt": "2026-10-20T04:25:26.627Z",
+    "updatedAt": "2026-10-20T04:25:26.627Z"
+  }
+]
