@@ -228,8 +228,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T07:55:29.821Z",
-    "departmentHeadId": "1867"
+    "updatedAt": "2026-10-20T01:52:06.868Z",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn"
   },
   {
     "id": "1005",
@@ -581,16 +581,13 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements",
-      "reports",
-      "forms"
+      "announcements"
     ],
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T09:21:24.049Z",
-    "departmentHeadId": "1051",
-    "allowedWebIntegrations": []
+    "updatedAt": "2026-10-19T07:59:45.903Z",
+    "departmentHeadId": "1051"
   },
   {
     "id": "1085",
@@ -721,16 +718,13 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements",
-      "reports",
-      "forms"
+      "announcements"
     ],
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T09:21:34.536Z",
-    "departmentHeadId": "1051",
-    "allowedWebIntegrations": []
+    "updatedAt": "2026-10-19T08:01:02.262Z",
+    "departmentHeadId": "1051"
   },
   {
     "id": "1116",
@@ -841,19 +835,14 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements",
-      "reports",
-      "forms"
+      "announcements"
     ],
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T09:23:52.000Z",
+    "updatedAt": "2026-10-19T07:56:03.099Z",
     "email": "tuyet.vo@longkhai.com.vn",
-    "departmentHeadId": "1867",
-    "allowedWebIntegrations": [
-      "WEB-001"
-    ]
+    "departmentHeadId": "1867"
   },
   {
     "id": "1147",
@@ -1921,11 +1910,8 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T09:24:13.049Z",
-    "departmentHeadId": "2409",
-    "allowedWebIntegrations": [
-      "WEB-002"
-    ]
+    "updatedAt": "2026-10-19T08:11:23.597Z",
+    "departmentHeadId": "2409"
   },
   {
     "id": "1975",
@@ -2935,12 +2921,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T09:24:17.897Z",
+    "updatedAt": "2026-10-19T08:32:05.636Z",
     "email": "tai.trinh@longkhai.com.vn",
-    "departmentHeadEmail": "tu.pham@vitex.com.vn",
-    "allowedWebIntegrations": [
-      "WEB-002"
-    ]
+    "departmentHeadEmail": "tu.pham@vitex.com.vn"
   },
   {
     "id": "2410",
@@ -4181,16 +4164,13 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements",
-      "reports",
-      "forms"
+      "announcements"
     ],
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T09:22:10.008Z",
-    "departmentHeadEmail": "tu.pham@vitex.com.vn",
-    "allowedWebIntegrations": []
+    "updatedAt": "2026-10-19T09:01:30.416Z",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn"
   },
   {
     "id": "2747",
