@@ -10,13 +10,16 @@
   "shift": "Ca Hành chính (08:00 - 16:30)",
   "reason": "thẻ hỏng không quét được",
   "status": "pending",
-  "currentStepIndex": 0,
+  "currentStepIndex": 1,
   "steps": [
     {
       "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
       "roleRequired": "security",
-      "approverName": "Tổ trưởng / Nhân viên Bảo vệ Cổng",
-      "status": "pending"
+      "approverName": "24-40 Nguyễn Hữu Lập",
+      "status": "approved",
+      "approverId": "101",
+      "comment": "Đã xác nhận kiểm tra hợp lệ",
+      "actionAt": "2026-10-20T02:05:56.223Z"
     },
     {
       "stepName": "Trưởng bộ phận phê duyệt giải trình",
@@ -33,5 +36,5 @@
     }
   ],
   "createdAt": "2026-10-20T02:05:22.384Z",
-  "updatedAt": "2026-10-20T02:05:22.384Z"
+  "updatedAt": "2026-10-20T02:05:56.223Z"
 }
