@@ -9,7 +9,7 @@
   "checkOutTime": "16:30",
   "shift": "Ca Hành chính (08:00 - 16:30)",
   "reason": "mất thẻ",
-  "status": "pending",
+  "status": "approved",
   "currentStepIndex": 3,
   "steps": [
     {
@@ -42,10 +42,13 @@
     {
       "stepName": "IT cấp phôi thẻ mới",
       "roleRequired": "it",
-      "approverName": "Bộ phận CNTT (IT)",
-      "status": "pending"
+      "approverName": "Trần Lê Hữu Lực",
+      "status": "approved",
+      "approverId": "2265",
+      "comment": "Đã xác nhận kiểm tra hợp lệ",
+      "actionAt": "2026-10-20T04:00:01.516Z"
     }
   ],
   "createdAt": "2026-10-20T03:26:40.254Z",
-  "updatedAt": "2026-10-20T03:59:37.884Z"
+  "updatedAt": "2026-10-20T04:00:01.516Z"
 }
