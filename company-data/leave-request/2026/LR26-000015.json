@@ -8,7 +8,7 @@
   "toDate": "2026-10-24",
   "totalDays": 2,
   "reason": "bận",
-  "status": "pending",
+  "status": "rejected",
   "currentStepIndex": 0,
   "steps": [
     {
@@ -16,7 +16,9 @@
       "roleRequired": "manager",
       "approverId": "1867",
       "approverName": "Trương Anh Như Quỳnh",
-      "status": "pending"
+      "status": "rejected",
+      "comment": "không bố trí được nhân sự thay thế",
+      "actionAt": "2026-10-20T02:58:53.839Z"
     },
     {
       "stepName": "Nhân viên kinh tế xác nhận cắt cơm",
@@ -27,5 +29,5 @@
     }
   ],
   "createdAt": "2026-10-20T02:58:28.048Z",
-  "updatedAt": "2026-10-20T02:58:28.048Z"
+  "updatedAt": "2026-10-20T02:58:53.839Z"
 }
