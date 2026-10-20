@@ -1,0 +1,38 @@
+{
+  "id": "ATT26-000007",
+  "employeeId": "2424",
+  "employeeName": "Lê Đình Thành",
+  "department": "Phòng Hành Chính Nhân Sự",
+  "issueType": "the_hong",
+  "date": "2026-10-20",
+  "checkInTime": "07:00",
+  "checkOutTime": "15:30",
+  "shift": "Ca vườn (07:00 - 15:30)",
+  "reason": "thẻ không nhận",
+  "status": "pending",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
+      "roleRequired": "security",
+      "approverName": "Tổ trưởng / Nhân viên Bảo vệ Cổng",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng bộ phận phê duyệt giải trình",
+      "roleRequired": "manager",
+      "approverId": "1867",
+      "approverName": "Trương Anh Như Quỳnh",
+      "status": "pending"
+    },
+    {
+      "stepName": "IT cập nhật dữ liệu máy chấm công",
+      "roleRequired": "it",
+      "approverName": "Bộ phận CNTT (IT)",
+      "status": "pending"
+    }
+  ],
+  "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=attendance&id=ATT26-000007",
+  "createdAt": "2026-10-20T07:58:59.051Z",
+  "updatedAt": "2026-10-20T07:58:59.051Z"
+}
