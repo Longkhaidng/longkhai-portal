@@ -8,7 +8,7 @@
   "toDate": "2026-10-22",
   "totalDays": 2,
   "reason": "bận",
-  "status": "pending",
+  "status": "rejected",
   "currentStepIndex": 0,
   "steps": [
     {
@@ -16,16 +16,19 @@
       "roleRequired": "manager",
       "approverId": "1867",
       "approverName": "Trương Anh Như Quỳnh",
-      "status": "pending"
+      "status": "rejected",
+      "comment": "Không bố trí được nhân viên thay thế",
+      "actionAt": "2026-10-20T03:23:51.236Z"
     },
     {
       "stepName": "Nhân viên kinh tế xác nhận cắt cơm",
       "roleRequired": "economic",
       "approverId": "1139",
       "approverName": "Võ Thị Tuyết",
-      "status": "pending"
+      "status": "skipped",
+      "comment": "Bỏ qua (Đơn đã bị từ chối, không cần cắt cơm)"
     }
   ],
   "createdAt": "2026-10-20T03:23:13.364Z",
-  "updatedAt": "2026-10-20T03:23:13.364Z"
+  "updatedAt": "2026-10-20T03:23:51.236Z"
 }
