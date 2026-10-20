@@ -10,20 +10,24 @@
   "shift": "Ca vườn (07:00 - 15:30)",
   "reason": "thẻ không nhận",
   "status": "pending",
-  "currentStepIndex": 0,
+  "currentStepIndex": 2,
   "steps": [
     {
       "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
       "roleRequired": "security",
-      "approverName": "Tổ trưởng / Nhân viên Bảo vệ Cổng",
-      "status": "pending"
+      "approverName": "Bảo vệ cổng",
+      "status": "approved",
+      "comment": "Đã xác nhận kiểm tra vào/ra thực tế qua quét mã QR",
+      "actionAt": "2026-10-20T08:05:43.817Z"
     },
     {
       "stepName": "Trưởng bộ phận phê duyệt giải trình",
       "roleRequired": "manager",
       "approverId": "1867",
       "approverName": "Trương Anh Như Quỳnh",
-      "status": "pending"
+      "status": "approved",
+      "comment": "Đã xác nhận kiểm tra hợp lệ",
+      "actionAt": "2026-10-20T08:07:36.480Z"
     },
     {
       "stepName": "IT cập nhật dữ liệu máy chấm công",
@@ -34,5 +38,5 @@
   ],
   "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=attendance&id=ATT26-000007",
   "createdAt": "2026-10-20T07:58:59.051Z",
-  "updatedAt": "2026-10-20T07:58:59.051Z"
+  "updatedAt": "2026-10-20T08:07:36.480Z"
 }
