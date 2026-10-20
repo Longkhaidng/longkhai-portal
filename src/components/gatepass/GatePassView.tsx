@@ -30,7 +30,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { formatDate, formatDateTime, generateDocId } from '@/lib/utils';
-import { generateQrDataUrl } from '@/lib/qr';
+import { generateQrDataUrl, getQrConfirmUrl } from '@/lib/qr';
 import { dispatchApprovalEmail } from '@/lib/email';
 import { ToastContainer, useToast } from '@/components/common/Toast';
 import {
@@ -190,8 +190,8 @@ export function GatePassView() {
     }
 
     const docId = generateDocId('GP', passes.length);
-    const timeRef = departureTime || returnTime || new Date().toISOString();
-    const qrPayload = `LONGKHAI_GATEPASS:${docId}:${currentUser.id}:${timeRef}`;
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const qrPayload = getQrConfirmUrl('gate_pass', docId, origin);
 
     const allUsers = storage.getUsers();
     const freshUser = allUsers.find((u) => u.id.toLowerCase() === currentUser.id.toLowerCase()) || currentUser;
@@ -403,7 +403,9 @@ export function GatePassView() {
 
   // Show QR modal
   const handleShowQr = async (pass: GatePass) => {
-    const url = await generateQrDataUrl(pass.qrCodeData);
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const qrTargetUrl = getQrConfirmUrl('gate_pass', pass.id, origin);
+    const url = await generateQrDataUrl(qrTargetUrl);
     setQrModalUrl(url);
     setSelectedPass(pass);
   };
@@ -1233,28 +1235,67 @@ export function GatePassView() {
       {/* MODAL: View QR Code */}
       {qrModalUrl && selectedPass && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-sm w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl text-center space-y-4">
-            <h3 className="font-bold text-base text-slate-900 dark:text-white">
-              Mã QR Ra Vào Cổng
-            </h3>
-            <p className="text-xs text-slate-500">
-              Xuất trình mã này tại bốt bảo vệ khi qua cổng
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-sm w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl text-center space-y-4 animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+              <h3 className="font-bold text-base text-slate-900 dark:text-white flex items-center gap-1.5">
+                <QrCode className="w-5 h-5 text-emerald-600" />
+                <span>Mã QR Ra - Vào Cổng</span>
+              </h3>
+              <button
+                onClick={() => setQrModalUrl(null)}
+                className="text-slate-400 hover:text-slate-600 p-1"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Xuất trình mã này cho <b>Bảo vệ tại cổng</b> quét mã để xác nhận thời gian vào - ra thực tế (Không cần bảo vệ đăng nhập).
             </p>
+
+            {/* Approval Status notice */}
+            {selectedPass.status === 'pending' ? (
+              <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-[11px] font-semibold text-amber-800 dark:text-amber-300 text-left">
+                ⚠️ Phiếu đang chờ Trưởng bộ phận phê duyệt. Sau khi duyệt, bảo vệ mới có thể xác nhận cho ra cổng.
+              </div>
+            ) : selectedPass.status === 'approved' ? (
+              <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300 text-left">
+                ✅ Trưởng bộ phận đã phê duyệt. Sẵn sàng cho bảo vệ quét mã để xác nhận ra cổng.
+              </div>
+            ) : selectedPass.status === 'departed' ? (
+              <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-300 dark:border-blue-800 text-[11px] font-semibold text-blue-800 dark:text-blue-300 text-left">
+                🚪 Đã ra cổng. Trình mã này cho bảo vệ quét khi vào lại công ty.
+              </div>
+            ) : (
+              <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-[11px] font-semibold text-slate-600 dark:text-slate-400 text-left">
+                ✓ Phiếu đã hoàn tất quy trình ra vào cổng.
+              </div>
+            )}
 
             <div className="bg-white p-4 rounded-2xl border border-slate-200 inline-block shadow-sm">
               <img src={qrModalUrl} alt="Mã QR Phiếu ra cổng" className="w-56 h-56 mx-auto" />
             </div>
 
-            <div className="text-xs text-slate-700 dark:text-slate-300 space-y-0.5">
-              <div className="font-bold font-mono text-emerald-600">{selectedPass.id}</div>
-              <div>{selectedPass.employeeName} ({selectedPass.employeeId})</div>
-              <div className="text-[11px] text-slate-400">{selectedPass.purpose}</div>
+            <div className="text-xs text-slate-700 dark:text-slate-300 space-y-1 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-left">
+              <div className="font-bold font-mono text-emerald-600 dark:text-emerald-400 text-sm">{selectedPass.id}</div>
+              <div className="font-semibold">{selectedPass.employeeName} ({selectedPass.employeeId})</div>
+              <div className="text-[11px] text-slate-500">{selectedPass.department}</div>
+              <div className="text-[11px] font-medium text-slate-700 dark:text-slate-300 pt-0.5">Lý do: <b>{selectedPass.purpose}</b></div>
             </div>
 
-            <div className="pt-2">
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={() => {
+                  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+                  window.open(getQrConfirmUrl('gate_pass', selectedPass.id, origin), '_blank');
+                }}
+                className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs"
+              >
+                Mở trang quét bảo vệ
+              </button>
               <button
                 onClick={() => setQrModalUrl(null)}
-                className="w-full py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white text-xs font-bold rounded-xl"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white text-xs font-bold rounded-xl"
               >
                 Đóng
               </button>

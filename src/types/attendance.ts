@@ -18,6 +18,7 @@ export interface AttendanceConfirm {
   status: AttendanceStatus;
   currentStepIndex: number;
   steps: ApprovalStep[];
+  qrCodeData?: string;
   createdAt: string;
   updatedAt: string;
 }

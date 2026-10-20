@@ -24,9 +24,11 @@ import {
   CreditCard,
   Building,
   MinusCircle,
+  QrCode,
 } from 'lucide-react';
 import { formatDate, generateDocId } from '@/lib/utils';
 import { dispatchApprovalEmail } from '@/lib/email';
+import { generateQrDataUrl, getQrConfirmUrl } from '@/lib/qr';
 import { ToastContainer, useToast } from '@/components/common/Toast';
 import {
   filterUserAttendances,
@@ -85,6 +87,16 @@ export function AttendanceView() {
   }, [attendances, currentUser]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<AttendanceConfirm | null>(null);
+  const [qrModalUrl, setQrModalUrl] = useState<string | null>(null);
+  const [qrSelectedItem, setQrSelectedItem] = useState<AttendanceConfirm | null>(null);
+
+  const handleShowQr = async (item: AttendanceConfirm) => {
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const qrUrl = getQrConfirmUrl('attendance', item.id, origin);
+    const dataUrl = await generateQrDataUrl(qrUrl);
+    setQrModalUrl(dataUrl);
+    setQrSelectedItem(item);
+  };
 
   // Form states
   const [issueType, setIssueType] = useState<AttendanceIssueType>('quen_the');
@@ -168,6 +180,9 @@ export function AttendanceView() {
 
     const finalShift = shift === 'Ca khác' ? (customShift.trim() || 'Ca khác') : shift;
 
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const qrCodeData = getQrConfirmUrl('attendance', docId, origin);
+
     const newConfirm: AttendanceConfirm = {
       id: docId,
       employeeId: currentUser.id,
@@ -182,6 +197,7 @@ export function AttendanceView() {
       status: 'pending',
       currentStepIndex: 0,
       steps,
+      qrCodeData,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -833,9 +849,22 @@ export function AttendanceView() {
                       )}
                     </td>
                     <td className="py-3 px-4 text-right">
-                      <span className="text-amber-600 dark:text-amber-400 font-semibold text-xs hover:underline">
-                        Xem chi tiết &rarr;
-                      </span>
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleShowQr(item);
+                          }}
+                          className="px-2.5 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-bold text-[11px] rounded-lg border border-amber-300 dark:border-amber-800/80 flex items-center gap-1 transition-colors"
+                          title="Xem mã QR để bảo vệ quét"
+                        >
+                          <QrCode className="w-3.5 h-3.5" />
+                          <span>Mã QR</span>
+                        </button>
+                        <span className="text-amber-600 dark:text-amber-400 font-semibold text-xs hover:underline hidden sm:inline">
+                          Xem chi tiết &rarr;
+                        </span>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -1039,6 +1068,14 @@ export function AttendanceView() {
                 </h3>
               </div>
               <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handleShowQr(selectedItem)}
+                  className="px-2.5 py-1.5 rounded-lg border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 hover:bg-amber-100 flex items-center gap-1.5 text-xs font-bold"
+                  title="Xuất trình mã QR cho bảo vệ quét"
+                >
+                  <QrCode className="w-4 h-4" />
+                  <span>Mã QR</span>
+                </button>
                 <button
                   onClick={() => window.print()}
                   className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100"
@@ -1246,6 +1283,72 @@ export function AttendanceView() {
               <button
                 onClick={() => setSelectedItem(null)}
                 className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-xl"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: View Attendance QR Code */}
+      {qrModalUrl && qrSelectedItem && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-sm w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl text-center space-y-4 animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+              <h3 className="font-bold text-base text-slate-900 dark:text-white flex items-center gap-1.5">
+                <QrCode className="w-5 h-5 text-amber-600" />
+                <span>Mã QR Xác Nhận Công</span>
+              </h3>
+              <button
+                onClick={() => setQrModalUrl(null)}
+                className="text-slate-400 hover:text-slate-600 p-1"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Xuất trình mã này cho <b>Bảo vệ tại cổng</b> quét mã để xác nhận thời gian vào - ra thực tế (Bước 1 - không cần bảo vệ đăng nhập).
+            </p>
+
+            {/* Status notice */}
+            {qrSelectedItem.steps[0]?.status === 'approved' ? (
+              <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300 text-left">
+                ✓ Bước 1 đã được Bảo vệ cổng xác nhận thực tế.
+              </div>
+            ) : (
+              <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-[11px] font-semibold text-amber-800 dark:text-amber-300 text-left">
+                ⏳ Chờ bảo vệ cổng quét mã để ghi nhận giờ vào - ra thực tế.
+              </div>
+            )}
+
+            <div className="bg-white p-4 rounded-2xl border border-slate-200 inline-block shadow-sm">
+              <img src={qrModalUrl} alt="Mã QR Xác Nhận Công" className="w-56 h-56 mx-auto" />
+            </div>
+
+            <div className="text-xs text-slate-700 dark:text-slate-300 space-y-1 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-left">
+              <div className="font-bold font-mono text-amber-600 dark:text-amber-400 text-sm">{qrSelectedItem.id}</div>
+              <div className="font-semibold">{qrSelectedItem.employeeName} ({qrSelectedItem.employeeId})</div>
+              <div className="text-[11px] text-slate-500">{ISSUE_TYPE_LABELS[qrSelectedItem.issueType]?.text} &bull; {formatDate(qrSelectedItem.date)}</div>
+              <div className="text-[11px] font-bold text-slate-600 dark:text-slate-400">
+                Vào: {qrSelectedItem.checkInTime} &bull; Ra: {qrSelectedItem.checkOutTime}
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={() => {
+                  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+                  window.open(getQrConfirmUrl('attendance', qrSelectedItem.id, origin), '_blank');
+                }}
+                className="flex-1 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl shadow-xs"
+              >
+                Mở trang quét bảo vệ
+              </button>
+              <button
+                onClick={() => setQrModalUrl(null)}
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white text-xs font-bold rounded-xl"
               >
                 Đóng
               </button>
