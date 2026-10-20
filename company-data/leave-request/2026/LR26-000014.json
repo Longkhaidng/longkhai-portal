@@ -1,0 +1,31 @@
+{
+  "id": "LR26-000014",
+  "employeeId": "1002",
+  "employeeName": "Trần Thị Kim Loan",
+  "department": "Phòng Hành Chính Nhân Sự",
+  "leaveType": "phep_nam",
+  "fromDate": "2026-10-22",
+  "toDate": "2026-10-22",
+  "totalDays": 1,
+  "reason": "bận việc riêng",
+  "status": "pending",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận phê duyệt",
+      "roleRequired": "manager",
+      "approverId": "1867",
+      "approverName": "Trương Anh Như Quỳnh",
+      "status": "pending"
+    },
+    {
+      "stepName": "Nhân viên kinh tế xác nhận cắt cơm",
+      "roleRequired": "economic",
+      "approverId": "1139",
+      "approverName": "Võ Thị Tuyết",
+      "status": "pending"
+    }
+  ],
+  "createdAt": "2026-10-20T02:55:15.949Z",
+  "updatedAt": "2026-10-20T02:55:15.949Z"
+}
