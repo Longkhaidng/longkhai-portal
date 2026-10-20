@@ -161,14 +161,12 @@
     "role": "security",
     "permissions": [
       "dashboard",
-      "attendance",
-      "gate_pass",
       "announcements"
     ],
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-17T03:22:33.971Z",
+    "updatedAt": "2026-10-20T06:46:42.511Z",
     "allowedWebIntegrations": []
   },
   {
