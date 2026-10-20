@@ -4667,7 +4667,7 @@
     "name": "Nguyễn Thị Kim Yến",
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Chuyên viên hành chính nhân sự",
-    "role": "employee",
+    "role": "hr",
     "permissions": [
       "dashboard",
       "leave",
@@ -4678,7 +4678,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-20T04:14:22.488Z",
+    "updatedAt": "2026-10-20T06:18:02.211Z",
     "departmentHeadId": "1867",
     "economicStaffId": "1139"
   },
