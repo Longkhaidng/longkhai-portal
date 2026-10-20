@@ -1,0 +1,20 @@
+{
+  "id": "GP26-000006",
+  "employeeId": "2424",
+  "employeeName": "Lê Đình Thành",
+  "department": "Phòng Hành Chính Nhân Sự",
+  "purpose": "CN - Ra vào trong giờ làm việc",
+  "passType": "personal",
+  "timeType": "nghi_cuoi_gio",
+  "reasonCategory": "ca_nhan",
+  "specificReason": "CN - Ra vào trong giờ làm việc",
+  "hasAssets": false,
+  "assets": [],
+  "estimatedDepartureTime": "2026-10-20T14:30",
+  "managerApproverId": "1867",
+  "managerApproverName": "Trương Anh Như Quỳnh",
+  "status": "pending",
+  "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=gate_pass&id=GP26-000006",
+  "createdAt": "2026-10-20T08:11:59.385Z",
+  "updatedAt": "2026-10-20T08:11:59.386Z"
+}
