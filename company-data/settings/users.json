@@ -49,9 +49,10 @@
     "isActive": true,
     "password": "Quynh1",
     "createdAt": "2026-10-16T07:48:21.879Z",
-    "updatedAt": "2026-10-19T07:06:50.010Z",
+    "updatedAt": "2026-10-20T04:05:25.055Z",
     "email": "Quynh.truong@longkhai.com.vn",
-    "departmentHeadEmail": "buithuanh@vitex.com.vn"
+    "departmentHeadEmail": "buithuanh@vitex.com.vn",
+    "economicStaffId": "1139"
   },
   {
     "id": "2265",
