@@ -180,24 +180,6 @@
     "allowedWebIntegrations": []
   },
   {
-    "id": "106",
-    "name": "26-21 Trần Văn Phát Huy",
-    "department": "Đội Bảo Vệ & An Ninh",
-    "position": "Bảo vệ",
-    "role": "security",
-    "permissions": [
-      "dashboard",
-      "announcements",
-      "attendance",
-      "gate_pass"
-    ],
-    "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-20T06:48:43.433Z",
-    "allowedWebIntegrations": []
-  },
-  {
     "id": "107",
     "name": "24-02 Trương Văn Hùng",
     "department": "Đội Bảo Vệ & An Ninh",
