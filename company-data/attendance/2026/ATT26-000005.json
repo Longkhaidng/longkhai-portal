@@ -10,25 +10,33 @@
   "shift": "Ca Hành chính (08:00 - 16:30)",
   "reason": "mất thẻ",
   "status": "pending",
-  "currentStepIndex": 0,
+  "currentStepIndex": 3,
   "steps": [
     {
       "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
       "roleRequired": "security",
-      "approverName": "Tổ trưởng / Nhân viên Bảo vệ Cổng",
-      "status": "pending"
+      "approverName": "Trưởng bộ phận (Email)",
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt (qua Email)",
+      "actionAt": "2026-10-20T08:00:50.683Z"
     },
     {
       "stepName": "Trưởng bộ phận phê duyệt giải trình",
       "roleRequired": "manager",
-      "approverName": "Quản lý / Trưởng bộ phận",
-      "status": "pending"
+      "approverName": "Trương Anh Như Quỳnh",
+      "status": "approved",
+      "approverId": "1867",
+      "comment": "Đã xác nhận kiểm tra hợp lệ",
+      "actionAt": "2026-10-20T08:08:35.439Z"
     },
     {
       "stepName": "Kế toán ghi nhận trừ phí phôi thẻ",
       "roleRequired": "accountant",
-      "approverName": "Bộ phận Kế toán Tài chính",
-      "status": "pending"
+      "approverName": "Nguyễn Thị Nga",
+      "status": "approved",
+      "approverId": "1282",
+      "comment": "Đã xác nhận kiểm tra hợp lệ",
+      "actionAt": "2026-10-20T08:09:07.599Z"
     },
     {
       "stepName": "IT cấp phôi thẻ mới",
@@ -39,5 +47,5 @@
   ],
   "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=attendance&id=ATT26-000005",
   "createdAt": "2026-10-20T07:37:48.799Z",
-  "updatedAt": "2026-10-20T07:37:48.799Z"
+  "updatedAt": "2026-10-20T08:09:07.599Z"
 }
