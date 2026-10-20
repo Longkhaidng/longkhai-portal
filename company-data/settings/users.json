@@ -269,9 +269,10 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-17T07:01:02.575Z",
+    "updatedAt": "2026-10-20T04:30:33.019Z",
     "email": "xuan.doan@longkhai.com.vn",
-    "departmentHeadEmail": "trang.vuong@longkhai.com.vn"
+    "departmentHeadEmail": "trang.vuong@longkhai.com.vn",
+    "economicStaffId": "1139"
   },
   {
     "id": "1010",
