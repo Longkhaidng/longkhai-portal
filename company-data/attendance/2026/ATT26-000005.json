@@ -1,0 +1,43 @@
+{
+  "id": "ATT26-000005",
+  "employeeId": "1282",
+  "employeeName": "Nguyễn Thị Nga",
+  "department": "Phòng Kế Toán Tài Chính",
+  "issueType": "mat_the",
+  "date": "2026-10-20",
+  "checkInTime": "08:00",
+  "checkOutTime": "16:30",
+  "shift": "Ca Hành chính (08:00 - 16:30)",
+  "reason": "mất thẻ",
+  "status": "pending",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
+      "roleRequired": "security",
+      "approverName": "Tổ trưởng / Nhân viên Bảo vệ Cổng",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng bộ phận phê duyệt giải trình",
+      "roleRequired": "manager",
+      "approverName": "Quản lý / Trưởng bộ phận",
+      "status": "pending"
+    },
+    {
+      "stepName": "Kế toán ghi nhận trừ phí phôi thẻ",
+      "roleRequired": "accountant",
+      "approverName": "Bộ phận Kế toán Tài chính",
+      "status": "pending"
+    },
+    {
+      "stepName": "IT cấp phôi thẻ mới",
+      "roleRequired": "it",
+      "approverName": "Bộ phận CNTT (IT)",
+      "status": "pending"
+    }
+  ],
+  "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=attendance&id=ATT26-000005",
+  "createdAt": "2026-10-20T07:37:48.799Z",
+  "updatedAt": "2026-10-20T07:37:48.799Z"
+}
