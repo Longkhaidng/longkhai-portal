@@ -228,9 +228,10 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-20T01:58:41.980Z",
+    "updatedAt": "2026-10-20T02:46:55.859Z",
     "departmentHeadId": "1867",
-    "teamLeaderId": "1139"
+    "teamLeaderId": "1139",
+    "economicStaffId": "1139"
   },
   {
     "id": "1005",
