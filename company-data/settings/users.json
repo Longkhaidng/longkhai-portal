@@ -163,7 +163,7 @@
   },
   {
     "id": "105",
-    "name": "23-21 Lê Văn Ân",
+    "name": "Lê Văn Ân",
     "department": "Đội Bảo Vệ & An Ninh",
     "position": "Bảo vệ",
     "role": "security",
@@ -176,7 +176,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-20T06:48:37.402Z",
+    "updatedAt": "2026-10-20T07:54:55.610Z",
     "allowedWebIntegrations": []
   },
   {
