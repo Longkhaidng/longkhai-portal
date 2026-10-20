@@ -4038,8 +4038,9 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T08:57:21.762Z",
-    "departmentHeadEmail": "trang.vuong@longkhai.com.vn"
+    "updatedAt": "2026-10-20T04:30:42.899Z",
+    "departmentHeadEmail": "trang.vuong@longkhai.com.vn",
+    "economicStaffId": "1139"
   },
   {
     "id": "2732",
