@@ -99,6 +99,22 @@ export function isEconomicStaff(user?: User | null): boolean {
 }
 
 /**
+ * Check if the user is assigned as an Economic Staff / Meal cutting coordinator across the system
+ */
+export function isAssignedEconomicStaff(
+  user?: User | null,
+  allUsers?: User[],
+  leaves?: LeaveRequest[]
+): boolean {
+  if (!user) return false;
+  if (isEconomicStaff(user)) return true;
+  const uid = user.id.toLowerCase();
+  if (allUsers && allUsers.some((u) => u.economicStaffId?.toLowerCase() === uid)) return true;
+  if (leaves && leaves.some((l) => l.steps?.some((s) => s.roleRequired === 'economic' && s.approverId?.toLowerCase() === uid))) return true;
+  return false;
+}
+
+/**
  * Filter Leave Requests based on user permissions:
  * - Regular employee: Strictly can only see their own requests.
  * - Economic staff (Nhân viên kinh tế): Can see requests assigned to them for cutting meals once approved by Manager.
@@ -108,13 +124,18 @@ export function isEconomicStaff(user?: User | null): boolean {
 export function filterUserLeaves(
   leaves: LeaveRequest[],
   user: User | null,
-  scope: DocumentScope = 'all'
+  scope: DocumentScope = 'all',
+  allUsers?: User[]
 ): LeaveRequest[] {
   if (!user) return [];
   const uid = user.id.toLowerCase();
 
   // 1. Economic staff (Nhân viên kinh tế / Phụ trách cắt cơm)
-  const isEconomic = isEconomicStaff(user) || leaves.some((l) => l.steps?.some((s) => s.roleRequired === 'economic' && s.approverId?.toLowerCase() === uid));
+  const isEconomic =
+    isEconomicStaff(user) ||
+    leaves.some((l) => l.steps?.some((s) => s.roleRequired === 'economic' && s.approverId?.toLowerCase() === uid)) ||
+    (allUsers && allUsers.some((u) => u.economicStaffId?.toLowerCase() === uid));
+
   if (isEconomic && !isSuperAdminOrBOD(user) && user.role !== 'manager') {
     if (scope === 'my') {
       return leaves.filter((l) => l.employeeId.toLowerCase() === uid);

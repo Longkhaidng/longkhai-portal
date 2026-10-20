@@ -17,11 +17,12 @@ import {
   User,
   ShieldCheck,
   AlertCircle,
+  MinusCircle,
 } from 'lucide-react';
 import { formatDate, generateDocId } from '@/lib/utils';
 import { dispatchApprovalEmail } from '@/lib/email';
 import { ToastContainer, useToast } from '@/components/common/Toast';
-import { filterUserLeaves, isApproverRole, isSuperAdminOrBOD, isSameDepartment, isEconomicStaff, DocumentScope } from '@/lib/permissions';
+import { filterUserLeaves, isApproverRole, isSuperAdminOrBOD, isSameDepartment, isEconomicStaff, isAssignedEconomicStaff, DocumentScope } from '@/lib/permissions';
 
 export function LeaveView() {
   const { currentUser } = useAuth();
@@ -29,12 +30,47 @@ export function LeaveView() {
   const [leaves, setLeaves] = useState<LeaveRequest[]>(() => storage.getLeaveRequests());
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [scopeFilter, setScopeFilter] = useState<DocumentScope>(() => isApproverRole(currentUser) ? 'all' : 'my');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState<LeaveRequest | null>(null);
 
-  const canManageOthers = isApproverRole(currentUser) || isEconomicStaff(currentUser);
+  const allUsers = useMemo(() => storage.getUsers(), []);
+
+  // Check if current user is Economic Staff or designated to cut meals for any employee
+  const isAssignedEconomic = useMemo(() => {
+    return isAssignedEconomicStaff(currentUser, allUsers, leaves);
+  }, [currentUser, allUsers, leaves]);
+
+  const canManageOthers = isApproverRole(currentUser) || isAssignedEconomic;
   const isBOD = isSuperAdminOrBOD(currentUser);
+
+  // Initialize scopeFilter: approvers and economic staff default to 'all' so they immediately see pending requests
+  const [scopeFilter, setScopeFilter] = useState<DocumentScope>(() => {
+    if (!currentUser) return 'my';
+    const users = storage.getUsers();
+    const isEco = isAssignedEconomicStaff(currentUser, users);
+    return (isApproverRole(currentUser) || isEco) ? 'all' : 'my';
+  });
+
+  // Ensure economic staff automatically switches away from 'my' if loaded initially as regular employee
+  React.useEffect(() => {
+    if (isAssignedEconomic && scopeFilter === 'my' && !isApproverRole(currentUser)) {
+      setScopeFilter('all');
+    }
+  }, [isAssignedEconomic]);
+
+  // Count leaves currently waiting for this economic staff to confirm meal cutting
+  const pendingMealCutCount = useMemo(() => {
+    if (!currentUser) return 0;
+    const uid = currentUser.id.toLowerCase();
+    return leaves.filter((l) => {
+      if (l.status !== 'pending') return false;
+      const currentStep = l.steps[l.currentStepIndex];
+      return (
+        currentStep?.roleRequired === 'economic' &&
+        (currentStep?.approverId?.toLowerCase() === uid || isEconomicStaff(currentUser))
+      );
+    }).length;
+  }, [leaves, currentUser]);
 
   // Approval action states
   const [approvalComment, setApprovalComment] = useState('');
@@ -301,10 +337,42 @@ export function LeaveView() {
       setApprovalComment('');
 
       if (nextStep.roleRequired === 'economic') {
+        const users = storage.getUsers();
+        const economicUser = users.find(
+          (u) => u.id.toLowerCase() === nextStep.approverId?.toLowerCase()
+        );
+
+        // Dispatch email notification to economic staff if email is configured
+        if (economicUser?.email) {
+          dispatchApprovalEmail({
+            toEmail: economicUser.email,
+            managerName: economicUser.name,
+            type: 'leave',
+            docId: updated.id,
+            employeeId: updated.employeeId,
+            employeeName: updated.employeeName,
+            department: updated.department,
+            details: {
+              title: 'Thông báo Cắt Cơm: Nhân viên được duyệt nghỉ phép',
+              items: [
+                { label: 'Nhân viên nghỉ phép', value: `${updated.employeeName} (${updated.employeeId})` },
+                { label: 'Phòng ban / Xưởng', value: updated.department },
+                { label: 'Thời gian nghỉ', value: `Từ ${formatDate(updated.fromDate)} đến ${formatDate(updated.toDate)} (${updated.totalDays} ngày)` },
+                { label: 'Loại nghỉ phép', value: LEAVE_TYPE_LABELS[updated.leaveType] || updated.leaveType },
+                { label: 'Lý do nghỉ', value: updated.reason },
+                { label: 'Người duyệt (Trưởng BP)', value: `${currentUser.name} (${currentUser.id})` },
+                { label: 'Yêu cầu', value: 'Vui lòng kiểm tra và xác nhận cắt cơm trên Cổng Portal Long Khai.' },
+              ],
+            },
+          }).catch(console.error);
+        }
+
         showToast({
           type: 'success',
           title: 'Trưởng bộ phận đã phê duyệt',
-          message: `Đơn ${updated.id} đã được chuyển đến Nhân viên kinh tế (${nextStep.approverName}) để xác nhận cắt cơm.`,
+          message: economicUser?.email
+            ? `Đơn ${updated.id} đã được chuyển và gửi email thông báo cắt cơm đến Nhân viên kinh tế: ${nextStep.approverName} (${economicUser.email}).`
+            : `Đơn ${updated.id} đã được chuyển đến Nhân viên kinh tế (${nextStep.approverName} - Mã NV: ${nextStep.approverId}) để cắt cơm trên Cổng Portal.`,
         });
       } else {
         showToast({
@@ -361,6 +429,14 @@ export function LeaveView() {
     currentStep.comment = rejectionReason;
     currentStep.actionAt = new Date().toISOString();
 
+    // Skip all remaining subsequent steps (e.g. Nhân viên kinh tế xác nhận cắt cơm)
+    for (let k = updated.currentStepIndex + 1; k < updated.steps.length; k++) {
+      updated.steps[k].status = 'skipped';
+      updated.steps[k].comment = updated.steps[k].roleRequired === 'economic'
+        ? 'Bỏ qua (Đơn đã bị từ chối, không cần cắt cơm)'
+        : 'Bỏ qua (Đơn đã bị từ chối ở bước trước)';
+    }
+
     updated.status = 'rejected';
     updated.updatedAt = new Date().toISOString();
 
@@ -371,13 +447,13 @@ export function LeaveView() {
     showToast({
       type: 'info',
       title: 'Đã từ chối đơn',
-      message: `Đơn ${updated.id} đã được chuyển sang trạng thái từ chối.`,
+      message: `Đơn ${updated.id} đã bị từ chối. Bước cắt cơm của nhân viên kinh tế được bỏ qua.`,
     });
   };
 
   // Filter list strictly based on user permissions
   const userVisibleLeaves = useMemo(() => {
-    return filterUserLeaves(leaves, currentUser, scopeFilter);
+    return filterUserLeaves(leaves, currentUser, scopeFilter, allUsers);
   }, [leaves, currentUser, scopeFilter]);
 
   const filteredLeaves = userVisibleLeaves.filter((item) => {
@@ -403,9 +479,13 @@ export function LeaveView() {
             </h1>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            {!canManageOthers
+            {isAssignedEconomic && !isApproverRole(currentUser)
+              ? `Tiếp nhận và theo dõi thông tin đơn xin nghỉ phép của nhân viên để thực hiện cắt cơm (${currentUser?.name || ''})`
+              : !canManageOthers
               ? `Chỉ hiển thị các đơn xin nghỉ phép của bạn (${currentUser?.name || ''})`
-              : 'Quy trình phê duyệt tự động: Nhân viên → Tổ trưởng (nếu có) → Trưởng bộ phận'}
+              : isBOD
+              ? 'Quản lý và phê duyệt toàn bộ đơn xin nghỉ phép toàn công ty'
+              : `Quản lý đơn xin nghỉ phép của nhân viên bộ phận ${currentUser?.department || ''}`}
           </p>
         </div>
 
@@ -418,7 +498,28 @@ export function LeaveView() {
         </button>
       </div>
 
-      {/* Scope Switcher for Approvers / Managers */}
+      {/* Notification banner for Economic Staff when there are pending meal-cut requests */}
+      {isAssignedEconomic && pendingMealCutCount > 0 && (
+        <div className="p-3.5 rounded-2xl bg-amber-500/10 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-xs">
+          <div className="flex items-center gap-2.5 text-amber-900 dark:text-amber-200">
+            <span className="p-1.5 rounded-xl bg-amber-500/20 text-amber-700 dark:text-amber-300 text-base">
+              🔔
+            </span>
+            <div>
+              <span className="font-bold text-sm">Thông báo cắt cơm mới: </span>
+              <span>Có <b>{pendingMealCutCount} đơn xin nghỉ phép</b> đã được Trưởng bộ phận phê duyệt đang chờ bạn xác nhận cắt cơm!</span>
+            </div>
+          </div>
+          <button
+            onClick={() => setScopeFilter('approver')}
+            className="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shrink-0 shadow-xs transition-all"
+          >
+            Xem đơn chờ cắt cơm ({pendingMealCutCount}) &rarr;
+          </button>
+        </div>
+      )}
+
+      {/* Scope Switcher for Approvers / Managers / Economic Staff */}
       {canManageOthers && (
         <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
           <button
@@ -429,19 +530,26 @@ export function LeaveView() {
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
-            {isBOD
+            {isAssignedEconomic && !isApproverRole(currentUser)
+              ? 'Tất cả đơn cắt cơm'
+              : isBOD
               ? 'Tất cả đơn toàn công ty'
               : `Đơn nhân viên ${currentUser?.department || 'bộ phận'}`}
           </button>
           <button
             onClick={() => setScopeFilter('approver')}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 ${
               scopeFilter === 'approver'
-                ? 'bg-blue-600 text-white shadow-xs'
+                ? 'bg-amber-600 text-white shadow-xs'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
-            Đơn cần tôi duyệt
+            <span>{isAssignedEconomic && !isApproverRole(currentUser) ? 'Chờ xác nhận cắt cơm' : 'Đơn cần tôi duyệt'}</span>
+            {pendingMealCutCount > 0 && (
+              <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-white text-amber-700 font-extrabold">
+                {pendingMealCutCount}
+              </span>
+            )}
           </button>
           <button
             onClick={() => setScopeFilter('my')}
@@ -824,34 +932,54 @@ export function LeaveView() {
                 Tiến trình phê duyệt đa cấp:
               </h4>
               <div className="space-y-2">
-                {selectedLeave.steps.map((step, idx) => (
-                  <div
-                    key={idx}
-                    className={`p-3 rounded-xl border text-xs flex items-center justify-between ${
-                      step.status === 'approved'
-                        ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900/40 text-emerald-900 dark:text-emerald-300'
-                        : step.status === 'rejected'
-                        ? 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900/40 text-rose-900 dark:text-rose-300'
-                        : idx === selectedLeave.currentStepIndex
-                        ? 'bg-blue-50/60 dark:bg-blue-950/30 border-blue-300 dark:border-blue-900/50'
-                        : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-400'
-                    }`}
-                  >
-                    <div>
-                      <div className="font-bold flex items-center gap-2">
-                        <span>Bước {idx + 1}: {step.stepName}</span>
-                        {step.status === 'approved' && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
-                        {step.status === 'rejected' && <XCircle className="w-4 h-4 text-rose-600" />}
+                {selectedLeave.steps.map((step, idx) => {
+                  const isSkipped = step.status === 'skipped' || (selectedLeave.status === 'rejected' && idx > selectedLeave.currentStepIndex);
+                  return (
+                    <div
+                      key={idx}
+                      className={`p-3 rounded-xl border text-xs flex items-center justify-between ${
+                        step.status === 'approved'
+                          ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900/40 text-emerald-900 dark:text-emerald-300'
+                          : step.status === 'rejected'
+                          ? 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900/40 text-rose-900 dark:text-rose-300'
+                          : isSkipped
+                          ? 'bg-slate-50/60 dark:bg-slate-800/20 border-slate-200 dark:border-slate-800 text-slate-400 opacity-60'
+                          : idx === selectedLeave.currentStepIndex
+                          ? 'bg-blue-50/60 dark:bg-blue-950/30 border-blue-300 dark:border-blue-900/50'
+                          : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-400'
+                      }`}
+                    >
+                      <div>
+                        <div className="font-bold flex items-center gap-2">
+                          <span>Bước {idx + 1}: {step.stepName}</span>
+                          {step.status === 'approved' && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
+                          {step.status === 'rejected' && <XCircle className="w-4 h-4 text-rose-600" />}
+                          {isSkipped && <MinusCircle className="w-4 h-4 text-slate-400" />}
+                        </div>
+                        <div className="text-[11px] mt-0.5">
+                          {isSkipped ? (
+                            <span className="italic text-slate-400">
+                              Người duyệt: <b>{step.approverName || 'Nhân viên kinh tế'}</b> - (Bỏ qua vì đơn đã bị từ chối ở bước trước, không cần cắt cơm)
+                            </span>
+                          ) : (
+                            <span>
+                              Người duyệt: <b>{step.approverName || 'Chờ phân bổ'}</b> {step.comment && ` - Ghi chú: "${step.comment}"`}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <div className="text-[11px] mt-0.5">
-                        Người duyệt: <b>{step.approverName || 'Chờ phân bổ'}</b> {step.comment && ` - Ghi chú: "${step.comment}"`}
-                      </div>
+                      <span className={`text-[10px] font-bold uppercase ${isSkipped ? 'text-slate-400 bg-slate-200/60 dark:bg-slate-700/50 px-2 py-0.5 rounded-md' : ''}`}>
+                        {step.status === 'approved'
+                          ? 'Đã duyệt'
+                          : step.status === 'rejected'
+                          ? 'Từ chối'
+                          : isSkipped
+                          ? 'Bỏ qua'
+                          : 'Chờ xử lý'}
+                      </span>
                     </div>
-                    <span className="text-[10px] font-bold uppercase">
-                      {step.status === 'approved' ? 'Đã duyệt' : step.status === 'rejected' ? 'Từ chối' : 'Chờ xử lý'}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

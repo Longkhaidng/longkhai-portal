@@ -23,6 +23,7 @@ import {
   User,
   CreditCard,
   Building,
+  MinusCircle,
 } from 'lucide-react';
 import { formatDate, generateDocId } from '@/lib/utils';
 import { dispatchApprovalEmail } from '@/lib/email';
@@ -349,6 +350,12 @@ export function AttendanceView() {
     step.approverName = currentUser.name;
     step.comment = rejectionReason.trim();
     step.actionAt = new Date().toISOString();
+
+    // Skip all remaining subsequent steps
+    for (let k = updated.currentStepIndex + 1; k < updated.steps.length; k++) {
+      updated.steps[k].status = 'skipped';
+      updated.steps[k].comment = 'Bỏ qua (Phiếu đã bị từ chối ở bước trước)';
+    }
 
     updated.status = 'rejected';
     updated.updatedAt = new Date().toISOString();
@@ -864,34 +871,48 @@ export function AttendanceView() {
                 Tiến trình duyệt hồ sơ ({selectedItem.steps.length} bước):
               </h4>
               <div className="space-y-2">
-                {selectedItem.steps.map((st, i) => (
-                  <div
-                    key={i}
-                    className={`p-3 rounded-xl border text-xs flex items-center justify-between ${
-                      st.status === 'approved'
-                        ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900/40 text-emerald-900 dark:text-emerald-300'
-                        : st.status === 'rejected'
-                        ? 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900/40 text-rose-900 dark:text-rose-300'
-                        : i === selectedItem.currentStepIndex
-                        ? 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-300 dark:border-amber-900/50'
-                        : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-400'
-                    }`}
-                  >
-                    <div>
-                      <div className="font-bold flex items-center gap-2">
-                        <span>Bước {i + 1}: {st.stepName}</span>
-                        {st.status === 'approved' && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
-                        {st.status === 'rejected' && <XCircle className="w-4 h-4 text-rose-600" />}
+                {selectedItem.steps.map((st, i) => {
+                  const isSkipped = st.status === 'skipped' || (selectedItem.status === 'rejected' && i > selectedItem.currentStepIndex);
+                  return (
+                    <div
+                      key={i}
+                      className={`p-3 rounded-xl border text-xs flex items-center justify-between ${
+                        st.status === 'approved'
+                          ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900/40 text-emerald-900 dark:text-emerald-300'
+                          : st.status === 'rejected'
+                          ? 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900/40 text-rose-900 dark:text-rose-300'
+                          : isSkipped
+                          ? 'bg-slate-50/60 dark:bg-slate-800/20 border-slate-200 dark:border-slate-800 text-slate-400 opacity-60'
+                          : i === selectedItem.currentStepIndex
+                          ? 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-300 dark:border-amber-900/50'
+                          : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-400'
+                      }`}
+                    >
+                      <div>
+                        <div className="font-bold flex items-center gap-2">
+                          <span>Bước {i + 1}: {st.stepName}</span>
+                          {st.status === 'approved' && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
+                          {st.status === 'rejected' && <XCircle className="w-4 h-4 text-rose-600" />}
+                          {isSkipped && <MinusCircle className="w-4 h-4 text-slate-400" />}
+                        </div>
+                        <div className="text-[11px] mt-0.5">
+                          {isSkipped ? (
+                            <span className="italic text-slate-400">
+                              Người duyệt: <b>{st.approverName}</b> - (Bỏ qua vì phiếu đã bị từ chối ở bước trước)
+                            </span>
+                          ) : (
+                            <span>
+                              Người duyệt: <b>{st.approverName}</b> {st.comment && ` - "${st.comment}"`}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <div className="text-[11px] mt-0.5">
-                        Người duyệt: <b>{st.approverName}</b> {st.comment && ` - "${st.comment}"`}
-                      </div>
+                      <span className={`text-[10px] font-bold uppercase ${isSkipped ? 'text-slate-400 bg-slate-200/60 dark:bg-slate-700/50 px-2 py-0.5 rounded-md' : ''}`}>
+                        {st.status === 'approved' ? 'Đã duyệt' : st.status === 'rejected' ? 'Từ chối' : isSkipped ? 'Bỏ qua' : 'Chờ duyệt'}
+                      </span>
                     </div>
-                    <span className="text-[10px] font-bold uppercase">
-                      {st.status === 'approved' ? 'Đã duyệt' : st.status === 'rejected' ? 'Từ chối' : 'Chờ duyệt'}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
