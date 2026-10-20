@@ -13,8 +13,9 @@
   "estimatedReturnTime": "2026-10-20T09:00",
   "managerApproverId": "1867",
   "managerApproverName": "Trương Anh Như Quỳnh",
-  "status": "pending",
+  "status": "approved",
   "qrCodeData": "LONGKHAI_GATEPASS:GP26-000003:1005:2026-10-20T11:30",
   "createdAt": "2026-10-20T03:36:32.955Z",
-  "updatedAt": "2026-10-20T03:36:32.955Z"
+  "updatedAt": "2026-10-20T03:37:09.698Z",
+  "managerApprovedAt": "2026-10-20T03:37:09.698Z"
 }
