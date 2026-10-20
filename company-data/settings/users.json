@@ -458,9 +458,10 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T07:57:51.640Z",
+    "updatedAt": "2026-10-20T04:35:14.757Z",
     "email": "kythuatmau.01@longkhai.com.vn",
-    "departmentHeadEmail": "tu.pham@longkhai.com.vn"
+    "departmentHeadEmail": "tu.pham@longkhai.com.vn",
+    "economicStaffId": "2777"
   },
   {
     "id": "1035",
