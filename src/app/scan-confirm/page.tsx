@@ -24,6 +24,14 @@ import {
 import { formatDate } from '@/lib/utils';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
 
+export const SECURITY_GUARDS = [
+  'Lương Văn Vĩnh',
+  'Nguyễn Hữu Lập',
+  'Lê Văn Ân',
+  'Trương Văn Hùng',
+  'Trần Công Nhân',
+] as const;
+
 function ScanConfirmContent() {
   const searchParams = useSearchParams();
   const rawId = searchParams.get('id') || searchParams.get('code') || '';
@@ -37,7 +45,7 @@ function ScanConfirmContent() {
   const [managerInfo, setManagerInfo] = useState<any>(null);
 
   // Form states for security action
-  const [guardName, setGuardName] = useState('Bảo vệ cổng');
+  const [guardName, setGuardName] = useState<string>(SECURITY_GUARDS[0]);
   const [actionTime, setActionTime] = useState(() => {
     const d = new Date();
     return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
@@ -393,15 +401,19 @@ function ScanConfirmContent() {
                           <div className="grid grid-cols-2 gap-3 text-xs">
                             <div>
                               <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
-                                Tên bảo vệ trực cổng:
+                                Tên bảo vệ xác nhận: *
                               </label>
-                              <input
-                                type="text"
+                              <select
                                 value={guardName}
                                 onChange={(e) => setGuardName(e.target.value)}
-                                className="w-full p-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white"
-                                placeholder="Bảo vệ cổng"
-                              />
+                                className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-semibold cursor-pointer"
+                              >
+                                {SECURITY_GUARDS.map((guard) => (
+                                  <option key={guard} value={guard}>
+                                    {guard}
+                                  </option>
+                                ))}
+                              </select>
                             </div>
                             <div>
                               <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
@@ -455,15 +467,19 @@ function ScanConfirmContent() {
                           <div className="grid grid-cols-2 gap-3 text-xs">
                             <div>
                               <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
-                                Tên bảo vệ trực:
+                                Tên bảo vệ xác nhận: *
                               </label>
-                              <input
-                                type="text"
+                              <select
                                 value={guardName}
                                 onChange={(e) => setGuardName(e.target.value)}
-                                className="w-full p-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white"
-                                placeholder="Bảo vệ cổng"
-                              />
+                                className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold cursor-pointer"
+                              >
+                                {SECURITY_GUARDS.map((guard) => (
+                                  <option key={guard} value={guard}>
+                                    {guard}
+                                  </option>
+                                ))}
+                              </select>
                             </div>
                             <div>
                               <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
@@ -605,15 +621,19 @@ function ScanConfirmContent() {
                         <div className="grid grid-cols-2 gap-3 text-xs">
                           <div className="col-span-2 sm:col-span-1">
                             <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
-                              Tên bảo vệ xác nhận:
+                              Tên bảo vệ xác nhận: *
                             </label>
-                            <input
-                              type="text"
+                            <select
                               value={guardName}
                               onChange={(e) => setGuardName(e.target.value)}
-                              className="w-full p-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white"
-                              placeholder="Bảo vệ cổng"
-                            />
+                              className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold cursor-pointer"
+                            >
+                              {SECURITY_GUARDS.map((guard) => (
+                                <option key={guard} value={guard}>
+                                  {guard}
+                                </option>
+                              ))}
+                            </select>
                           </div>
                           <div className="col-span-2 sm:col-span-1">
                             <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
