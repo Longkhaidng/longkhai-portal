@@ -9,7 +9,7 @@
   "checkOutTime": "16:30",
   "shift": "Ca Hành chính (08:00 - 16:30)",
   "reason": "thẻ hỏng không quét được",
-  "status": "pending",
+  "status": "approved",
   "currentStepIndex": 2,
   "steps": [
     {
@@ -33,10 +33,13 @@
     {
       "stepName": "IT cập nhật dữ liệu máy chấm công",
       "roleRequired": "it",
-      "approverName": "Bộ phận CNTT (IT)",
-      "status": "pending"
+      "approverName": "Trương Anh Như Quỳnh",
+      "status": "approved",
+      "approverId": "1867",
+      "comment": "Đã xác nhận kiểm tra hợp lệ",
+      "actionAt": "2026-10-20T02:39:52.224Z"
     }
   ],
   "createdAt": "2026-10-20T02:05:22.384Z",
-  "updatedAt": "2026-10-20T02:06:15.247Z"
+  "updatedAt": "2026-10-20T02:39:52.224Z"
 }
