@@ -10,13 +10,16 @@
   "shift": "Ca Hành chính (08:00 - 16:30)",
   "reason": "quên thẻ",
   "status": "pending",
-  "currentStepIndex": 0,
+  "currentStepIndex": 1,
   "steps": [
     {
       "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
       "roleRequired": "security",
-      "approverName": "Tổ trưởng / Nhân viên Bảo vệ Cổng",
-      "status": "pending"
+      "approverName": "24-06 Nguyễn Thanh Ba",
+      "status": "approved",
+      "approverId": "102",
+      "comment": "Đã xác nhận kiểm tra hợp lệ",
+      "actionAt": "2026-10-20T02:00:19.222Z"
     },
     {
       "stepName": "Trưởng bộ phận phê duyệt giải trình",
@@ -33,5 +36,5 @@
     }
   ],
   "createdAt": "2026-10-20T01:59:32.535Z",
-  "updatedAt": "2026-10-20T01:59:32.535Z"
+  "updatedAt": "2026-10-20T02:00:19.222Z"
 }
