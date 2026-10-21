@@ -53,7 +53,9 @@
     "name": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "description": "Kiểm soát chất lượng đầu vào IQC, trên chuyền PQC và xuất xưởng OQC",
     "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
+    "updatedAt": "2026-10-21T06:31:00.862Z",
+    "managerId": "2831",
+    "managerName": "Trần Thị Thanh Diệu"
   },
   {
     "id": "PB-KT",
