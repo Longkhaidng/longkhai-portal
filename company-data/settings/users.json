@@ -26,8 +26,8 @@
   {
     "id": "1867",
     "name": "Trương Anh Như Quỳnh",
-    "department": "Ban Giám Đốc",
-    "position": "Phó giám đốc HCNS",
+    "department": "Phòng HCNS",
+    "position": "Trưởng phòng HCNS",
     "role": "manager",
     "email": "Quynh.truong@longkhai.com.vn",
     "phone": "0919188051",
@@ -48,7 +48,7 @@
     "isActive": true,
     "password": "Quynh1",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-21T06:37:43.978Z"
   },
   {
     "id": "2265",
