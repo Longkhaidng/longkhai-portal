@@ -826,11 +826,13 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-21T03:39:40.455Z",
+    "updatedAt": "2026-10-21T03:39:45.816Z",
     "email": "tuyet.vo@longkhai.com.vn",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "allowedWebIntegrations": []
+    "allowedWebIntegrations": [
+      "WEB-001"
+    ]
   },
   {
     "id": "1147",
