@@ -10,10 +10,12 @@
   {
     "id": "PB-HCNS",
     "code": "HCNS",
-    "name": "Phòng Hành Chính Nhân Sự",
+    "name": "Phòng HCNS",
     "description": "Quản lý nhân sự, tiền lương, tuyển dụng và đời sống công nhân viên",
     "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
+    "updatedAt": "2026-10-21T06:29:08.986Z",
+    "managerId": "1867",
+    "managerName": "Trương Anh Như Quỳnh"
   },
   {
     "id": "PB-SX1",
