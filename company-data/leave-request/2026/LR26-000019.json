@@ -9,14 +9,17 @@
   "totalDays": 1,
   "reason": "bận",
   "status": "pending",
-  "currentStepIndex": 0,
+  "currentStepIndex": 1,
   "steps": [
     {
       "stepName": "Trưởng bộ phận phê duyệt",
       "roleRequired": "manager",
       "approverId": "1867",
       "approverName": "Trương Anh Như Quỳnh",
-      "status": "pending"
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-10-21T03:09:10.384Z",
+      "signature": "Trương Anh Như Quỳnh (1867)"
     },
     {
       "stepName": "Nhân viên kinh tế xác nhận cắt cơm",
@@ -27,5 +30,5 @@
     }
   ],
   "createdAt": "2026-10-21T03:08:49.546Z",
-  "updatedAt": "2026-10-21T03:08:49.546Z"
+  "updatedAt": "2026-10-21T03:09:10.384Z"
 }
