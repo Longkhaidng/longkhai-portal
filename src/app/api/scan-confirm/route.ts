@@ -220,12 +220,13 @@ export async function POST(req: NextRequest) {
     } = body as {
       type: 'gate_pass' | 'attendance';
       id: string;
-      action: 'depart' | 'return' | 'confirm_security';
+      action: 'depart' | 'return' | 'confirm_security' | 'confirm_check_in' | 'confirm_check_out' | 'check_in' | 'check_out';
       actualTime?: string;
       actualCheckIn?: string;
       actualCheckOut?: string;
       guardName?: string;
       note?: string;
+      time?: string;
     };
 
     if (!id) {
@@ -331,14 +332,6 @@ export async function POST(req: NextRequest) {
       }
 
       const step0 = doc.steps[0];
-      if (step0.status === 'approved') {
-        return NextResponse.json({
-          success: true,
-          alreadyProcessed: true,
-          message: `Bước 1 đã được Bảo vệ xác nhận trước đó (${step0.approverName} lúc ${step0.actionAt})!`,
-          record: doc,
-        });
-      }
 
       if (step0.status === 'rejected' || doc.status === 'rejected') {
         return NextResponse.json({
@@ -348,23 +341,64 @@ export async function POST(req: NextRequest) {
         }, { status: 400 });
       }
 
-      // Approve Step 1 (Security)
-      step0.status = 'approved';
-      step0.approverName = finalGuard;
-      step0.comment = (note || '').trim() || 'Đã xác nhận kiểm tra vào/ra thực tế tại cổng qua quét mã QR';
-      step0.actionAt = now;
+      const pad = (n: number) => String(n).padStart(2, '0');
+      const dNow = new Date();
+      const currentHHmm = `${pad(dNow.getHours())}:${pad(dNow.getMinutes())}`;
 
-      if (actualCheckIn) { doc.checkInTime = actualCheckIn; doc.actualCheckIn = actualCheckIn; }
-      if (actualCheckOut) { doc.checkOutTime = actualCheckOut; doc.actualCheckOut = actualCheckOut; }
+      // Case A: Confirm Time In (Xác nhận thời gian vào)
+      if (action === 'confirm_check_in' || action === 'check_in') {
+        const inTime = (body.time || actualTime || actualCheckIn || '').trim() || currentHHmm;
+        doc.actualCheckIn = inTime;
+        doc.actualCheckInGuard = finalGuard;
+        doc.actualCheckInAt = now;
 
-      if (doc.currentStepIndex === 0) {
-        doc.currentStepIndex = 1; // Advance to Step 2: Manager approval
+        step0.status = 'approved';
+        step0.approverName = finalGuard;
+        step0.actionAt = now;
+        step0.comment = (note || '').trim() || `Bảo vệ đã xác nhận giờ vào thực tế: ${inTime}`;
+
+        if (doc.currentStepIndex === 0) {
+          doc.currentStepIndex = 1; // Advance to Step 2: Manager approval
+        }
+        doc.updatedAt = now;
+        resultMessage = `✓ Bảo vệ ${finalGuard} đã xác nhận THỜI GIAN VÀO thực tế (${inTime}) cho nhân viên ${doc.employeeName} thành công!`;
+
+      // Case B: Confirm Time Out (Xác nhận thời gian ra)
+      } else if (action === 'confirm_check_out' || action === 'check_out') {
+        const outTime = (body.time || actualTime || actualCheckOut || '').trim() || currentHHmm;
+        doc.actualCheckOut = outTime;
+        doc.actualCheckOutGuard = finalGuard;
+        doc.actualCheckOutAt = now;
+
+        step0.status = 'approved';
+        step0.approverName = finalGuard;
+        step0.actionAt = now;
+        step0.comment = (note || '').trim() || (doc.actualCheckIn ? `Bảo vệ đã xác nhận giờ vào (${doc.actualCheckIn}) & giờ ra (${outTime}) thực tế` : `Bảo vệ đã xác nhận giờ ra thực tế: ${outTime}`);
+
+        if (doc.currentStepIndex === 0) {
+          doc.currentStepIndex = 1; // Advance to Step 2: Manager approval
+        }
+        doc.updatedAt = now;
+        resultMessage = `✓ Bảo vệ ${finalGuard} đã xác nhận THỜI GIAN RA thực tế (${outTime}) cho nhân viên ${doc.employeeName} thành công!`;
+
+      // Case C: Legacy full confirmation
+      } else {
+        if (actualCheckIn) doc.actualCheckIn = actualCheckIn;
+        if (actualCheckOut) doc.actualCheckOut = actualCheckOut;
+        doc.actualCheckInGuard = finalGuard;
+        doc.actualCheckOutGuard = finalGuard;
+        step0.status = 'approved';
+        step0.approverName = finalGuard;
+        step0.comment = (note || '').trim() || 'Đã xác nhận kiểm tra vào/ra thực tế tại cổng qua quét mã QR';
+        step0.actionAt = now;
+        if (doc.currentStepIndex === 0) {
+          doc.currentStepIndex = 1;
+        }
+        doc.updatedAt = now;
+        resultMessage = `✓ Bảo vệ cổng đã xác nhận thời gian vào - ra thực tế cho nhân viên ${doc.employeeName} thành công!`;
       }
-      doc.updatedAt = now;
 
-      resultMessage = `✓ Bảo vệ cổng đã xác nhận thời gian vào - ra thực tế cho nhân viên ${doc.employeeName} thành công! Phiếu đã được chuyển tiếp đến Trưởng bộ phận phê duyệt giải trình.`;
-
-      // Dispatch email notification to Manager for Step 2
+      // Dispatch email notification to Manager for Step 2 (only once)
       const users = loadAllUsers();
       const empUser = users.find((u) => u.id?.toLowerCase() === doc.employeeId?.toLowerCase());
       const nextStep = doc.steps[1];
@@ -372,7 +406,8 @@ export async function POST(req: NextRequest) {
       const managerUser = managerId ? users.find((u) => u.id?.toLowerCase() === managerId.toLowerCase()) : null;
       const managerEmail = (managerUser?.email || empUser?.departmentHeadEmail || '').trim();
 
-      if (managerEmail) {
+      if (managerEmail && !doc.managerNotified) {
+        doc.managerNotified = true;
         const origin = req.nextUrl.origin || 'https://longkhai-portal.vercel.app';
         const approveUrl = `${origin}/approve?type=attendance&id=${doc.id}&action=approve`;
         const rejectUrl = `${origin}/approve?type=attendance&id=${doc.id}&action=reject`;
@@ -388,7 +423,7 @@ export async function POST(req: NextRequest) {
               <tr><td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold; width: 35%;">Mã hồ sơ:</td><td style="padding: 8px; border: 1px solid #cbd5e1;">${doc.id}</td></tr>
               <tr><td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold;">Lý do phát sinh:</td><td style="padding: 8px; border: 1px solid #cbd5e1;">${doc.issueType === 'mat_the' ? 'Mất thẻ' : doc.issueType === 'quen_the' ? 'Quên mang thẻ' : 'Thẻ hỏng / lỗi'}</td></tr>
               <tr><td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold;">Ngày & Ca:</td><td style="padding: 8px; border: 1px solid #cbd5e1;">${doc.date} (${doc.shift})</td></tr>
-              <tr><td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold;">Giờ vào - ra:</td><td style="padding: 8px; border: 1px solid #cbd5e1;">Vào: ${doc.checkInTime} &bull; Ra: ${doc.checkOutTime}</td></tr>
+              <tr><td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold;">Giờ vào - ra thực tế:</td><td style="padding: 8px; border: 1px solid #cbd5e1;">Vào: <strong>${doc.actualCheckIn || 'Chưa ghi nhận'}</strong> &bull; Ra: <strong>${doc.actualCheckOut || 'Chưa ghi nhận'}</strong></td></tr>
               <tr><td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold;">Bảo vệ xác nhận:</td><td style="padding: 8px; border: 1px solid #cbd5e1; color: #15803d; font-weight: bold;">${finalGuard} (Đã xác nhận thực tế)</td></tr>
               <tr><td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold;">Lý do giải trình:</td><td style="padding: 8px; border: 1px solid #cbd5e1;">${doc.reason}</td></tr>
             </table>

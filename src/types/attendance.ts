@@ -17,6 +17,11 @@ export interface AttendanceConfirm {
   reason: string;
   actualCheckIn?: string;
   actualCheckOut?: string;
+  actualCheckInGuard?: string;
+  actualCheckOutGuard?: string;
+  actualCheckInAt?: string;
+  actualCheckOutAt?: string;
+  managerNotified?: boolean;
   status: AttendanceStatus;
   currentStepIndex: number;
   steps: ApprovalStep[];

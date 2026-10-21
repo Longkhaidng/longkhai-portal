@@ -828,18 +828,18 @@ export function AttendanceView() {
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      {item.steps[0]?.status === 'approved' ? (
+                      {item.actualCheckIn ? (
                         <div className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
-                          {item.actualCheckIn || item.checkInTime}
+                          {item.actualCheckIn}
                         </div>
                       ) : (
                         <span className="text-[11px] text-slate-400 italic">Chưa xác nhận</span>
                       )}
                     </td>
                     <td className="py-3 px-4">
-                      {item.steps[0]?.status === 'approved' ? (
-                        <div className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
-                          {item.actualCheckOut || item.checkOutTime}
+                      {item.actualCheckOut ? (
+                        <div className="font-mono font-bold text-blue-600 dark:text-blue-400">
+                          {item.actualCheckOut}
                         </div>
                       ) : (
                         <span className="text-[11px] text-slate-400 italic">Chưa xác nhận</span>
@@ -994,33 +994,6 @@ export function AttendanceView() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Giờ vào thực tế:
-                  </label>
-                  <input
-                    type="time"
-                    required
-                    value={checkInTime}
-                    onChange={(e) => setCheckInTime(e.target.value)}
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Giờ ra thực tế:
-                  </label>
-                  <input
-                    type="time"
-                    required
-                    value={checkOutTime}
-                    onChange={(e) => setCheckOutTime(e.target.value)}
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
-                </div>
-              </div>
-
               <div>
                 <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Ca làm việc:
@@ -1164,7 +1137,7 @@ export function AttendanceView() {
               <div>
                 <span className="text-slate-400 block text-[11px]">Giờ vào - Giờ ra:</span>
                 <span className="font-bold text-blue-600 dark:text-blue-400">
-                  {selectedItem.checkInTime} &rarr; {selectedItem.checkOutTime}
+                  {selectedItem.actualCheckIn ? `Vào: ${selectedItem.actualCheckIn}` : `Vào ca: ${selectedItem.checkInTime}`} &bull; {selectedItem.actualCheckOut ? `Ra: ${selectedItem.actualCheckOut}` : `Tan ca: ${selectedItem.checkOutTime}`}
                 </span>
               </div>
               <div className="col-span-2">

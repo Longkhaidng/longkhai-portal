@@ -158,16 +158,20 @@ function ScanConfirmContent() {
   };
 
   // Handle Security Action for Attendance Confirm (Step 1)
-  const handleAttendanceAction = () => {
+  const handleAttendanceAction = (actionType: 'check_in' | 'check_out') => {
     if (!docData) return;
     setIsSubmitting(true);
+
+    const d = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const currentTime = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
 
     const payload = {
       type: 'attendance',
       id: docData.id,
-      action: 'confirm_security',
-      actualCheckIn: actualCheckIn.trim() || docData.checkInTime,
-      actualCheckOut: actualCheckOut.trim() || docData.checkOutTime,
+      action: actionType === 'check_in' ? 'confirm_check_in' : 'confirm_check_out',
+      actionType,
+      time: currentTime,
       guardName: guardName.trim() || 'Bảo vệ cổng (Quét QR)',
       note: note.trim(),
     };
@@ -181,11 +185,30 @@ function ScanConfirmContent() {
       .then((data) => {
         if (data.success) {
           setDocData(data.record);
+
+          // Update localStorage if client has it
+          try {
+            if (typeof window !== 'undefined') {
+              const localAtt = localStorage.getItem('longkhai_attendance_confirms');
+              if (localAtt) {
+                const list = JSON.parse(localAtt);
+                const idx = list.findIndex((a: any) => a.id === data.record.id);
+                if (idx >= 0) {
+                  list[idx] = data.record;
+                } else {
+                  list.unshift(data.record);
+                }
+                localStorage.setItem('longkhai_attendance_confirms', JSON.stringify(list));
+              }
+            }
+          } catch {}
+
+          const actionLabel = actionType === 'check_in' ? 'Thời Gian Vào' : 'Thời Gian Ra';
           setResultModal({
             show: true,
             success: true,
-            title: 'Xác Nhận Giờ Vào - Ra Thực Tế Thành Công',
-            message: data.message || 'Bước 1 đã được xác nhận. Hồ sơ đã được chuyển tiếp đến Trưởng bộ phận.',
+            title: `Xác Nhận ${actionLabel} Thực Tế Thành Công`,
+            message: data.message || `Đã ghi nhận ${actionLabel.toLowerCase()} thực tế lúc ${currentTime} cho nhân viên ${docData.employeeName}.`,
           });
         } else {
           setResultModal({
@@ -570,99 +593,98 @@ function ScanConfirmContent() {
 
                   {/* STEP 1: SECURITY CHECK */}
                   {Array.isArray(docData.steps) && docData.steps[0] && (
-                    docData.steps[0].status === 'approved' ? (
-                      <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-800 text-center space-y-2">
-                        <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
-                        <div className="font-bold text-sm text-emerald-300">
-                          BƯỚC 1: BẢO VỆ CỔNG ĐÃ XÁC NHẬN THỰC TẾ
-                        </div>
-                        <p className="text-xs text-slate-300">
-                          Người xác nhận: <b>{docData.steps[0].approverName}</b> &bull; Ghi chú: &ldquo;{docData.steps[0].comment || 'Đã xác nhận'}&rdquo;
-                        </p>
-                        <div className="text-[11px] text-slate-400 pt-1">
-                          Hồ sơ hiện tại đang ở: <b>Bước {docData.currentStepIndex + 1}: {docData.steps[docData.currentStepIndex]?.stepName}</b>
-                        </div>
-                      </div>
-                    ) : (
-                      /* STEP 1 PENDING: GUARD CONFIRMATION FORM */
-                      <div className="p-4 rounded-2xl bg-slate-950 border border-amber-600/70 space-y-3">
-                        <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase">
-                          <ShieldCheck className="w-4 h-4" />
+                    <div className="p-4 rounded-2xl bg-slate-950 border border-amber-600/70 space-y-3.5">
+                      <div className="flex items-center justify-between text-xs font-bold text-amber-400 uppercase">
+                        <div className="flex items-center gap-2">
+                          <ShieldCheck className="w-4 h-4 text-emerald-400" />
                           <span>Bước 1: Bảo vệ cổng xác nhận vào/ra thực tế</span>
                         </div>
-
-                        <div className="grid grid-cols-2 gap-3 text-xs">
-                          <div>
-                            <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
-                              Giờ vào thực tế:
-                            </label>
-                            <input
-                              type="text"
-                              value={actualCheckIn}
-                              onChange={(e) => setActualCheckIn(e.target.value)}
-                              className="w-full p-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-emerald-400 font-mono font-bold"
-                              placeholder="08:00"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
-                              Giờ ra thực tế:
-                            </label>
-                            <input
-                              type="text"
-                              value={actualCheckOut}
-                              onChange={(e) => setActualCheckOut(e.target.value)}
-                              className="w-full p-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-emerald-400 font-mono font-bold"
-                              placeholder="16:30"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3 text-xs">
-                          <div className="col-span-2 sm:col-span-1">
-                            <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
-                              Tên bảo vệ xác nhận: *
-                            </label>
-                            <select
-                              value={guardName}
-                              onChange={(e) => setGuardName(e.target.value)}
-                              className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold cursor-pointer"
-                            >
-                              {SECURITY_GUARDS.map((guard) => (
-                                <option key={guard} value={guard}>
-                                  {guard}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <div className="col-span-2 sm:col-span-1">
-                            <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
-                              Ghi chú kiểm tra:
-                            </label>
-                            <input
-                              type="text"
-                              value={note}
-                              onChange={(e) => setNote(e.target.value)}
-                              className="w-full p-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white"
-                              placeholder="Đã kiểm tra vào/ra thực tế"
-                            />
-                          </div>
-                        </div>
-
-                        <button
-                          onClick={handleAttendanceAction}
-                          disabled={isSubmitting}
-                          className="w-full py-3.5 bg-amber-600 hover:bg-amber-500 active:scale-[0.99] text-white font-black text-sm rounded-2xl shadow-lg shadow-amber-950 flex items-center justify-center gap-2 transition-all cursor-pointer"
-                        >
-                          <CheckCircle2 className="w-5 h-5" />
-                          <span>
-                            {isSubmitting
-                              ? 'ĐANG LƯU VÀ CHUYỂN BƯỚC...'
-                              : '✓ BẢO VỆ XÁC NHẬN GIỜ VÀO - RA THỰC TẾ'}
+                        {docData.steps[0].status === 'approved' && (
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] lowercase font-semibold">
+                            ✓ đã chuyển duyệt
                           </span>
+                        )}
+                      </div>
+
+                      {/* Hiển thị thời gian thực tế đã ghi nhận */}
+                      <div className="grid grid-cols-2 gap-3 text-xs">
+                        <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                          <span className="text-slate-400 text-[11px] block">Thời gian vào thực tế:</span>
+                          <span className="font-mono font-bold text-sm text-emerald-400">
+                            {docData.actualCheckIn ? `✓ ${docData.actualCheckIn}` : 'Chưa ghi nhận'}
+                          </span>
+                          {docData.actualCheckInGuard && (
+                            <span className="text-[10px] text-slate-500 block truncate mt-0.5">
+                              Bảo vệ: {docData.actualCheckInGuard}
+                            </span>
+                          )}
+                        </div>
+                        <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                          <span className="text-slate-400 text-[11px] block">Thời gian ra thực tế:</span>
+                          <span className="font-mono font-bold text-sm text-blue-400">
+                            {docData.actualCheckOut ? `✓ ${docData.actualCheckOut}` : 'Chưa ghi nhận'}
+                          </span>
+                          {docData.actualCheckOutGuard && (
+                            <span className="text-[10px] text-slate-500 block truncate mt-0.5">
+                              Bảo vệ: {docData.actualCheckOutGuard}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div>
+                          <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
+                            Tên bảo vệ xác nhận: *
+                          </label>
+                          <select
+                            value={guardName}
+                            onChange={(e) => setGuardName(e.target.value)}
+                            className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold cursor-pointer"
+                          >
+                            {SECURITY_GUARDS.map((guard) => (
+                              <option key={guard} value={guard}>
+                                {guard}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
+                            Ghi chú kiểm tra:
+                          </label>
+                          <input
+                            type="text"
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                            className="w-full p-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white"
+                            placeholder="Đã kiểm tra vào/ra thực tế qua quét mã"
+                          />
+                        </div>
+                      </div>
+
+                      {/* 2 nút theo yêu cầu của người dùng */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => handleAttendanceAction('check_in')}
+                          disabled={isSubmitting}
+                          className="py-3.5 px-3 bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white font-black text-xs sm:text-sm rounded-2xl shadow-lg shadow-emerald-950 flex items-center justify-center gap-2 transition-all cursor-pointer"
+                        >
+                          <LogIn className="w-4 h-4 shrink-0" />
+                          <span>{isSubmitting ? 'ĐANG LƯU...' : 'Xác nhận thời gian vào'}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleAttendanceAction('check_out')}
+                          disabled={isSubmitting}
+                          className="py-3.5 px-3 bg-blue-600 hover:bg-blue-500 active:scale-[0.99] text-white font-black text-xs sm:text-sm rounded-2xl shadow-lg shadow-blue-950 flex items-center justify-center gap-2 transition-all cursor-pointer"
+                        >
+                          <LogOut className="w-4 h-4 shrink-0" />
+                          <span>{isSubmitting ? 'ĐANG LƯU...' : 'Xác nhận thời gian ra'}</span>
                         </button>
                       </div>
-                    )
+                    </div>
                   )}
                 </div>
               )}
