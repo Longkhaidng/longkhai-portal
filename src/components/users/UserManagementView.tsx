@@ -318,9 +318,23 @@ export function UserManagementView() {
         const index = existing.findIndex((u) => u.id.toLowerCase() === newUser.id.toLowerCase());
         if (index >= 0) {
           updateCount++;
+          const cur = existing[index];
           existing[index] = {
-            ...existing[index],
-            ...newUser,
+            ...cur,
+            name: newUser.name || cur.name,
+            department: newUser.department || cur.department,
+            position: newUser.position || cur.position,
+            role: newUser.role || cur.role,
+            email: newUser.email !== undefined ? newUser.email : cur.email,
+            phone: newUser.phone !== undefined ? newUser.phone : cur.phone,
+            teamLeaderId: newUser.teamLeaderId !== undefined ? newUser.teamLeaderId : cur.teamLeaderId,
+            departmentHeadId: newUser.departmentHeadId !== undefined ? newUser.departmentHeadId : cur.departmentHeadId,
+            economicStaffId: newUser.economicStaffId !== undefined ? newUser.economicStaffId : cur.economicStaffId,
+            departmentHeadEmail: newUser.departmentHeadEmail !== undefined ? newUser.departmentHeadEmail : cur.departmentHeadEmail,
+            password: newUser.password && newUser.password !== 'LK@123456' ? newUser.password : cur.password,
+            permissions: (newUser.permissions && newUser.permissions.length > 0) ? newUser.permissions : (cur.permissions || []),
+            allowedWebIntegrations: cur.allowedWebIntegrations || newUser.allowedWebIntegrations,
+            isActive: cur.isActive,
             updatedAt: new Date().toISOString(),
           };
         } else {
@@ -1148,6 +1162,7 @@ export function UserManagementView() {
                         <th className="p-2">Họ tên</th>
                         <th className="p-2">Phòng ban</th>
                         <th className="p-2">Chức vụ</th>
+                        <th className="p-2">NV Kinh tế</th>
                         <th className="p-2">Quyền</th>
                       </tr>
                     </thead>
@@ -1158,6 +1173,7 @@ export function UserManagementView() {
                           <td className="p-2 font-semibold">{u.name}</td>
                           <td className="p-2">{u.department}</td>
                           <td className="p-2">{u.position}</td>
+                          <td className="p-2 font-mono text-amber-600 font-semibold">{u.economicStaffId || '-'}</td>
                           <td className="p-2">{u.permissions.length} mục</td>
                         </tr>
                       ))}

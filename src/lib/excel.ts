@@ -7,6 +7,39 @@ export interface ParsedEmployeeResult {
   totalRows: number;
 }
 
+
+function normalizeHeaderKey(key: string): string {
+  return key
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/[^a-z0-9]/g, '');
+}
+
+function getRowValue(row: any, ...aliases: string[]): string {
+  // 1. Direct match with aliases
+  for (const a of aliases) {
+    if (row[a] !== undefined && row[a] !== null && String(row[a]).trim() !== '') {
+      return String(row[a]).trim();
+    }
+  }
+  // 2. Normalized match against all row keys
+  const rowKeys = Object.keys(row);
+  for (const a of aliases) {
+    const normA = normalizeHeaderKey(a);
+    for (const rk of rowKeys) {
+      if (normalizeHeaderKey(rk) === normA) {
+        const val = row[rk];
+        if (val !== undefined && val !== null && String(val).trim() !== '') {
+          return String(val).trim();
+        }
+      }
+    }
+  }
+  return '';
+}
+
 export function parseEmployeeExcel(file: File): Promise<ParsedEmployeeResult> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -26,39 +59,79 @@ export function parseEmployeeExcel(file: File): Promise<ParsedEmployeeResult> {
         rawJson.forEach((row, index) => {
           const rowNum = index + 2; // Row 1 is header
 
-          // Flexible header matching
-          const employeeId = String(
-            row['Mã nhân viên'] || row['Mã NV'] || row['Mã số NV'] || row['employeeId'] || row['EmployeeID'] || row['id'] || ''
-          ).trim();
+          // Flexible header matching with accent & space normalization
+          const employeeId = getRowValue(
+            row,
+            'Mã nhân viên', 'Mã NV', 'Mã số NV', 'Mã số nhân viên', 'employeeId', 'EmployeeID', 'id', 'ID', 'Mã số'
+          );
 
-          const name = String(
-            row['Họ và tên'] || row['Họ tên'] || row['Tên'] || row['name'] || row['FullName'] || ''
-          ).trim();
+          const name = getRowValue(
+            row,
+            'Họ và tên', 'Họ tên', 'Tên nhân viên', 'Tên', 'name', 'FullName', 'Họ & Tên'
+          );
 
-          const department = String(
-            row['Phòng ban'] || row['Bộ phận'] || row['department'] || 'Nhà máy'
-          ).trim();
+          const department = getRowValue(
+            row,
+            'Phòng ban', 'Bộ phận', 'Phòng ban / Xưởng', 'Phân xưởng', 'Xưởng', 'department'
+          ) || 'Nhà máy';
 
-          const position = String(
-            row['Vị trí công tác'] || row['Chức danh'] || row['Chức vụ'] || row['Vị trí'] || row['position'] || 'Nhân viên'
-          ).trim();
+          const position = getRowValue(
+            row,
+            'Vị trí công tác', 'Chức danh', 'Chức vụ', 'Vị trí', 'position'
+          ) || 'Nhân viên';
 
-          const roleRaw = String(
-            row['Vai trò'] || row['Role'] || row['role'] || 'employee'
-          ).toLowerCase().trim();
+          const roleRaw = getRowValue(
+            row,
+            'Vai trò', 'Role', 'role', 'Chức vụ hệ thống'
+          ).toLowerCase() || 'employee';
 
-          const email = String(row['Email'] || row['email'] || '').trim();
-          const phone = String(row['Số điện thoại'] || row['SĐT'] || row['phone'] || '').trim();
-          const teamLeaderId = String(row['Mã Tổ trưởng'] || row['Tổ trưởng'] || row['teamLeaderId'] || '').trim();
-          const departmentHeadId = String(row['Mã Trưởng BP'] || row['Trưởng BP'] || row['departmentHeadId'] || '').trim();
-          const economicStaffId = String(
-            row['Mã NV kinh tế'] || row['Mã NV Kinh tế'] || row['Mã nhân viên kinh tế'] || row['NV kinh tế'] || row['economicStaffId'] || ''
-          ).trim();
-          const departmentHeadEmail = String(
-            row['Email Trưởng BP'] || row['Email Trưởng bộ phận'] || row['departmentHeadEmail'] || ''
-          ).trim();
-          const password = String(row['Mật khẩu'] || row['password'] || 'LK@123456').trim();
-          const permissionsRaw = String(row['Phân quyền'] || row['Quyền'] || row['permissions'] || '').trim();
+          const email = getRowValue(row, 'Email', 'Email công việc', 'email', 'Hộp thư');
+          const phone = getRowValue(row, 'Số điện thoại', 'SĐT', 'SDT', 'Điện thoại', 'phone', 'Telephone', 'Số ĐT');
+          const teamLeaderId = getRowValue(row, 'Mã Tổ trưởng', 'Mã tổ trưởng', 'Tổ trưởng', 'Mã số tổ trưởng', 'teamLeaderId', 'team_leader_id');
+          const departmentHeadId = getRowValue(row, 'Mã Trưởng BP', 'Mã Trưởng bộ phận', 'Trưởng BP', 'Trưởng bộ phận', 'Mã TB', 'departmentHeadId', 'managerId');
+          
+          let economicStaffId = getRowValue(
+            row,
+            'Mã NV kinh tế',
+            'Mã NV Kinh tế',
+            'Mã nhân viên kinh tế',
+            'Mã số nhân viên kinh tế',
+            'Mã số NV kinh tế',
+            'NV kinh tế',
+            'Nhân viên kinh tế',
+            'Mã kinh tế',
+            'Mã NV cắt cơm',
+            'NV cắt cơm',
+            'Mã số NV cắt cơm',
+            'Mã NV KT',
+            'NV KT',
+            'economicStaffId',
+            'economic_staff_id'
+          );
+
+          // Deep search fallback for economicStaffId
+          if (!economicStaffId) {
+            for (const rk of Object.keys(row)) {
+              const norm = normalizeHeaderKey(rk);
+              if (
+                norm.includes('kinhte') ||
+                norm.includes('catcom') ||
+                norm.includes('economic') ||
+                norm === 'manvkt' ||
+                norm === 'nvkt'
+              ) {
+                const val = row[rk];
+                if (val !== undefined && val !== null && String(val).trim() !== '') {
+                  economicStaffId = String(val).trim();
+                  break;
+                }
+              }
+            }
+          }
+
+          const departmentHeadEmail = getRowValue(row, 'Email Trưởng BP', 'Email Trưởng bộ phận', 'Email TB', 'departmentHeadEmail');
+          const password = getRowValue(row, 'Mật khẩu', 'password', 'Pass') || 'LK@123456';
+          const permissionsRaw = getRowValue(row, 'Phân quyền', 'Quyền', 'permissions', 'Quyền hạn');
 
           if (!employeeId) {
             errors.push(`Dòng ${rowNum}: Thiếu Mã nhân viên`);
@@ -117,6 +190,7 @@ export function parseEmployeeExcel(file: File): Promise<ParsedEmployeeResult> {
             phone: phone || undefined,
             teamLeaderId: teamLeaderId || undefined,
             departmentHeadId: departmentHeadId || undefined,
+            economicStaffId: economicStaffId || undefined,
             departmentHeadEmail: departmentHeadEmail || undefined,
             permissions,
             isActive: true,
@@ -171,6 +245,7 @@ export function generateEmployeeTemplateExcel() {
       'Số điện thoại': '0901234567',
       'Mã Tổ trưởng': 'LK-050',
       'Mã Trưởng BP': 'LK-010',
+      'Mã NV kinh tế': '2415',
       'Email Trưởng BP': 'cuong.le@longkhai.vn',
       'Mật khẩu': 'LK@123456',
       'Phân quyền': 'dashboard,leave,attendance,gate_pass,announcements',
@@ -186,6 +261,7 @@ export function generateEmployeeTemplateExcel() {
       'Số điện thoại': '0912345678',
       'Mã Tổ trưởng': '',
       'Mã Trưởng BP': 'LK-010',
+      'Mã NV kinh tế': '2415',
       'Email Trưởng BP': 'cuong.le@longkhai.vn',
       'Mật khẩu': 'LK@123456',
       'Phân quyền': 'dashboard,leave,attendance,gate_pass,announcements,reports',
@@ -216,6 +292,7 @@ export function generateEmployeeTemplateExcel() {
       'Số điện thoại': '0934567890',
       'Mã Tổ trưởng': '',
       'Mã Trưởng BP': 'LK-002',
+      'Mã NV kinh tế': '1139',
       'Email Trưởng BP': 'hr.manager@longkhai.vn',
       'Mật khẩu': 'LK@123456',
       'Phân quyền': 'dashboard,leave,attendance,users,departments,reports',
@@ -265,6 +342,7 @@ export function generateEmployeeTemplateExcel() {
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '1. Cột "Mã nhân viên" là DUY NHẤT trong toàn công ty và dùng làm Tên đăng nhập.' },
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '2. Cột "Vai trò": employee (Nhân viên), team_leader (Tổ trưởng), manager (Trưởng BP), hr (Nhân sự), security (Bảo vệ), accountant (Kế toán), it (CNTT), admin (Quản trị).' },
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '3. Cột "Mã Trưởng BP" & "Email Trưởng BP": Điền thông tin Trưởng BP để hệ thống tự động đẩy email phê duyệt khi nhân viên tạo đơn nghỉ phép/ra vào cổng.' },
+    { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '3.1. Cột "Mã NV kinh tế" (hoặc "Mã nhân viên kinh tế"): Điền mã số nhân viên kinh tế phụ trách cắt cơm của bộ phận đó để tự động chuyển đơn duyệt cắt cơm sau khi Trưởng BP duyệt.' },
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '4. Cột "Phân quyền": Điền "all" để cấp toàn quyền, hoặc liệt kê các mã cách nhau bằng dấu phẩy:' },
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '   - dashboard: Tổng quan điều hành' },
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '   - departments: Quản lý phòng ban (Thêm, sửa, xóa phòng ban)' },
