@@ -17,12 +17,10 @@
       "forms",
       "reports"
     ],
-    "allowedWebIntegrations": [],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1867",
@@ -30,7 +28,9 @@
     "department": "Ban Giám Đốc",
     "position": "Phó giám đốc HCNS",
     "role": "manager",
+    "email": "Quynh.truong@longkhai.com.vn",
     "phone": "0919188051",
+    "departmentHeadEmail": "buithuanh@vitex.com.vn",
     "permissions": [
       "dashboard",
       "departments",
@@ -43,26 +43,20 @@
       "users",
       "web_integrations"
     ],
-    "allowedWebIntegrations": [
-      "WEB-001",
-      "WEB-002"
-    ],
     "isActive": true,
-    "password": "Quynh1",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T05:37:20.617Z",
-    "email": "Quynh.truong@longkhai.com.vn",
-    "departmentHeadEmail": "buithuanh@vitex.com.vn",
-    "economicStaffId": "1139"
+    "password": "LK@123456",
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2265",
     "name": "Trần Lê Hữu Lực",
-    "email": "it@longkhai.com.vn",
-    "phone": "0935198776",
     "department": "Bộ Phận Công Nghệ Thông Tin (IT)",
     "position": "Quản trị viên CNTT (Admin)",
     "role": "admin",
+    "email": "it@longkhai.com.vn",
+    "phone": "0935198776",
+    "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
       "departments",
@@ -77,17 +71,10 @@
       "plugins",
       "settings"
     ],
-    "allowedWebIntegrations": [
-      "WEB-001",
-      "WEB-002",
-      "WEB-003"
-    ],
     "isActive": true,
-    "password": "admin@123",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T05:37:12.129Z",
-    "departmentHeadId": "1867",
-    "economicStaffId": "1139"
+    "password": "LK@123456",
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "101",
@@ -103,9 +90,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "102",
@@ -121,9 +107,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "103",
@@ -139,9 +124,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "104",
@@ -157,9 +141,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "105",
@@ -175,9 +158,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1002",
@@ -185,6 +167,7 @@
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Nhân viên dọn dẹp",
     "role": "employee",
+    "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
       "leave",
@@ -194,10 +177,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1867",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1005",
@@ -205,6 +186,7 @@
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Nhân viên dọn dẹp",
     "role": "employee",
+    "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
       "leave",
@@ -214,10 +196,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1867",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1008",
@@ -225,6 +205,8 @@
     "department": "Phòng Kế Toán Tài Chính",
     "position": "Nhân viên kế toán",
     "role": "accountant",
+    "email": "xuan.doan@longkhai.com.vn",
+    "departmentHeadEmail": "trang.vuong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "leave",
@@ -234,11 +216,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "email": "xuan.doan@longkhai.com.vn",
-    "departmentHeadEmail": "trang.vuong@longkhai.com.vn",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1010",
@@ -246,6 +225,8 @@
     "department": "Phân xưởng dệt",
     "position": "Chuyên viên kế hoạch dệt",
     "role": "employee",
+    "email": "hien.nguyen@longkhai.com.vn",
+    "departmentHeadId": "2864",
     "permissions": [
       "dashboard",
       "leave",
@@ -255,11 +236,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "email": "hien.nguyen@longkhai.com.vn",
-    "departmentHeadId": "2864",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1012",
@@ -267,6 +245,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1554",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -276,11 +256,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1554",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1014",
@@ -288,6 +265,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1554",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -297,11 +276,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1554",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1015",
@@ -309,6 +285,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -318,10 +296,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1020",
@@ -329,6 +305,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -338,11 +316,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1403",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1022",
@@ -350,6 +325,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "2645",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -359,11 +336,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2645",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1025",
@@ -371,6 +345,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1554",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -380,11 +356,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1554",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1026",
@@ -392,6 +365,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS Hoàn Thành",
     "role": "employee",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -401,10 +375,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "2831",
-    "economicStaffId": "2421"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1030",
@@ -412,6 +384,8 @@
     "department": "Phân xưởng dệt",
     "position": "Phụ trách kỹ thuật - PX Dệt",
     "role": "manager",
+    "email": "kythuatmau.01@longkhai.com.vn",
+    "departmentHeadEmail": "tu.pham@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "leave",
@@ -421,11 +395,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "email": "kythuatmau.01@longkhai.com.vn",
-    "departmentHeadEmail": "tu.pham@longkhai.com.vn",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1035",
@@ -433,6 +404,7 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -KTD",
     "role": "employee",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -442,10 +414,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1049",
@@ -453,6 +423,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS Hoàn Thành",
     "role": "employee",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -462,10 +433,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "2831",
-    "economicStaffId": "2421"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1051",
@@ -473,6 +442,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Phụ trách PX Hoàn thành",
     "role": "manager",
+    "email": "cuong.ngo@longkhai.com.vn",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
       "leave",
@@ -484,11 +455,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "email": "cuong.ngo@longkhai.com.vn",
-    "departmentHeadEmail": "tu.pham@vitex.com.vn",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1056",
@@ -496,6 +464,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -505,10 +475,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1061",
@@ -516,6 +484,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -525,10 +495,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1070",
@@ -536,6 +504,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -545,10 +515,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1079",
@@ -556,6 +524,7 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Tổ trưởng",
     "role": "team_leader",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -565,10 +534,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1051",
-    "economicStaffId": "2415"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1085",
@@ -576,6 +543,7 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -KTD",
     "role": "employee",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -585,10 +553,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1094",
@@ -596,6 +562,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -605,11 +573,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1403",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1096",
@@ -617,6 +582,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - CĐS",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -626,10 +593,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1097",
@@ -637,6 +602,7 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 5 - ĐK",
     "role": "employee",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -646,9 +612,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1101",
@@ -656,6 +621,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -665,10 +632,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1104",
@@ -676,6 +641,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -685,10 +652,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1114",
@@ -696,6 +661,7 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Tổ trưởng",
     "role": "team_leader",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -705,9 +671,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1116",
@@ -715,6 +680,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - TN-GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -724,10 +691,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1118",
@@ -735,6 +700,7 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Nhân viên phục vụ HT",
     "role": "employee",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -744,9 +710,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1119",
@@ -754,6 +719,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - TN-GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -763,10 +730,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1121",
@@ -774,6 +739,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - TN-GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -783,10 +750,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1131",
@@ -794,6 +759,7 @@
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Nhân viên dọn dẹp",
     "role": "employee",
+    "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
       "leave",
@@ -803,10 +769,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1867",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1139",
@@ -814,24 +778,19 @@
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Chuyên viên hành chính nhân sự",
     "role": "hr",
+    "email": "tuyet.vo@longkhai.com.vn",
+    "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
       "leave",
       "attendance",
       "gate_pass",
-      "announcements",
-      "reports"
+      "announcements"
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T05:52:39.506Z",
-    "email": "tuyet.vo@longkhai.com.vn",
-    "departmentHeadId": "1867",
-    "economicStaffId": "1139",
-    "allowedWebIntegrations": [
-      "WEB-001"
-    ]
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1147",
@@ -839,6 +798,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -848,10 +809,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1158",
@@ -859,6 +818,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -868,10 +829,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1204",
@@ -879,6 +838,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -888,11 +849,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1403",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1205",
@@ -900,6 +858,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -909,11 +869,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1403",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1240",
@@ -921,6 +878,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -930,11 +889,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051",
-    "economicStaffId": "2415"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1241",
@@ -942,6 +898,8 @@
     "department": "Phòng công nghệ mẫu",
     "position": "Nhân viên công nghệ mẫu",
     "role": "team_leader",
+    "email": "dung.vo@longkhai.com.vn",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
       "leave",
@@ -951,11 +909,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "email": "dung.vo@longkhai.com.vn",
-    "departmentHeadEmail": "tu.pham@vitex.com.vn",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1243",
@@ -963,6 +918,7 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Nhân viên phục vụ HT",
     "role": "employee",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -972,9 +928,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1246",
@@ -982,6 +937,7 @@
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Nhân viên phục vụ - kho PL",
     "role": "employee",
+    "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
       "leave",
@@ -991,10 +947,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1867",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1253",
@@ -1002,6 +956,7 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -KTD",
     "role": "employee",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -1011,10 +966,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1255",
@@ -1022,6 +975,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1031,10 +986,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1258",
@@ -1042,6 +995,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1051,10 +1006,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1264",
@@ -1062,6 +1015,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - CĐS",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1071,10 +1026,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1271",
@@ -1082,6 +1035,7 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -KTD",
     "role": "employee",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -1091,10 +1045,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1282",
@@ -1102,6 +1054,8 @@
     "department": "Phòng Kế Toán Tài Chính",
     "position": "Kế toán tổng hợp",
     "role": "accountant",
+    "email": "accounting.01@longkhai.com.vn",
+    "departmentHeadEmail": "trang.vuong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "leave",
@@ -1111,11 +1065,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "email": "accounting.01@longkhai.com.vn",
-    "departmentHeadEmail": "trang.vuong@longkhai.com.vn",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1305",
@@ -1123,6 +1074,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - TN-GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1132,10 +1085,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1307",
@@ -1143,6 +1094,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1152,10 +1105,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1308",
@@ -1163,6 +1114,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1172,10 +1125,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1348",
@@ -1183,6 +1134,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1192,11 +1145,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051",
-    "economicStaffId": "2415"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1368",
@@ -1204,6 +1154,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1213,10 +1165,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1400",
@@ -1224,6 +1174,8 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Phụ trách PX Dệt + PXHT",
     "role": "manager",
+    "email": "duyen.nguyen@longkhai.com.vn",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
       "leave",
@@ -1233,11 +1185,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "email": "duyen.nguyen@longkhai.com.vn",
-    "departmentHeadEmail": "tu.pham@vitex.com.vn",
-    "economicStaffId": "2421"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1403",
@@ -1245,6 +1194,7 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -KTD",
     "role": "team_leader",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -1254,10 +1204,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1413",
@@ -1265,6 +1213,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1274,11 +1224,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051",
-    "economicStaffId": "2415"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1418",
@@ -1286,6 +1233,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -1295,11 +1244,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1403",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1419",
@@ -1307,6 +1253,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -1316,11 +1264,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1403",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1443",
@@ -1328,6 +1273,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - TN-GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1337,10 +1284,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1444",
@@ -1348,6 +1293,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1357,10 +1304,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1466",
@@ -1368,6 +1313,7 @@
     "department": "Phòng công nghệ mẫu",
     "position": "Nhân viên công nghệ mẫu",
     "role": "employee",
+    "departmentHeadId": "1241",
     "permissions": [
       "dashboard",
       "leave",
@@ -1377,10 +1323,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1241",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1491",
@@ -1388,6 +1332,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1397,10 +1343,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1503",
@@ -1408,6 +1352,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1417,10 +1363,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1527",
@@ -1428,6 +1372,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "2645",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -1437,11 +1383,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2645",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1532",
@@ -1449,6 +1392,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1458,10 +1403,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1554",
@@ -1469,6 +1412,7 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -KTD",
     "role": "team_leader",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -1478,10 +1422,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1559",
@@ -1489,6 +1431,7 @@
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Bếp chính",
     "role": "employee",
+    "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
       "leave",
@@ -1498,10 +1441,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1867",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1598",
@@ -1509,6 +1450,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1518,10 +1461,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1635",
@@ -1529,6 +1470,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1538,10 +1481,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1637",
@@ -1549,6 +1490,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1558,10 +1501,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1640",
@@ -1569,6 +1510,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - TN-GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1578,10 +1521,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1643",
@@ -1589,6 +1530,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1598,10 +1541,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1649",
@@ -1609,6 +1550,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1618,10 +1561,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1672",
@@ -1629,6 +1570,7 @@
     "department": "Phòng Cơ Điện & Bảo Trì",
     "position": "Nhân viên vận hành lò hơi",
     "role": "employee",
+    "departmentHeadId": "2409",
     "permissions": [
       "dashboard",
       "leave",
@@ -1638,10 +1580,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "2409",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1679",
@@ -1649,6 +1589,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1658,10 +1600,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1706",
@@ -1669,6 +1609,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1678,10 +1620,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1770",
@@ -1689,6 +1629,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
+    "teamLeaderId": "2308",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1698,10 +1640,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2308",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1778",
@@ -1709,6 +1649,7 @@
     "department": "Phòng Cơ Điện & Bảo Trì",
     "position": "Nhân viên Kỹ thuật",
     "role": "employee",
+    "departmentHeadId": "2409",
     "permissions": [
       "dashboard",
       "leave",
@@ -1718,10 +1659,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "2409",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1785",
@@ -1729,6 +1668,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - TN-GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1738,10 +1679,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1802",
@@ -1749,6 +1688,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1758,10 +1699,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1804",
@@ -1769,6 +1708,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - CĐS",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1778,10 +1719,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1809",
@@ -1789,6 +1728,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1798,10 +1739,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1849",
@@ -1809,6 +1748,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1818,10 +1759,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1894",
@@ -1829,6 +1768,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Chuyên viên kế hoạch HT",
     "role": "employee",
+    "email": "nhu-y.tran@longkhai.com.vn",
+    "departmentHeadEmail": "tu.pham@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "leave",
@@ -1838,10 +1779,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "email": "nhu-y.tran@longkhai.com.vn",
-    "departmentHeadEmail": "tu.pham@longkhai.com.vn"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1912",
@@ -1849,6 +1788,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Nhân viên kinh tế - kế hoạch HT",
     "role": "employee",
+    "email": "finishing04@longkhai.com.vn",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1858,10 +1799,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "email": "finishing04@longkhai.com.vn",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1924",
@@ -1869,6 +1808,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1878,10 +1819,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1926",
@@ -1889,6 +1828,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1898,10 +1839,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1927",
@@ -1909,6 +1848,7 @@
     "department": "Phòng Cơ Điện & Bảo Trì",
     "position": "Nhân viên cơ điện",
     "role": "employee",
+    "departmentHeadId": "2409",
     "permissions": [
       "dashboard",
       "leave",
@@ -1918,10 +1858,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "2409",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1975",
@@ -1929,6 +1867,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1938,10 +1878,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1983",
@@ -1949,6 +1887,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -1958,10 +1898,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2033",
@@ -1969,6 +1907,7 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD+BTD",
     "role": "employee",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -1978,10 +1917,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2039",
@@ -1989,6 +1926,7 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -KTD",
     "role": "employee",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -1998,10 +1936,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2040",
@@ -2009,6 +1945,7 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -KTD",
     "role": "employee",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2018,10 +1955,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2043",
@@ -2029,6 +1964,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2038,11 +1975,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1403",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2102",
@@ -2050,6 +1984,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2059,10 +1995,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2105",
@@ -2070,6 +2004,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2079,10 +2015,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2107",
@@ -2090,6 +2024,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "2645",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2099,11 +2035,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2645",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2118",
@@ -2111,6 +2044,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2120,10 +2055,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2120",
@@ -2131,6 +2064,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2140,10 +2075,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2121",
@@ -2151,6 +2084,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2160,10 +2095,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2123",
@@ -2171,6 +2104,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - CĐS",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2180,10 +2115,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2124",
@@ -2191,6 +2124,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2200,10 +2135,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2131",
@@ -2211,6 +2144,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1554",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2220,11 +2155,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1554",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2139",
@@ -2232,6 +2164,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2241,10 +2175,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2140",
@@ -2252,6 +2184,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2261,10 +2195,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2146",
@@ -2272,6 +2204,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2281,10 +2215,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2154",
@@ -2292,6 +2224,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "2645",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2301,11 +2235,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2645",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2164",
@@ -2313,6 +2244,7 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -KTD",
     "role": "employee",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2322,10 +2254,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2190",
@@ -2333,6 +2263,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2342,10 +2274,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2196",
@@ -2353,6 +2283,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - GS",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2362,10 +2294,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2227",
@@ -2373,6 +2303,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2382,10 +2314,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2243",
@@ -2393,6 +2323,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - TN-GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2402,10 +2334,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2247",
@@ -2413,6 +2343,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1554",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2422,11 +2354,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1554",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2250",
@@ -2434,6 +2363,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "2645",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2443,11 +2374,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2645",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2254",
@@ -2455,6 +2383,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2464,10 +2394,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2267",
@@ -2475,6 +2403,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2484,10 +2414,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2268",
@@ -2495,6 +2423,7 @@
     "department": "Phân xưởng dệt",
     "position": "Nhân viên công nghệ dệt",
     "role": "employee",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2504,10 +2433,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2277",
@@ -2515,6 +2442,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2524,10 +2453,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2284",
@@ -2535,6 +2462,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "2645",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2544,11 +2473,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2645",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2287",
@@ -2556,6 +2482,7 @@
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Phụ bếp",
     "role": "employee",
+    "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
       "leave",
@@ -2565,10 +2492,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1867",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2293",
@@ -2576,6 +2501,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS dệt",
     "role": "employee",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -2585,10 +2511,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "2831",
-    "economicStaffId": "2421"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2297",
@@ -2596,6 +2520,7 @@
     "department": "Phòng Cơ Điện & Bảo Trì",
     "position": "Chuyên viên kỹ thuật cơ điện",
     "role": "employee",
+    "departmentHeadId": "2409",
     "permissions": [
       "dashboard",
       "leave",
@@ -2605,10 +2530,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "2409",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2320",
@@ -2616,6 +2539,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "2645",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2625,11 +2550,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2645",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2332",
@@ -2637,6 +2559,7 @@
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Phụ bếp",
     "role": "employee",
+    "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
       "leave",
@@ -2646,10 +2569,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1867",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2336",
@@ -2657,6 +2578,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1554",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2666,11 +2589,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1554",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2341",
@@ -2678,6 +2598,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2687,10 +2609,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2342",
@@ -2698,6 +2618,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - TN-GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2707,10 +2629,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2344",
@@ -2718,6 +2638,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2727,10 +2649,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2351",
@@ -2738,6 +2658,7 @@
     "department": "Phân xưởng dệt",
     "position": "Nhân viên phục vụ dệt",
     "role": "employee",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2747,10 +2668,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2359",
@@ -2758,6 +2677,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1554",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2767,11 +2688,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1554",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2365",
@@ -2779,6 +2697,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2788,11 +2708,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1403",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2366",
@@ -2800,6 +2717,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2809,11 +2728,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1403",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2373",
@@ -2821,6 +2737,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - CĐS",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2830,10 +2748,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2374",
@@ -2841,6 +2757,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2850,10 +2768,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2380",
@@ -2861,6 +2777,7 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Tổ trưởng kiêm kỹ thuật in",
     "role": "team_leader",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2872,10 +2789,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "departmentHeadId": "1051",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2388",
@@ -2883,6 +2798,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2892,10 +2809,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2391",
@@ -2903,6 +2818,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2912,10 +2829,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2399",
@@ -2923,6 +2838,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy in trên trục - Máy trưởng",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2932,10 +2849,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2409",
@@ -2943,6 +2858,8 @@
     "department": "Phòng Cơ Điện & Bảo Trì",
     "position": "Trưởng phòng Cơ điện",
     "role": "manager",
+    "email": "tai.trinh@longkhai.com.vn",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
       "leave",
@@ -2952,11 +2869,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "email": "tai.trinh@longkhai.com.vn",
-    "departmentHeadEmail": "tu.pham@vitex.com.vn",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2410",
@@ -2964,6 +2878,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1554",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -2973,11 +2889,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1554",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2415",
@@ -2985,6 +2898,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Nhân viên kinh tế - kế hoạch HT",
     "role": "employee",
+    "email": "finishing05@longkhai.com.vn",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -2994,10 +2909,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "email": "finishing05@longkhai.com.vn",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2421",
@@ -3005,6 +2918,8 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS Hoàn Thành",
     "role": "employee",
+    "email": "kcs01@longkhai.com.vn",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -3014,11 +2929,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "email": "kcs01@longkhai.com.vn",
-    "departmentHeadId": "2831",
-    "economicStaffId": "2421"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2431",
@@ -3026,6 +2938,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3035,10 +2949,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2435",
@@ -3046,6 +2958,8 @@
     "department": "Phòng Kho Vận & Vật Tư",
     "position": "Thủ kho phụ liệu",
     "role": "employee",
+    "email": "warehouse01@longkhai.com.vn",
+    "departmentHeadId": "2745",
     "permissions": [
       "dashboard",
       "leave",
@@ -3055,11 +2969,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "email": "warehouse01@longkhai.com.vn",
-    "departmentHeadId": "2745",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2436",
@@ -3067,6 +2978,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3076,10 +2989,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2446",
@@ -3087,6 +2998,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3096,10 +3009,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2448",
@@ -3107,6 +3018,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - CĐS",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3116,10 +3029,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2471",
@@ -3127,6 +3038,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3136,10 +3049,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2472",
@@ -3147,6 +3058,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3156,10 +3069,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2473",
@@ -3167,6 +3078,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1554",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -3176,11 +3089,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "1554",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2474",
@@ -3188,6 +3098,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3197,10 +3109,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2476",
@@ -3208,6 +3118,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3217,10 +3129,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2486",
@@ -3228,6 +3138,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy in trên trục - Máy trưởng",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3237,10 +3149,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2489",
@@ -3248,6 +3158,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3257,10 +3169,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2500",
@@ -3268,6 +3178,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - CĐS",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3277,10 +3189,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2502",
@@ -3288,6 +3198,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3297,10 +3209,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2506",
@@ -3308,6 +3218,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3317,10 +3229,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2507",
@@ -3328,6 +3238,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS Hoàn Thành",
     "role": "employee",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -3337,10 +3248,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "2831",
-    "economicStaffId": "2421"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2509",
@@ -3348,6 +3257,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "2645",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -3357,11 +3268,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2645",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2510",
@@ -3369,6 +3277,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "2645",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -3378,11 +3288,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2645",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2515",
@@ -3390,6 +3297,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy in trên trục - Máy trưởng",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3399,10 +3308,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2522",
@@ -3410,6 +3317,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3419,10 +3328,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2525",
@@ -3430,6 +3337,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3439,10 +3348,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2528",
@@ -3450,6 +3357,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - TN-GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3459,10 +3368,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2529",
@@ -3470,6 +3377,7 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Nhân viên phục vụ HT",
     "role": "employee",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3479,9 +3387,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2535",
@@ -3489,6 +3396,7 @@
     "department": "Phòng Kho Vận & Vật Tư",
     "position": "Phụ kho",
     "role": "employee",
+    "departmentHeadId": "2745",
     "permissions": [
       "dashboard",
       "leave",
@@ -3498,10 +3406,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "2745",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2539",
@@ -3509,6 +3415,7 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Nhân viên phục vụ HT",
     "role": "employee",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3518,9 +3425,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2560",
@@ -3528,6 +3434,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3537,10 +3445,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2576",
@@ -3548,6 +3454,7 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Nhân viên kinh tế - kế hoạch HT",
     "role": "employee",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3557,9 +3464,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2598",
@@ -3567,6 +3473,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS dệt",
     "role": "employee",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -3576,10 +3483,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "2831",
-    "economicStaffId": "2421"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2602",
@@ -3587,6 +3492,7 @@
     "department": "Phân xưởng dệt",
     "position": "Nhân viên phục vụ dệt",
     "role": "employee",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -3596,10 +3502,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2611",
@@ -3607,6 +3511,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1554",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -3616,11 +3522,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1554",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2613",
@@ -3628,6 +3531,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS Hoàn Thành",
     "role": "employee",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -3637,10 +3541,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "2831",
-    "economicStaffId": "2421"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2615",
@@ -3648,6 +3550,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3657,10 +3561,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2620",
@@ -3668,6 +3570,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3677,11 +3581,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1403",
-    "departmentHeadId": "1051",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2625",
@@ -3689,6 +3590,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3698,10 +3601,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2626",
@@ -3709,6 +3610,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "2645",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -3718,11 +3621,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2645",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2627",
@@ -3730,6 +3630,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3739,10 +3641,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2629",
@@ -3750,6 +3650,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3759,10 +3661,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2632",
@@ -3770,6 +3670,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3779,10 +3681,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2645",
@@ -3790,6 +3690,7 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -KTD",
     "role": "team_leader",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -3799,10 +3700,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2646",
@@ -3810,6 +3709,7 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Nhân viên phục vụ HT",
     "role": "employee",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3819,9 +3719,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2656",
@@ -3829,6 +3728,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "2645",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -3838,11 +3739,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2645",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2663",
@@ -3850,6 +3748,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3859,10 +3759,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2667",
@@ -3870,6 +3768,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - CĐS",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3879,10 +3779,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2669",
@@ -3890,6 +3788,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3899,10 +3799,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2671",
@@ -3910,6 +3808,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3919,10 +3819,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2685",
@@ -3930,6 +3828,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3939,10 +3839,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2692",
@@ -3950,6 +3848,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "2645",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -3959,11 +3859,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2645",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2710",
@@ -3971,6 +3868,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -3980,10 +3879,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2713",
@@ -3991,6 +3888,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4000,10 +3899,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2717",
@@ -4011,6 +3908,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4020,10 +3919,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2725",
@@ -4031,6 +3928,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4040,10 +3939,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2727",
@@ -4051,6 +3948,7 @@
     "department": "Phòng Kế Toán Tài Chính",
     "position": "Nhân viên kế toán",
     "role": "accountant",
+    "departmentHeadEmail": "trang.vuong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "leave",
@@ -4060,10 +3958,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadEmail": "trang.vuong@longkhai.com.vn",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2732",
@@ -4071,6 +3967,7 @@
     "department": "Phân xưởng dệt",
     "position": "Nhân viên phục vụ dệt",
     "role": "employee",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -4080,10 +3977,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2736",
@@ -4091,6 +3986,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4100,10 +3997,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2737",
@@ -4111,6 +4006,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4120,10 +4017,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2739",
@@ -4131,6 +4026,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4140,10 +4037,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2740",
@@ -4151,6 +4046,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4160,10 +4057,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2741",
@@ -4171,6 +4066,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4180,10 +4077,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2742",
@@ -4191,6 +4086,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 4 - TN-GBG",
     "role": "employee",
+    "teamLeaderId": "1114",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4200,10 +4097,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1114",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2745",
@@ -4211,6 +4106,7 @@
     "department": "Phòng Kho Vận & Vật Tư",
     "position": "Phụ trách kho",
     "role": "manager",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
       "leave",
@@ -4220,10 +4116,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadEmail": "tu.pham@vitex.com.vn",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2747",
@@ -4231,6 +4125,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1554",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -4240,11 +4136,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1554",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2752",
@@ -4252,6 +4145,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -4261,11 +4156,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1403",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2754",
@@ -4273,6 +4165,8 @@
     "department": "Phân xưởng dệt",
     "position": "Nhân viên kinh tế - kế hoạch Dệt",
     "role": "employee",
+    "email": "finishing03@longkhai.com.vn",
+    "departmentHeadId": "2864",
     "permissions": [
       "dashboard",
       "leave",
@@ -4282,11 +4176,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "email": "finishing03@longkhai.com.vn",
-    "departmentHeadId": "2864",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2755",
@@ -4294,6 +4185,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4303,10 +4196,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2760",
@@ -4314,6 +4205,7 @@
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Phụ bếp",
     "role": "employee",
+    "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
       "leave",
@@ -4323,10 +4215,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "1867",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2765",
@@ -4334,6 +4224,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4343,10 +4235,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2772",
@@ -4354,6 +4244,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -4363,11 +4255,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1403",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2777",
@@ -4375,6 +4264,7 @@
     "department": "Phân xưởng dệt",
     "position": "Nhân viên kinh tế",
     "role": "employee",
+    "departmentHeadId": "2864",
     "permissions": [
       "dashboard",
       "leave",
@@ -4384,10 +4274,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "2864",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2778",
@@ -4395,6 +4283,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS Hoàn Thành",
     "role": "employee",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -4404,10 +4293,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "2831",
-    "economicStaffId": "2421"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2781",
@@ -4415,6 +4302,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4424,10 +4313,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2791",
@@ -4435,6 +4322,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4444,10 +4333,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2793",
@@ -4455,6 +4342,7 @@
     "department": "Phòng Kho Vận & Vật Tư",
     "position": "Thủ kho thành phẩm",
     "role": "employee",
+    "departmentHeadId": "2745",
     "permissions": [
       "dashboard",
       "leave",
@@ -4464,10 +4352,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "2745",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2795",
@@ -4475,6 +4361,7 @@
     "department": "Phân xưởng dệt",
     "position": "Nhân viên kế hoạch dệt",
     "role": "employee",
+    "departmentHeadId": "2864",
     "permissions": [
       "dashboard",
       "leave",
@@ -4484,10 +4371,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "2864",
-    "economicStaffId": "2795"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2800",
@@ -4495,6 +4380,7 @@
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Phụ bếp",
     "role": "employee",
+    "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
       "leave",
@@ -4504,10 +4390,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "1867",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2802",
@@ -4515,6 +4399,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1554",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -4524,11 +4410,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1554",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2810",
@@ -4536,6 +4419,7 @@
     "department": "Phân xưởng dệt",
     "position": "Nhân viên phục vụ dệt",
     "role": "employee",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -4545,10 +4429,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2809",
@@ -4556,6 +4438,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4565,10 +4449,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2811",
@@ -4576,6 +4458,7 @@
     "department": "Phòng Cơ Điện & Bảo Trì",
     "position": "Nhân viên vận hành lò hơi",
     "role": "employee",
+    "departmentHeadId": "2409",
     "permissions": [
       "dashboard",
       "leave",
@@ -4585,10 +4468,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "2409",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2816",
@@ -4596,6 +4477,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4605,10 +4488,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2817",
@@ -4616,6 +4497,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4625,17 +4508,16 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2818",
     "name": "Nguyễn Thị Kim Yến",
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Chuyên viên hành chính nhân sự",
-    "role": "cb",
+    "role": "hr",
+    "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
       "leave",
@@ -4645,12 +4527,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T06:04:53.802Z",
-    "departmentHeadId": "1867",
-    "economicStaffId": "1139",
-    "allowedWebIntegrations": [],
-    "email": "hr.01@longkhai.com.vn"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2819",
@@ -4658,6 +4536,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4667,10 +4547,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2820",
@@ -4678,6 +4556,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS Hoàn Thành",
     "role": "employee",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -4687,10 +4566,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "2831",
-    "economicStaffId": "2421"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2822",
@@ -4698,6 +4575,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4707,10 +4586,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2823",
@@ -4718,6 +4595,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4727,10 +4606,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2826",
@@ -4738,6 +4615,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4747,10 +4626,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2830",
@@ -4758,6 +4635,7 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 5 - ĐK",
     "role": "employee",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4767,9 +4645,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2831",
@@ -4777,6 +4654,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Phụ trách KCS",
     "role": "manager",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
       "leave",
@@ -4786,10 +4664,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadEmail": "tu.pham@vitex.com.vn",
-    "economicStaffId": "2421"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2834",
@@ -4797,6 +4673,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4806,10 +4684,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2836",
@@ -4817,6 +4693,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1554",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -4826,11 +4704,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1554",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2838",
@@ -4838,6 +4713,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
+    "teamLeaderId": "1403",
+    "departmentHeadId": "1030",
     "permissions": [
       "dashboard",
       "leave",
@@ -4847,11 +4724,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1403",
-    "departmentHeadId": "1030",
-    "economicStaffId": "2777"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2839",
@@ -4859,6 +4733,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
     "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4868,10 +4744,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "1079",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2841",
@@ -4879,6 +4753,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4888,10 +4764,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2843",
@@ -4899,6 +4773,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4908,10 +4784,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2846",
@@ -4919,6 +4793,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4928,10 +4804,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2847",
@@ -4939,6 +4813,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - K",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4948,10 +4824,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2848",
@@ -4959,6 +4833,7 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Nhân viên phục vụ kiểm hàng",
     "role": "employee",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -4968,28 +4843,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "departmentHeadId": "1051"
-  },
-  {
-    "id": "2849",
-    "name": "Trần Thế Khang",
-    "department": "Phân xưởng hoàn thành",
-    "position": "Công nhân tổ 5 - ĐK",
-    "role": "employee",
-    "permissions": [
-      "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements"
-    ],
-    "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T09:15:12.764Z",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2850",
@@ -4997,6 +4852,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -5006,10 +4863,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2851",
@@ -5017,6 +4872,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS Hoàn Thành",
     "role": "employee",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -5026,10 +4882,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.898Z",
-    "departmentHeadId": "2831",
-    "economicStaffId": "2421"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2852",
@@ -5037,6 +4891,8 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 2 - KTTH",
     "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -5046,10 +4902,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.898Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2854",
@@ -5057,27 +4911,8 @@
     "department": "Phân xưởng dệt",
     "position": "Công nhân vận hành máy dệt kim tròn -TD",
     "role": "employee",
-    "permissions": [
-      "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements"
-    ],
-    "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.898Z",
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
-    "economicStaffId": "2777"
-  },
-  {
-    "id": "2855",
-    "name": "Võ Thanh Hà",
-    "department": "Phân xưởng hoàn thành",
-    "position": "Công nhân tổ 2 - KTTH",
-    "role": "employee",
     "permissions": [
       "dashboard",
       "leave",
@@ -5087,10 +4922,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-19T09:16:20.876Z",
-    "teamLeaderId": "2380",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2856",
@@ -5098,6 +4931,7 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 5 - ĐK",
     "role": "employee",
+    "departmentHeadId": "1051",
     "permissions": [
       "dashboard",
       "leave",
@@ -5107,9 +4941,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.898Z",
-    "departmentHeadId": "1051"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1386",
@@ -5117,6 +4950,7 @@
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Giám sát nhà máy",
     "role": "hr",
+    "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
       "leave",
@@ -5126,10 +4960,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.898Z",
-    "departmentHeadId": "1867",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2424",
@@ -5137,6 +4969,7 @@
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Nhân viên tưới cây",
     "role": "employee",
+    "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
       "leave",
@@ -5146,10 +4979,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.898Z",
-    "departmentHeadId": "1867",
-    "economicStaffId": "1139"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1142",
@@ -5157,6 +4988,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS dệt",
     "role": "employee",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -5166,9 +4998,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.898Z",
-    "departmentHeadId": "2831"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1310",
@@ -5176,6 +5007,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS dệt",
     "role": "employee",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -5185,9 +5017,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.898Z",
-    "departmentHeadId": "2831"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1311",
@@ -5195,6 +5026,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS dệt",
     "role": "employee",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -5204,9 +5036,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.898Z",
-    "departmentHeadId": "2831"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1312",
@@ -5214,6 +5045,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Nhân viên KCS dệt",
     "role": "employee",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -5223,9 +5055,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.898Z",
-    "departmentHeadId": "2831"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "1141",
@@ -5233,6 +5064,7 @@
     "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
     "position": "Công nhân vận hành máy dệt kim tròn -KTD",
     "role": "employee",
+    "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
       "leave",
@@ -5242,9 +5074,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.898Z",
-    "departmentHeadId": "2831"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2866",
@@ -5263,8 +5094,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:09.704Z"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2867",
@@ -5283,8 +5114,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:09.704Z"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2868",
@@ -5303,8 +5134,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:09.704Z"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2869",
@@ -5322,8 +5153,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:09.704Z"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2857",
@@ -5342,8 +5173,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:09.704Z"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2861",
@@ -5361,8 +5192,8 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:09.704Z"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   },
   {
     "id": "2862",
@@ -5381,7 +5212,7 @@
     ],
     "isActive": true,
     "password": "LK@123456",
-    "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:09.704Z"
+    "createdAt": "2026-10-21T06:05:09.826Z",
+    "updatedAt": "2026-10-21T06:05:09.826Z"
   }
 ]
