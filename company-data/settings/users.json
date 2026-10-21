@@ -2,7 +2,7 @@
   {
     "id": "2864",
     "name": "Nguyễn Đình Linh",
-    "department": "Ban Giám Đốc",
+    "department": "Phòng quản lý sản xuất",
     "position": "Phụ trách sản xuất",
     "role": "manager",
     "email": "linh.nguyen@longkhai.com.vn",
@@ -20,7 +20,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:19:22.058Z",
-    "updatedAt": "2026-10-21T06:19:22.058Z"
+    "updatedAt": "2026-10-21T06:33:18.049Z"
   },
   {
     "id": "1867",
