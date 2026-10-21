@@ -560,12 +560,14 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports"
     ],
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-21T06:51:22.868Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "1085",
