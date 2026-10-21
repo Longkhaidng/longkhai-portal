@@ -4516,7 +4516,7 @@
     "name": "Nguyễn Thị Kim Yến",
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Chuyên viên hành chính nhân sự",
-    "role": "hr",
+    "role": "cb",
     "departmentHeadId": "1867",
     "permissions": [
       "dashboard",
@@ -4528,7 +4528,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:19:22.058Z",
-    "updatedAt": "2026-10-21T06:19:22.058Z"
+    "updatedAt": "2026-10-21T06:24:23.921Z"
   },
   {
     "id": "2819",
