@@ -5212,7 +5212,7 @@
   {
     "id": "2424",
     "name": "Lê Đình Thành",
-    "department": "Phòng Hành Chính Nhân Sự",
+    "department": "Phòng HCNS",
     "position": "Nhân viên tưới cây",
     "role": "employee",
     "departmentHeadId": "1867",
@@ -5227,7 +5227,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-21T06:42:40.673Z"
   },
   {
     "id": "1142",
