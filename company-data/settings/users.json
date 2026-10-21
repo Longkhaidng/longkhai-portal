@@ -4642,14 +4642,17 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-20T06:18:02.211Z",
+    "updatedAt": "2026-10-21T03:40:04.327Z",
     "departmentHeadId": "1867",
-    "economicStaffId": "1139"
+    "economicStaffId": "1139",
+    "allowedWebIntegrations": []
   },
   {
     "id": "2819",
