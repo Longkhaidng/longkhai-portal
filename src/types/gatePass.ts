@@ -21,6 +21,14 @@ export const PERSONAL_REASONS = [
   'CN - Trễ/sớm & ra vào tăng ca (CN)',
 ] as const;
 
+export const GATE_PASS_SHIFTS = [
+  'Ca Hành chính (08:00 - 16:30)',
+  'Ca 1 (06:00 - 14:00)',
+  'Ca 2 (14:00 - 22:00)',
+  'Ca 3 (22:00 - 06:00)',
+  'Ca khác',
+] as const;
+
 export interface GatePassAsset {
   id: string;
   name: string; // Tên thiết bị, mẫu hàng mang ra
@@ -41,6 +49,7 @@ export interface GatePass {
   reasonCategory?: GatePassReasonCategory; // 'ca_nhan' | 'cong_ty' | 'khac'
   specificReason?: string; // Tên lý do cụ thể khi chọn Cá nhân
   customReason?: string; // Nội dung nhập khi chọn Lý do khác hoặc Công ty
+  shift?: string; // Ca làm việc: Ca Hành chính (08:00 - 16:30), Ca 1, Ca 2...
   hasAssets: boolean;
   assets: GatePassAsset[];
   estimatedDepartureTime?: string; // ISO datetime (có khi nghỉ giữa giờ, nghỉ cuối giờ)

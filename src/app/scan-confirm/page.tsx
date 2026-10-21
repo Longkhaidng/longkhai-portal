@@ -340,6 +340,15 @@ function ScanConfirmContent() {
                         </span>
                       </div>
 
+                      {docData.shift && (
+                        <div className="pt-1 border-t border-slate-800/60">
+                          <span className="text-slate-400 text-[11px] block">Ca làm việc:</span>
+                          <span className="font-semibold text-amber-300">
+                            {docData.shift}
+                          </span>
+                        </div>
+                      )}
+
                       <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800/60">
                         <div>
                           <span className="text-slate-400 text-[11px] block">Loại thời gian:</span>

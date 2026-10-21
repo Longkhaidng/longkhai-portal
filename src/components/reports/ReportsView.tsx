@@ -91,10 +91,9 @@ export function ReportsView() {
         'Tài sản mang theo': gp.hasAssets && gp.assets && gp.assets.length > 0
           ? gp.assets.map((a) => `${a.name} (SL: ${a.quantity})`).join('; ')
           : 'Không mang theo',
-        'Giờ ra dự kiến': gp.estimatedDepartureTime || '',
-        'Giờ vào dự kiến': gp.estimatedReturnTime || '',
-        'Giờ ra thực tế': gp.actualDepartureTime || '',
-        'Giờ vào thực tế': gp.actualReturnTime || '',
+        'Ca làm việc': gp.shift || '',
+        'Giờ ra thực tế': gp.actualDepartureTime ? formatDateTime(gp.actualDepartureTime) : '',
+        'Giờ vào thực tế': gp.actualReturnTime ? formatDateTime(gp.actualReturnTime) : '',
         'Trạng thái': gp.status,
       }));
     } else if (reportType === 'meal_cut') {
@@ -379,6 +378,7 @@ export function ReportsView() {
                   <th className="p-2 border">Nhân viên</th>
                   <th className="p-2 border">Mục đích</th>
                   <th className="p-2 border">Tài sản mang theo</th>
+                  <th className="p-2 border">Ca làm việc</th>
                   <th className="p-2 border">Giờ ra thực tế</th>
                   <th className="p-2 border">Giờ vào thực tế</th>
                   <th className="p-2 border">Trạng thái</th>
@@ -399,6 +399,7 @@ export function ReportsView() {
                         <span className="text-slate-400">Không mang</span>
                       )}
                     </td>
+                    <td className="p-2 border font-medium text-slate-700 dark:text-slate-300">{gp.shift || '-'}</td>
                     <td className="p-2 border">{gp.actualDepartureTime ? formatDateTime(gp.actualDepartureTime) : (gp.estimatedDepartureTime ? `Dự kiến ${formatDateTime(gp.estimatedDepartureTime)}` : '-')}</td>
                     <td className="p-2 border">{gp.timeType === 'nghi_cuoi_gio' ? 'Không về lại' : gp.actualReturnTime ? formatDateTime(gp.actualReturnTime) : (gp.estimatedReturnTime ? `Dự kiến ${formatDateTime(gp.estimatedReturnTime)}` : '-')}</td>
                     <td className="p-2 border uppercase text-[10px] font-bold">{gp.status}</td>

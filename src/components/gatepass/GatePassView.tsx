@@ -10,6 +10,7 @@ import {
   GatePassTimeType,
   GatePassReasonCategory,
   PERSONAL_REASONS,
+  GATE_PASS_SHIFTS,
 } from '@/types/gatePass';
 import {
   QrCode,
@@ -83,6 +84,8 @@ export function GatePassView() {
   const [specificReason, setSpecificReason] = useState<string>('');
   const [companyReason, setCompanyReason] = useState('');
   const [otherReason, setOtherReason] = useState('');
+  const [shift, setShift] = useState<string>('Ca Hành chính (08:00 - 16:30)');
+  const [customShift, setCustomShift] = useState('');
   const [hasAssets, setHasAssets] = useState(false);
   const [assets, setAssets] = useState<GatePassAsset[]>([]);
   const [newAssetName, setNewAssetName] = useState('');
@@ -124,6 +127,16 @@ export function GatePassView() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentUser) return;
+
+    const finalShift = shift === 'Ca khác' ? customShift.trim() : shift;
+    if (!finalShift) {
+      showToast({
+        type: 'warning',
+        title: 'Chưa chọn ca làm việc',
+        message: 'Vui lòng chọn ca làm việc của bạn (mục này bắt buộc).',
+      });
+      return;
+    }
 
     if (reasonCategory === 'ca_nhan' && !specificReason) {
       showToast({
@@ -225,6 +238,7 @@ export function GatePassView() {
       reasonCategory,
       specificReason: reasonCategory === 'ca_nhan' ? specificReason : undefined,
       customReason: reasonCategory === 'cong_ty' ? companyReason.trim() : reasonCategory === 'khac' ? otherReason.trim() : undefined,
+      shift: finalShift,
       hasAssets: shouldHaveAssets,
       assets: shouldHaveAssets ? finalAssets : [],
       estimatedDepartureTime: (timeType === 'nghi_giua_gio' || timeType === 'nghi_cuoi_gio') ? departureTime : undefined,
@@ -778,6 +792,11 @@ export function GatePassView() {
                                   : 'Giữa giờ'}
                               </span>
                             )}
+                            {item.shift && (
+                              <span className="text-[10px] px-1.5 py-0.5 rounded-md font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
+                                {item.shift}
+                              </span>
+                            )}
                           </div>
                         </td>
                         <td className="py-3 px-4">
@@ -1140,6 +1159,37 @@ export function GatePassView() {
                 )}
               </div>
 
+              {/* Ca làm việc */}
+              <div>
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Ca làm việc: *
+                </label>
+                <select
+                  required
+                  value={shift}
+                  onChange={(e) => setShift(e.target.value)}
+                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium"
+                >
+                  <option value="">-- Chọn ca làm việc --</option>
+                  {GATE_PASS_SHIFTS.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+
+                {shift === 'Ca khác' && (
+                  <input
+                    type="text"
+                    required
+                    value={customShift}
+                    onChange={(e) => setCustomShift(e.target.value)}
+                    placeholder="Nhập tên ca và thời gian làm việc..."
+                    className="w-full mt-2 p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                  />
+                )}
+              </div>
+
               {/* Thời gian ra – vào dự kiến */}
               <div>
                 <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
@@ -1420,6 +1470,12 @@ export function GatePassView() {
                 <span>Nhân viên: <b className="text-slate-900 dark:text-white">{selectedPass.employeeName}</b> ({selectedPass.employeeId})</span>
                 <span>Phòng ban: <b>{selectedPass.department}</b></span>
               </div>
+              {selectedPass.shift && (
+                <div>
+                  <span className="text-slate-400">Ca làm việc:</span>{' '}
+                  <b className="text-slate-900 dark:text-white">{selectedPass.shift}</b>
+                </div>
+              )}
               <div>
                 <span className="text-slate-400">Hình thức ra - vào:</span>{' '}
                 <b className="text-blue-600 dark:text-blue-400">
