@@ -5192,7 +5192,7 @@
   {
     "id": "1386",
     "name": "Nguyễn Thanh Hải",
-    "department": "Phòng Hành Chính Nhân Sự",
+    "department": "Phòng HCNS",
     "position": "Giám sát nhà máy",
     "role": "hr",
     "departmentHeadId": "1867",
@@ -5207,7 +5207,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-21T06:38:59.074Z"
   },
   {
     "id": "2424",
