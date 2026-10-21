@@ -8,7 +8,7 @@
   "toDate": "2026-10-22",
   "totalDays": 1,
   "reason": "bận",
-  "status": "pending",
+  "status": "approved",
   "currentStepIndex": 1,
   "steps": [
     {
@@ -26,9 +26,12 @@
       "roleRequired": "economic",
       "approverId": "1139",
       "approverName": "Võ Thị Tuyết",
-      "status": "pending"
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-10-21T03:09:40.600Z",
+      "signature": "Võ Thị Tuyết (1139)"
     }
   ],
   "createdAt": "2026-10-21T03:08:49.546Z",
-  "updatedAt": "2026-10-21T03:09:10.384Z"
+  "updatedAt": "2026-10-21T03:09:40.600Z"
 }
