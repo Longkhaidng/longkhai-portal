@@ -4635,7 +4635,7 @@
     "name": "Nguyễn Thị Kim Yến",
     "department": "Phòng Hành Chính Nhân Sự",
     "position": "Chuyên viên hành chính nhân sự",
-    "role": "hr",
+    "role": "cb",
     "permissions": [
       "dashboard",
       "leave",
@@ -4646,10 +4646,11 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.897Z",
+    "updatedAt": "2026-10-21T06:04:43.280Z",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "allowedWebIntegrations": []
+    "allowedWebIntegrations": [],
+    "email": "hr.01@longkhai.com.vn"
   },
   {
     "id": "2819",
