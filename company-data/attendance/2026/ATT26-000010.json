@@ -10,20 +10,24 @@
   "shift": "Ca Hành chính (08:00 - 16:30)",
   "reason": "Thẻ hỏng",
   "status": "pending",
-  "currentStepIndex": 0,
+  "currentStepIndex": 2,
   "steps": [
     {
       "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
       "roleRequired": "security",
-      "approverName": "Tổ trưởng / Nhân viên Bảo vệ Cổng",
-      "status": "pending"
+      "approverName": "Lương Văn Vĩnh",
+      "status": "approved",
+      "actionAt": "2026-10-21T07:46:19.457Z",
+      "comment": "Đã xác nhận kiểm tra vào/ra thực tế qua quét mã QR"
     },
     {
       "stepName": "Trưởng bộ phận phê duyệt giải trình",
       "roleRequired": "manager",
       "approverId": "1867",
       "approverName": "Trương Anh Như Quỳnh",
-      "status": "pending"
+      "status": "approved",
+      "comment": "Đã xác nhận kiểm tra hợp lệ",
+      "actionAt": "2026-10-21T07:46:38.132Z"
     },
     {
       "stepName": "IT cập nhật dữ liệu máy chấm công",
@@ -34,5 +38,9 @@
   ],
   "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=attendance&id=ATT26-000010",
   "createdAt": "2026-10-21T07:18:01.814Z",
-  "updatedAt": "2026-10-21T07:18:01.814Z"
+  "updatedAt": "2026-10-21T07:46:38.132Z",
+  "actualCheckIn": "14:46",
+  "actualCheckInGuard": "Lương Văn Vĩnh",
+  "actualCheckInAt": "2026-10-21T07:46:19.457Z",
+  "managerNotified": true
 }
