@@ -73,6 +73,7 @@ export async function GET() {
   try {
     const users = readJsonFile<any[]>('settings/users.json', []);
     const departments = readJsonFile<any[]>('settings/departments.json', []);
+    const positions = readJsonFile<any[]>('settings/positions.json', []);
     const webIntegrations = readJsonFile<any[]>('settings/web_integrations.json', []);
     const emailConfig = readJsonFile<any>('settings/email-config.json', null);
     const githubConfig = resolveServerGitHubConfig();
@@ -86,6 +87,7 @@ export async function GET() {
       data: {
         users,
         departments,
+        positions,
         webIntegrations,
         leaveRequests,
         gatePasses,

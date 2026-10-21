@@ -40,7 +40,7 @@ export function parseEmployeeExcel(file: File): Promise<ParsedEmployeeResult> {
           ).trim();
 
           const position = String(
-            row['Chức vụ'] || row['Vị trí'] || row['position'] || 'Nhân viên'
+            row['Vị trí công tác'] || row['Chức danh'] || row['Chức vụ'] || row['Vị trí'] || row['position'] || 'Nhân viên'
           ).trim();
 
           const roleRaw = String(

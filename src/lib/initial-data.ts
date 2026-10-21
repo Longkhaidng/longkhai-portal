@@ -1,4 +1,4 @@
-import { User, CATEGORY_DEFINITIONS, Department, WebIntegration } from '@/types/user';
+import { User, CATEGORY_DEFINITIONS, Department, WebIntegration, Position } from '@/types/user';
 import { Announcement } from '@/types/announcement';
 import { DynamicFormSchema } from '@/types/dynamicForm';
 import { INITIAL_PLUGINS } from '@/types/plugin';
@@ -263,4 +263,450 @@ export const INITIAL_DYNAMIC_FORMS: DynamicFormSchema[] = [
       { id: 'expected_benefit', label: 'Hiệu quả ước tính (Thời gian / Chi phí / An toàn)', fieldType: 'text', required: true, placeholder: 'VD: Giảm 15 giây/sản phẩm, tiết kiệm 20 triệu/tháng' },
     ],
   },
+];
+
+/**
+ * Danh sách Chức vụ cài đặt ban đầu của nhà máy Long Khai
+ */
+export const INITIAL_POSITIONS: Position[] = [
+  {
+    "id": "POS-001",
+    "name": "Bảo vệ",
+    "code": "CV-001",
+    "description": "Chức vụ / Vị trí Bảo vệ",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-002",
+    "name": "Bếp chính",
+    "code": "CV-002",
+    "description": "Chức vụ / Vị trí Bếp chính",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-003",
+    "name": "Chuyên viên hành chính nhân sự",
+    "code": "CV-003",
+    "description": "Chức vụ / Vị trí Chuyên viên hành chính nhân sự",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-004",
+    "name": "Chuyên viên kế hoạch HT",
+    "code": "CV-004",
+    "description": "Chức vụ / Vị trí Chuyên viên kế hoạch HT",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-005",
+    "name": "Chuyên viên kế hoạch dệt",
+    "code": "CV-005",
+    "description": "Chức vụ / Vị trí Chuyên viên kế hoạch dệt",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-006",
+    "name": "Chuyên viên kỹ thuật cơ điện",
+    "code": "CV-006",
+    "description": "Chức vụ / Vị trí Chuyên viên kỹ thuật cơ điện",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-007",
+    "name": "Công nhân tổ 1 - K",
+    "code": "CV-007",
+    "description": "Chức vụ / Vị trí Công nhân tổ 1 - K",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-008",
+    "name": "Công nhân tổ 1 - L",
+    "code": "CV-008",
+    "description": "Chức vụ / Vị trí Công nhân tổ 1 - L",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-009",
+    "name": "Công nhân tổ 2 - CĐS",
+    "code": "CV-009",
+    "description": "Chức vụ / Vị trí Công nhân tổ 2 - CĐS",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-010",
+    "name": "Công nhân tổ 2 - GS",
+    "code": "CV-010",
+    "description": "Chức vụ / Vị trí Công nhân tổ 2 - GS",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-011",
+    "name": "Công nhân tổ 2 - KTTH",
+    "code": "CV-011",
+    "description": "Chức vụ / Vị trí Công nhân tổ 2 - KTTH",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-012",
+    "name": "Công nhân tổ 4 - GBG",
+    "code": "CV-012",
+    "description": "Chức vụ / Vị trí Công nhân tổ 4 - GBG",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-013",
+    "name": "Công nhân tổ 4 - TN-GBG",
+    "code": "CV-013",
+    "description": "Chức vụ / Vị trí Công nhân tổ 4 - TN-GBG",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-014",
+    "name": "Công nhân tổ 5 - ĐK",
+    "code": "CV-014",
+    "description": "Chức vụ / Vị trí Công nhân tổ 5 - ĐK",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-015",
+    "name": "Công nhân vận hành máy dệt kim tròn -KTD",
+    "code": "CV-015",
+    "description": "Chức vụ / Vị trí Công nhân vận hành máy dệt kim tròn -KTD",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-016",
+    "name": "Công nhân vận hành máy dệt kim tròn -TD",
+    "code": "CV-016",
+    "description": "Chức vụ / Vị trí Công nhân vận hành máy dệt kim tròn -TD",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-017",
+    "name": "Công nhân vận hành máy dệt kim tròn -TD+BTD",
+    "code": "CV-017",
+    "description": "Chức vụ / Vị trí Công nhân vận hành máy dệt kim tròn -TD+BTD",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-018",
+    "name": "Công nhân vận hành máy in trên trục - Máy trưởng",
+    "code": "CV-018",
+    "description": "Chức vụ / Vị trí Công nhân vận hành máy in trên trục - Máy trưởng",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-019",
+    "name": "Công nhân vận hành máy in trên trục - Tổ 6 - In",
+    "code": "CV-019",
+    "description": "Chức vụ / Vị trí Công nhân vận hành máy in trên trục - Tổ 6 - In",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-020",
+    "name": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "code": "CV-020",
+    "description": "Chức vụ / Vị trí Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-021",
+    "name": "Giám sát nhà máy",
+    "code": "CV-021",
+    "description": "Chức vụ / Vị trí Giám sát nhà máy",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-022",
+    "name": "Kế toán tổng hợp",
+    "code": "CV-022",
+    "description": "Chức vụ / Vị trí Kế toán tổng hợp",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-023",
+    "name": "Nhân viên KCS Hoàn Thành",
+    "code": "CV-023",
+    "description": "Chức vụ / Vị trí Nhân viên KCS Hoàn Thành",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-024",
+    "name": "Nhân viên KCS dệt",
+    "code": "CV-024",
+    "description": "Chức vụ / Vị trí Nhân viên KCS dệt",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-025",
+    "name": "Nhân viên Kỹ thuật",
+    "code": "CV-025",
+    "description": "Chức vụ / Vị trí Nhân viên Kỹ thuật",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-026",
+    "name": "Nhân viên công nghệ dệt",
+    "code": "CV-026",
+    "description": "Chức vụ / Vị trí Nhân viên công nghệ dệt",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-027",
+    "name": "Nhân viên công nghệ mẫu",
+    "code": "CV-027",
+    "description": "Chức vụ / Vị trí Nhân viên công nghệ mẫu",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-028",
+    "name": "Nhân viên cơ điện",
+    "code": "CV-028",
+    "description": "Chức vụ / Vị trí Nhân viên cơ điện",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-029",
+    "name": "Nhân viên dọn dẹp",
+    "code": "CV-029",
+    "description": "Chức vụ / Vị trí Nhân viên dọn dẹp",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-030",
+    "name": "Nhân viên kinh tế",
+    "code": "CV-030",
+    "description": "Chức vụ / Vị trí Nhân viên kinh tế",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-031",
+    "name": "Nhân viên kinh tế - kế hoạch Dệt",
+    "code": "CV-031",
+    "description": "Chức vụ / Vị trí Nhân viên kinh tế - kế hoạch Dệt",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-032",
+    "name": "Nhân viên kinh tế - kế hoạch HT",
+    "code": "CV-032",
+    "description": "Chức vụ / Vị trí Nhân viên kinh tế - kế hoạch HT",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-033",
+    "name": "Nhân viên kế hoạch dệt",
+    "code": "CV-033",
+    "description": "Chức vụ / Vị trí Nhân viên kế hoạch dệt",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-034",
+    "name": "Nhân viên kế toán",
+    "code": "CV-034",
+    "description": "Chức vụ / Vị trí Nhân viên kế toán",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-035",
+    "name": "Nhân viên phục vụ - kho PL",
+    "code": "CV-035",
+    "description": "Chức vụ / Vị trí Nhân viên phục vụ - kho PL",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-036",
+    "name": "Nhân viên phục vụ HT",
+    "code": "CV-036",
+    "description": "Chức vụ / Vị trí Nhân viên phục vụ HT",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-037",
+    "name": "Nhân viên phục vụ dệt",
+    "code": "CV-037",
+    "description": "Chức vụ / Vị trí Nhân viên phục vụ dệt",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-038",
+    "name": "Nhân viên phục vụ kiểm hàng",
+    "code": "CV-038",
+    "description": "Chức vụ / Vị trí Nhân viên phục vụ kiểm hàng",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-039",
+    "name": "Nhân viên tưới cây",
+    "code": "CV-039",
+    "description": "Chức vụ / Vị trí Nhân viên tưới cây",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-040",
+    "name": "Nhân viên vận hành lò hơi",
+    "code": "CV-040",
+    "description": "Chức vụ / Vị trí Nhân viên vận hành lò hơi",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-041",
+    "name": "Phó giám đốc HCNS",
+    "code": "CV-041",
+    "description": "Chức vụ / Vị trí Phó giám đốc HCNS",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-042",
+    "name": "Phụ bếp",
+    "code": "CV-042",
+    "description": "Chức vụ / Vị trí Phụ bếp",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-043",
+    "name": "Phụ kho",
+    "code": "CV-043",
+    "description": "Chức vụ / Vị trí Phụ kho",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-044",
+    "name": "Phụ trách KCS",
+    "code": "CV-044",
+    "description": "Chức vụ / Vị trí Phụ trách KCS",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-045",
+    "name": "Phụ trách PX Dệt + PXHT",
+    "code": "CV-045",
+    "description": "Chức vụ / Vị trí Phụ trách PX Dệt + PXHT",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-046",
+    "name": "Phụ trách PX Hoàn thành",
+    "code": "CV-046",
+    "description": "Chức vụ / Vị trí Phụ trách PX Hoàn thành",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-047",
+    "name": "Phụ trách kho",
+    "code": "CV-047",
+    "description": "Chức vụ / Vị trí Phụ trách kho",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-048",
+    "name": "Phụ trách kỹ thuật - PX Dệt",
+    "code": "CV-048",
+    "description": "Chức vụ / Vị trí Phụ trách kỹ thuật - PX Dệt",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-049",
+    "name": "Phụ trách sản xuất",
+    "code": "CV-049",
+    "description": "Chức vụ / Vị trí Phụ trách sản xuất",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-050",
+    "name": "Quản trị viên CNTT (Admin)",
+    "code": "CV-050",
+    "description": "Chức vụ / Vị trí Quản trị viên CNTT (Admin)",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-051",
+    "name": "Thủ kho phụ liệu",
+    "code": "CV-051",
+    "description": "Chức vụ / Vị trí Thủ kho phụ liệu",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-052",
+    "name": "Thủ kho thành phẩm",
+    "code": "CV-052",
+    "description": "Chức vụ / Vị trí Thủ kho thành phẩm",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-053",
+    "name": "Trưởng phòng Cơ điện",
+    "code": "CV-053",
+    "description": "Chức vụ / Vị trí Trưởng phòng Cơ điện",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-054",
+    "name": "Tổ trưởng",
+    "code": "CV-054",
+    "description": "Chức vụ / Vị trí Tổ trưởng",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  },
+  {
+    "id": "POS-055",
+    "name": "Tổ trưởng kiêm kỹ thuật in",
+    "code": "CV-055",
+    "description": "Chức vụ / Vị trí Tổ trưởng kiêm kỹ thuật in",
+    "createdAt": "2026-10-21T04:42:40.629Z",
+    "updatedAt": "2026-10-21T04:42:40.629Z"
+  }
 ];

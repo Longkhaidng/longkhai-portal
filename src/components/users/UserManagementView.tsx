@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
-import { User, CategoryPermission, CATEGORY_DEFINITIONS, UserRole, Department } from '@/types/user';
+import { User, CategoryPermission, CATEGORY_DEFINITIONS, UserRole, Department, Position } from '@/types/user';
 import {
   Users,
   Upload,
@@ -24,7 +24,10 @@ import {
   Globe,
   Pencil,
   Trash2,
+  Briefcase,
+  Award,
 } from 'lucide-react';
+import { INITIAL_ROOT_ADMIN } from '@/lib/initial-data';
 import {
   parseEmployeeExcel,
   generateEmployeeTemplateExcel,
@@ -32,21 +35,46 @@ import {
   ParsedEmployeeResult,
 } from '@/lib/excel';
 
+
+const ROLE_LABELS: Record<UserRole, { label: string; badge: string }> = {
+  admin: { label: 'Quản trị viên (Admin)', badge: 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300' },
+  manager: { label: 'Trưởng bộ phận (Manager)', badge: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300' },
+  team_leader: { label: 'Tổ trưởng (Team Leader)', badge: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300' },
+  hr: { label: 'Nhân sự (HR)', badge: 'bg-teal-100 text-teal-700 dark:bg-teal-950 dark:text-teal-300' },
+  security: { label: 'Bảo vệ cổng (Security)', badge: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300' },
+  accountant: { label: 'Kế toán', badge: 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300' },
+  it: { label: 'CNTT (IT)', badge: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300' },
+  ehs: { label: 'An toàn (EHS)', badge: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' },
+  employee: { label: 'Công nhân / Nhân viên', badge: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300' },
+};
+
 export function UserManagementView() {
   const { currentUser, reloadCurrentUser } = useAuth();
   const [users, setUsers] = useState<User[]>(() => storage.getUsers());
   const [departments, setDepartments] = useState<Department[]>(() => storage.getDepartments());
+  const [positions, setPositions] = useState<Position[]>(() => storage.getPositions());
   const [allWebsites, setAllWebsites] = useState(() => storage.getWebIntegrations());
   const [search, setSearch] = useState('');
   const [deptFilter, setDeptFilter] = useState('all');
   const [roleFilter, setRoleFilter] = useState('all');
 
-  // Excel Upload Modal State
+  // Excel Upload Modal State (with 2 options: 'update' or 'replace')
+  const [importMode, setImportMode] = useState<'update' | 'replace'>('update');
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [parsedResult, setParsedResult] = useState<ParsedEmployeeResult | null>(null);
   const [isParsing, setIsParsing] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+
+  // Position Management Modal State
+  const [showPositionsModal, setShowPositionsModal] = useState(false);
+  const [posSearch, setPosSearch] = useState('');
+  const [editingPosition, setEditingPosition] = useState<Position | null>(null);
+  const [posName, setPosName] = useState('');
+  const [posCode, setPosCode] = useState('');
+  const [posDesc, setPosDesc] = useState('');
+  const [showPosForm, setShowPosForm] = useState(false);
+  const [posError, setPosError] = useState<string | null>(null);
 
   // Permission Matrix Modal State
   const [permissionTargetUser, setPermissionTargetUser] = useState<User | null>(null);
@@ -270,37 +298,159 @@ export function UserManagementView() {
     }
   };
 
-  // Confirm import parsed users from Excel (smart upsert without wiping)
+
+  // Open Position Management Modal
+  const handleOpenPositionsModal = () => {
+    setPositions(storage.getPositions());
+    setPosSearch('');
+    setShowPosForm(false);
+    setEditingPosition(null);
+    setPosError(null);
+    setShowPositionsModal(true);
+  };
+
+  const handleOpenAddPosition = () => {
+    setEditingPosition(null);
+    setPosName('');
+    setPosCode('');
+    setPosDesc('');
+    setPosError(null);
+    setShowPosForm(true);
+  };
+
+  const handleOpenEditPosition = (pos: Position) => {
+    setEditingPosition(pos);
+    setPosName(pos.name);
+    setPosCode(pos.code || '');
+    setPosDesc(pos.description || '');
+    setPosError(null);
+    setShowPosForm(true);
+  };
+
+  const handleSavePosition = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentUser) return;
+    setPosError(null);
+
+    const cleanName = posName.trim();
+    if (!cleanName) {
+      setPosError('Vui lòng nhập tên chức vụ.');
+      return;
+    }
+
+    // Check duplicate name
+    const exists = positions.find(
+      (p) => p.name.toLowerCase() === cleanName.toLowerCase() && (!editingPosition || p.id !== editingPosition.id)
+    );
+    if (exists) {
+      setPosError(`Chức vụ "${cleanName}" đã tồn tại.`);
+      return;
+    }
+
+    const now = new Date().toISOString();
+
+    if (editingPosition) {
+      const oldName = editingPosition.name;
+      const updated = positions.map((p) =>
+        p.id === editingPosition.id
+          ? { ...p, name: cleanName, code: posCode.trim() || undefined, description: posDesc.trim() || undefined, updatedAt: now }
+          : p
+      );
+      storage.savePositions(updated, { id: currentUser.id, name: currentUser.name });
+      setPositions(updated);
+
+      // If position name was changed, sync to all users who currently have this position
+      if (oldName.toLowerCase() !== cleanName.toLowerCase()) {
+        const updatedUsers = users.map((u) =>
+          u.position?.toLowerCase() === oldName.toLowerCase()
+            ? { ...u, position: cleanName, updatedAt: now }
+            : u
+        );
+        storage.saveUsers(updatedUsers, { id: currentUser.id, name: currentUser.name });
+        setUsers(updatedUsers);
+      }
+      setShowPosForm(false);
+    } else {
+      const newPos: Position = {
+        id: `POS-${Date.now()}`,
+        name: cleanName,
+        code: posCode.trim() || undefined,
+        description: posDesc.trim() || undefined,
+        createdAt: now,
+        updatedAt: now,
+      };
+      const updated = [newPos, ...positions];
+      storage.savePositions(updated, { id: currentUser.id, name: currentUser.name });
+      setPositions(updated);
+      setShowPosForm(false);
+    }
+  };
+
+  const handleDeletePosition = (pos: Position) => {
+    if (!currentUser) return;
+    const count = users.filter((u) => u.position?.toLowerCase() === pos.name.toLowerCase()).length;
+    const confirmMsg =
+      count > 0
+        ? `Chức vụ "${pos.name}" đang được gán cho ${count} nhân viên. Bạn có chắc chắn muốn xóa chức vụ này khỏi danh mục cài đặt?`
+        : `Bạn có chắc chắn muốn xóa chức vụ "${pos.name}" khỏi danh mục cài đặt?`;
+
+    if (confirm(confirmMsg)) {
+      const updated = positions.filter((p) => p.id !== pos.id);
+      storage.savePositions(updated, { id: currentUser.id, name: currentUser.name });
+      setPositions(updated);
+    }
+  };
+
+  // Confirm import parsed users from Excel: Tùy chọn 1 (Cập nhật nhân viên mới) hoặc Tùy chọn 2 (Thay thế toàn bộ)
   const handleConfirmImport = () => {
     if (!parsedResult || parsedResult.users.length === 0 || !currentUser) return;
-
-    const existing = [...users];
     const incoming = parsedResult.users;
-    let newCount = 0;
-    let updateCount = 0;
 
-    incoming.forEach((newUser) => {
-      const index = existing.findIndex((u) => u.id.toLowerCase() === newUser.id.toLowerCase());
-      if (index >= 0) {
-        updateCount++;
-        existing[index] = {
-          ...existing[index],
-          ...newUser,
-          updatedAt: new Date().toISOString(),
-        };
-      } else {
-        newCount++;
-        existing.push(newUser);
-      }
-    });
+    if (importMode === 'replace') {
+      const warnMsg = `CẢNH BÁO: Bạn đang chọn THAY THẾ TOÀN BỘ danh sách nhân viên!\n\nHành động này sẽ XÓA TẤT CẢ ${users.length} nhân viên hiện tại trên hệ thống và thay bằng ${incoming.length} nhân viên trong file Excel.\n(Tài khoản Quản trị viên 2265 vẫn được bảo lưu an toàn).\n\nBạn có chắc chắn muốn thực hiện thay thế?`;
+      if (!confirm(warnMsg)) return;
 
-    storage.saveUsers(existing, { id: currentUser.id, name: currentUser.name });
-    setUsers(existing);
-    reloadCurrentUser();
-    setShowUploadModal(false);
-    setUploadFile(null);
-    setParsedResult(null);
-    alert(`Nạp danh sách nhân viên thành công!\n- Thêm mới: ${newCount} nhân viên\n- Cập nhật: ${updateCount} nhân viên\nTổng cộng hiện có: ${existing.length} nhân viên trong hệ thống.`);
+      // Preserve root admin (2265 / ADMIN01) if not included in the file
+      const rootAdmin = users.find((u) => u.id === '2265' || u.id === 'ADMIN01') || INITIAL_ROOT_ADMIN;
+      const hasRoot = incoming.some((u) => u.id === '2265' || u.id === 'ADMIN01');
+      const finalUsers = hasRoot ? incoming : [rootAdmin, ...incoming];
+
+      storage.saveUsers(finalUsers, { id: currentUser.id, name: currentUser.name });
+      setUsers(finalUsers);
+      reloadCurrentUser();
+      setShowUploadModal(false);
+      setUploadFile(null);
+      setParsedResult(null);
+      alert(`Đã thay thế toàn bộ danh sách thành công!\nTổng số nhân viên mới trên hệ thống: ${finalUsers.length} người.`);
+    } else {
+      // importMode === 'update' (Cập nhật nhân viên mới & thông tin nhân viên đã có)
+      const existing = [...users];
+      let newCount = 0;
+      let updateCount = 0;
+
+      incoming.forEach((newUser) => {
+        const index = existing.findIndex((u) => u.id.toLowerCase() === newUser.id.toLowerCase());
+        if (index >= 0) {
+          updateCount++;
+          existing[index] = {
+            ...existing[index],
+            ...newUser,
+            updatedAt: new Date().toISOString(),
+          };
+        } else {
+          newCount++;
+          existing.push(newUser);
+        }
+      });
+
+      storage.saveUsers(existing, { id: currentUser.id, name: currentUser.name });
+      setUsers(existing);
+      reloadCurrentUser();
+      setShowUploadModal(false);
+      setUploadFile(null);
+      setParsedResult(null);
+      alert(`Cập nhật danh sách nhân viên thành công!\n- Thêm mới: ${newCount} nhân viên\n- Cập nhật: ${updateCount} nhân viên\nTổng cộng hiện có: ${existing.length} nhân viên trong hệ thống.`);
+    }
   };
 
   // Open Permission Matrix for a User
@@ -406,6 +556,16 @@ export function UserManagementView() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+          {/* Nút Cài đặt chức vụ */}
+          <button
+            onClick={handleOpenPositionsModal}
+            className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-colors"
+            title="Cài đặt danh mục chức vụ (Thêm, sửa, xóa chức vụ)"
+          >
+            <Briefcase className="w-4 h-4" />
+            <span>Cài đặt chức vụ ({positions.length})</span>
+          </button>
+
           {/* Nút Thêm nhân viên mới */}
           <button
             onClick={handleOpenAddUser}
@@ -476,7 +636,7 @@ export function UserManagementView() {
             onChange={(e) => setRoleFilter(e.target.value)}
             className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none"
           >
-            <option value="all">Tất cả vai trò</option>
+            <option value="all">Tất cả chức vụ</option>
             <option value="admin">Quản trị viên (Admin)</option>
             <option value="manager">Trưởng bộ phận (Manager)</option>
             <option value="team_leader">Tổ trưởng (Team Leader)</option>
@@ -498,8 +658,8 @@ export function UserManagementView() {
                 <th className="py-3.5 px-3 text-center w-12">STT</th>
                 <th className="py-3.5 px-4">Mã NV (Tên Đăng Nhập)</th>
                 <th className="py-3.5 px-4">Họ và tên</th>
-                <th className="py-3.5 px-4">Phòng ban & Chức vụ</th>
-                <th className="py-3.5 px-4">Vai trò</th>
+                <th className="py-3.5 px-4">Phòng ban & Vị trí</th>
+                <th className="py-3.5 px-4">Chức vụ</th>
                 <th className="py-3.5 px-4">Danh mục được cấp quyền</th>
                 <th className="py-3.5 px-4">Trạng thái</th>
                 <th className="py-3.5 px-4 text-right">Thao tác</th>
@@ -539,8 +699,8 @@ export function UserManagementView() {
                         <div className="text-[11px] text-slate-400">{u.position}</div>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                          {u.role}
+                        <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold ${ROLE_LABELS[u.role]?.badge || 'bg-slate-100 text-slate-700'}`}>
+                          {ROLE_LABELS[u.role]?.label || u.role}
                         </span>
                       </td>
                       <td className="py-3 px-4">
@@ -707,13 +867,14 @@ export function UserManagementView() {
                 </div>
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Chức vụ:
+                    Vị trí công tác:
                   </label>
                   <input
                     type="text"
+                    list="positions-datalist"
                     value={newEmpPos}
                     onChange={(e) => setNewEmpPos(e.target.value)}
-                    placeholder="VD: Công nhân tiện CNC, Kế toán..."
+                    placeholder="Chọn từ danh mục hoặc nhập mới..."
                     className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
                   />
                 </div>
@@ -722,7 +883,7 @@ export function UserManagementView() {
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Vai trò (Role):
+                    Chức vụ:
                   </label>
                   <select
                     value={newEmpRole}
@@ -1010,9 +1171,81 @@ export function UserManagementView() {
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between text-xs">
+                {/* 2 TÙY CHỌN NẠP EXCEL */}
+                <div className="space-y-2 pt-1">
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200 block">
+                    Chọn phương thức nạp dữ liệu vào hệ thống:
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {/* Tùy chọn 1: Cập nhật nhân viên mới */}
+                    <div
+                      onClick={() => setImportMode('update')}
+                      className={`p-3 rounded-xl border cursor-pointer transition-all ${
+                        importMode === 'update'
+                          ? 'bg-blue-50/80 dark:bg-blue-950/40 border-blue-500 ring-2 ring-blue-500/20'
+                          : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                      }`}
+                    >
+                      <div className="flex items-start gap-2.5">
+                        <input
+                          type="radio"
+                          name="importMode"
+                          checked={importMode === 'update'}
+                          onChange={() => setImportMode('update')}
+                          className="mt-0.5 text-blue-600"
+                        />
+                        <div className="space-y-1">
+                          <div className="font-bold text-xs text-slate-900 dark:text-white flex items-center gap-1.5">
+                            <span>Cập nhật nhân viên mới</span>
+                            <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 font-semibold">Khuyên dùng</span>
+                          </div>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                            Cập nhật thông tin nhân viên mới chưa có trong danh sách hiện tại. Giữ nguyên an toàn toàn bộ dữ liệu nhân viên cũ.
+                          </p>
+                          <div className="text-[10px] font-semibold text-blue-600 dark:text-blue-400">
+                            Thêm mới: +{previewNewCount} &bull; Cập nhật: {previewUpdateCount}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Tùy chọn 2: Thay thế toàn bộ */}
+                    <div
+                      onClick={() => setImportMode('replace')}
+                      className={`p-3 rounded-xl border cursor-pointer transition-all ${
+                        importMode === 'replace'
+                          ? 'bg-rose-50/80 dark:bg-rose-950/40 border-rose-500 ring-2 ring-rose-500/20'
+                          : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                      }`}
+                    >
+                      <div className="flex items-start gap-2.5">
+                        <input
+                          type="radio"
+                          name="importMode"
+                          checked={importMode === 'replace'}
+                          onChange={() => setImportMode('replace')}
+                          className="mt-0.5 text-rose-600"
+                        />
+                        <div className="space-y-1">
+                          <div className="font-bold text-xs text-rose-700 dark:text-rose-400 flex items-center gap-1.5">
+                            <span>Thay thế toàn bộ</span>
+                            <span className="text-[10px] px-1.5 py-0.2 rounded bg-rose-100 text-rose-800 font-semibold">Xóa danh sách cũ</span>
+                          </div>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                            Xóa tất cả nhân viên hiện tại trong danh sách ({users.length} người) và thay thế hoàn toàn bằng danh sách trong file mẫu tải lên.
+                          </p>
+                          <div className="text-[10px] font-semibold text-rose-600 dark:text-rose-400">
+                            Bảo lưu an toàn tài khoản Quản trị viên 2265
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between text-xs pt-1">
                   <span className="font-bold text-slate-800 dark:text-slate-200">
-                    Xem trước kết quả phân tích:
+                    Xem trước danh sách ({parsedResult.users.length} dòng):
                   </span>
                   <div className="flex items-center gap-2 font-semibold">
                     <span className="text-emerald-600">Mới: +{previewNewCount}</span>
@@ -1070,9 +1303,15 @@ export function UserManagementView() {
                 type="button"
                 disabled={!parsedResult || parsedResult.users.length === 0}
                 onClick={handleConfirmImport}
-                className="px-5 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold rounded-xl text-xs shadow-md"
+                className={`px-5 py-2 disabled:opacity-50 text-white font-bold rounded-xl text-xs shadow-md transition-colors ${
+                  importMode === 'replace'
+                    ? 'bg-rose-600 hover:bg-rose-700'
+                    : 'bg-blue-600 hover:bg-blue-700'
+                }`}
               >
-                Lưu vào hệ thống ({parsedResult?.users.length || 0} nhân viên)
+                {importMode === 'replace'
+                  ? `Thay thế toàn bộ (${parsedResult?.users.length || 0} nhân viên)`
+                  : `Cập nhật nhân viên mới (${parsedResult?.users.length || 0} nhân viên)`}
               </button>
             </div>
           </div>
@@ -1255,7 +1494,7 @@ export function UserManagementView() {
                   </h3>
                 </div>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Cập nhật họ tên, phòng ban, chức vụ, vai trò và thông tin liên hệ
+                  Cập nhật họ tên, phòng ban, vị trí công tác, chức vụ và thông tin liên hệ
                 </p>
               </div>
               <button
@@ -1321,13 +1560,14 @@ export function UserManagementView() {
                 </div>
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Chức vụ:
+                    Vị trí công tác:
                   </label>
                   <input
                     type="text"
+                    list="positions-datalist"
                     value={editPos}
                     onChange={(e) => setEditPos(e.target.value)}
-                    placeholder="VD: Công nhân tiện CNC, Kế toán..."
+                    placeholder="Chọn từ danh mục hoặc nhập mới..."
                     className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
                   />
                 </div>
@@ -1336,7 +1576,7 @@ export function UserManagementView() {
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Vai trò (Role):
+                    Chức vụ:
                   </label>
                   <select
                     value={editRole}
@@ -1491,6 +1731,216 @@ export function UserManagementView() {
           </div>
         </div>
       )}
+
+      {/* DATALIST CHO CHỨC VỤ / VỊ TRÍ CÔNG TÁC */}
+      <datalist id="positions-datalist">
+        {positions.map((p) => (
+          <option key={p.id} value={p.name} />
+        ))}
+      </datalist>
+
+      {/* MODAL 4: CÀI ĐẶT DANH MỤC CHỨC VỤ (ADMIN CÓ THỂ THÊM, SỬA, XÓA) */}
+      {showPositionsModal && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-3xl w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-8">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-600">
+                    <Briefcase className="w-5 h-5" />
+                  </div>
+                  <h3 className="font-bold text-base text-slate-900 dark:text-white">
+                    Cài Đặt Danh Mục Chức Vụ
+                  </h3>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300">
+                    {positions.length} chức vụ
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  Quản lý danh sách các chức vụ / vị trí công tác để gán cho nhân viên toàn công ty
+                </p>
+              </div>
+              <button
+                onClick={() => setShowPositionsModal(false)}
+                className="text-slate-400 hover:text-slate-600 text-lg font-bold"
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* Action & Filter toolbar */}
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex-1 min-w-[220px] relative">
+                <Search className="w-3.5 h-3.5 absolute left-3 top-3 text-slate-400" />
+                <input
+                  type="text"
+                  value={posSearch}
+                  onChange={(e) => setPosSearch(e.target.value)}
+                  placeholder="Tìm kiếm chức vụ theo tên, mã..."
+                  className="w-full pl-8 pr-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs"
+                />
+              </div>
+
+              {!showPosForm && (
+                <button
+                  type="button"
+                  onClick={handleOpenAddPosition}
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Thêm chức vụ mới</span>
+                </button>
+              )}
+            </div>
+
+            {/* Sub-form Add / Edit Position */}
+            {showPosForm && (
+              <form onSubmit={handleSavePosition} className="p-4 bg-indigo-50/60 dark:bg-indigo-950/30 rounded-2xl border border-indigo-200 dark:border-indigo-800/60 space-y-3 text-xs">
+                <div className="flex items-center justify-between font-bold text-indigo-900 dark:text-indigo-300">
+                  <span>{editingPosition ? `Chỉnh sửa chức vụ: ${editingPosition.name}` : 'Thêm chức vụ mới'}</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowPosForm(false)}
+                    className="text-slate-400 hover:text-slate-600"
+                  >
+                    &times; Hủy
+                  </button>
+                </div>
+
+                {posError && (
+                  <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs">
+                    {posError}
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-semibold mb-1">Tên chức vụ: *</label>
+                    <input
+                      type="text"
+                      required
+                      value={posName}
+                      onChange={(e) => setPosName(e.target.value)}
+                      placeholder="VD: Trưởng phòng Cơ điện, Công nhân tiện CNC..."
+                      className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-semibold mb-1">Mã chức vụ (tùy chọn):</label>
+                    <input
+                      type="text"
+                      value={posCode}
+                      onChange={(e) => setPosCode(e.target.value)}
+                      placeholder="VD: CV-TP, CV-CN..."
+                      className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-mono uppercase"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block font-semibold mb-1">Mô tả / Ghi chú nhiệm vụ:</label>
+                  <input
+                    type="text"
+                    value={posDesc}
+                    onChange={(e) => setPosDesc(e.target.value)}
+                    placeholder="Mô tả chức năng nhiệm vụ vị trí này..."
+                    className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl"
+                  />
+                </div>
+
+                <div className="flex justify-end gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setShowPosForm(false)}
+                    className="px-3 py-1.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold rounded-lg"
+                  >
+                    Hủy
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-sm"
+                  >
+                    {editingPosition ? 'Lưu thay đổi chức vụ' : 'Thêm chức vụ'}
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* Positions Table */}
+            <div className="max-h-96 overflow-y-auto border border-slate-200 dark:border-slate-800 rounded-xl">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-bold uppercase">
+                    <th className="py-2.5 px-3 text-center w-12">STT</th>
+                    <th className="py-2.5 px-4">Tên chức vụ</th>
+                    <th className="py-2.5 px-3">Mã</th>
+                    <th className="py-2.5 px-3 text-center">Số nhân sự</th>
+                    <th className="py-2.5 px-4">Mô tả</th>
+                    <th className="py-2.5 px-4 text-right">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {positions
+                    .filter((p) => p.name.toLowerCase().includes(posSearch.toLowerCase()) || (p.code || '').toLowerCase().includes(posSearch.toLowerCase()))
+                    .map((pos, idx) => {
+                      const memberCount = users.filter((u) => u.position?.toLowerCase() === pos.name.toLowerCase()).length;
+                      return (
+                        <tr key={pos.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
+                          <td className="py-2 px-3 text-center font-bold text-slate-400">{idx + 1}</td>
+                          <td className="py-2 px-4 font-bold text-slate-900 dark:text-white">
+                            {pos.name}
+                          </td>
+                          <td className="py-2 px-3 font-mono text-[11px] text-indigo-600 dark:text-indigo-400">
+                            {pos.code || '-'}
+                          </td>
+                          <td className="py-2 px-3 text-center">
+                            <span className="px-2 py-0.5 rounded-full font-bold text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                              {memberCount} người
+                            </span>
+                          </td>
+                          <td className="py-2 px-4 text-slate-500 text-[11px] truncate max-w-[200px]" title={pos.description}>
+                            {pos.description || '-'}
+                          </td>
+                          <td className="py-2 px-4 text-right">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => handleOpenEditPosition(pos)}
+                                className="p-1.5 rounded-lg text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/40"
+                                title="Sửa chức vụ"
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeletePosition(pos)}
+                                className="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40"
+                                title="Xóa chức vụ"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="flex justify-end pt-2 border-t border-slate-100 dark:border-slate-800">
+              <button
+                type="button"
+                onClick={() => setShowPositionsModal(false)}
+                className="px-4 py-2 font-semibold text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-xs"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

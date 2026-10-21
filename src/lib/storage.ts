@@ -1,4 +1,4 @@
-import { User, CATEGORY_DEFINITIONS, Department, WebIntegration } from '@/types/user';
+import { User, CATEGORY_DEFINITIONS, Department, WebIntegration, Position } from '@/types/user';
 import { LeaveRequest } from '@/types/leave';
 import { AttendanceConfirm } from '@/types/attendance';
 import { GatePass } from '@/types/gatePass';
@@ -10,6 +10,7 @@ import { EmailConfig } from '@/types/email';
 import {
   INITIAL_ROOT_ADMIN,
   INITIAL_DEPARTMENTS,
+  INITIAL_POSITIONS,
   INITIAL_WEB_INTEGRATIONS,
   INITIAL_ANNOUNCEMENTS,
   INITIAL_DYNAMIC_FORMS,
@@ -19,6 +20,7 @@ import { GitHubService } from './github-api';
 const STORAGE_KEYS = {
   USERS: 'lk_portal_users',
   DEPARTMENTS: 'lk_portal_departments',
+  POSITIONS: 'lk_portal_positions',
   WEB_INTEGRATIONS: 'lk_portal_web_integrations',
   LEAVE_REQUESTS: 'lk_portal_leave_requests',
   ATTENDANCE_CONFIRMS: 'lk_portal_attendance_confirms',
@@ -144,6 +146,35 @@ class StorageService {
     logs.unshift(newLog);
     if (logs.length > 500) logs.pop();
     localStorage.setItem(STORAGE_KEYS.AUDIT_LOGS, JSON.stringify(logs));
+  }
+
+
+  // --- POSITIONS (CHỨC VỤ) ---
+  getPositions(): Position[] {
+    if (!this.isClient()) return INITIAL_POSITIONS;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.POSITIONS);
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    localStorage.setItem(STORAGE_KEYS.POSITIONS, JSON.stringify(INITIAL_POSITIONS));
+    return INITIAL_POSITIONS;
+  }
+
+  savePositions(positions: Position[], byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    localStorage.setItem(STORAGE_KEYS.POSITIONS, JSON.stringify(positions));
+    this.addAuditLog(
+      'update',
+      'positions',
+      'settings/positions.json',
+      byUser?.id || 'SYSTEM',
+      byUser?.name || 'Hệ thống',
+      `Cập nhật danh mục chức vụ (${positions.length} chức vụ)`
+    );
+    this.syncFileToGitHub('settings/positions.json', JSON.stringify(positions, null, 2), `Update positions directory`);
   }
 
   // --- DEPARTMENTS (PHÒNG BAN) ---
@@ -658,6 +689,7 @@ class StorageService {
       const {
         users,
         departments,
+        positions,
         webIntegrations,
         leaveRequests,
         gatePasses,
@@ -671,6 +703,9 @@ class StorageService {
       }
       if (Array.isArray(departments) && departments.length > 0) {
         localStorage.setItem(STORAGE_KEYS.DEPARTMENTS, JSON.stringify(departments));
+      }
+      if (Array.isArray(positions) && positions.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.POSITIONS, JSON.stringify(positions));
       }
       if (Array.isArray(webIntegrations) && webIntegrations.length > 0) {
         localStorage.setItem(STORAGE_KEYS.WEB_INTEGRATIONS, JSON.stringify(webIntegrations));

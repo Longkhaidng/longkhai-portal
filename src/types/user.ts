@@ -45,6 +45,15 @@ export const CATEGORY_DEFINITIONS: CategoryInfo[] = [
   { id: 'settings', name: 'Cài đặt hệ thống', description: 'Cấu hình GitHub, sao lưu và thông tin công ty', iconName: 'Settings' },
 ];
 
+export interface Position {
+  id: string; // POS-001...
+  name: string; // Tên chức vụ
+  code?: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Department {
   id: string; // PB-SX, PB-CD...
   name: string;
