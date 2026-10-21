@@ -71,11 +71,11 @@ export function ReportsView() {
         'Mã NV': a.employeeId,
         'Họ và tên': a.employeeName,
         'Phòng ban': a.department,
-        'Trường hợp': ISSUE_TYPE_LABELS[a.issueType]?.text,
+        'Lý do': ISSUE_TYPE_LABELS[a.issueType]?.text || a.issueType,
         'Ngày': a.date,
-        'Giờ vào': a.checkInTime,
-        'Giờ ra': a.checkOutTime,
-        'Ca': a.shift,
+        'Ca làm việc': a.shift,
+        'Giờ vào thực tế': a.actualCheckIn || '',
+        'Giờ ra thực tế': a.actualCheckOut || '',
         'Lý do giải trình': a.reason,
         'Trạng thái': a.status,
       }));
@@ -343,7 +343,9 @@ export function ReportsView() {
                   <th className="p-2 border">Họ và tên</th>
                   <th className="p-2 border">Lý do</th>
                   <th className="p-2 border">Ngày</th>
-                  <th className="p-2 border">Giờ vào - ra</th>
+                  <th className="p-2 border">Ca làm việc</th>
+                  <th className="p-2 border">Giờ vào thực tế</th>
+                  <th className="p-2 border">Giờ ra thực tế</th>
                   <th className="p-2 border">Trạng thái</th>
                 </tr>
               </thead>
@@ -353,9 +355,15 @@ export function ReportsView() {
                     <td className="p-2 border font-mono font-bold">{a.id}</td>
                     <td className="p-2 border font-mono">{a.employeeId}</td>
                     <td className="p-2 border font-semibold">{a.employeeName}</td>
-                    <td className="p-2 border">{ISSUE_TYPE_LABELS[a.issueType]?.text}</td>
+                    <td className="p-2 border">{ISSUE_TYPE_LABELS[a.issueType]?.text || a.issueType}</td>
                     <td className="p-2 border">{formatDate(a.date)}</td>
-                    <td className="p-2 border font-mono">{a.checkInTime} - {a.checkOutTime}</td>
+                    <td className="p-2 border font-medium text-slate-700 dark:text-slate-300">{a.shift}</td>
+                    <td className="p-2 border font-mono font-semibold text-emerald-600 dark:text-emerald-400">
+                      {a.actualCheckIn || '-'}
+                    </td>
+                    <td className="p-2 border font-mono font-semibold text-blue-600 dark:text-blue-400">
+                      {a.actualCheckOut || '-'}
+                    </td>
                     <td className="p-2 border uppercase text-[10px] font-bold">{a.status}</td>
                   </tr>
                 ))}
