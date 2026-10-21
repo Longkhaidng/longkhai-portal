@@ -33,7 +33,9 @@
     "name": "Phân xưởng hoàn thành",
     "description": "Xưởng hoàn thiện sản phẩm",
     "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-10-16T07:12:15.615Z"
+    "updatedAt": "2026-10-21T06:30:18.916Z",
+    "managerId": "1051",
+    "managerName": "Ngô Thị Cường"
   },
   {
     "id": "PB-CD",
