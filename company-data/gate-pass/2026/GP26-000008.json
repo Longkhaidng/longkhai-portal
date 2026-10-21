@@ -1,0 +1,27 @@
+{
+  "id": "GP26-000008",
+  "employeeId": "1139",
+  "employeeName": "Võ Thị Tuyết",
+  "department": "Phòng HCNS",
+  "purpose": "CN - Ra vào trong giờ làm việc",
+  "passType": "personal",
+  "timeType": "nghi_cuoi_gio",
+  "reasonCategory": "ca_nhan",
+  "specificReason": "CN - Ra vào trong giờ làm việc",
+  "hasAssets": true,
+  "assets": [
+    {
+      "id": "AST-1792567549759",
+      "name": "laptop",
+      "quantity": 1,
+      "unit": "cái"
+    }
+  ],
+  "estimatedDepartureTime": "2026-10-21T14:50",
+  "managerApproverId": "1867",
+  "managerApproverName": "Trương Anh Như Quỳnh",
+  "status": "pending",
+  "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=gate_pass&id=GP26-000008",
+  "createdAt": "2026-10-21T07:25:49.759Z",
+  "updatedAt": "2026-10-21T07:25:49.759Z"
+}
