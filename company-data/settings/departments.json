@@ -71,7 +71,9 @@
     "name": "Phòng Kho Vận & Vật Tư",
     "description": "Kho nguyên vật liệu, kho thành phẩm và điều vận xe giao nhận hàng",
     "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
+    "updatedAt": "2026-10-21T06:31:11.781Z",
+    "managerId": "2745",
+    "managerName": "Bùi Ngọc Phúc"
   },
   {
     "id": "PB-BV",
