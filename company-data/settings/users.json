@@ -167,7 +167,7 @@
   {
     "id": "1002",
     "name": "Trần Thị Kim Loan",
-    "department": "Phòng Hành Chính Nhân Sự",
+    "department": "Phòng HCNS",
     "position": "Nhân viên dọn dẹp",
     "role": "employee",
     "departmentHeadId": "1867",
@@ -182,7 +182,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-21T06:40:03.141Z"
   },
   {
     "id": "1005",
