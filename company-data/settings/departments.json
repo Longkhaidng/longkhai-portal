@@ -23,7 +23,9 @@
     "name": "Phân xưởng dệt",
     "description": "Xưởng dệt tất",
     "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-10-16T07:11:40.249Z"
+    "updatedAt": "2026-10-21T06:29:27.411Z",
+    "managerId": "1030",
+    "managerName": "Mai Hồng Hậu"
   },
   {
     "id": "PB-SX2",
