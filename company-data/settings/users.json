@@ -1495,7 +1495,7 @@
   {
     "id": "1559",
     "name": "Hồ Thị Ngọc Diệp",
-    "department": "Phòng Hành Chính Nhân Sự",
+    "department": "Phòng HCNS",
     "position": "Bếp chính",
     "role": "employee",
     "departmentHeadId": "1867",
@@ -1510,7 +1510,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-21T06:42:08.376Z"
   },
   {
     "id": "1598",
