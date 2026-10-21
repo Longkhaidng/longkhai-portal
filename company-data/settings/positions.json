@@ -1,5 +1,13 @@
 [
   {
+    "id": "POS-1792561150860",
+    "name": "Nhân viên C&B",
+    "code": "c&b",
+    "description": "Chuyên viên nhân sự tiền lương",
+    "createdAt": "2026-10-21T05:39:10.860Z",
+    "updatedAt": "2026-10-21T05:39:10.860Z"
+  },
+  {
     "id": "POS-001",
     "name": "Bảo vệ",
     "code": "CV-001",
