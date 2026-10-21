@@ -1,0 +1,38 @@
+{
+  "id": "ATT26-000010",
+  "employeeId": "1139",
+  "employeeName": "Võ Thị Tuyết",
+  "department": "Phòng HCNS",
+  "issueType": "the_hong",
+  "date": "2026-10-21",
+  "checkInTime": "08:00",
+  "checkOutTime": "16:30",
+  "shift": "Ca Hành chính (08:00 - 16:30)",
+  "reason": "Thẻ hỏng",
+  "status": "pending",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
+      "roleRequired": "security",
+      "approverName": "Tổ trưởng / Nhân viên Bảo vệ Cổng",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng bộ phận phê duyệt giải trình",
+      "roleRequired": "manager",
+      "approverId": "1867",
+      "approverName": "Trương Anh Như Quỳnh",
+      "status": "pending"
+    },
+    {
+      "stepName": "IT cập nhật dữ liệu máy chấm công",
+      "roleRequired": "it",
+      "approverName": "Bộ phận CNTT (IT)",
+      "status": "pending"
+    }
+  ],
+  "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=attendance&id=ATT26-000010",
+  "createdAt": "2026-10-21T07:18:01.814Z",
+  "updatedAt": "2026-10-21T07:18:01.814Z"
+}
