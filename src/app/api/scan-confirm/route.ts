@@ -354,8 +354,8 @@ export async function POST(req: NextRequest) {
       step0.comment = (note || '').trim() || 'Đã xác nhận kiểm tra vào/ra thực tế tại cổng qua quét mã QR';
       step0.actionAt = now;
 
-      if (actualCheckIn) doc.checkInTime = actualCheckIn;
-      if (actualCheckOut) doc.checkOutTime = actualCheckOut;
+      if (actualCheckIn) { doc.checkInTime = actualCheckIn; doc.actualCheckIn = actualCheckIn; }
+      if (actualCheckOut) { doc.checkOutTime = actualCheckOut; doc.actualCheckOut = actualCheckOut; }
 
       if (doc.currentStepIndex === 0) {
         doc.currentStepIndex = 1; // Advance to Step 2: Manager approval

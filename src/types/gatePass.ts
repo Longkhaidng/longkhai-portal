@@ -52,6 +52,8 @@ export interface GatePass {
   managerApprovedAt?: string;
   securityDepartureGuardId?: string;
   securityReturnGuardId?: string;
+  itConfirmedAt?: string;
+  itConfirmedBy?: string;
   status: GatePassStatus;
   rejectionReason?: string;
   qrCodeData: string; // Chuỗi token xác thực mã QR

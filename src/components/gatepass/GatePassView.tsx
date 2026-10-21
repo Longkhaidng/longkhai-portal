@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 import { formatDate, formatDateTime, generateDocId } from '@/lib/utils';
 import { generateQrDataUrl, getQrConfirmUrl } from '@/lib/qr';
-import { dispatchApprovalEmail } from '@/lib/email';
+import { dispatchApprovalEmail, dispatchCBNotificationEmail } from '@/lib/email';
 import { ToastContainer, useToast } from '@/components/common/Toast';
 import {
   filterUserGatePasses,
@@ -201,6 +201,19 @@ export function GatePassView() {
       : null;
     const managerName = deptHeadUser?.name || 'Trưởng bộ phận';
 
+    // Auto-flush entered asset if user checked hasAssets and entered name without clicking 'Thêm'
+    const finalAssets = [...assets];
+    if (hasAssets && newAssetName.trim()) {
+      finalAssets.push({
+        id: `AST-${Date.now()}`,
+        name: newAssetName.trim(),
+        quantity: Number(newAssetQty) || 1,
+        unit: 'cái',
+        serialNumber: newAssetSerial.trim() || undefined,
+      });
+    }
+    const shouldHaveAssets = hasAssets && finalAssets.length > 0;
+
     const newPass: GatePass = {
       id: docId,
       employeeId: currentUser.id,
@@ -212,8 +225,8 @@ export function GatePassView() {
       reasonCategory,
       specificReason: reasonCategory === 'ca_nhan' ? specificReason : undefined,
       customReason: reasonCategory === 'cong_ty' ? companyReason.trim() : reasonCategory === 'khac' ? otherReason.trim() : undefined,
-      hasAssets: hasAssets && assets.length > 0,
-      assets: hasAssets ? assets : [],
+      hasAssets: shouldHaveAssets,
+      assets: shouldHaveAssets ? finalAssets : [],
       estimatedDepartureTime: (timeType === 'nghi_giua_gio' || timeType === 'nghi_cuoi_gio') ? departureTime : undefined,
       estimatedReturnTime: (timeType === 'nghi_dau_gio' || timeType === 'nghi_giua_gio') ? returnTime : undefined,
       managerApproverId: targetHeadId || undefined,
@@ -398,6 +411,58 @@ export function GatePassView() {
       type: 'info',
       title: 'Đã từ chối phiếu',
       message: `Phiếu ra vào cổng ${updated.id} đã chuyển sang trạng thái từ chối.`,
+    });
+  };
+
+
+  // IT Confirm & Dispatch C&B Notification
+  const handleITConfirmGatePass = async (pass: GatePass) => {
+    if (!currentUser) return;
+    const now = new Date().toISOString();
+    const updated: GatePass = {
+      ...pass,
+      itConfirmedAt: now,
+      itConfirmedBy: `${currentUser.name} (${currentUser.id})`,
+      status: (pass.status === 'departed' && pass.timeType === 'nghi_cuoi_gio') || pass.actualReturnTime ? 'completed' : pass.status,
+      updatedAt: now,
+    };
+
+    storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
+    setPasses(storage.getGatePasses());
+    setSelectedPass(updated);
+
+    // Dispatch notification email to C&B department
+    const details = [
+      { label: 'Mã phiếu', value: updated.id },
+      { label: 'Nhân viên', value: `${updated.employeeName} (${updated.employeeId})` },
+      { label: 'Phòng ban', value: updated.department },
+      { label: 'Lý do ra vào cổng', value: updated.purpose },
+      { label: 'Loại thời gian', value: updated.timeType === 'nghi_dau_gio' ? 'Nghỉ đầu giờ' : updated.timeType === 'nghi_cuoi_gio' ? 'Nghỉ cuối giờ' : 'Nghỉ giữa giờ' },
+      { label: 'TG ra dự kiến', value: updated.estimatedDepartureTime ? formatDateTime(updated.estimatedDepartureTime) : '-' },
+      { label: 'TG vào dự kiến', value: updated.estimatedReturnTime ? formatDateTime(updated.estimatedReturnTime) : '-' },
+      { label: 'TG ra thực tế (Bảo vệ quét)', value: updated.actualDepartureTime ? formatDateTime(updated.actualDepartureTime) : 'Chưa ghi nhận' },
+      { label: 'TG vào thực tế (Bảo vệ quét)', value: updated.actualReturnTime ? formatDateTime(updated.actualReturnTime) : (updated.timeType === 'nghi_cuoi_gio' ? 'Không về lại (Nghỉ cuối giờ)' : 'Chưa ghi nhận') },
+      { label: 'Tài sản mang theo', value: updated.hasAssets && updated.assets.length > 0 ? updated.assets.map(a => `${a.name} (SL: ${a.quantity})`).join('; ') : 'Không mang theo' },
+      { label: 'Trưởng bộ phận phê duyệt', value: updated.managerApproverName || 'Đã duyệt' },
+      { label: 'IT xác nhận hoàn tất', value: `${currentUser.name} (${currentUser.id})` },
+    ];
+
+    await dispatchCBNotificationEmail({
+      type: 'gate_pass',
+      docId: updated.id,
+      employeeId: updated.employeeId,
+      employeeName: updated.employeeName,
+      department: updated.department,
+      title: 'Phiếu Ra - Vào Cổng',
+      summary: `Nhân viên ${updated.employeeName} đã được IT xác nhận hoàn tất ra vào cổng.`,
+      itApproverName: currentUser.name,
+      details,
+    });
+
+    showToast({
+      type: 'success',
+      title: 'Đã hoàn tất xác nhận IT',
+      message: `Đã xác nhận phiếu ${updated.id} và đẩy thông báo thành công đến Bộ phận C&B để cập nhật dữ liệu chấm công.`,
     });
   };
 
@@ -661,6 +726,8 @@ export function GatePassView() {
                     <th className="py-3.5 px-4">Lý do ra - vào cổng</th>
                     <th className="py-3.5 px-4">Tài sản mang theo</th>
                     <th className="py-3.5 px-4">Thời gian dự kiến</th>
+                    <th className="py-3.5 px-4">Thời gian ra thực tế</th>
+                    <th className="py-3.5 px-4">Thời gian vào thực tế</th>
                     <th className="py-3.5 px-4">Trạng thái</th>
                     <th className="py-3.5 px-4 text-right">Mã QR</th>
                   </tr>
@@ -668,7 +735,7 @@ export function GatePassView() {
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {filtered.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="py-8 text-center text-slate-400">
+                      <td colSpan={9} className="py-8 text-center text-slate-400">
                         Không có phiếu ra vào cổng nào.
                       </td>
                     </tr>
@@ -714,11 +781,16 @@ export function GatePassView() {
                           </div>
                         </td>
                         <td className="py-3 px-4">
-                          {item.hasAssets ? (
-                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-lg border border-amber-200 dark:border-amber-800/60">
-                              <Package className="w-3 h-3" />
-                              <span>{item.assets.length} món tài sản</span>
-                            </span>
+                          {item.hasAssets && item.assets && item.assets.length > 0 ? (
+                            <div className="space-y-1 max-w-[200px]">
+                              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-lg border border-amber-200 dark:border-amber-800/60">
+                                <Package className="w-3 h-3 shrink-0" />
+                                <span>{item.assets.length} món</span>
+                              </span>
+                              <div className="text-[11px] text-slate-700 dark:text-slate-300 font-medium truncate" title={item.assets.map((a) => `${a.name} (SL: ${a.quantity})`).join(', ')}>
+                                {item.assets.map((a) => `${a.name} (${a.quantity})`).join(', ')}
+                              </div>
+                            </div>
                           ) : (
                             <span className="text-slate-400 text-[11px]">Không mang</span>
                           )}
@@ -743,6 +815,26 @@ export function GatePassView() {
                                 </div>
                               )}
                             </>
+                          )}
+                        </td>
+                        <td className="py-3 px-4">
+                          {item.actualDepartureTime ? (
+                            <div className="font-mono text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                              {formatDateTime(item.actualDepartureTime)}
+                            </div>
+                          ) : (
+                            <span className="text-[11px] text-slate-400 italic">Chưa ra</span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4">
+                          {item.timeType === 'nghi_cuoi_gio' ? (
+                            <span className="text-[11px] text-slate-500 italic">Không về lại (Cuối giờ)</span>
+                          ) : item.actualReturnTime ? (
+                            <div className="font-mono text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                              {formatDateTime(item.actualReturnTime)}
+                            </div>
+                          ) : (
+                            <span className="text-[11px] text-slate-400 italic">Chưa vào</span>
                           )}
                         </td>
                         <td className="py-3 px-4">
@@ -1497,6 +1589,34 @@ export function GatePassView() {
                     </button>
                   )}
                 </div>
+              </div>
+            )}
+
+            {/* IT Confirmation & C&B Notification block */}
+            {(currentUser?.role === 'it' || currentUser?.role === 'admin' || isBOD) && selectedPass.status !== 'pending' && selectedPass.status !== 'rejected' && (
+              <div className="p-3.5 bg-purple-50 dark:bg-purple-950/40 rounded-xl border border-purple-200 dark:border-purple-800/60 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-purple-900 dark:text-purple-300 flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-purple-600" />
+                    <span>Bộ phận CNTT (IT) - Xác nhận hoàn tất & Báo C&B:</span>
+                  </span>
+                  {selectedPass.itConfirmedAt && (
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                      ✓ Đã thông báo C&B ({selectedPass.itConfirmedBy})
+                    </span>
+                  )}
+                </div>
+                <p className="text-[11px] text-purple-800 dark:text-purple-300">
+                  Nhân viên IT kiểm tra đối chiếu giờ ra/vào thực tế và bấm nút bên dưới để hoàn tất hồ sơ, tự động đẩy email thông báo đến Bộ phận C&B cập nhật dữ liệu máy chấm công.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => handleITConfirmGatePass(selectedPass)}
+                  className="w-full py-2 px-3 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5 transition-colors"
+                >
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>{selectedPass.itConfirmedAt ? 'Cập nhật lại & Đẩy thông báo đến C&B' : 'IT Xác nhận hoàn tất & Thông báo C&B'}</span>
+                </button>
               </div>
             )}
 

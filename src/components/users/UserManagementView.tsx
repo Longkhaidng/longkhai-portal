@@ -28,6 +28,7 @@ import {
 import {
   parseEmployeeExcel,
   generateEmployeeTemplateExcel,
+  exportAllUsersToExcel,
   ParsedEmployeeResult,
 } from '@/lib/excel';
 
@@ -269,22 +270,26 @@ export function UserManagementView() {
     }
   };
 
-  // Confirm import parsed users from Excel
+  // Confirm import parsed users from Excel (smart upsert without wiping)
   const handleConfirmImport = () => {
     if (!parsedResult || parsedResult.users.length === 0 || !currentUser) return;
 
     const existing = [...users];
     const incoming = parsedResult.users;
+    let newCount = 0;
+    let updateCount = 0;
 
     incoming.forEach((newUser) => {
       const index = existing.findIndex((u) => u.id.toLowerCase() === newUser.id.toLowerCase());
       if (index >= 0) {
+        updateCount++;
         existing[index] = {
           ...existing[index],
           ...newUser,
           updatedAt: new Date().toISOString(),
         };
       } else {
+        newCount++;
         existing.push(newUser);
       }
     });
@@ -295,6 +300,7 @@ export function UserManagementView() {
     setShowUploadModal(false);
     setUploadFile(null);
     setParsedResult(null);
+    alert(`Nạp danh sách nhân viên thành công!\n- Thêm mới: ${newCount} nhân viên\n- Cập nhật: ${updateCount} nhân viên\nTổng cộng hiện có: ${existing.length} nhân viên trong hệ thống.`);
   };
 
   // Open Permission Matrix for a User
@@ -410,6 +416,15 @@ export function UserManagementView() {
           </button>
 
           <button
+            onClick={() => exportAllUsersToExcel(users)}
+            className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-colors"
+            title="Tải toàn bộ danh sách nhân viên hiện có về máy tính dạng file Excel"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>Tải danh sách nhân viên ({users.length})</span>
+          </button>
+
+          <button
             onClick={generateEmployeeTemplateExcel}
             className="px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-xs rounded-xl border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 transition-colors"
             title="Tải file Excel mẫu chuẩn"
@@ -480,6 +495,7 @@ export function UserManagementView() {
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-bold uppercase tracking-wider">
+                <th className="py-3.5 px-3 text-center w-12">STT</th>
                 <th className="py-3.5 px-4">Mã NV (Tên Đăng Nhập)</th>
                 <th className="py-3.5 px-4">Họ và tên</th>
                 <th className="py-3.5 px-4">Phòng ban & Chức vụ</th>
@@ -492,12 +508,12 @@ export function UserManagementView() {
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-slate-400">
+                  <td colSpan={8} className="py-8 text-center text-slate-400">
                     Chưa có nhân viên nào phù hợp. Vui lòng nhấn "+ Thêm nhân viên mới" hoặc "Tải lên danh sách Excel".
                   </td>
                 </tr>
               ) : (
-                filteredUsers.map((u) => {
+                filteredUsers.map((u, index) => {
                   const isRoot = u.id === '2265' || u.id === 'ADMIN01';
                   const permCount = u.role === 'admin' ? CATEGORY_DEFINITIONS.length : u.permissions?.length || 0;
 
@@ -506,6 +522,9 @@ export function UserManagementView() {
                       key={u.id}
                       className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
                     >
+                      <td className="py-3 px-3 text-center font-bold text-slate-500 dark:text-slate-400">
+                        {index + 1}
+                      </td>
                       <td className="py-3 px-4 font-mono font-bold text-blue-600 dark:text-blue-400">
                         {u.id}
                       </td>
@@ -973,15 +992,33 @@ export function UserManagementView() {
             )}
 
             {/* Preview Parsed Data */}
-            {parsedResult && (
+            {parsedResult && (() => {
+              const previewNewCount = parsedResult.users.filter(
+                (nu) => !users.some((u) => u.id.toLowerCase() === nu.id.toLowerCase())
+              ).length;
+              const previewUpdateCount = parsedResult.users.length - previewNewCount;
+
+              return (
               <div className="space-y-3">
+                <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-xs text-blue-900 dark:text-blue-300">
+                  <div className="font-bold flex items-center gap-1.5 mb-1 text-emerald-700 dark:text-emerald-400">
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    <span>Cập nhật trực tiếp vào hệ thống (Không cần xóa cài lại):</span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300">
+                    Hệ thống sẽ <b>thêm mới {previewNewCount} nhân viên</b> chưa có và <b>cập nhật {previewUpdateCount} nhân viên</b> đã tồn tại theo Mã NV. Dữ liệu nhân sự hiện có được giữ nguyên an toàn.
+                  </p>
+                </div>
+
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-slate-800 dark:text-slate-200">
                     Xem trước kết quả phân tích:
                   </span>
-                  <span className="font-semibold text-emerald-600">
-                    ✓ Hợp lệ: {parsedResult.users.length} tài khoản
-                  </span>
+                  <div className="flex items-center gap-2 font-semibold">
+                    <span className="text-emerald-600">Mới: +{previewNewCount}</span>
+                    <span className="text-blue-600">Cập nhật: {previewUpdateCount}</span>
+                    <span className="text-slate-500">Tổng: {parsedResult.users.length}</span>
+                  </div>
                 </div>
 
                 {parsedResult.errors.length > 0 && (
@@ -1018,7 +1055,8 @@ export function UserManagementView() {
                   </table>
                 </div>
               </div>
-            )}
+              );
+            })()}
 
             <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
               <button

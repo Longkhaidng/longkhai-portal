@@ -15,15 +15,16 @@ import {
   QrCode,
   FileSpreadsheet,
   Building2,
+  Utensils,
 } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatDateTime } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { filterUserLeaves, filterUserAttendances, filterUserGatePasses } from '@/lib/permissions';
 
 export function ReportsView() {
   const { currentUser } = useAuth();
-  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'departments'>('leave');
+  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'departments'>('leave');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('all');
@@ -33,6 +34,18 @@ export function ReportsView() {
   const gatePasses = filterUserGatePasses(storage.getGatePasses(), currentUser, 'all');
   const departments = storage.getDepartments();
   const users = storage.getUsers();
+
+  // All leave requests where Economic staff has confirmed cutting meals
+  const mealCutLeaves = leaves.filter((l) =>
+    l.steps.some((s) => s.roleRequired === 'economic' && s.status === 'approved')
+  );
+
+  const filteredMealCutLeaves = mealCutLeaves.filter((l) => {
+    if (departmentFilter !== 'all' && l.department !== departmentFilter) return false;
+    if (fromDate && l.fromDate < fromDate) return false;
+    if (toDate && l.toDate > toDate) return false;
+    return true;
+  });
 
   // Export to Excel handler
   const handleExportExcel = () => {
@@ -67,20 +80,43 @@ export function ReportsView() {
         'Trạng thái': a.status,
       }));
     } else if (reportType === 'gate_pass') {
-      dataToExport = gatePasses.map((gp) => ({
+      dataToExport = gatePasses.map((gp, idx) => ({
+        'STT': idx + 1,
         'Mã phiếu': gp.id,
         'Mã NV': gp.employeeId,
         'Họ và tên': gp.employeeName,
         'Phòng ban': gp.department,
         'Mục đích': gp.purpose,
         'Loại': gp.passType === 'business' ? 'Công tác' : 'Việc riêng',
-        'Có tài sản': gp.hasAssets ? 'Có' : 'Không',
-        'Giờ ra dự kiến': gp.estimatedDepartureTime,
+        'Tài sản mang theo': gp.hasAssets && gp.assets && gp.assets.length > 0
+          ? gp.assets.map((a) => `${a.name} (SL: ${a.quantity})`).join('; ')
+          : 'Không mang theo',
+        'Giờ ra dự kiến': gp.estimatedDepartureTime || '',
         'Giờ vào dự kiến': gp.estimatedReturnTime || '',
         'Giờ ra thực tế': gp.actualDepartureTime || '',
         'Giờ vào thực tế': gp.actualReturnTime || '',
         'Trạng thái': gp.status,
       }));
+    } else if (reportType === 'meal_cut') {
+      dataToExport = filteredMealCutLeaves.map((l, idx) => {
+        const ecoStep = l.steps.find((s) => s.roleRequired === 'economic');
+        return {
+          'STT': idx + 1,
+          'Mã đơn': l.id,
+          'Mã NV': l.employeeId,
+          'Họ và tên': l.employeeName,
+          'Phòng ban': l.department,
+          'Loại nghỉ phép': LEAVE_TYPE_LABELS[l.leaveType],
+          'Từ ngày': l.fromDate,
+          'Đến ngày': l.toDate,
+          'Số ngày cắt cơm': l.totalDays,
+          'NV Kinh tế xác nhận': ecoStep?.approverName || ecoStep?.approverId || 'NV Kinh tế',
+          'Thời gian xác nhận': ecoStep?.actionAt ? formatDateTime(ecoStep.actionAt) : 'Đã xác nhận',
+          'Lý do nghỉ': l.reason,
+          'Trạng thái đơn': l.status === 'approved' ? 'Hoàn tất' : l.status,
+        };
+      });
+      fileName = `LONGKHAI_Bao_Cao_CAT_COM_${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
     } else if (reportType === 'departments') {
       dataToExport = departments.map((d) => ({
         'Mã phòng ban': d.code,
@@ -130,8 +166,49 @@ export function ReportsView() {
         </div>
       </div>
 
+      {/* Filter Toolbar */}
+      <div className="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs shadow-xs">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+            <Filter className="w-3.5 h-3.5 text-blue-600" />
+            Lọc dữ liệu:
+          </span>
+          <select
+            value={departmentFilter}
+            onChange={(e) => setDepartmentFilter(e.target.value)}
+            className="py-1.5 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs"
+          >
+            <option value="all">Tất cả phòng ban</option>
+            {departments.map((d) => (
+              <option key={d.id} value={d.name}>
+                {d.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Calendar className="w-3.5 h-3.5 text-slate-400" />
+          <input
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+            className="py-1.5 px-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs"
+            placeholder="Từ ngày"
+          />
+          <span className="text-slate-400">&rarr;</span>
+          <input
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+            className="py-1.5 px-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs"
+            placeholder="Đến ngày"
+          />
+        </div>
+      </div>
+
       {/* Select Report Type Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         <button
           onClick={() => setReportType('leave')}
           className={`p-4 rounded-2xl border text-left transition-all ${
@@ -172,6 +249,19 @@ export function ReportsView() {
         </button>
 
         <button
+          onClick={() => setReportType('meal_cut')}
+          className={`p-4 rounded-2xl border text-left transition-all ${
+            reportType === 'meal_cut'
+              ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-500 shadow-sm'
+              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800'
+          }`}
+        >
+          <Utensils className="w-5 h-5 text-rose-600 mb-2" />
+          <div className="font-bold text-xs text-slate-900 dark:text-white">Cắt cơm</div>
+          <div className="text-[11px] text-slate-500">{filteredMealCutLeaves.length} lượt cắt cơm</div>
+        </button>
+
+        <button
           onClick={() => setReportType('departments')}
           className={`p-4 rounded-2xl border text-left transition-all ${
             reportType === 'departments'
@@ -206,7 +296,7 @@ export function ReportsView() {
         {/* Report Title */}
         <div className="text-center">
           <h2 className="text-base md:text-lg font-black uppercase text-slate-900 dark:text-white">
-            BÁO CÁO TỔNG HỢP {reportType.toUpperCase()}
+            BÁO CÁO TỔNG HỢP {reportType === 'meal_cut' ? 'CẮT CƠM NHÂN VIÊN' : reportType === 'leave' ? 'NGHỈ PHÉP' : reportType === 'attendance' ? 'XÁC NHẬN CÔNG' : reportType === 'gate_pass' ? 'RA VÀO CỔNG & TÀI SẢN' : 'CƠ CẤU PHÒNG BAN'}
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
             Phục vụ công tác thanh kiểm tra và quản trị nội bộ nhà máy
@@ -280,8 +370,9 @@ export function ReportsView() {
                   <th className="p-2 border">Mã phiếu</th>
                   <th className="p-2 border">Nhân viên</th>
                   <th className="p-2 border">Mục đích</th>
-                  <th className="p-2 border">Giờ ra</th>
-                  <th className="p-2 border">Giờ vào</th>
+                  <th className="p-2 border">Tài sản mang theo</th>
+                  <th className="p-2 border">Giờ ra thực tế</th>
+                  <th className="p-2 border">Giờ vào thực tế</th>
                   <th className="p-2 border">Trạng thái</th>
                 </tr>
               </thead>
@@ -291,11 +382,80 @@ export function ReportsView() {
                     <td className="p-2 border font-mono font-bold text-emerald-600">{gp.id}</td>
                     <td className="p-2 border font-semibold">{gp.employeeName} ({gp.employeeId})</td>
                     <td className="p-2 border">{gp.purpose}</td>
-                    <td className="p-2 border">{gp.actualDepartureTime || gp.estimatedDepartureTime}</td>
-                    <td className="p-2 border">{gp.actualReturnTime || gp.estimatedReturnTime || '-'}</td>
+                    <td className="p-2 border">
+                      {gp.hasAssets && gp.assets && gp.assets.length > 0 ? (
+                        <span className="font-semibold text-amber-700 dark:text-amber-400">
+                          {gp.assets.map((a) => `${a.name} (${a.quantity})`).join(', ')}
+                        </span>
+                      ) : (
+                        <span className="text-slate-400">Không mang</span>
+                      )}
+                    </td>
+                    <td className="p-2 border">{gp.actualDepartureTime ? formatDateTime(gp.actualDepartureTime) : (gp.estimatedDepartureTime ? `Dự kiến ${formatDateTime(gp.estimatedDepartureTime)}` : '-')}</td>
+                    <td className="p-2 border">{gp.timeType === 'nghi_cuoi_gio' ? 'Không về lại' : gp.actualReturnTime ? formatDateTime(gp.actualReturnTime) : (gp.estimatedReturnTime ? `Dự kiến ${formatDateTime(gp.estimatedReturnTime)}` : '-')}</td>
                     <td className="p-2 border uppercase text-[10px] font-bold">{gp.status}</td>
                   </tr>
                 ))}
+              </tbody>
+            </table>
+          )}
+
+          {reportType === 'meal_cut' && (
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
+                  <th className="p-2 border text-center w-12">STT</th>
+                  <th className="p-2 border">Mã đơn</th>
+                  <th className="p-2 border">Mã NV</th>
+                  <th className="p-2 border">Họ và tên</th>
+                  <th className="p-2 border">Phòng ban</th>
+                  <th className="p-2 border">Loại nghỉ</th>
+                  <th className="p-2 border">Thời gian nghỉ</th>
+                  <th className="p-2 border text-center">Số ngày cắt cơm</th>
+                  <th className="p-2 border">NV Kinh tế xác nhận</th>
+                  <th className="p-2 border">Thời gian xác nhận</th>
+                  <th className="p-2 border">Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredMealCutLeaves.length === 0 ? (
+                  <tr>
+                    <td colSpan={11} className="p-6 text-center text-slate-400">
+                      Chưa có nhân viên nào được xác nhận cắt cơm trong hệ thống hoặc khoảng thời gian đã chọn.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredMealCutLeaves.map((l, idx) => {
+                    const ecoStep = l.steps.find((s) => s.roleRequired === 'economic');
+                    return (
+                      <tr key={l.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                        <td className="p-2 border text-center font-bold text-slate-500">{idx + 1}</td>
+                        <td className="p-2 border font-mono font-bold text-blue-600">{l.id}</td>
+                        <td className="p-2 border font-mono">{l.employeeId}</td>
+                        <td className="p-2 border font-bold text-slate-900 dark:text-white">{l.employeeName}</td>
+                        <td className="p-2 border">{l.department}</td>
+                        <td className="p-2 border">{LEAVE_TYPE_LABELS[l.leaveType]}</td>
+                        <td className="p-2 border font-semibold text-slate-800 dark:text-slate-200">
+                          {formatDate(l.fromDate)} &rarr; {formatDate(l.toDate)}
+                        </td>
+                        <td className="p-2 border text-center font-bold text-rose-600">
+                          {l.totalDays} ngày
+                        </td>
+                        <td className="p-2 border font-medium text-emerald-700 dark:text-emerald-400">
+                          {ecoStep?.approverName || 'Nhân viên kinh tế'}
+                        </td>
+                        <td className="p-2 border text-[11px] text-slate-500">
+                          {ecoStep?.actionAt ? formatDateTime(ecoStep.actionAt) : 'Đã xác nhận'}
+                        </td>
+                        <td className="p-2 border">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                            Đã cắt cơm
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           )}

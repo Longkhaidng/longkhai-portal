@@ -15,6 +15,8 @@ export interface AttendanceConfirm {
   checkOutTime: string; // HH:mm
   shift: string; // Ca 1 (06:00 - 14:00), Ca 2 (14:00 - 22:00), Ca HC (07:30 - 16:30)...
   reason: string;
+  actualCheckIn?: string;
+  actualCheckOut?: string;
   status: AttendanceStatus;
   currentStepIndex: number;
   steps: ApprovalStep[];

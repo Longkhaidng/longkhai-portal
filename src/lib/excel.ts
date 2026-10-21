@@ -141,6 +141,7 @@ export function parseEmployeeExcel(file: File): Promise<ParsedEmployeeResult> {
 
 export function generateEmployeeTemplateExcel() {
   const headers = [
+    'STT',
     'Mã nhân viên',
     'Họ và tên',
     'Phòng ban',
@@ -150,6 +151,7 @@ export function generateEmployeeTemplateExcel() {
     'Số điện thoại',
     'Mã Tổ trưởng',
     'Mã Trưởng BP',
+    'Mã NV kinh tế',
     'Email Trưởng BP',
     'Mật khẩu',
     'Phân quyền',
@@ -157,6 +159,7 @@ export function generateEmployeeTemplateExcel() {
 
   const sampleData = [
     {
+      'STT': 1,
       'Mã nhân viên': 'LK-101',
       'Họ và tên': 'Nguyễn Văn An',
       'Phòng ban': 'Xưởng Sản xuất 1',
@@ -171,6 +174,7 @@ export function generateEmployeeTemplateExcel() {
       'Phân quyền': 'dashboard,leave,attendance,gate_pass,announcements',
     },
     {
+      'STT': 2,
       'Mã nhân viên': 'LK-050',
       'Họ và tên': 'Trần Văn Bình',
       'Phòng ban': 'Xưởng Sản xuất 1',
@@ -185,6 +189,7 @@ export function generateEmployeeTemplateExcel() {
       'Phân quyền': 'dashboard,leave,attendance,gate_pass,announcements,reports',
     },
     {
+      'STT': 3,
       'Mã nhân viên': 'LK-010',
       'Họ và tên': 'Lê Hoàng Cường',
       'Phòng ban': 'Xưởng Sản xuất 1',
@@ -199,6 +204,7 @@ export function generateEmployeeTemplateExcel() {
       'Phân quyền': 'all',
     },
     {
+      'STT': 4,
       'Mã nhân viên': 'LK-005',
       'Họ và tên': 'Phạm Thị Dung',
       'Phòng ban': 'Phòng Hành Chính Nhân Sự',
@@ -213,6 +219,7 @@ export function generateEmployeeTemplateExcel() {
       'Phân quyền': 'dashboard,leave,attendance,users,departments,reports',
     },
     {
+      'STT': 5,
       'Mã nhân viên': 'LK-008',
       'Họ và tên': 'Võ Văn Em',
       'Phòng ban': 'Đội Bảo Vệ & An Ninh',
@@ -232,6 +239,7 @@ export function generateEmployeeTemplateExcel() {
   
   // Set column widths
   worksheet['!cols'] = [
+    { wch: 6 },  // STT
     { wch: 15 }, // Mã NV
     { wch: 22 }, // Họ tên
     { wch: 25 }, // Phòng ban
@@ -241,6 +249,7 @@ export function generateEmployeeTemplateExcel() {
     { wch: 15 }, // SĐT
     { wch: 14 }, // Tổ trưởng
     { wch: 14 }, // Trưởng BP
+    { wch: 14 }, // Mã NV kinh tế
     { wch: 26 }, // Email Trưởng BP
     { wch: 14 }, // Mật khẩu
     { wch: 45 }, // Phân quyền
@@ -280,4 +289,47 @@ export function exportDataToExcel(data: any[], fileName: string, sheetName: stri
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
   XLSX.writeFile(workbook, `${fileName}.xlsx`);
+}
+
+export function exportAllUsersToExcel(users: User[]) {
+  const data = users.map((u, index) => ({
+    'STT': index + 1,
+    'Mã nhân viên': u.id,
+    'Họ và tên': u.name,
+    'Phòng ban': u.department,
+    'Chức vụ': u.position,
+    'Vai trò': u.role,
+    'Email': u.email || '',
+    'Số điện thoại': u.phone || '',
+    'Mã Tổ trưởng': u.teamLeaderId || '',
+    'Mã Trưởng BP': u.departmentHeadId || '',
+    'Mã NV kinh tế': u.economicStaffId || '',
+    'Email Trưởng BP': u.departmentHeadEmail || '',
+    'Phân quyền': (u.permissions || []).join(', '),
+    'Trạng thái': u.isActive ? 'Đang hoạt động' : 'Đã khóa',
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(data);
+  worksheet['!cols'] = [
+    { wch: 6 },  // STT
+    { wch: 15 }, // Mã NV
+    { wch: 22 }, // Họ tên
+    { wch: 25 }, // Phòng ban
+    { wch: 22 }, // Chức vụ
+    { wch: 14 }, // Vai trò
+    { wch: 24 }, // Email
+    { wch: 15 }, // SĐT
+    { wch: 14 }, // Tổ trưởng
+    { wch: 14 }, // Trưởng BP
+    { wch: 14 }, // Mã NV kinh tế
+    { wch: 26 }, // Email Trưởng BP
+    { wch: 45 }, // Phân quyền
+    { wch: 16 }, // Trạng thái
+  ];
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Danh Sách Nhân Viên');
+  const d = new Date();
+  const dateStr = String(d.getFullYear()) + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+  XLSX.writeFile(workbook, 'LONGKHAI_Danh_Sach_Nhan_Vien_' + dateStr + '.xlsx');
 }

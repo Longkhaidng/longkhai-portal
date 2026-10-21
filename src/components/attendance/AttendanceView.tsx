@@ -27,7 +27,7 @@ import {
   QrCode,
 } from 'lucide-react';
 import { formatDate, generateDocId } from '@/lib/utils';
-import { dispatchApprovalEmail } from '@/lib/email';
+import { dispatchApprovalEmail, dispatchCBNotificationEmail } from '@/lib/email';
 import { generateQrDataUrl, getQrConfirmUrl } from '@/lib/qr';
 import { ToastContainer, useToast } from '@/components/common/Toast';
 import {
@@ -219,7 +219,7 @@ export function AttendanceView() {
         employeeName: currentUser.name,
         department: currentUser.department,
         details: {
-          title: 'Chi tiết Phiếu Xác Nhận Công Vào - Ra',
+          title: 'Chi tiết Phiếu Xác Nhận Công',
           items: [
             { label: 'Sự cố chấm công', value: ISSUE_TYPE_LABELS[issueType]?.text || issueType },
             { label: 'Ngày cần xác nhận', value: formatDate(date) },
@@ -384,7 +384,7 @@ export function AttendanceView() {
             employeeName: updated.employeeName,
             department: updated.department,
             details: {
-              title: 'Thông báo Duyệt Phiếu Xác Nhận Công Vào - Ra',
+              title: 'Thông báo Duyệt Phiếu Xác Nhận Công',
               items: [
                 { label: 'Sự cố chấm công', value: ISSUE_TYPE_LABELS[updated.issueType]?.text || updated.issueType },
                 { label: 'Nhân viên giải trình', value: `${updated.employeeName} (${updated.employeeId})` },
@@ -491,10 +491,34 @@ export function AttendanceView() {
         });
       }
     } else {
+      // Step IT completed -> Dispatch notification to C&B department
+      dispatchCBNotificationEmail({
+        type: 'attendance',
+        docId: updated.id,
+        employeeId: updated.employeeId,
+        employeeName: updated.employeeName,
+        department: updated.department,
+        title: 'Phiếu Xác Nhận Công',
+        summary: `Nhân viên ${updated.employeeName} đã được IT xác nhận hoàn tất giải trình công.`,
+        itApproverName: currentUser.name,
+        details: [
+          { label: 'Mã phiếu', value: updated.id },
+          { label: 'Nhân viên', value: `${updated.employeeName} (${updated.employeeId})` },
+          { label: 'Phòng ban', value: updated.department },
+          { label: 'Sự cố chấm công', value: ISSUE_TYPE_LABELS[updated.issueType]?.text || updated.issueType },
+          { label: 'Ca làm việc', value: `Ngày ${formatDate(updated.date)} (${updated.shift})` },
+          { label: 'TG vào thực tế', value: updated.actualCheckIn || updated.checkInTime },
+          { label: 'TG ra thực tế', value: updated.actualCheckOut || updated.checkOutTime },
+          { label: 'Lý do giải trình', value: updated.reason },
+          { label: 'Bảo vệ xác nhận', value: updated.steps[0]?.approverName || 'Đã xác nhận' },
+          { label: 'IT xác nhận hoàn tất', value: `${currentUser.name} (${currentUser.id})` },
+        ],
+      }).catch(console.error);
+
       showToast({
         type: 'success',
         title: 'Hồ sơ đã hoàn tất phê duyệt',
-        message: `Phiếu ${updated.id} đã hoàn thành tất cả các bước xác nhận công.`,
+        message: `Phiếu ${updated.id} đã hoàn thành. Hệ thống đã đẩy thông báo đến Bộ phận C&B để cập nhật dữ liệu chấm công.`,
       });
     }
   };
@@ -574,7 +598,7 @@ export function AttendanceView() {
               <Clock className="w-5 h-5" />
             </div>
             <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-              Phiếu Xác Nhận Công Vào - Ra
+              Phiếu Xác Nhận Công
             </h1>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -753,7 +777,9 @@ export function AttendanceView() {
                 <th className="py-3.5 px-4">Mã phiếu</th>
                 <th className="py-3.5 px-4">Nhân viên</th>
                 <th className="py-3.5 px-4">Lý do phát sinh</th>
-                <th className="py-3.5 px-4">Ngày & Giờ vào/ra</th>
+                <th className="py-3.5 px-4">Ca làm việc</th>
+                <th className="py-3.5 px-4">Thời gian vào thực tế</th>
+                <th className="py-3.5 px-4">Thời gian ra thực tế</th>
                 <th className="py-3.5 px-4">Tiến trình duyệt</th>
                 <th className="py-3.5 px-4">Trạng thái</th>
                 <th className="py-3.5 px-4 text-right">Chi tiết</th>
@@ -762,7 +788,7 @@ export function AttendanceView() {
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-slate-400">
+                  <td colSpan={9} className="py-8 text-center text-slate-400">
                     Không tìm thấy phiếu xác nhận công nào.
                   </td>
                 </tr>
@@ -797,9 +823,27 @@ export function AttendanceView() {
                       <div className="font-semibold text-slate-800 dark:text-slate-200">
                         Ngày {formatDate(item.date)}
                       </div>
-                      <div className="text-[11px] text-slate-500">
-                        Vào: <b>{item.checkInTime}</b> &bull; Ra: <b>{item.checkOutTime}</b>
+                      <div className="text-[11px] font-medium text-blue-600 dark:text-blue-400">
+                        {item.shift}
                       </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      {item.steps[0]?.status === 'approved' ? (
+                        <div className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                          {item.actualCheckIn || item.checkInTime}
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-slate-400 italic">Chưa xác nhận</span>
+                      )}
+                    </td>
+                    <td className="py-3 px-4">
+                      {item.steps[0]?.status === 'approved' ? (
+                        <div className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                          {item.actualCheckOut || item.checkOutTime}
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-slate-400 italic">Chưa xác nhận</span>
+                      )}
                     </td>
                     <td className="py-3 px-4">
                       <div className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">
@@ -881,7 +925,7 @@ export function AttendanceView() {
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div>
                 <h3 className="font-bold text-base text-slate-900 dark:text-white">
-                  Tạo Phiếu Xác Nhận Công Vào - Ra
+                  Tạo Phiếu Xác Nhận Công
                 </h3>
                 <p className="text-xs text-slate-500">
                   Người làm đơn: <b>{currentUser?.name}</b> ({currentUser?.id} - {currentUser?.department})
@@ -1064,7 +1108,7 @@ export function AttendanceView() {
                   {selectedItem.id}
                 </span>
                 <h3 className="font-bold text-base text-slate-900 dark:text-white">
-                  Phiếu Xác Nhận Công Vào - Ra
+                  Phiếu Xác Nhận Công
                 </h3>
               </div>
               <div className="flex items-center gap-2">

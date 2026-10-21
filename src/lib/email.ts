@@ -221,3 +221,132 @@ export async function dispatchApprovalEmail(payload: SendEmailPayload): Promise<
     };
   }
 }
+
+export interface DispatchCBPayload {
+  type: 'attendance' | 'gate_pass';
+  docId: string;
+  employeeId: string;
+  employeeName: string;
+  department: string;
+  title: string;
+  summary: string;
+  details: { label: string; value: string }[];
+  itApproverName?: string;
+}
+
+/**
+ * Dispatch completion notification email to C&B department
+ */
+export async function dispatchCBNotificationEmail(payload: DispatchCBPayload): Promise<{ success: boolean; count: number }> {
+  const config = storage.getEmailConfig();
+  const allUsers = storage.getUsers();
+
+  // Find C&B / HR staff members
+  const cbUsers = allUsers.filter(
+    (u) =>
+      u.role === 'hr' ||
+      (u.position && /c&b|tiền lương|chấm công|hành chính nhân sự/i.test(u.position)) ||
+      (u.department && /nhân sự/i.test(u.department))
+  );
+
+  const targetEmails = Array.from(
+    new Set(
+      cbUsers
+        .map((u) => (u.email || '').trim().toLowerCase())
+        .filter((em) => em.includes('@'))
+    )
+  );
+
+  // Fallback if no specific emails set
+  if (targetEmails.length === 0) {
+    targetEmails.push('tuyet.vo@longkhai.com.vn');
+  }
+
+  const subject = `[Long Khai Portal] Thông báo C&B: Hoàn tất phê duyệt ${payload.title} - ${payload.employeeName} (${payload.employeeId}) - Vui lòng cập nhật dữ liệu chấm công`;
+
+  const rowsHtml = payload.details
+    .map(
+      (item) => `
+      <tr>
+        <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569; width: 35%; background-color: #f8fafc;">
+          ${item.label}
+        </td>
+        <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; color: #1e293b; font-weight: 500;">
+          ${item.value}
+        </td>
+      </tr>
+    `
+    )
+    .join('');
+
+  const html = `
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <title>${subject}</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #334155; line-height: 1.6;">
+  <div style="max-width: 600px; margin: 30px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0;">
+    <div style="background: linear-gradient(135deg, #065f46 0%, #047857 100%); padding: 26px 20px; text-align: center; color: #ffffff;">
+      <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #a7f3d0; margin-bottom: 6px;">
+        CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG
+      </div>
+      <h1 style="margin: 0; font-size: 20px; font-weight: 900; color: #ffffff;">
+        THÔNG BÁO BỘ PHẬN C&B / TIỀN LƯƠNG & CHẤM CÔNG
+      </h1>
+      <div style="display: inline-block; margin-top: 10px; background-color: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); padding: 4px 14px; border-radius: 16px; font-size: 12px; font-family: monospace; font-weight: bold;">
+        MÃ HỒ SƠ: ${payload.docId}
+      </div>
+    </div>
+
+    <div style="padding: 24px;">
+      <p style="margin-top: 0; font-size: 14px; color: #1e293b;">
+        Kính gửi <strong>Bộ phận C&B / Quản lý Tiền lương & Chấm công</strong>,
+      </p>
+      <div style="background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 12px; padding: 14px; margin-bottom: 18px; color: #065f46; font-size: 13px;">
+        <b>✓ Đơn đã được phê duyệt và hoàn tất xử lý IT:</b>
+        <p style="margin: 6px 0 0 0;">
+          Nhân viên CNTT (${payload.itApproverName || 'Bảo trợ IT'}) đã xác nhận hoàn thành hồ sơ <b>${payload.title}</b> của nhân viên <b>${payload.employeeName}</b>. Kính đề nghị Bộ phận C&B kiểm tra và cập nhật dữ liệu chấm công / giải trình công tương ứng.
+        </p>
+      </div>
+
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0;">
+        <tbody>
+          ${rowsHtml}
+        </tbody>
+      </table>
+
+      <div style="text-align: center; margin-top: 24px; padding-top: 18px; border-top: 1px dashed #cbd5e1; font-size: 12px; color: #64748b;">
+        Hệ thống Quản trị & Điều hành Nội bộ Long Khai Portal &bull; Tự động thông báo
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  let successCount = 0;
+  for (const toEmail of targetEmails) {
+    try {
+      await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          toEmail,
+          subject,
+          html,
+          type: payload.type,
+          docId: payload.docId,
+          employeeName: payload.employeeName,
+          emailConfig: config,
+        }),
+      });
+      successCount++;
+    } catch (e) {
+      console.error('Lỗi gửi email C&B:', e);
+    }
+  }
+
+  return { success: successCount > 0, count: successCount };
+}
