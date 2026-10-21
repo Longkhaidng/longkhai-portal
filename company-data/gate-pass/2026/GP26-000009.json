@@ -1,0 +1,21 @@
+{
+  "id": "GP26-000009",
+  "employeeId": "1139",
+  "employeeName": "Võ Thị Tuyết",
+  "department": "Phòng HCNS",
+  "purpose": "Công tác: đi BHXH",
+  "passType": "business",
+  "timeType": "nghi_giua_gio",
+  "reasonCategory": "cong_ty",
+  "customReason": "đi BHXH",
+  "hasAssets": false,
+  "assets": [],
+  "estimatedDepartureTime": "2026-10-21T15:00",
+  "estimatedReturnTime": "2026-10-21T15:30",
+  "managerApproverId": "1867",
+  "managerApproverName": "Trương Anh Như Quỳnh",
+  "status": "pending",
+  "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=gate_pass&id=GP26-000009",
+  "createdAt": "2026-10-21T07:53:21.232Z",
+  "updatedAt": "2026-10-21T07:53:21.232Z"
+}
