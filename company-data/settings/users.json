@@ -2680,7 +2680,7 @@
   {
     "id": "2332",
     "name": "Nguyễn Thùy Nhung",
-    "department": "Phòng Hành Chính Nhân Sự",
+    "department": "Phòng HCNS",
     "position": "Phụ bếp",
     "role": "employee",
     "departmentHeadId": "1867",
@@ -2695,7 +2695,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-21T06:40:42.638Z"
   },
   {
     "id": "2336",
