@@ -976,7 +976,7 @@
   {
     "id": "1246",
     "name": "Đỗ Thị Kim Nhung",
-    "department": "Phòng Hành Chính Nhân Sự",
+    "department": "Phòng HCNS",
     "position": "Nhân viên phục vụ - kho PL",
     "role": "employee",
     "departmentHeadId": "1867",
@@ -991,7 +991,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-21T06:40:33.060Z"
   },
   {
     "id": "1253",
