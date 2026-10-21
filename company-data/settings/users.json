@@ -809,7 +809,7 @@
   {
     "id": "1139",
     "name": "Võ Thị Tuyết",
-    "department": "Phòng Hành Chính Nhân Sự",
+    "department": "Phòng HCNS",
     "position": "Chuyên viên hành chính nhân sự",
     "role": "hr",
     "email": "tuyet.vo@longkhai.com.vn",
@@ -825,7 +825,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-21T06:38:41.986Z"
   },
   {
     "id": "1147",
