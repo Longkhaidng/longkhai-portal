@@ -824,12 +824,17 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:42:25.551Z"
+    "updatedAt": "2026-10-21T06:47:38.622Z",
+    "allowedWebIntegrations": [
+      "WEB-001"
+    ]
   },
   {
     "id": "1147",
