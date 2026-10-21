@@ -73,6 +73,7 @@ export function parseEmployeeExcel(file: File): Promise<ParsedEmployeeResult> {
           // Map role
           let role: UserRole = 'employee';
           if (roleRaw.includes('admin') || roleRaw.includes('quản trị')) role = 'admin';
+          else if (roleRaw.includes('c&b') || roleRaw.includes('cb')) role = 'cb';
           else if (roleRaw.includes('hr') || roleRaw.includes('nhân sự')) role = 'hr';
           else if (roleRaw.includes('ehs') || roleRaw.includes('an toàn')) role = 'ehs';
           else if (roleRaw.includes('security') || roleRaw.includes('bảo vệ')) role = 'security';
@@ -101,6 +102,7 @@ export function parseEmployeeExcel(file: File): Promise<ParsedEmployeeResult> {
           if (permissions.length === 0) {
             permissions = ['dashboard', 'leave', 'attendance', 'gate_pass', 'announcements'];
             if (role === 'security') permissions.push('gate_pass', 'attendance');
+            if (role === 'cb') permissions.push('leave', 'attendance', 'gate_pass', 'reports');
             if (role === 'hr') permissions.push('leave', 'attendance', 'reports', 'users', 'departments');
             if (role === 'manager' || role === 'team_leader') permissions.push('reports', 'forms');
           }

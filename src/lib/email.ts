@@ -244,6 +244,7 @@ export async function dispatchCBNotificationEmail(payload: DispatchCBPayload): P
   // Find C&B / HR staff members
   const cbUsers = allUsers.filter(
     (u) =>
+      u.role === 'cb' ||
       u.role === 'hr' ||
       (u.position && /c&b|tiền lương|chấm công|hành chính nhân sự/i.test(u.position)) ||
       (u.department && /nhân sự/i.test(u.department))

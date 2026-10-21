@@ -156,7 +156,13 @@ export function filterUserLeaves(
     });
   }
 
-  // 2. Regular users strictly only see their own requests
+  // 2. HR & C&B roles can see all company leaves for timekeeping / payroll tracking
+  if (user.role === 'hr' || user.role === 'cb') {
+    if (scope === 'my') return leaves.filter((l) => l.employeeId.toLowerCase() === uid);
+    return leaves;
+  }
+
+  // 3. Regular users strictly only see their own requests
   if (!isApproverRole(user)) {
     return leaves.filter((l) => l.employeeId.toLowerCase() === uid);
   }
@@ -224,6 +230,12 @@ export function filterUserGatePasses(
         (p) => (p.status === 'approved' || p.status === 'departed') && p.employeeId.toLowerCase() !== uid
       );
     }
+    return passes;
+  }
+
+  // HR & C&B roles can see all gate passes across company
+  if (user.role === 'hr' || user.role === 'cb') {
+    if (scope === 'my') return passes.filter((p) => p.employeeId.toLowerCase() === uid);
     return passes;
   }
 
@@ -337,6 +349,12 @@ export function filterUserAttendances(
       const isMyDept = (user.role === 'manager' || user.role === 'team_leader') && isSameDepartment(a.department, user.department);
       return isMine || hasAccStep || isMyDept;
     });
+  }
+
+  // 3.5. HR & C&B roles can see all attendance confirmations across company
+  if (user.role === 'hr' || user.role === 'cb') {
+    if (scope === 'my') return attendances.filter((a) => a.employeeId.toLowerCase() === uid);
+    return attendances;
   }
 
   // 4. Regular employees strictly only see their own
