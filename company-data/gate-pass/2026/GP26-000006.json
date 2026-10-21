@@ -16,6 +16,8 @@
   "status": "approved",
   "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=gate_pass&id=GP26-000006",
   "createdAt": "2026-10-20T08:11:59.385Z",
-  "updatedAt": "2026-10-20T08:13:04.953Z",
-  "managerApprovedAt": "2026-10-20T08:13:04.953Z"
+  "updatedAt": "2026-10-21T07:49:03.974Z",
+  "managerApprovedAt": "2026-10-20T08:13:04.953Z",
+  "itConfirmedAt": "2026-10-21T07:49:03.974Z",
+  "itConfirmedBy": "Trần Lê Hữu Lực (2265)"
 }
