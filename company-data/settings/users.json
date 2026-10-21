@@ -819,15 +819,18 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-16T07:59:12.466Z",
-    "updatedAt": "2026-10-20T06:17:52.243Z",
+    "updatedAt": "2026-10-21T03:39:40.455Z",
     "email": "tuyet.vo@longkhai.com.vn",
     "departmentHeadId": "1867",
-    "economicStaffId": "1139"
+    "economicStaffId": "1139",
+    "allowedWebIntegrations": []
   },
   {
     "id": "1147",
