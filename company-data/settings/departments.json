@@ -43,7 +43,9 @@
     "name": "Phòng Cơ Điện & Bảo Trì",
     "description": "Bảo trì máy móc thiết bị, hệ thống trạm điện, khí nén và phụ trợ",
     "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
+    "updatedAt": "2026-10-21T06:30:34.836Z",
+    "managerId": "2409",
+    "managerName": "Trịnh Anh Tài"
   },
   {
     "id": "PB-QA",
