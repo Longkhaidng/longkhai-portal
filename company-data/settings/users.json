@@ -83,9 +83,9 @@
       "WEB-003"
     ],
     "isActive": true,
-    "password": "LK@123456",
+    "password": "admin@123",
     "createdAt": "2026-10-21T04:27:09.704Z",
-    "updatedAt": "2026-10-21T04:27:35.896Z",
+    "updatedAt": "2026-10-21T05:37:12.129Z",
     "departmentHeadId": "1867",
     "economicStaffId": "1139"
   },
