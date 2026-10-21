@@ -98,5 +98,15 @@
     "description": "Thiết kế, kiểm tra chất lượng mẫu. Phê duyệt mẫu trước khi đưa vào sản xuất đại trà",
     "createdAt": "2026-10-20T04:25:26.627Z",
     "updatedAt": "2026-10-20T04:25:26.627Z"
+  },
+  {
+    "id": "PB-QLSX",
+    "code": "QLSX",
+    "name": "Phòng quản lý sản xuất",
+    "description": "Kiểm tra, theo dõi tiến độ sản xuất của nhà máy",
+    "managerId": "2864",
+    "managerName": "Nguyễn Đình Linh",
+    "createdAt": "2026-10-21T06:32:54.681Z",
+    "updatedAt": "2026-10-21T06:32:54.681Z"
   }
 ]
