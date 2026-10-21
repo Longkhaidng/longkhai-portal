@@ -14,13 +14,13 @@
       "attendance",
       "gate_pass",
       "announcements",
-      "forms",
-      "reports"
+      "reports",
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements, reports, forms",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1867",
@@ -33,20 +33,17 @@
     "departmentHeadEmail": "buithuanh@vitex.com.vn",
     "permissions": [
       "dashboard",
-      "departments",
       "leave",
       "attendance",
       "gate_pass",
       "announcements",
-      "forms",
       "reports",
-      "users",
-      "web_integrations"
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements, departments, forms, reports, web_integrations, users",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2265",
@@ -72,9 +69,9 @@
       "settings"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, departments, leave, attendance, gate_pass, announcements, forms, reports, users, web_integrations, plugins, settings",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "101",
@@ -84,14 +81,17 @@
     "role": "security",
     "permissions": [
       "dashboard",
+      "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "gate_pass",
+      "attendance"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, announcements, gate_pass, attendance",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "102",
@@ -101,14 +101,17 @@
     "role": "security",
     "permissions": [
       "dashboard",
+      "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "gate_pass",
+      "attendance"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, announcements, attendance, gate_pass",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "103",
@@ -118,14 +121,17 @@
     "role": "security",
     "permissions": [
       "dashboard",
+      "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "gate_pass",
+      "attendance"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, announcements, attendance, gate_pass",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "104",
@@ -135,14 +141,17 @@
     "role": "security",
     "permissions": [
       "dashboard",
+      "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "gate_pass",
+      "attendance"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, announcements, attendance, gate_pass",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "105",
@@ -152,14 +161,17 @@
     "role": "security",
     "permissions": [
       "dashboard",
+      "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "gate_pass",
+      "attendance"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, announcements, attendance, gate_pass",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1002",
@@ -176,9 +188,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1005",
@@ -195,9 +207,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1008",
@@ -215,9 +227,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1010",
@@ -235,9 +247,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1012",
@@ -255,9 +267,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1014",
@@ -275,9 +287,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1015",
@@ -295,9 +307,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1020",
@@ -315,9 +327,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1022",
@@ -335,9 +347,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1025",
@@ -355,9 +367,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1026",
@@ -374,9 +386,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1030",
@@ -391,12 +403,14 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1035",
@@ -413,9 +427,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1049",
@@ -432,9 +446,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1051",
@@ -450,13 +464,13 @@
       "attendance",
       "gate_pass",
       "announcements",
-      "forms",
-      "reports"
+      "reports",
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements, forms, reports",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1056",
@@ -474,9 +488,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1061",
@@ -494,9 +508,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1070",
@@ -514,9 +528,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1079",
@@ -530,12 +544,14 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1085",
@@ -552,9 +568,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1094",
@@ -572,9 +588,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1096",
@@ -592,9 +608,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1097",
@@ -611,9 +627,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1101",
@@ -631,9 +647,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1104",
@@ -651,9 +667,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1114",
@@ -667,12 +683,14 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1116",
@@ -690,9 +708,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1118",
@@ -709,9 +727,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1119",
@@ -729,9 +747,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1121",
@@ -749,9 +767,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1131",
@@ -768,9 +786,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1139",
@@ -785,12 +803,17 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "leave",
+      "attendance",
+      "reports",
+      "users",
+      "departments"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1147",
@@ -808,9 +831,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1158",
@@ -828,9 +851,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1204",
@@ -848,9 +871,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1205",
@@ -868,9 +891,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1240",
@@ -888,9 +911,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1241",
@@ -905,12 +928,14 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1243",
@@ -927,9 +952,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1246",
@@ -946,9 +971,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1253",
@@ -965,9 +990,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1255",
@@ -985,9 +1010,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1258",
@@ -1005,9 +1030,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1264",
@@ -1025,9 +1050,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1271",
@@ -1044,9 +1069,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1282",
@@ -1064,9 +1089,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1305",
@@ -1084,9 +1109,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1307",
@@ -1104,9 +1129,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1308",
@@ -1124,9 +1149,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1348",
@@ -1144,9 +1169,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1368",
@@ -1164,9 +1189,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1400",
@@ -1181,12 +1206,14 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1403",
@@ -1200,12 +1227,14 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1413",
@@ -1223,9 +1252,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1418",
@@ -1243,9 +1272,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1419",
@@ -1263,9 +1292,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1443",
@@ -1283,9 +1312,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1444",
@@ -1303,9 +1332,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1466",
@@ -1322,9 +1351,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1491",
@@ -1342,9 +1371,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1503",
@@ -1362,9 +1391,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1527",
@@ -1382,9 +1411,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1532",
@@ -1402,9 +1431,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1554",
@@ -1418,12 +1447,14 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1559",
@@ -1440,9 +1471,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1598",
@@ -1460,9 +1491,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1635",
@@ -1480,9 +1511,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1637",
@@ -1500,9 +1531,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1640",
@@ -1520,9 +1551,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1643",
@@ -1540,9 +1571,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1649",
@@ -1560,9 +1591,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1672",
@@ -1579,9 +1610,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1679",
@@ -1599,9 +1630,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1706",
@@ -1619,9 +1650,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1770",
@@ -1639,9 +1670,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1778",
@@ -1658,9 +1689,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1785",
@@ -1678,9 +1709,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1802",
@@ -1698,9 +1729,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1804",
@@ -1718,9 +1749,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1809",
@@ -1738,9 +1769,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1849",
@@ -1758,9 +1789,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1894",
@@ -1778,9 +1809,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1912",
@@ -1798,9 +1829,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1924",
@@ -1818,9 +1849,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1926",
@@ -1838,9 +1869,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1927",
@@ -1857,9 +1888,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1975",
@@ -1877,9 +1908,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1983",
@@ -1897,9 +1928,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2033",
@@ -1916,9 +1947,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2039",
@@ -1935,9 +1966,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2040",
@@ -1954,9 +1985,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2043",
@@ -1974,9 +2005,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2102",
@@ -1994,9 +2025,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2105",
@@ -2014,9 +2045,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2107",
@@ -2034,9 +2065,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2118",
@@ -2054,9 +2085,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2120",
@@ -2074,9 +2105,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2121",
@@ -2094,9 +2125,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2123",
@@ -2114,9 +2145,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2124",
@@ -2134,9 +2165,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2131",
@@ -2154,9 +2185,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2139",
@@ -2174,9 +2205,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2140",
@@ -2194,9 +2225,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2146",
@@ -2214,9 +2245,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2154",
@@ -2234,9 +2265,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2164",
@@ -2253,9 +2284,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2190",
@@ -2273,9 +2304,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2196",
@@ -2293,9 +2324,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2227",
@@ -2313,9 +2344,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2243",
@@ -2333,9 +2364,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2247",
@@ -2353,9 +2384,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2250",
@@ -2373,9 +2404,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2254",
@@ -2393,9 +2424,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2267",
@@ -2413,9 +2444,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2268",
@@ -2432,9 +2463,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2277",
@@ -2452,9 +2483,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2284",
@@ -2472,9 +2503,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2287",
@@ -2491,9 +2522,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2293",
@@ -2510,9 +2541,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2297",
@@ -2529,9 +2560,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2320",
@@ -2549,9 +2580,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2332",
@@ -2568,9 +2599,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2336",
@@ -2588,9 +2619,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2341",
@@ -2608,9 +2639,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2342",
@@ -2628,9 +2659,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2344",
@@ -2648,9 +2679,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2351",
@@ -2667,9 +2698,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2359",
@@ -2687,9 +2718,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2365",
@@ -2707,9 +2738,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2366",
@@ -2727,9 +2758,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2373",
@@ -2747,9 +2778,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2374",
@@ -2767,9 +2798,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2380",
@@ -2784,13 +2815,13 @@
       "attendance",
       "gate_pass",
       "announcements",
-      "forms",
-      "reports"
+      "reports",
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements, reports, forms",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2388",
@@ -2808,9 +2839,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2391",
@@ -2828,9 +2859,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2399",
@@ -2848,9 +2879,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2409",
@@ -2865,12 +2896,14 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2410",
@@ -2888,9 +2921,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2415",
@@ -2908,9 +2941,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2421",
@@ -2928,9 +2961,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2431",
@@ -2948,9 +2981,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2435",
@@ -2968,9 +3001,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2436",
@@ -2988,9 +3021,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2446",
@@ -3008,9 +3041,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2448",
@@ -3028,9 +3061,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2471",
@@ -3048,9 +3081,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2472",
@@ -3068,9 +3101,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2473",
@@ -3088,9 +3121,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2474",
@@ -3108,9 +3141,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2476",
@@ -3128,9 +3161,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2486",
@@ -3148,9 +3181,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2489",
@@ -3168,9 +3201,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2500",
@@ -3188,9 +3221,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2502",
@@ -3208,9 +3241,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2506",
@@ -3228,9 +3261,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2507",
@@ -3247,9 +3280,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2509",
@@ -3267,9 +3300,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2510",
@@ -3287,9 +3320,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2515",
@@ -3307,9 +3340,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2522",
@@ -3327,9 +3360,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2525",
@@ -3347,9 +3380,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2528",
@@ -3367,9 +3400,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2529",
@@ -3386,9 +3419,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2535",
@@ -3405,9 +3438,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2539",
@@ -3424,9 +3457,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2560",
@@ -3444,9 +3477,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2576",
@@ -3463,9 +3496,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2598",
@@ -3482,9 +3515,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2602",
@@ -3501,9 +3534,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2611",
@@ -3521,9 +3554,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2613",
@@ -3540,9 +3573,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2615",
@@ -3560,9 +3593,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2620",
@@ -3580,9 +3613,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2625",
@@ -3600,9 +3633,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2626",
@@ -3620,9 +3653,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2627",
@@ -3640,9 +3673,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2629",
@@ -3660,9 +3693,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2632",
@@ -3680,9 +3713,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2645",
@@ -3696,12 +3729,14 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2646",
@@ -3718,9 +3753,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2656",
@@ -3738,9 +3773,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2663",
@@ -3758,9 +3793,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2667",
@@ -3778,9 +3813,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2669",
@@ -3798,9 +3833,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2671",
@@ -3818,9 +3853,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2685",
@@ -3838,9 +3873,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2692",
@@ -3858,9 +3893,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2710",
@@ -3878,9 +3913,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2713",
@@ -3898,9 +3933,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2717",
@@ -3918,9 +3953,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2725",
@@ -3938,9 +3973,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2727",
@@ -3957,9 +3992,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2732",
@@ -3976,9 +4011,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2736",
@@ -3996,9 +4031,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2737",
@@ -4016,9 +4051,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2739",
@@ -4036,9 +4071,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2740",
@@ -4056,9 +4091,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2741",
@@ -4076,9 +4111,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2742",
@@ -4096,9 +4131,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2745",
@@ -4112,12 +4147,14 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2747",
@@ -4135,9 +4172,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2752",
@@ -4155,9 +4192,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2754",
@@ -4175,9 +4212,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2755",
@@ -4195,9 +4232,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2760",
@@ -4214,9 +4251,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2765",
@@ -4234,9 +4271,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2772",
@@ -4254,9 +4291,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2777",
@@ -4273,9 +4310,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2778",
@@ -4292,9 +4329,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2781",
@@ -4312,9 +4349,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2791",
@@ -4332,9 +4369,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2793",
@@ -4351,9 +4388,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2795",
@@ -4370,9 +4407,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2800",
@@ -4389,9 +4426,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2802",
@@ -4409,9 +4446,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2810",
@@ -4428,9 +4465,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2809",
@@ -4448,9 +4485,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2811",
@@ -4467,9 +4504,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2816",
@@ -4487,9 +4524,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2817",
@@ -4507,9 +4544,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2818",
@@ -4523,12 +4560,17 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "leave",
+      "attendance",
+      "reports",
+      "users",
+      "departments"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2819",
@@ -4546,9 +4588,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2820",
@@ -4565,9 +4607,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2822",
@@ -4585,9 +4627,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2823",
@@ -4605,9 +4647,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2826",
@@ -4625,9 +4667,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2830",
@@ -4644,9 +4686,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2831",
@@ -4660,12 +4702,14 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "reports",
+      "forms"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2834",
@@ -4683,9 +4727,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2836",
@@ -4703,9 +4747,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2838",
@@ -4723,9 +4767,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2839",
@@ -4743,9 +4787,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2841",
@@ -4763,9 +4807,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2843",
@@ -4783,9 +4827,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2846",
@@ -4803,9 +4847,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2847",
@@ -4823,9 +4867,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2848",
@@ -4842,9 +4886,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2850",
@@ -4862,9 +4906,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2851",
@@ -4881,9 +4925,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2852",
@@ -4901,9 +4945,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2854",
@@ -4921,9 +4965,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2856",
@@ -4940,9 +4984,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1386",
@@ -4956,12 +5000,17 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "leave",
+      "attendance",
+      "reports",
+      "users",
+      "departments"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2424",
@@ -4978,9 +5027,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1142",
@@ -4997,9 +5046,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1310",
@@ -5016,9 +5065,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1311",
@@ -5035,9 +5084,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1312",
@@ -5054,9 +5103,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "1141",
@@ -5073,9 +5122,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2866",
@@ -5093,9 +5142,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2867",
@@ -5113,9 +5162,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2868",
@@ -5133,9 +5182,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2869",
@@ -5152,9 +5201,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2857",
@@ -5172,9 +5221,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2861",
@@ -5191,9 +5240,9 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   },
   {
     "id": "2862",
@@ -5211,8 +5260,8 @@
       "announcements"
     ],
     "isActive": true,
-    "password": "LK@123456",
-    "createdAt": "2026-10-21T06:05:09.826Z",
-    "updatedAt": "2026-10-21T06:05:09.826Z"
+    "password": "dashboard, leave, attendance, gate_pass, announcements",
+    "createdAt": "2026-10-21T06:10:27.744Z",
+    "updatedAt": "2026-10-21T06:10:27.744Z"
   }
 ]
