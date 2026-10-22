@@ -17,8 +17,10 @@
   "status": "completed",
   "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=gate_pass&id=GP26-000010",
   "createdAt": "2026-10-22T02:17:43.796Z",
-  "updatedAt": "2026-10-22T09:04:17.969Z",
+  "updatedAt": "2026-10-22T09:04:19.329Z",
   "managerApprovedAt": "2026-10-22T02:18:16.924Z",
   "actualDepartureTime": "2026-10-22T09:04:17.969Z",
-  "securityDepartureGuardId": "2265"
+  "securityDepartureGuardId": "2265",
+  "itConfirmedAt": "2026-10-22T09:04:19.329Z",
+  "itConfirmedBy": "Trần Lê Hữu Lực (2265)"
 }
