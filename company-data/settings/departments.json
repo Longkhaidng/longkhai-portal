@@ -50,10 +50,10 @@
   {
     "id": "PB-QA",
     "code": "QA",
-    "name": "Phòng Quản Lý Chất Lượng (QA/QC)",
+    "name": "Phòng KCS",
     "description": "Kiểm soát chất lượng đầu vào IQC, trên chuyền PQC và xuất xưởng OQC",
     "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-10-21T06:31:00.862Z",
+    "updatedAt": "2026-10-22T04:22:19.153Z",
     "managerId": "2831",
     "managerName": "Trần Thị Thanh Diệu"
   },
