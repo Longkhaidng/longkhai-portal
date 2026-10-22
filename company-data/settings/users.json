@@ -3019,7 +3019,7 @@
   {
     "id": "2409",
     "name": "Trịnh Anh Tài",
-    "department": "Phòng Cơ Điện & Bảo Trì",
+    "department": "Cơ điện",
     "position": "Trưởng phòng Cơ điện",
     "role": "manager",
     "email": "tai.trinh@longkhai.com.vn",
@@ -3036,7 +3036,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:51:38.948Z",
+    "updatedAt": "2026-10-22T05:44:23.368Z",
     "allowedWebIntegrations": [
       "WEB-002"
     ]
