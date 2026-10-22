@@ -3086,7 +3086,7 @@
   {
     "id": "2421",
     "name": "Trương Thị Minh Nguyệt",
-    "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
+    "department": "Phòng KCS",
     "position": "Nhân viên KCS Hoàn Thành",
     "role": "employee",
     "email": "kcs01@longkhai.com.vn",
@@ -3102,7 +3102,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-22T05:49:10.902Z"
   },
   {
     "id": "2431",
