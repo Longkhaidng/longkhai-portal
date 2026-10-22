@@ -57,7 +57,7 @@
   {
     "id": "2265",
     "name": "Trần Lê Hữu Lực",
-    "department": "Bộ Phận Công Nghệ Thông Tin (IT)",
+    "department": "Bộ Phận CNTT",
     "position": "Quản trị viên CNTT (Admin)",
     "role": "admin",
     "email": "it@longkhai.com.vn",
@@ -81,7 +81,7 @@
     "isActive": true,
     "password": "admin@123",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-22T05:44:02.529Z"
   },
   {
     "id": "101",
