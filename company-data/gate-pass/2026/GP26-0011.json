@@ -13,17 +13,13 @@
   "assets": [],
   "estimatedDepartureTime": "2026-11-05T09:30",
   "estimatedReturnTime": "2026-11-05T13:00",
-  "status": "completed",
+  "status": "departed",
   "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=gate_pass&id=GP26-000011",
   "createdAt": "2026-10-22T03:01:08.536Z",
-  "updatedAt": "2026-10-22T09:03:51.969Z",
+  "updatedAt": "2026-10-22T09:03:57.562Z",
   "managerApproverId": "2265",
   "managerApproverName": "Trần Lê Hữu Lực",
   "managerApprovedAt": "2026-10-22T03:04:11.547Z",
-  "actualDepartureTime": "2026-10-22T09:03:50.267Z",
-  "securityDepartureGuardId": "2265",
-  "actualReturnTime": "2026-10-22T09:03:50.865Z",
-  "securityReturnGuardId": "2265",
-  "itConfirmedAt": "2026-10-22T09:03:51.969Z",
-  "itConfirmedBy": "Trần Lê Hữu Lực (2265)"
+  "actualDepartureTime": "2026-10-22T09:03:57.562Z",
+  "securityDepartureGuardId": "2265"
 }
