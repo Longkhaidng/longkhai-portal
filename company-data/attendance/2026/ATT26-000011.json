@@ -1,0 +1,44 @@
+{
+  "id": "ATT26-000011",
+  "employeeId": "2297",
+  "employeeName": "Lê Văn Tình",
+  "department": "Phòng Cơ Điện & Bảo Trì",
+  "issueType": "mat_the",
+  "date": "2026-10-22",
+  "checkInTime": "08:00",
+  "checkOutTime": "16:30",
+  "shift": "Ca Hành chính (08:00 - 16:30)",
+  "reason": "mất thẻ",
+  "status": "pending",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
+      "roleRequired": "security",
+      "approverName": "Tổ trưởng / Nhân viên Bảo vệ Cổng",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng bộ phận phê duyệt giải trình",
+      "roleRequired": "manager",
+      "approverId": "2409",
+      "approverName": "Trịnh Anh Tài",
+      "status": "pending"
+    },
+    {
+      "stepName": "Kế toán ghi nhận trừ phí phôi thẻ",
+      "roleRequired": "accountant",
+      "approverName": "Bộ phận Kế toán Tài chính",
+      "status": "pending"
+    },
+    {
+      "stepName": "IT cấp phôi thẻ mới",
+      "roleRequired": "it",
+      "approverName": "Bộ phận CNTT (IT)",
+      "status": "pending"
+    }
+  ],
+  "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=attendance&id=ATT26-000011",
+  "createdAt": "2026-10-22T02:10:03.803Z",
+  "updatedAt": "2026-10-22T02:10:03.803Z"
+}
