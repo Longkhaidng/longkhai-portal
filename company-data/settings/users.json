@@ -952,7 +952,7 @@
   {
     "id": "1241",
     "name": "Võ Thị Phương Dung",
-    "department": "Phòng công nghệ mẫu",
+    "department": "Phòng Mẫu",
     "position": "Nhân viên công nghệ mẫu",
     "role": "team_leader",
     "email": "dung.vo@longkhai.com.vn",
@@ -968,7 +968,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-22T05:46:52.445Z"
   },
   {
     "id": "1243",
