@@ -9,7 +9,7 @@
   "checkOutTime": "16:30",
   "shift": "Ca Hành chính (08:00 - 16:30)",
   "reason": "mất thẻ",
-  "status": "pending",
+  "status": "approved",
   "currentStepIndex": 3,
   "steps": [
     {
@@ -41,13 +41,16 @@
     {
       "stepName": "IT cấp phôi thẻ mới",
       "roleRequired": "it",
-      "approverName": "Bộ phận CNTT (IT)",
-      "status": "pending"
+      "approverName": "Trần Lê Hữu Lực",
+      "status": "approved",
+      "approverId": "2265",
+      "comment": "Đã xác nhận kiểm tra hợp lệ",
+      "actionAt": "2026-10-22T02:14:40.828Z"
     }
   ],
   "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=attendance&id=ATT26-000011",
   "createdAt": "2026-10-22T02:10:03.803Z",
-  "updatedAt": "2026-10-22T02:14:22.310Z",
+  "updatedAt": "2026-10-22T02:14:40.828Z",
   "actualCheckIn": "09:11",
   "actualCheckInGuard": "Lương Văn Vĩnh",
   "actualCheckInAt": "2026-10-22T02:11:33.476Z",
