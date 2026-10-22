@@ -3588,7 +3588,7 @@
   {
     "id": "2535",
     "name": "Mai Thành Chót",
-    "department": "Phòng Kho Vận & Vật Tư",
+    "department": "Kho",
     "position": "Phụ kho",
     "role": "employee",
     "departmentHeadId": "2745",
@@ -3603,7 +3603,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-22T05:48:44.592Z"
   },
   {
     "id": "2539",
