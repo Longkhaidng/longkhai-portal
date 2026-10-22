@@ -33,7 +33,7 @@ export async function GET() {
       smtpSecure: false,
       smtpUser: '',
       smtpPassword: '',
-      senderName: 'Cổng Thông Tin Long Khai',
+      senderName: 'Cổng Thông Tin Long Khải',
       senderEmail: '',
       isEnabled: true,
       portalBaseUrl: 'https://longkhai-portal.vercel.app',

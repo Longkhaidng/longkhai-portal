@@ -365,7 +365,7 @@ function ScanConfirmContent() {
                             {docData.timeType === 'nghi_dau_gio'
                               ? 'Nghỉ đầu giờ (Vào trễ)'
                               : docData.timeType === 'nghi_giua_gio'
-                              ? 'Nghỉ giữa giờ (Ra & Vào lại)'
+                              ? 'Nghỉ trong giờ làm việc (Ra & Vào lại)'
                               : docData.timeType === 'nghi_cuoi_gio'
                               ? 'Nghỉ cuối giờ (Về sớm)'
                               : 'Trong ca làm việc'}

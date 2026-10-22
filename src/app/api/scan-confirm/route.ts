@@ -93,7 +93,7 @@ function sendEmailBackground(toEmail: string, subject: string, html: string, bas
           to: toEmail,
           subject,
           html,
-          fromName: emailConfig.senderName || 'Cổng Thông Tin Long Khai',
+          fromName: emailConfig.senderName || 'Cổng Thông Tin Long Khải',
         }),
       }).catch(console.error);
     } else if (emailConfig?.smtpUser && emailConfig?.smtpPassword) {
@@ -108,7 +108,7 @@ function sendEmailBackground(toEmail: string, subject: string, html: string, bas
       });
 
       transporter.sendMail({
-        from: `"${emailConfig.senderName || 'Cổng Thông Tin Long Khai'}" <${emailConfig.senderEmail || emailConfig.smtpUser}>`,
+        from: `"${emailConfig.senderName || 'Cổng Thông Tin Long Khải'}" <${emailConfig.senderEmail || emailConfig.smtpUser}>`,
         to: toEmail,
         subject,
         html,
@@ -412,7 +412,7 @@ export async function POST(req: NextRequest) {
         const approveUrl = `${origin}/approve?type=attendance&id=${doc.id}&action=approve`;
         const rejectUrl = `${origin}/approve?type=attendance&id=${doc.id}&action=reject`;
 
-        const subject = `[Long Khai Portal] Yêu cầu duyệt PHIẾU XÁC NHẬN CÔNG: ${doc.employeeName} (${doc.employeeId}) - Mã: ${doc.id}`;
+        const subject = `[Long Khải Portal] Yêu cầu duyệt PHIẾU XÁC NHẬN CÔNG: ${doc.employeeName} (${doc.employeeId}) - Mã: ${doc.id}`;
         const emailHtml = `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">
             <h2 style="color: #1e3a8a; margin-top: 0;">CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG</h2>

@@ -133,7 +133,7 @@ export function AttendanceView() {
     e.preventDefault();
     if (!currentUser) return;
 
-    const docId = generateDocId('ATT', attendances.length);
+    const docId = generateDocId('ATT', attendances);
     const allUsers = storage.getUsers();
     const freshUser = allUsers.find((u) => u.id.toLowerCase() === currentUser.id.toLowerCase()) || currentUser;
     const targetHeadId = freshUser.departmentHeadId || currentUser.departmentHeadId;
@@ -918,7 +918,7 @@ export function AttendanceView() {
       {/* MODAL: Create Attendance */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-8">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-auto max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div>
                 <h3 className="font-bold text-base text-slate-900 dark:text-white">

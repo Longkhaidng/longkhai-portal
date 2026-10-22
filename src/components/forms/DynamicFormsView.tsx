@@ -117,7 +117,7 @@ export function DynamicFormsView() {
     e.preventDefault();
     if (!activeFormToFill || !currentUser) return;
 
-    const subId = generateDocId('SUB', submissions.length);
+    const subId = generateDocId('SUB', submissions);
     const newSub: DynamicFormSubmission = {
       id: subId,
       formId: activeFormToFill.id,

@@ -413,3 +413,54 @@ export function exportAllUsersToExcel(users: User[]) {
   const dateStr = String(d.getFullYear()) + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
   XLSX.writeFile(workbook, 'LONGKHAI_Danh_Sach_Nhan_Vien_' + dateStr + '.xlsx');
 }
+
+
+export interface ExportReportOptions {
+  title: string;
+  subtitle: string;
+  docCode?: string;
+  headers: string[];
+  rows: (string | number)[][];
+  fileName: string;
+  colWidths?: number[];
+}
+
+export function exportReportToExcel(opts: ExportReportOptions) {
+  const now = new Date();
+  const exportDate = now.toLocaleDateString('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+
+  const aoa: any[][] = [
+    ['CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG'],
+    ['Hệ thống Quản trị & Điều hành Sản xuất Nội bộ'],
+    [`Ngày xuất báo cáo: ${exportDate} | Mã tài liệu: ${opts.docCode || 'BC-LK-2026/01'}`],
+    [],
+    [`BÁO CÁO TỔNG HỢP ${opts.title.toUpperCase()}`],
+    [opts.subtitle],
+    [],
+    opts.headers,
+    ...opts.rows,
+  ];
+
+  const worksheet = XLSX.utils.aoa_to_sheet(aoa);
+
+  if (opts.colWidths && opts.colWidths.length > 0) {
+    worksheet['!cols'] = opts.colWidths.map((w) => ({ wch: w }));
+  } else {
+    worksheet['!cols'] = opts.headers.map((h, i) => {
+      let maxLen = h.length;
+      opts.rows.forEach((r) => {
+        const valStr = String(r[i] || '');
+        if (valStr.length > maxLen) maxLen = valStr.length;
+      });
+      return { wch: Math.min(Math.max(maxLen + 4, 14), 45) };
+    });
+  }
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Báo cáo');
+  XLSX.writeFile(workbook, `${opts.fileName}.xlsx`);
+}

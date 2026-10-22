@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
-import { exportDataToExcel } from '@/lib/excel';
+import { exportReportToExcel } from '@/lib/excel';
 import {
   BarChart3,
   Download,
@@ -209,67 +209,120 @@ export function ReportsView() {
 
   // Export to Excel handler
   const handleExportExcel = () => {
-    let dataToExport: any[] = [];
-    let fileName = `LONGKHAI_Bao_Cao_${reportType.toUpperCase()}`;
+    const nowStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    const subtitle =
+      (departmentFilter !== 'all' ? `Phòng ban: ${departmentFilter} • ` : '') +
+      (fromDate && toDate
+        ? `Từ ngày ${formatDate(fromDate)} đến ngày ${formatDate(toDate)}`
+        : fromDate
+        ? `Từ ngày ${formatDate(fromDate)}`
+        : toDate
+        ? `Đến ngày ${formatDate(toDate)}`
+        : 'Tất cả thời gian');
+
+    let title = '';
+    let fileName = '';
+    let headers: string[] = [];
+    let rows: (string | number)[][] = [];
 
     if (reportType === 'leave') {
-      dataToExport = filteredLeaves.map((l) => ({
-        'Mã đơn': l.id,
-        'Mã NV': l.employeeId,
-        'Họ và tên': l.employeeName,
-        'Phòng ban': l.department,
-        'Loại nghỉ phép': LEAVE_TYPE_LABELS[l.leaveType] || l.leaveType,
-        'Từ ngày': l.fromDate,
-        'Đến ngày': l.toDate,
-        'Số ngày': l.totalDays,
-        'Lý do': l.reason,
-        'Trạng thái':
-          l.status === 'approved'
-            ? 'Đã duyệt'
-            : l.status === 'pending'
-            ? 'Chờ duyệt'
-            : l.status === 'rejected'
-            ? 'Từ chối'
-            : l.status,
-      }));
+      title = 'NGHỈ PHÉP';
+      fileName = `LONGKHAI_Bao_Cao_NGHI_PHEP_${nowStr}`;
+      headers = [
+        'Mã đơn',
+        'Mã NV',
+        'Họ và tên',
+        'Phòng ban',
+        'Loại nghỉ phép',
+        'Thời gian nghỉ',
+        'Số ngày',
+        'Lý do',
+        'Trạng thái',
+      ];
+      rows = filteredLeaves.map((l) => [
+        l.id,
+        l.employeeId,
+        l.employeeName,
+        l.department,
+        LEAVE_TYPE_LABELS[l.leaveType] || l.leaveType,
+        `${formatDate(l.fromDate)} → ${formatDate(l.toDate)}`,
+        l.totalDays,
+        l.reason || '',
+        l.status === 'approved'
+          ? 'Đã duyệt'
+          : l.status === 'pending'
+          ? 'Chờ duyệt'
+          : l.status === 'rejected'
+          ? 'Từ chối'
+          : 'Đã hủy',
+      ]);
     } else if (reportType === 'attendance') {
-      dataToExport = filteredAttendances.map((a) => ({
-        'Mã phiếu': a.id,
-        'Mã NV': a.employeeId,
-        'Họ và tên': a.employeeName,
-        'Phòng ban': a.department,
-        'Lý do': ISSUE_TYPE_LABELS[a.issueType]?.text || a.issueType,
-        'Ngày': a.date,
-        'Ca làm việc': a.shift,
-        'Giờ vào thực tế': a.actualCheckIn || '',
-        'Giờ ra thực tế': a.actualCheckOut || '',
-        'Lý do giải trình': a.reason,
-        'Trạng thái':
-          a.status === 'approved'
-            ? 'Đã duyệt'
-            : a.status === 'pending'
-            ? 'Chờ duyệt'
-            : a.status === 'rejected'
-            ? 'Từ chối'
-            : a.status,
-      }));
+      title = 'XÁC NHẬN CÔNG';
+      fileName = `LONGKHAI_Bao_Cao_XAC_NHAN_CONG_${nowStr}`;
+      headers = [
+        'Mã phiếu',
+        'Mã NV',
+        'Họ và tên',
+        'Phòng ban',
+        'Lý do sự cố',
+        'Ngày',
+        'Ca làm việc',
+        'Giờ vào thực tế',
+        'Giờ ra thực tế',
+        'Trạng thái',
+      ];
+      rows = filteredAttendances.map((a) => [
+        a.id,
+        a.employeeId,
+        a.employeeName,
+        a.department,
+        ISSUE_TYPE_LABELS[a.issueType]?.text || a.issueType,
+        formatDate(a.date),
+        a.shift,
+        a.actualCheckIn || '',
+        a.actualCheckOut || '',
+        a.status === 'approved'
+          ? 'Đã duyệt'
+          : a.status === 'pending'
+          ? 'Chờ duyệt'
+          : 'Từ chối',
+      ]);
     } else if (reportType === 'gate_pass') {
-      dataToExport = filteredGatePasses.map((gp, idx) => ({
-        'STT': idx + 1,
-        'Mã phiếu': gp.id,
-        'Mã NV': gp.employeeId,
-        'Họ và tên': gp.employeeName,
-        'Phòng ban': gp.department,
-        'Mục đích': gp.purpose,
-        'Loại': gp.passType === 'business' ? 'Công tác' : 'Việc riêng',
-        'Tài sản mang theo':
+      title = 'RA VÀO CỔNG & TÀI SẢN';
+      fileName = `LONGKHAI_Bao_Cao_RA_VAO_CONG_${nowStr}`;
+      headers = [
+        'Mã phiếu',
+        'Nhân viên',
+        'Phòng ban',
+        'Mục đích',
+        'Tài sản mang theo',
+        'Ca làm việc',
+        'Giờ ra thực tế',
+        'Giờ vào thực tế',
+        'Trạng thái',
+      ];
+      rows = filteredGatePasses.map((gp) => {
+        const empText = `${gp.employeeName} (${gp.employeeId})`;
+        const assetStr =
           gp.hasAssets && gp.assets && gp.assets.length > 0
-            ? gp.assets.map((a) => `${a.name} (SL: ${a.quantity})`).join('; ')
-            : 'Không mang theo',
-        'Ca làm việc': gp.shift || '',
-        'Giờ ra thực tế': gp.actualDepartureTime ? formatDateTime(gp.actualDepartureTime) : '',
-        'Giờ vào thực tế': gp.actualReturnTime ? formatDateTime(gp.actualReturnTime) : '',
-        'Trạng thái':
+            ? gp.assets.map((a) => `${a.name} (${a.quantity})`).join(', ')
+            : '';
+        const depTime = gp.actualDepartureTime
+          ? formatDateTime(gp.actualDepartureTime)
+          : gp.timeType === 'nghi_dau_gio'
+          ? ''
+          : gp.estimatedDepartureTime && gp.status === 'approved'
+          ? `Dự kiến ${formatDateTime(gp.estimatedDepartureTime)}`
+          : '';
+        const retTime =
+          gp.timeType === 'nghi_cuoi_gio'
+            ? ''
+            : gp.actualReturnTime
+            ? formatDateTime(gp.actualReturnTime)
+            : gp.estimatedReturnTime && gp.status === 'approved'
+            ? `Dự kiến ${formatDateTime(gp.estimatedReturnTime)}`
+            : '';
+        const statusStr =
           gp.status === 'approved'
             ? 'Đã duyệt'
             : gp.status === 'departed'
@@ -280,49 +333,84 @@ export function ReportsView() {
             ? 'Chờ duyệt'
             : gp.status === 'rejected'
             ? 'Từ chối'
-            : gp.status,
-      }));
-    } else if (reportType === 'meal_cut') {
-      dataToExport = filteredMealCutLeaves.map((l, idx) => {
-        const ecoStep = l.steps.find((s) => s.roleRequired === 'economic');
-        return {
-          'STT': idx + 1,
-          'Mã đơn': l.id,
-          'Mã NV': l.employeeId,
-          'Họ và tên': l.employeeName,
-          'Phòng ban': l.department,
-          'Loại nghỉ phép': LEAVE_TYPE_LABELS[l.leaveType] || l.leaveType,
-          'Từ ngày': l.fromDate,
-          'Đến ngày': l.toDate,
-          'Số ngày cắt cơm': l.totalDays,
-          'NV Kinh tế xác nhận': ecoStep?.approverName || ecoStep?.approverId || 'NV Kinh tế',
-          'Thời gian xác nhận': ecoStep?.actionAt ? formatDateTime(ecoStep.actionAt) : 'Đã xác nhận',
-          'Lý do nghỉ': l.reason,
-          'Trạng thái đơn':
-            l.status === 'approved'
-              ? 'Hoàn tất'
-              : l.status === 'pending'
-              ? 'Chờ duyệt'
-              : l.status,
-        };
+            : 'Hết hạn';
+
+        return [
+          gp.id,
+          empText,
+          gp.department,
+          gp.purpose,
+          assetStr,
+          gp.shift || '',
+          depTime,
+          retTime,
+          statusStr,
+        ];
       });
-      fileName = `LONGKHAI_Bao_Cao_CAT_COM_${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
+    } else if (reportType === 'meal_cut') {
+      title = 'CẮT CƠM NHÂN VIÊN';
+      fileName = `LONGKHAI_Bao_Cao_CAT_COM_${nowStr}`;
+      headers = [
+        'STT',
+        'Mã đơn',
+        'Mã NV',
+        'Họ và tên',
+        'Phòng ban',
+        'Loại nghỉ',
+        'Thời gian nghỉ',
+        'Số ngày cắt cơm',
+        'NV Kinh tế xác nhận',
+        'Thời gian xác nhận',
+        'Trạng thái',
+      ];
+      rows = filteredMealCutLeaves.map((l, idx) => {
+        const ecoStep = l.steps.find((s) => s.roleRequired === 'economic');
+        return [
+          idx + 1,
+          l.id,
+          l.employeeId,
+          l.employeeName,
+          l.department,
+          LEAVE_TYPE_LABELS[l.leaveType] || l.leaveType,
+          `${formatDate(l.fromDate)} → ${formatDate(l.toDate)}`,
+          `${l.totalDays} ngày`,
+          ecoStep?.approverName || 'Nhân viên kinh tế',
+          ecoStep?.actionAt ? formatDateTime(ecoStep.actionAt) : 'Đã xác nhận',
+          'Đã cắt cơm',
+        ];
+      });
     } else if (reportType === 'departments') {
-      dataToExport = filteredDepartments.map((d) => ({
-        'Mã phòng ban': d.code,
-        'Tên phòng ban': d.name,
-        'Mô tả': d.description || '',
-        'Trưởng bộ phận': d.managerName || '',
-        'Số nhân sự': users.filter((u) => u.department === d.name).length,
-      }));
+      title = 'CƠ CẤU PHÒNG BAN';
+      fileName = `LONGKHAI_Bao_Cao_PHONG_BAN_${nowStr}`;
+      headers = [
+        'Mã phòng ban',
+        'Tên phòng ban',
+        'Mô tả chức năng',
+        'Trưởng bộ phận',
+        'Số nhân sự',
+      ];
+      rows = filteredDepartments.map((d) => [
+        d.code,
+        d.name,
+        d.description || '',
+        d.managerName || 'Chưa chỉ định',
+        `${users.filter((u) => u.department === d.name).length} người`,
+      ]);
     }
 
-    if (dataToExport.length === 0) {
+    if (rows.length === 0) {
       alert('Không có dữ liệu phù hợp với bộ lọc hiện tại để xuất file Excel.');
       return;
     }
 
-    exportDataToExcel(dataToExport, fileName);
+    exportReportToExcel({
+      title,
+      subtitle,
+      docCode: 'BC-LK-2026/01',
+      headers,
+      rows,
+      fileName,
+    });
   };
 
   return (
@@ -814,28 +902,28 @@ export function ReportsView() {
                           <span className="font-semibold text-amber-700 dark:text-amber-400">
                             {gp.assets.map((a) => `${a.name} (${a.quantity})`).join(', ')}
                           </span>
-                        ) : (
-                          <span className="text-slate-400">Không mang</span>
-                        )}
+                        ) : null}
                       </td>
                       <td className="p-2 border font-medium text-slate-700 dark:text-slate-300">
-                        {gp.shift || '-'}
+                        {gp.shift || ''}
                       </td>
                       <td className="p-2 border">
                         {gp.actualDepartureTime
                           ? formatDateTime(gp.actualDepartureTime)
-                          : gp.estimatedDepartureTime
+                          : gp.timeType === 'nghi_dau_gio'
+                          ? ''
+                          : gp.estimatedDepartureTime && gp.status === 'approved'
                           ? `Dự kiến ${formatDateTime(gp.estimatedDepartureTime)}`
-                          : '-'}
+                          : ''}
                       </td>
                       <td className="p-2 border">
                         {gp.timeType === 'nghi_cuoi_gio'
-                          ? 'Không về lại'
+                          ? ''
                           : gp.actualReturnTime
                           ? formatDateTime(gp.actualReturnTime)
-                          : gp.estimatedReturnTime
+                          : gp.estimatedReturnTime && gp.status === 'approved'
                           ? `Dự kiến ${formatDateTime(gp.estimatedReturnTime)}`
-                          : '-'}
+                          : ''}
                       </td>
                       <td className="p-2 border">
                         <span
@@ -971,24 +1059,7 @@ export function ReportsView() {
           )}
         </div>
 
-        {/* Signature Blocks for Official Factory Paper Documents */}
-        <div className="pt-8 grid grid-cols-3 gap-4 text-center text-xs">
-          <div>
-            <div className="font-bold uppercase text-slate-800 dark:text-slate-200">Người Lập Biểu</div>
-            <div className="text-[11px] text-slate-400 mt-0.5">(Ký, ghi rõ họ tên)</div>
-            <div className="h-16" />
-          </div>
-          <div>
-            <div className="font-bold uppercase text-slate-800 dark:text-slate-200">Trưởng Bộ Phận</div>
-            <div className="text-[11px] text-slate-400 mt-0.5">(Ký, ghi rõ họ tên)</div>
-            <div className="h-16" />
-          </div>
-          <div>
-            <div className="font-bold uppercase text-slate-800 dark:text-slate-200">Ban Giám Đốc Phê Duyệt</div>
-            <div className="text-[11px] text-slate-400 mt-0.5">(Ký, đóng dấu)</div>
-            <div className="h-16" />
-          </div>
-        </div>
+        
       </div>
     </div>
   );

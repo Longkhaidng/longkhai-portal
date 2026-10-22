@@ -15,7 +15,7 @@ function resolveServerEmailConfig(clientConfig?: EmailConfig): EmailConfig {
     smtpSecure: process.env.SMTP_PORT === '465',
     smtpUser: process.env.SMTP_USER || '',
     smtpPassword: process.env.SMTP_PASSWORD || '',
-    senderName: process.env.SMTP_FROM_NAME || 'Cổng Thông Tin Long Khai',
+    senderName: process.env.SMTP_FROM_NAME || 'Cổng Thông Tin Long Khải',
     senderEmail: process.env.SMTP_FROM_EMAIL || '',
     resendApiKey: process.env.RESEND_API_KEY || '',
     googleScriptUrl: process.env.GOOGLE_SCRIPT_URL || '',
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
     const port = Number(activeConfig.smtpPort || 587);
     const user = activeConfig.smtpUser?.trim();
     const pass = activeConfig.smtpPassword?.trim();
-    const senderName = activeConfig.senderName || 'Cổng Thông Tin Long Khai';
+    const senderName = activeConfig.senderName || 'Cổng Thông Tin Long Khải';
     const senderEmail = activeConfig.senderEmail || user || 'no-reply@longkhai.vn';
 
     // 1. If Google Apps Script Relay is provided (Phương án 1 - Khuyên dùng)

@@ -16,6 +16,7 @@ import {
   INITIAL_DYNAMIC_FORMS,
 } from './initial-data';
 import { GitHubService } from './github-api';
+import { formatDocId } from './utils';
 
 const STORAGE_KEYS = {
   USERS: 'lk_portal_users',
@@ -271,7 +272,10 @@ class StorageService {
     if (!this.isClient()) return [];
     try {
       const data = localStorage.getItem(STORAGE_KEYS.LEAVE_REQUESTS);
-      if (data) return JSON.parse(data);
+      if (data) {
+        const list: LeaveRequest[] = JSON.parse(data);
+        return list.map((r) => ({ ...r, id: formatDocId(r.id) }));
+      }
     } catch {}
     return [];
   }
@@ -316,6 +320,7 @@ class StorageService {
         const parsed: AttendanceConfirm[] = JSON.parse(data);
         let modified = false;
         parsed.forEach((c) => {
+          c.id = formatDocId(c.id);
           c.steps?.forEach((s) => {
             if (s.roleRequired === 'accountant' && (s.approverName === 'Bộ phận Kế toán Tiền lương' || !s.approverName)) {
               s.approverName = 'Bộ phận Kế toán Tài chính';
@@ -368,7 +373,10 @@ class StorageService {
     if (!this.isClient()) return [];
     try {
       const data = localStorage.getItem(STORAGE_KEYS.GATE_PASSES);
-      if (data) return JSON.parse(data);
+      if (data) {
+        const passes: GatePass[] = JSON.parse(data);
+        return passes.map((p) => ({ ...p, id: formatDocId(p.id) }));
+      }
     } catch {}
     return [];
   }

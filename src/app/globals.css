@@ -70,16 +70,64 @@ body {
   background: #334155;
 }
 
-/* Print styles for factory paper forms */
+/* Print styles for factory paper forms and reports */
 @media print {
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
+  }
   body {
     background: #ffffff !important;
     color: #000000 !important;
+    font-size: 10px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
-  .no-print {
+  aside, header, nav, .no-print {
     display: none !important;
+  }
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  .print-document {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
   }
   .print-only {
     display: block !important;
+  }
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    page-break-inside: auto;
+  }
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  thead {
+    display: table-header-group;
+  }
+  table th {
+    text-align: center !important;
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+    font-size: 10px !important;
+    padding: 5px 6px !important;
+    border: 1px solid #334155 !important;
+  }
+  table td {
+    font-size: 9.5px !important;
+    padding: 4px 6px !important;
+    border: 1px solid #64748b !important;
+    line-height: 1.25 !important;
+    color: #0f172a !important;
   }
 }

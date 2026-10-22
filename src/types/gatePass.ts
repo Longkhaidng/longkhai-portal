@@ -22,11 +22,23 @@ export const PERSONAL_REASONS = [
 ] as const;
 
 export const GATE_PASS_SHIFTS = [
-  'Ca Hành chính (08:00 - 16:30)',
+  'Ca HC (08:00 - 16:30)',
   'Ca 1 (06:00 - 14:00)',
   'Ca 2 (14:00 - 22:00)',
   'Ca 3 (22:00 - 06:00)',
   'Ca khác',
+] as const;
+
+export const OTHER_GATE_PASS_SHIFTS = [
+  'Ca HC_V : 07:00 – 15:30',
+  'Ca HC_V1 : 06:30 – 15:00',
+  'Ca HC_KT : 07:30 – 16:00',
+  'Ca LH : 12:00 – 20:00',
+  'Ca BK1 : 07:00 – 15:00',
+  'Ca BK2 : 08:00 – 16:00',
+  'Ca BK3 : 18:00 – 02:00',
+  'Ca BK4 : 10:00 – 18:00',
+  'Ca BK5 : 07:30 – 15:30',
 ] as const;
 
 export interface GatePassAsset {

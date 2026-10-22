@@ -11,6 +11,7 @@ import {
   GatePassReasonCategory,
   PERSONAL_REASONS,
   GATE_PASS_SHIFTS,
+  OTHER_GATE_PASS_SHIFTS,
 } from '@/types/gatePass';
 import {
   QrCode,
@@ -84,7 +85,8 @@ export function GatePassView() {
   const [specificReason, setSpecificReason] = useState<string>('');
   const [companyReason, setCompanyReason] = useState('');
   const [otherReason, setOtherReason] = useState('');
-  const [shift, setShift] = useState<string>('Ca Hành chính (08:00 - 16:30)');
+  const [shift, setShift] = useState<string>('Ca HC (08:00 - 16:30)');
+  const [otherShiftSelect, setOtherShiftSelect] = useState('');
   const [customShift, setCustomShift] = useState('');
   const [hasAssets, setHasAssets] = useState(false);
   const [assets, setAssets] = useState<GatePassAsset[]>([]);
@@ -202,7 +204,7 @@ export function GatePassView() {
       calculatedPassType = 'personal';
     }
 
-    const docId = generateDocId('GP', passes.length);
+    const docId = generateDocId('GP', passes);
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
     const qrPayload = getQrConfirmUrl('gate_pass', docId, origin);
 
@@ -263,7 +265,7 @@ export function GatePassView() {
         ? `Nghỉ đầu giờ (Vào cổng: ${formatDateTime(returnTime)})`
         : timeType === 'nghi_cuoi_gio'
         ? `Nghỉ cuối giờ (Ra cổng: ${formatDateTime(departureTime)})`
-        : `Nghỉ giữa giờ (Ra: ${formatDateTime(departureTime)} - Vào: ${formatDateTime(returnTime)})`;
+        : `Nghỉ trong giờ làm việc (Ra: ${formatDateTime(departureTime)} - Vào: ${formatDateTime(returnTime)})`;
 
     if (managerEmail) {
       dispatchApprovalEmail({
@@ -284,7 +286,7 @@ export function GatePassView() {
                   ? 'Nghỉ đầu giờ'
                   : timeType === 'nghi_cuoi_gio'
                   ? 'Nghỉ cuối giờ'
-                  : 'Nghỉ giữa giờ',
+                  : 'Nghỉ trong giờ làm việc',
             },
             { label: 'Thời gian dự kiến', value: timeDesc },
             { label: 'Lý do ra cổng', value: finalPurpose },
@@ -451,7 +453,7 @@ export function GatePassView() {
       { label: 'Nhân viên', value: `${updated.employeeName} (${updated.employeeId})` },
       { label: 'Phòng ban', value: updated.department },
       { label: 'Lý do ra vào cổng', value: updated.purpose },
-      { label: 'Loại thời gian', value: updated.timeType === 'nghi_dau_gio' ? 'Nghỉ đầu giờ' : updated.timeType === 'nghi_cuoi_gio' ? 'Nghỉ cuối giờ' : 'Nghỉ giữa giờ' },
+      { label: 'Loại thời gian', value: updated.timeType === 'nghi_dau_gio' ? 'Nghỉ đầu giờ' : updated.timeType === 'nghi_cuoi_gio' ? 'Nghỉ cuối giờ' : 'Nghỉ trong giờ làm việc' },
       { label: 'TG ra dự kiến', value: updated.estimatedDepartureTime ? formatDateTime(updated.estimatedDepartureTime) : '-' },
       { label: 'TG vào dự kiến', value: updated.estimatedReturnTime ? formatDateTime(updated.estimatedReturnTime) : '-' },
       { label: 'TG ra thực tế (Bảo vệ quét)', value: updated.actualDepartureTime ? formatDateTime(updated.actualDepartureTime) : 'Chưa ghi nhận' },
@@ -920,7 +922,7 @@ export function GatePassView() {
               type="text"
               value={scanCode}
               onChange={(e) => setScanCode(e.target.value)}
-              placeholder="Nhập mã phiếu (Ví dụ: GP26-000001)..."
+              placeholder="Nhập mã phiếu (Ví dụ: GP26-0001)..."
               className="flex-1 p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-mono font-bold text-slate-900 dark:text-white uppercase focus:outline-none focus:ring-2 focus:ring-emerald-500"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleLookupPass();
@@ -965,7 +967,7 @@ export function GatePassView() {
                     ? 'Nghỉ đầu giờ'
                     : scannedPass.timeType === 'nghi_cuoi_gio'
                     ? 'Nghỉ cuối giờ'
-                    : 'Nghỉ giữa giờ'
+                    : 'Nghỉ trong giờ làm việc'
                 }</b></div>
                 {scannedPass.estimatedDepartureTime && (
                   <div>Giờ dự kiến ra: <b>{formatDateTime(scannedPass.estimatedDepartureTime)}</b></div>
@@ -1045,7 +1047,7 @@ export function GatePassView() {
       {/* MODAL: Create Gate Pass */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-8">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-auto max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div>
                 <h3 className="font-bold text-base text-slate-900 dark:text-white">
@@ -1179,14 +1181,41 @@ export function GatePassView() {
                 </select>
 
                 {shift === 'Ca khác' && (
-                  <input
-                    type="text"
-                    required
-                    value={customShift}
-                    onChange={(e) => setCustomShift(e.target.value)}
-                    placeholder="Nhập tên ca và thời gian làm việc..."
-                    className="w-full mt-2 p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
+                  <div className="mt-2 space-y-2">
+                    <select
+                      required
+                      value={otherShiftSelect}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setOtherShiftSelect(val);
+                        if (val !== 'custom') {
+                          setCustomShift(val);
+                        } else {
+                          setCustomShift('');
+                        }
+                      }}
+                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium text-xs"
+                    >
+                      <option value="">-- Chọn ca đã tạo sẵn --</option>
+                      {OTHER_GATE_PASS_SHIFTS.map((s) => (
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
+                      ))}
+                      <option value="custom">-- Tùy chọn khác (tự nhập tay) --</option>
+                    </select>
+
+                    {otherShiftSelect === 'custom' && (
+                      <input
+                        type="text"
+                        required
+                        value={customShift}
+                        onChange={(e) => setCustomShift(e.target.value)}
+                        placeholder="Nhập tên ca và thời gian làm việc..."
+                        className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs"
+                      />
+                    )}
+                  </div>
                 )}
               </div>
 
@@ -1483,7 +1512,7 @@ export function GatePassView() {
                     ? 'Nghỉ đầu giờ'
                     : selectedPass.timeType === 'nghi_cuoi_gio'
                     ? 'Nghỉ cuối giờ'
-                    : 'Nghỉ giữa giờ'}
+                    : 'Nghỉ trong giờ làm việc'}
                 </b>
               </div>
               <div>
