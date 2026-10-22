@@ -355,8 +355,7 @@ export function LeaveView() {
             details: {
               title: 'Thông báo Cắt Cơm: Nhân viên được duyệt nghỉ phép',
               items: [
-                { label: 'Nhân viên nghỉ phép', value: `${updated.employeeName} (${updated.employeeId})` },
-                { label: 'Phòng ban / Xưởng', value: updated.department },
+                
                 { label: 'Thời gian nghỉ', value: `Từ ${formatDate(updated.fromDate)} đến ${formatDate(updated.toDate)} (${updated.totalDays} ngày)` },
                 { label: 'Loại nghỉ phép', value: LEAVE_TYPE_LABELS[updated.leaveType] || updated.leaveType },
                 { label: 'Lý do nghỉ', value: updated.reason },

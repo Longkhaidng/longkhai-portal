@@ -387,8 +387,7 @@ export function AttendanceView() {
               title: 'Thông báo Duyệt Phiếu Xác Nhận Công',
               items: [
                 { label: 'Sự cố chấm công', value: ISSUE_TYPE_LABELS[updated.issueType]?.text || updated.issueType },
-                { label: 'Nhân viên giải trình', value: `${updated.employeeName} (${updated.employeeId})` },
-                { label: 'Phòng ban / Xưởng', value: updated.department },
+                
                 { label: 'Ngày & Ca làm việc', value: `${formatDate(updated.date)} (${updated.shift})` },
                 { label: 'Giờ vào - ra thực tế', value: `Vào: ${updated.checkInTime} - Ra: ${updated.checkOutTime}` },
                 { label: 'Lý do giải trình', value: updated.reason },
@@ -424,8 +423,7 @@ export function AttendanceView() {
               title: 'Thông báo Kế toán Tài chính: Ghi nhận trừ phí phôi thẻ (Mất thẻ)',
               items: [
                 { label: 'Sự cố chấm công', value: ISSUE_TYPE_LABELS[updated.issueType]?.text || updated.issueType },
-                { label: 'Nhân viên mất thẻ', value: `${updated.employeeName} (${updated.employeeId})` },
-                { label: 'Phòng ban / Xưởng', value: updated.department },
+                
                 { label: 'Ngày & Ca làm việc', value: `${formatDate(updated.date)} (${updated.shift})` },
                 { label: 'Lý do giải trình', value: updated.reason },
                 { label: 'Trưởng BP đã duyệt', value: `${currentUser.name} (${currentUser.id})` },
@@ -463,8 +461,7 @@ export function AttendanceView() {
                 : 'Thông báo IT: Cập nhật dữ liệu máy chấm công',
               items: [
                 { label: 'Sự cố chấm công', value: ISSUE_TYPE_LABELS[updated.issueType]?.text || updated.issueType },
-                { label: 'Nhân viên', value: `${updated.employeeName} (${updated.employeeId})` },
-                { label: 'Phòng ban / Xưởng', value: updated.department },
+                
                 { label: 'Ngày & Ca làm việc', value: `${formatDate(updated.date)} (${updated.shift})` },
                 { label: 'Lý do giải trình', value: updated.reason },
                 { label: 'Người duyệt trước đó', value: `${currentUser.name} (${currentUser.id})` },

@@ -37,7 +37,13 @@ ${baseUrl}`;
   return `mailto:${payload.toEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
-export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: string): { subject: string; html: string; approveUrl: string; rejectUrl: string } {
+export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: string): {
+  subject: string;
+  html: string;
+  text: string;
+  approveUrl: string;
+  rejectUrl: string;
+} {
   const typeTitle =
     payload.type === 'leave'
       ? 'ĐƠN XIN NGHỈ PHÉP'
@@ -49,15 +55,52 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
   const approveUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=approve`;
   const rejectUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=reject`;
 
-  const rowsHtml = payload.details.items
+  // Deduplicate items to avoid repeating employeeName and department
+  const filteredItems = (payload.details?.items || []).filter((item) => {
+    const l = (item.label || '').toLowerCase().trim();
+    if (
+      l === 'họ và tên nhân viên' ||
+      l === 'họ và tên' ||
+      l === 'nhân viên' ||
+      l === 'nhân viên giải trình' ||
+      l === 'nhân viên mất thẻ' ||
+      l === 'nhân viên nghỉ phép' ||
+      l === 'nhân viên ra cổng' ||
+      l === 'mã số nhân viên' ||
+      l === 'mã nv' ||
+      l === 'mã nhân viên'
+    ) {
+      return false;
+    }
+    if (
+      l === 'phòng ban' ||
+      l === 'phòng ban / xưởng' ||
+      l === 'phòng ban/xưởng' ||
+      l === 'bộ phận' ||
+      l === 'bộ phận / xưởng' ||
+      l === 'bộ phận/xưởng'
+    ) {
+      return false;
+    }
+    return true;
+  });
+
+  // Table rows with alternating zebra background
+  const allRows = [
+    { label: 'Họ và tên nhân viên', value: `${payload.employeeName} (${payload.employeeId})`, isPrimary: true },
+    { label: 'Phòng ban / Xưởng', value: payload.department, isPrimary: false },
+    ...filteredItems.map((item) => ({ label: item.label, value: item.value, isPrimary: false })),
+  ];
+
+  const rowsHtml = allRows
     .map(
-      (item) => `
-      <tr>
-        <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569; width: 35%; background-color: #f8fafc;">
+      (item, idx) => `
+      <tr style="background-color: ${idx % 2 === 0 ? '#ffffff' : '#f8fafc'};">
+        <td style="padding: 11px 16px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569; width: 36%; font-size: 13px;">
           ${item.label}
         </td>
-        <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; color: #1e293b; font-weight: 500;">
-          ${item.value}
+        <td style="padding: 11px 16px; border-bottom: 1px solid #e2e8f0; color: ${item.isPrimary ? '#0284c7' : '#1e293b'}; font-weight: ${item.isPrimary ? '700' : '500'}; font-size: 13px;">
+          ${item.value || '-'}
         </td>
       </tr>
     `
@@ -70,99 +113,139 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>${subject}</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #334155; line-height: 1.6;">
-  <div style="max-width: 600px; margin: 30px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0;">
-    
-    <!-- Header -->
-    <div style="background: linear-gradient(135deg, #090e1f 0%, #1e3a8a 100%); padding: 30px 24px; text-align: center; color: #ffffff; border-bottom: 2px solid #3b82f6;">
-      <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff; margin-bottom: 8px;">
-        CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG
-      </div>
-      <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #f8fafc; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
-        YÊU CẦU PHÊ DUYỆT ${typeTitle}
-      </h1>
-      <div style="display: inline-block; margin-top: 12px; background-color: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); padding: 4px 16px; border-radius: 20px; font-size: 12px; font-family: monospace; font-weight: 700; color: #ffffff;">
-        MÃ HỒ SƠ: ${payload.docId}
-      </div>
-    </div>
-
-    <!-- Body Content -->
-    <div style="padding: 28px 24px;">
-      <p style="margin-top: 0; font-size: 15px; color: #1e293b;">
-        Kính gửi <strong>${payload.managerName || 'Quý Trưởng bộ phận'}</strong>,
-      </p>
-      <p style="font-size: 14px; color: #475569; margin-bottom: 20px;">
-        Nhân viên <strong>${payload.employeeName}</strong> (Mã NV: <strong>${payload.employeeId}</strong>) thuộc <strong>${payload.department}</strong> vừa tạo yêu cầu cần Trưởng bộ phận xem xét và phê duyệt:
-      </p>
-
-      <!-- Details Table -->
-      <table style="width: 100%; border-collapse: collapse; font-size: 13px; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 26px;">
-        <tbody>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f1f5f9; width: 100%; margin: 0; padding: 24px 0;">
+    <tr>
+      <td align="center" style="padding: 12px;">
+        <!--[if (gte mso 9)|(IE)]>
+        <table width="600" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
-            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569; width: 35%; background-color: #f8fafc;">
-              Họ và tên nhân viên
-            </td>
-            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; color: #0369a1; font-weight: 700;">
-              ${payload.employeeName} (${payload.employeeId})
+            <td>
+        <![endif]-->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          
+          <!-- Header -->
+          <tr>
+            <td style="background-color: #0f172a; padding: 26px 20px; text-align: center; color: #ffffff; border-bottom: 3px solid #10b981;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center">
+                    <img src="${baseUrl}/logo.png" alt="Long Khải Corporation Logo" width="56" height="56" style="display: block; margin: 0 auto 10px auto; width: 56px; height: 56px; border: 0;" />
+                    <div style="font-size: 12px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px;">
+                      CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG
+                    </div>
+                    <h1 style="margin: 0; font-size: 20px; font-weight: 900; color: #ffffff; letter-spacing: 0.5px;">
+                      YÊU CẦU PHÊ DUYỆT ${typeTitle}
+                    </h1>
+                    <div style="display: inline-block; margin-top: 10px; background-color: #1e293b; border: 1px solid #334155; padding: 4px 16px; border-radius: 14px; font-size: 12px; font-family: monospace; font-weight: 700; color: #38bdf8;">
+                      MÃ HỒ SƠ: ${payload.docId}
+                    </div>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
+
+          <!-- Body Content -->
           <tr>
-            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569; background-color: #f8fafc;">
-              Phòng ban / Xưởng
-            </td>
-            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; color: #1e293b; font-weight: 500;">
-              ${payload.department}
+            <td style="padding: 26px 24px;">
+              <p style="margin-top: 0; margin-bottom: 8px; font-size: 15px; color: #1e293b;">
+                Kính gửi <strong>${payload.managerName || 'Quý cấp Quản lý'}</strong>,
+              </p>
+              <p style="font-size: 14px; color: #475569; margin-top: 0; margin-bottom: 20px; line-height: 1.5;">
+                Nhân viên <strong>${payload.employeeName}</strong> (Mã NV: <strong>${payload.employeeId}</strong>) thuộc <strong>${payload.department}</strong> vừa tạo yêu cầu cần được xem xét và phê duyệt:
+              </p>
+
+              <!-- Details Table -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="width: 100%; border-collapse: collapse; font-size: 13px; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 24px;">
+                <tbody>
+                  ${rowsHtml}
+                </tbody>
+              </table>
+
+              <!-- Action Buttons Card -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; margin-bottom: 20px;">
+                <tr>
+                  <td style="padding: 22px 18px; text-align: center;">
+                    <div style="font-size: 13px; font-weight: 800; color: #1e293b; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 16px;">
+                      BẤM NÚT ĐỂ DUYỆT HOẶC TỪ CHỐI TRỰC TIẾP:
+                    </div>
+                    
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 440px; margin: 0 auto;">
+                      <tr>
+                        <td align="center" style="padding: 6px;">
+                          <!-- Approve Button -->
+                          <a href="${approveUrl}" target="_blank" style="display: block; background-color: #059669; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; text-align: center;">
+                            &#10003; PHÊ DUYỆT ĐƠN
+                          </a>
+                        </td>
+                        <td align="center" style="padding: 6px;">
+                          <!-- Reject Button -->
+                          <a href="${rejectUrl}" target="_blank" style="display: block; background-color: #e11d48; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; text-align: center;">
+                            &#10005; TỪ CHỐI ĐƠN
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <div style="font-size: 11px; color: #64748b; margin-top: 14px; font-style: italic;">
+                      * Khi bấm phê duyệt hoặc từ chối, hệ thống sẽ tự động ghi nhận kết quả và cập nhật ngay cho người lao động.
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <div style="text-align: center; font-size: 12px; color: #94a3b8;">
+                Hoặc đăng nhập vào Cổng Thông Tin: <a href="${baseUrl}" style="color: #0284c7; text-decoration: underline;">${baseUrl}</a>
+              </div>
             </td>
           </tr>
-          ${rowsHtml}
-        </tbody>
-      </table>
 
-      <!-- Action Buttons Card -->
-      <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 22px; text-align: center; margin-bottom: 20px;">
-        <div style="font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 14px;">
-          BẤM NÚT ĐỂ DUYỆT HOẶC TỪ CHỐI TRỰC TIẾP:
-        </div>
-        
-        <table style="width: 100%; border-collapse: collapse;">
+          <!-- Footer -->
           <tr>
-            <td style="text-align: center; padding: 4px;">
-              <!-- Approve Button -->
-              <a href="${approveUrl}" target="_blank" style="display: inline-block; background-color: #059669; color: #ffffff; text-decoration: none; padding: 13px 28px; border-radius: 10px; font-size: 14px; font-weight: 700; box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.3);">
-                ✓ PHÊ DUYỆT ĐƠN
-              </a>
+            <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 16px 20px; text-align: center; font-size: 11px; color: #94a3b8;">
+              Email này được gửi tự động từ Hệ thống Cổng Thông Tin Long Khải Portal. Vui lòng không trả lời trực tiếp email này.
             </td>
-            <td style="text-align: center; padding: 4px;">
-              <!-- Reject Button -->
-              <a href="${rejectUrl}" target="_blank" style="display: inline-block; background-color: #e11d48; color: #ffffff; text-decoration: none; padding: 13px 28px; border-radius: 10px; font-size: 14px; font-weight: 700; box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.3);">
-                ✕ TỪ CHỐI ĐƠN
-              </a>
+          </tr>
+
+        </table>
+        <!--[if (gte mso 9)|(IE)]>
             </td>
           </tr>
         </table>
-
-        <div style="font-size: 11px; color: #64748b; margin-top: 14px; line-height: 1.5;">
-          * Khi bấm phê duyệt hoặc từ chối, hệ thống sẽ tự động ghi nhận kết quả và cập nhật ngay cho người lao động.
-        </div>
-      </div>
-
-      <div style="text-align: center; font-size: 12px; color: #94a3b8;">
-        Hoặc đăng nhập vào Cổng Thông Tin: <a href="${baseUrl}" style="color: #0284c7; text-decoration: underline;">${baseUrl}</a>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 16px 24px; text-align: center; font-size: 11px; color: #94a3b8;">
-      Email này được gửi tự động từ Hệ thống Cổng Thông Tin Long Khải Portal. Vui lòng không trả lời trực tiếp email này.
-    </div>
-  </div>
+        <![endif]-->
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
   `;
 
-  return { subject, html, approveUrl, rejectUrl };
+  const plainText = `CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG
+YÊU CẦU PHÊ DUYỆT ${typeTitle}
+MÃ HỒ SƠ: ${payload.docId}
+
+Kính gửi ${payload.managerName || 'Quý cấp Quản lý'},
+
+Nhân viên ${payload.employeeName} (Mã NV: ${payload.employeeId}) thuộc ${payload.department} vừa tạo yêu cầu cần được xem xét và phê duyệt:
+
+CHI TIẾT YÊU CẦU:
+- Họ và tên nhân viên: ${payload.employeeName} (${payload.employeeId})
+- Phòng ban / Xưởng: ${payload.department}
+${filteredItems.map((i) => `- ${i.label}: ${i.value || '-'}`).join('\n')}
+
+BẤM ĐƯỜNG LINK ĐỂ DUYỆT HOẶC TỪ CHỐI TRỰC TIẾP:
+✓ PHÊ DUYỆT ĐƠN: ${approveUrl}
+✕ TỪ CHỐI ĐƠN: ${rejectUrl}
+
+* Khi bấm phê duyệt hoặc từ chối, hệ thống sẽ tự động ghi nhận kết quả và cập nhật ngay cho người lao động.
+Hoặc đăng nhập vào Cổng Thông Tin: ${baseUrl}
+Email này được gửi tự động từ Hệ thống Cổng Thông Tin Long Khải Portal. Vui lòng không trả lời trực tiếp email này.`;
+
+  return { subject, html, text: plainText, approveUrl, rejectUrl };
 }
 
 export interface DispatchEmailResult {
@@ -182,7 +265,7 @@ export async function dispatchApprovalEmail(payload: SendEmailPayload): Promise<
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   const baseUrl = config.portalBaseUrl || origin || 'https://longkhai-portal.vercel.app';
 
-  const { subject, html, approveUrl, rejectUrl } = generateApprovalEmailHtml(payload, baseUrl);
+  const { subject, html, text, approveUrl, rejectUrl } = generateApprovalEmailHtml(payload, baseUrl);
   const mailtoUrl = generateMailtoUrl(payload, baseUrl);
 
   try {
@@ -193,6 +276,7 @@ export async function dispatchApprovalEmail(payload: SendEmailPayload): Promise<
         toEmail: payload.toEmail,
         subject,
         html,
+        text,
         type: payload.type,
         docId: payload.docId,
         employeeName: payload.employeeName,

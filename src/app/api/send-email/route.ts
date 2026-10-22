@@ -53,10 +53,11 @@ function resolveServerEmailConfig(clientConfig?: EmailConfig): EmailConfig {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { toEmail, subject, html, emailConfig } = body as {
+    const { toEmail, subject, html, text, emailConfig } = body as {
       toEmail: string;
       subject: string;
       html: string;
+      text?: string;
       type?: string;
       docId?: string;
       employeeName?: string;
@@ -91,6 +92,7 @@ export async function POST(req: NextRequest) {
             toEmail,
             subject,
             html,
+            text: text || '',
             senderName,
           }),
           redirect: 'follow',
@@ -137,6 +139,7 @@ export async function POST(req: NextRequest) {
         from: `"${senderName}" <${senderEmail}>`,
         to: toEmail,
         subject,
+        text: text || '',
         html,
       });
 
@@ -163,6 +166,7 @@ export async function POST(req: NextRequest) {
           from: fromAddress,
           to: [toEmail],
           subject,
+          text: text || '',
           html,
         }),
       });
