@@ -13,8 +13,11 @@
   "assets": [],
   "estimatedDepartureTime": "2026-11-05T09:30",
   "estimatedReturnTime": "2026-11-05T13:00",
-  "status": "pending",
+  "status": "approved",
   "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=gate_pass&id=GP26-000011",
   "createdAt": "2026-10-22T03:01:08.536Z",
-  "updatedAt": "2026-10-22T03:01:08.536Z"
+  "updatedAt": "2026-10-22T03:04:11.547Z",
+  "managerApproverId": "2265",
+  "managerApproverName": "Trần Lê Hữu Lực",
+  "managerApprovedAt": "2026-10-22T03:04:11.547Z"
 }
