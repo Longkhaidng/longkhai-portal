@@ -1390,7 +1390,7 @@
   {
     "id": "1466",
     "name": "Nguyễn Thị Thanh Tâm",
-    "department": "Phòng công nghệ mẫu",
+    "department": "Phòng Mẫu",
     "position": "Nhân viên công nghệ mẫu",
     "role": "employee",
     "departmentHeadId": "1241",
@@ -1405,7 +1405,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-22T05:47:12.933Z"
   },
   {
     "id": "1491",
