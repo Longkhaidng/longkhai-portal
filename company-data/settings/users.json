@@ -4917,7 +4917,7 @@
   {
     "id": "2831",
     "name": "Trần Thị Thanh Diệu",
-    "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
+    "department": "Phòng KCS",
     "position": "Phụ trách KCS",
     "role": "manager",
     "economicStaffId": "2421",
@@ -4932,7 +4932,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-22T05:47:51.826Z"
   },
   {
     "id": "2834",
