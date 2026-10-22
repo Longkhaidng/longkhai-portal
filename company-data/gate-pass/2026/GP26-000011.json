@@ -1,0 +1,20 @@
+{
+  "id": "GP26-000011",
+  "employeeId": "1282",
+  "employeeName": "Nguyễn Thị Nga",
+  "department": "Phòng Kế Toán Tài Chính",
+  "purpose": "Công tác: Đi UBND Phường Ngũ Hành Sơn",
+  "passType": "business",
+  "timeType": "nghi_giua_gio",
+  "reasonCategory": "cong_ty",
+  "customReason": "Đi UBND Phường Ngũ Hành Sơn",
+  "shift": "Ca Hành chính (08:00 - 16:30)",
+  "hasAssets": false,
+  "assets": [],
+  "estimatedDepartureTime": "2026-11-05T09:30",
+  "estimatedReturnTime": "2026-11-05T13:00",
+  "status": "pending",
+  "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=gate_pass&id=GP26-000011",
+  "createdAt": "2026-10-22T03:01:08.536Z",
+  "updatedAt": "2026-10-22T03:01:08.536Z"
+}
