@@ -3128,7 +3128,7 @@
   {
     "id": "2435",
     "name": "Nguyễn Thị Thanh Thảo",
-    "department": "Phòng Kho Vận & Vật Tư",
+    "department": "Kho",
     "position": "Thủ kho phụ liệu",
     "role": "employee",
     "email": "warehouse01@longkhai.com.vn",
@@ -3144,7 +3144,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-22T05:48:31.015Z"
   },
   {
     "id": "2436",
