@@ -1954,7 +1954,7 @@
   {
     "id": "1927",
     "name": "Phan Hải Đăng",
-    "department": "Phòng Cơ Điện & Bảo Trì",
+    "department": "Cơ điện",
     "position": "Nhân viên cơ điện",
     "role": "employee",
     "departmentHeadId": "2409",
@@ -1969,7 +1969,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:51:48.243Z",
+    "updatedAt": "2026-10-22T05:44:58.732Z",
     "allowedWebIntegrations": [
       "WEB-002"
     ]
