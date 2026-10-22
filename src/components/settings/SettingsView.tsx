@@ -32,9 +32,9 @@ const GOOGLE_SCRIPT_TEMPLATE = `function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
     var to = data.toEmail || data.to;
-    var subject = data.subject || '[Long Khai Portal] Yêu cầu phê duyệt';
+    var subject = data.subject || '[Long Khải Portal] Yêu cầu phê duyệt';
     var html = data.html || data.htmlBody || '';
-    var senderName = data.senderName || 'Cổng Thông Tin Long Khai';
+    var senderName = data.senderName || 'Cổng Thông Tin Long Khải';
 
     if (!to) {
       return ContentService.createTextOutput(JSON.stringify({ 
@@ -401,7 +401,7 @@ export function SettingsView() {
                       type="text"
                       value={emailConfig.senderName || ''}
                       onChange={(e) => setEmailConfig({ ...emailConfig, senderName: e.target.value })}
-                      placeholder="Cổng Thông Tin Long Khai"
+                      placeholder="Cổng Thông Tin Long Khải"
                       className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
                     />
                   </div>

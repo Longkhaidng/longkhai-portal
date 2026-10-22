@@ -361,7 +361,7 @@ export function LeaveView() {
                 { label: 'Loại nghỉ phép', value: LEAVE_TYPE_LABELS[updated.leaveType] || updated.leaveType },
                 { label: 'Lý do nghỉ', value: updated.reason },
                 { label: 'Người duyệt (Trưởng BP)', value: `${currentUser.name} (${currentUser.id})` },
-                { label: 'Yêu cầu', value: 'Vui lòng kiểm tra và xác nhận cắt cơm trên Cổng Portal Long Khai.' },
+                { label: 'Yêu cầu', value: 'Vui lòng kiểm tra và xác nhận cắt cơm trên Cổng Portal Long Khải.' },
               ],
             },
           }).catch(console.error);

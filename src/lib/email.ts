@@ -8,7 +8,7 @@ export function generateMailtoUrl(payload: SendEmailPayload, baseUrl: string): s
       : payload.type === 'attendance'
       ? 'PHIẾU XÁC NHẬN CÔNG'
       : 'PHIẾU RA - VÀO CỔNG';
-  const subject = `[Long Khai Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
+  const subject = `[Long Khải Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
 
   const approveUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=approve`;
   const rejectUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=reject`;
@@ -31,7 +31,7 @@ ${rejectUrl}
 --------------------------------------------------
 
 Trân trọng,
-Cổng Thông Tin Long Khai Portal
+Cổng Thông Tin Long Khải Portal
 ${baseUrl}`;
 
   return `mailto:${payload.toEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -44,7 +44,7 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
       : payload.type === 'attendance'
       ? 'PHIẾU XÁC NHẬN CÔNG'
       : 'PHIẾU RA - VÀO CỔNG';
-  const subject = `[Long Khai Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
+  const subject = `[Long Khải Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
 
   const approveUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=approve`;
   const rejectUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=reject`;
@@ -155,7 +155,7 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
 
     <!-- Footer -->
     <div style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 16px 24px; text-align: center; font-size: 11px; color: #94a3b8;">
-      Email này được gửi tự động từ Hệ thống Cổng Thông Tin Long Khai Portal. Vui lòng không trả lời trực tiếp email này.
+      Email này được gửi tự động từ Hệ thống Cổng Thông Tin Long Khải Portal. Vui lòng không trả lời trực tiếp email này.
     </div>
   </div>
 </body>
@@ -263,7 +263,7 @@ export async function dispatchCBNotificationEmail(payload: DispatchCBPayload): P
     targetEmails.push('tuyet.vo@longkhai.com.vn');
   }
 
-  const subject = `[Long Khai Portal] Thông báo C&B: Hoàn tất phê duyệt ${payload.title} - ${payload.employeeName} (${payload.employeeId}) - Vui lòng cập nhật dữ liệu chấm công`;
+  const subject = `[Long Khải Portal] Thông báo C&B: Hoàn tất phê duyệt ${payload.title} - ${payload.employeeName} (${payload.employeeId}) - Vui lòng cập nhật dữ liệu chấm công`;
 
   const rowsHtml = payload.details
     .map(
@@ -319,7 +319,7 @@ export async function dispatchCBNotificationEmail(payload: DispatchCBPayload): P
       </table>
 
       <div style="text-align: center; margin-top: 24px; padding-top: 18px; border-top: 1px dashed #cbd5e1; font-size: 12px; color: #64748b;">
-        Hệ thống Quản trị & Điều hành Nội bộ Long Khai Portal &bull; Tự động thông báo
+        Hệ thống Quản trị & Điều hành Nội bộ Long Khải Portal &bull; Tự động thông báo
       </div>
     </div>
   </div>

@@ -115,7 +115,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold mb-2 border border-blue-400/30">
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Cổng Thông Tin Nhà Máy Long Khai &bull; 2026</span>
+              <span>Cổng Thông Tin Nhà Máy Long Khải &bull; 2026</span>
             </div>
             <h1 className="text-xl md:text-2xl font-black tracking-tight">
               Xin chào, {currentUser?.name}!

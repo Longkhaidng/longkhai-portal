@@ -712,7 +712,7 @@ function ScanConfirmContent() {
 
         {/* Footer */}
         <div className="bg-slate-950/80 p-4 border-t border-slate-800/80 text-center text-[11px] text-slate-500 space-y-1">
-          <div>Hệ thống Cổng Thông Tin Long Khai Portal &bull; Phiên bản bảo mật 2026</div>
+          <div>Hệ thống Cổng Thông Tin Long Khải Portal &bull; Phiên bản bảo mật 2026</div>
         </div>
       </div>
 

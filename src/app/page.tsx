@@ -42,7 +42,7 @@ function PortalAppContent() {
       <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center text-white">
         <div className="w-10 h-10 border-3 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mb-4" />
         <p className="text-xs uppercase tracking-widest text-slate-400 font-bold">
-          Đang khởi động Cổng Thông Tin Long Khai...
+          Đang khởi động Cổng Thông Tin Long Khải...
         </p>
       </div>
     );

@@ -59,7 +59,7 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
             className="w-7 h-7 object-contain"
           />
           <span className="font-extrabold text-xs text-slate-900 dark:text-white">
-            LONG KHAI
+            LONG KHẢI
           </span>
         </div>
 

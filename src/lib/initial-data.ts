@@ -25,7 +25,7 @@ export const INITIAL_ROOT_ADMIN: User = {
 };
 
 /**
- * Danh sách Phòng Ban ban đầu của nhà máy Long Khai
+ * Danh sách Phòng Ban ban đầu của nhà máy Long Khải
  */
 export const INITIAL_DEPARTMENTS: Department[] = [
   {
@@ -188,7 +188,7 @@ export const INITIAL_ANNOUNCEMENTS: Announcement[] = [
 Kính gửi: Toàn thể Cán bộ Công nhân viên Công ty,
 
 Nhằm hiện đại hóa công tác quản trị và giảm thiểu thủ tục giấy tờ, Ban Giám Đốc ban hành quy định:
-1. **Quên thẻ / Hỏng thẻ**: Nhân viên làm Phiếu Xác nhận công trên **LONG KHAI PORTAL**, hệ thống tự động chuyển duyệt đến Bảo vệ, Trưởng bộ phận và Phòng IT/Kế toán.
+1. **Quên thẻ / Hỏng thẻ**: Nhân viên làm Phiếu Xác nhận công trên **LONG KHẢI PORTAL**, hệ thống tự động chuyển duyệt đến Bảo vệ, Trưởng bộ phận và Phòng IT/Kế toán.
 2. **Mất thẻ**: Bắt buộc giải trình trên portal, chuyển qua Bảo vệ, Trưởng BP, Kế toán và IT để tiến hành cấp phôi thẻ mới.
 3. **Ra vào cổng trong giờ làm việc**:
    - Điền phiếu xin ra cổng trước ít nhất 30 phút.
@@ -266,7 +266,7 @@ export const INITIAL_DYNAMIC_FORMS: DynamicFormSchema[] = [
 ];
 
 /**
- * Danh sách Chức vụ cài đặt ban đầu của nhà máy Long Khai
+ * Danh sách Chức vụ cài đặt ban đầu của nhà máy Long Khải
  */
 export const INITIAL_POSITIONS: Position[] = [
   {

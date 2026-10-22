@@ -393,7 +393,7 @@ export function AttendanceView() {
                 { label: 'Giờ vào - ra thực tế', value: `Vào: ${updated.checkInTime} - Ra: ${updated.checkOutTime}` },
                 { label: 'Lý do giải trình', value: updated.reason },
                 { label: 'Bảo vệ cổng', value: `Đã xác nhận thực tế (${currentUser.name})` },
-                { label: 'Yêu cầu', value: 'Vui lòng xem xét và phê duyệt trên Cổng Portal Long Khai.' },
+                { label: 'Yêu cầu', value: 'Vui lòng xem xét và phê duyệt trên Cổng Portal Long Khải.' },
               ],
             },
           }).catch(console.error);
@@ -430,7 +430,7 @@ export function AttendanceView() {
                 { label: 'Lý do giải trình', value: updated.reason },
                 { label: 'Trưởng BP đã duyệt', value: `${currentUser.name} (${currentUser.id})` },
                 { label: 'Bước xử lý', value: 'Bước 3: Kế toán ghi nhận trừ phí phôi thẻ' },
-                { label: 'Yêu cầu', value: 'Vui lòng kiểm tra và ghi nhận trừ phí phôi thẻ trên Cổng Portal Long Khai.' },
+                { label: 'Yêu cầu', value: 'Vui lòng kiểm tra và ghi nhận trừ phí phôi thẻ trên Cổng Portal Long Khải.' },
               ],
             },
           }).catch(console.error);
@@ -469,8 +469,8 @@ export function AttendanceView() {
                 { label: 'Lý do giải trình', value: updated.reason },
                 { label: 'Người duyệt trước đó', value: `${currentUser.name} (${currentUser.id})` },
                 { label: 'Yêu cầu', value: updated.issueType === 'mat_the'
-                    ? 'Vui lòng thực hiện cấp phôi thẻ mới trên Cổng Portal Long Khai.'
-                    : 'Vui lòng cập nhật dữ liệu máy chấm công trên Cổng Portal Long Khai.' },
+                    ? 'Vui lòng thực hiện cấp phôi thẻ mới trên Cổng Portal Long Khải.'
+                    : 'Vui lòng cập nhật dữ liệu máy chấm công trên Cổng Portal Long Khải.' },
               ],
             },
           }).catch(console.error);

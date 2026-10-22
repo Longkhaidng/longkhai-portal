@@ -45,7 +45,7 @@ export function LoginForm() {
             />
           </div>
           <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-            LONG KHAI PORTAL
+            LONG KHẢI PORTAL
           </h1>
           <p className="text-sm font-medium text-emerald-300 mt-1 uppercase tracking-widest">
             Hệ Thống Thông Tin & Điều Hành Nhà Máy
@@ -135,7 +135,7 @@ export function LoginForm() {
 
         {/* Footer info */}
         <p className="text-center text-xs text-slate-400 mt-6">
-          &copy; 2026 LONG KHAI INDUSTRIAL PORTAL &bull; GitHub Data Architecture
+          &copy; 2026 LONG KHẢI INDUSTRIAL PORTAL &bull; GitHub Data Architecture
         </p>
       </div>
     </div>

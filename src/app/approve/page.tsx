@@ -167,7 +167,7 @@ function QuickApprovalContent() {
 
         {/* Simple Footer */}
         <div className="bg-slate-50 dark:bg-slate-900/60 py-3 px-6 text-[11px] text-slate-400 border-t border-slate-100 dark:border-slate-800">
-          Cổng Thông Tin Long Khai Portal &bull; Tự động đồng bộ
+          Cổng Thông Tin Long Khải Portal &bull; Tự động đồng bộ
         </div>
       </div>
     </div>

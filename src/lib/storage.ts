@@ -83,7 +83,7 @@ class StorageService {
       smtpSecure: true,
       smtpUser: '',
       smtpPassword: '',
-      senderName: 'Cổng Thông Tin Long Khai',
+      senderName: 'Cổng Thông Tin Long Khải',
       senderEmail: '',
       isEnabled: true,
       portalBaseUrl: typeof window !== 'undefined' ? window.location.origin : '',

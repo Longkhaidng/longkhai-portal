@@ -190,7 +190,7 @@ export function Sidebar({
             </div>
             <div>
               <div className="font-black text-sm text-white tracking-wide leading-none">
-                LONG KHAI
+                LONG KHẢI
               </div>
               <div className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider mt-0.5">
                 CORPORATION PORTAL
@@ -319,7 +319,7 @@ export function Sidebar({
 
         {/* Footer info */}
         <div className="p-4 border-t border-slate-800 text-[11px] text-slate-500 text-center">
-          <div>Hệ thống Nhà máy Long Khai</div>
+          <div>Hệ thống Nhà máy Long Khải</div>
           <div className="text-[10px] text-slate-600 mt-0.5">Phiên bản 2026.2 &bull; Next.js 15</div>
         </div>
       </aside>
