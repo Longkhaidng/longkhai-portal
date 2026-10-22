@@ -60,10 +60,10 @@
   {
     "id": "PB-KT",
     "code": "KT",
-    "name": "Phòng Kế Toán Tài Chính",
+    "name": "Phòng Kế Toán",
     "description": "Kế toán giá thành, thanh toán công nợ, hóa đơn chứng từ",
     "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
+    "updatedAt": "2026-10-22T04:23:01.360Z"
   },
   {
     "id": "PB-KHO",
