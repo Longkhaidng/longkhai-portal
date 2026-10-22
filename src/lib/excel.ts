@@ -447,10 +447,18 @@ export async function exportReportToExcel(opts: ExportReportOptions) {
   });
   const totalCols = Math.max(opts.headers.length, 9);
 
+  // Border style for table cells: solid black thin border
+  const solidBlackBorder: Partial<ExcelJS.Borders> = {
+    top: { style: 'thin', color: { argb: 'FF000000' } },
+    left: { style: 'thin', color: { argb: 'FF000000' } },
+    bottom: { style: 'thin', color: { argb: 'FF000000' } },
+    right: { style: 'thin', color: { argb: 'FF000000' } },
+  };
+
   // Row 1: Company Name (Left) & Export Date (Right)
   const row1 = worksheet.addRow([]);
   row1.getCell(1).value = 'CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG';
-  row1.getCell(1).font = { name: 'Calibri', bold: true, size: 11, color: { argb: 'FF0F172A' } };
+  row1.getCell(1).font = { name: 'Calibri', bold: true, size: 11, color: { argb: 'FF000000' } };
   row1.getCell(totalCols).value = `Ngày xuất báo cáo: ${exportDate}`;
   row1.getCell(totalCols).font = { name: 'Calibri', size: 9.5, color: { argb: 'FF475569' } };
   row1.getCell(totalCols).alignment = { horizontal: 'right' };
@@ -469,7 +477,7 @@ export async function exportReportToExcel(opts: ExportReportOptions) {
   // Row 4: Report Main Title
   const row4 = worksheet.addRow([]);
   row4.getCell(1).value = `BÁO CÁO TỔNG HỢP ${opts.title.toUpperCase()}`;
-  row4.getCell(1).font = { name: 'Calibri', bold: true, size: 15, color: { argb: 'FF0F172A' } };
+  row4.getCell(1).font = { name: 'Calibri', bold: true, size: 15, color: { argb: 'FF000000' } };
   row4.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' };
   worksheet.mergeCells(4, 1, 4, totalCols);
   row4.height = 24;
@@ -487,37 +495,30 @@ export async function exportReportToExcel(opts: ExportReportOptions) {
   // Row 7: Table Headers
   const headerRow = worksheet.addRow(opts.headers);
   headerRow.height = 24;
-  headerRow.eachCell((cell) => {
-    cell.font = { name: 'Calibri', bold: true, size: 10.5, color: { argb: 'FF0F172A' } };
+  for (let c = 1; c <= opts.headers.length; c++) {
+    const cell = headerRow.getCell(c);
+    cell.font = { name: 'Calibri', bold: true, size: 10.5, color: { argb: 'FF000000' } };
     cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
     cell.fill = {
       type: 'pattern',
       pattern: 'solid',
       fgColor: { argb: 'FFF1F5F9' },
     };
-    cell.border = {
-      top: { style: 'thin', color: { argb: 'FF94A3B8' } },
-      left: { style: 'thin', color: { argb: 'FF94A3B8' } },
-      bottom: { style: 'thin', color: { argb: 'FF94A3B8' } },
-      right: { style: 'thin', color: { argb: 'FF94A3B8' } },
-    };
-  });
+    cell.border = solidBlackBorder;
+  }
 
   // Row 8+: Data Rows
   opts.rows.forEach((rowValues) => {
     const row = worksheet.addRow(rowValues);
     row.height = 20;
 
-    row.eachCell((cell, colNumber) => {
-      const colIdx = colNumber - 1;
+    for (let c = 1; c <= opts.headers.length; c++) {
+      const cell = row.getCell(c);
+      const colIdx = c - 1;
       const isCentered = opts.centerCols ? opts.centerCols.includes(colIdx) : false;
 
-      cell.border = {
-        top: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-        left: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-        bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-        right: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-      };
+      // Solid black thin border for EVERY cell
+      cell.border = solidBlackBorder;
 
       cell.font = { name: 'Calibri', size: 10, color: { argb: 'FF1E293B' } };
       cell.alignment = {
@@ -531,6 +532,11 @@ export async function exportReportToExcel(opts: ExportReportOptions) {
       if (colIdx === 0 && /^([A-Z]{2,4}\d{2}-\d+)$/.test(valStr)) {
         cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FF0284C7' } };
         cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      }
+
+      // Employee name (Bold)
+      if (opts.headers[colIdx] === 'Họ và tên' || (opts.headers[colIdx] === 'Nhân viên' && colIdx === 1)) {
+        cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FF0F172A' } };
       }
 
       // Status column styling
@@ -553,7 +559,7 @@ export async function exportReportToExcel(opts: ExportReportOptions) {
         cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FFE11D48' } };
         cell.alignment = { horizontal: 'center', vertical: 'middle' };
       }
-    });
+    }
   });
 
   // Calculate Column Widths

@@ -1245,7 +1245,7 @@ export function GatePassView() {
                         : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
                     }`}
                   >
-                    Nghỉ giữa giờ
+                    Nghỉ trong giờ làm việc
                   </button>
                   <button
                     type="button"
