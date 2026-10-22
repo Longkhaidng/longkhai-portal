@@ -13,6 +13,7 @@ import {
   GATE_PASS_SHIFTS,
   OTHER_GATE_PASS_SHIFTS,
 } from '@/types/gatePass';
+import { ApprovalStep } from '@/types/leave';
 import {
   QrCode,
   Plus,
@@ -20,6 +21,7 @@ import {
   Filter,
   CheckCircle2,
   XCircle,
+  MinusCircle,
   Package,
   Calendar,
   Clock,
@@ -93,6 +95,27 @@ export function GatePassView() {
   const [newAssetName, setNewAssetName] = useState('');
   const [newAssetQty, setNewAssetQty] = useState(1);
   const [newAssetSerial, setNewAssetSerial] = useState('');
+
+  // Approval selection options: Tổ trưởng duyệt & Trưởng bộ phận duyệt
+  const [needTeamLeader, setNeedTeamLeader] = useState<boolean>(true);
+  const [needManager, setNeedManager] = useState<boolean>(true);
+
+  // Check if current user has team leader configured
+  const hasTeamLeader = useMemo(() => {
+    if (!currentUser) return false;
+    const users = storage.getUsers();
+    const fresh = users.find((u) => u.id.toLowerCase() === currentUser.id.toLowerCase()) || currentUser;
+    return Boolean(fresh.teamLeaderId && fresh.teamLeaderId.trim());
+  }, [currentUser, showCreateModal]);
+
+  const handleOpenCreateModal = () => {
+    const users = storage.getUsers();
+    const fresh = (currentUser ? users.find((u) => u.id.toLowerCase() === currentUser.id.toLowerCase()) : null) || currentUser;
+    const userHasTL = Boolean(fresh?.teamLeaderId && fresh.teamLeaderId.trim());
+    setNeedTeamLeader(userHasTL);
+    setNeedManager(true);
+    setShowCreateModal(true);
+  };
 
   const handleSelectTimeType = (type: GatePassTimeType) => {
     setTimeType(type);
@@ -216,6 +239,12 @@ export function GatePassView() {
       : null;
     const managerName = deptHeadUser?.name || 'Trưởng bộ phận';
 
+    const targetLeaderId = freshUser.teamLeaderId || currentUser.teamLeaderId;
+    const teamLeaderUser = targetLeaderId
+      ? allUsers.find((u) => u.id.toLowerCase() === targetLeaderId.toLowerCase())
+      : null;
+    const teamLeaderName = teamLeaderUser?.name || 'Tổ trưởng';
+
     // Auto-flush entered asset if user checked hasAssets and entered name without clicking 'Thêm'
     const finalAssets = [...assets];
     if (hasAssets && newAssetName.trim()) {
@@ -228,6 +257,33 @@ export function GatePassView() {
       });
     }
     const shouldHaveAssets = hasAssets && finalAssets.length > 0;
+
+    // Build approval steps according to selected options
+    const steps: ApprovalStep[] = [];
+    if (needTeamLeader) {
+      steps.push({
+        stepName: 'Tổ trưởng phê duyệt',
+        roleRequired: 'team_leader',
+        approverId: targetLeaderId || undefined,
+        approverName: teamLeaderName,
+        status: 'pending',
+      });
+    }
+    if (needManager) {
+      steps.push({
+        stepName: 'Trưởng bộ phận phê duyệt',
+        roleRequired: 'manager',
+        approverId: targetHeadId || undefined,
+        approverName: managerName,
+        status: 'pending',
+      });
+    }
+    steps.push({
+      stepName: 'Bảo vệ xác nhận ra/vào cổng',
+      roleRequired: 'security',
+      approverName: 'Bảo vệ cổng',
+      status: 'pending',
+    });
 
     const newPass: GatePass = {
       id: docId,
@@ -245,8 +301,14 @@ export function GatePassView() {
       assets: shouldHaveAssets ? finalAssets : [],
       estimatedDepartureTime: (timeType === 'nghi_giua_gio' || timeType === 'nghi_cuoi_gio') ? departureTime : undefined,
       estimatedReturnTime: (timeType === 'nghi_dau_gio' || timeType === 'nghi_giua_gio') ? returnTime : undefined,
-      managerApproverId: targetHeadId || undefined,
-      managerApproverName: deptHeadUser?.name || undefined,
+      requireTeamLeader: needTeamLeader,
+      requireManager: needManager,
+      teamLeaderApproverId: needTeamLeader ? targetLeaderId || undefined : undefined,
+      teamLeaderApproverName: needTeamLeader ? teamLeaderName : undefined,
+      managerApproverId: needManager ? targetHeadId || undefined : undefined,
+      managerApproverName: needManager ? managerName : undefined,
+      currentStepIndex: 0,
+      steps,
       status: 'pending',
       qrCodeData: qrPayload,
       createdAt: new Date().toISOString(),
@@ -257,8 +319,14 @@ export function GatePassView() {
     setPasses(storage.getGatePasses());
     setShowCreateModal(false);
 
-    // Only dispatch email if employee has explicit departmentHeadEmail configured
-    const managerEmail = (freshUser.departmentHeadEmail || currentUser.departmentHeadEmail || '').trim();
+    // Determine first approver for email dispatch
+    const isTeamLeaderFirst = needTeamLeader;
+    const firstApproverRole = isTeamLeaderFirst ? 'Tổ trưởng' : 'Trưởng bộ phận';
+    const firstApproverName = isTeamLeaderFirst ? teamLeaderName : managerName;
+    const firstApproverEmail = isTeamLeaderFirst
+      ? (teamLeaderUser?.email || '').trim()
+      : (freshUser.departmentHeadEmail || currentUser.departmentHeadEmail || deptHeadUser?.email || '').trim();
+    const firstApproverId = isTeamLeaderFirst ? targetLeaderId : targetHeadId;
 
     const timeDesc =
       timeType === 'nghi_dau_gio'
@@ -267,10 +335,10 @@ export function GatePassView() {
         ? `Nghỉ cuối giờ (Ra cổng: ${formatDateTime(departureTime)})`
         : `Nghỉ trong giờ làm việc (Ra: ${formatDateTime(departureTime)} - Vào: ${formatDateTime(returnTime)})`;
 
-    if (managerEmail) {
+    if (firstApproverEmail) {
       dispatchApprovalEmail({
-        toEmail: managerEmail,
-        managerName,
+        toEmail: firstApproverEmail,
+        managerName: firstApproverName,
         type: 'gate_pass',
         docId,
         employeeId: currentUser.id,
@@ -294,6 +362,10 @@ export function GatePassView() {
               label: 'Tài sản mang theo',
               value: hasAssets && assets.length > 0 ? `${assets.length} món tài sản` : 'Không mang theo',
             },
+            {
+              label: 'Cấp duyệt hiện tại',
+              value: `${firstApproverRole}: ${firstApproverName}`,
+            },
           ],
         },
       }).then((res) => {
@@ -301,13 +373,13 @@ export function GatePassView() {
           showToast({
             type: 'success',
             title: 'Tạo phiếu ra vào cổng thành công',
-            message: `Đã gửi email thông báo phê duyệt đến Trưởng bộ phận: ${managerEmail}`,
+            message: `Đã gửi email thông báo phê duyệt đến ${firstApproverRole}: ${firstApproverEmail}`,
           });
         } else {
           showToast({
             type: 'warning',
             title: `Đã lưu phiếu ${docId} thành công`,
-            message: `Chưa gửi email tự động được. Bạn có thể bấm nút bên dưới để mở ứng dụng Email/Outlook gửi thông tin cho Trưởng bộ phận (${managerEmail}).`,
+            message: `Chưa gửi email tự động được. Bạn có thể bấm nút bên dưới để mở ứng dụng Email/Outlook gửi thông tin cho ${firstApproverRole} (${firstApproverEmail}).`,
             action: res.mailtoUrl
               ? {
                   label: 'Mở Outlook gửi ngay',
@@ -323,8 +395,8 @@ export function GatePassView() {
       showToast({
         type: 'success',
         title: 'Tạo phiếu ra vào cổng thành công',
-        message: targetHeadId
-          ? `Phiếu ${docId} đã được chuyển đến Trưởng bộ phận (${managerName} - Mã NV: ${targetHeadId}) phê duyệt trên hệ thống.`
+        message: firstApproverId
+          ? `Phiếu ${docId} đã được chuyển đến ${firstApproverRole} (${firstApproverName} - Mã NV: ${firstApproverId}) phê duyệt trên hệ thống.`
           : `Phiếu ${docId} đã được lưu và gửi đến cấp quản lý phê duyệt trên hệ thống.`,
       });
     }
@@ -351,7 +423,26 @@ export function GatePassView() {
     // 2. Admin & BOD can approve any pass across company
     if (isSuperAdminOrBOD(currentUser)) return true;
 
-    // 3. Manager and Team Leader can approve for their department or assigned pass
+    // 3. Multi-step approval check if steps array exists
+    if (Array.isArray(pass.steps) && pass.steps.length > 0) {
+      const stepIndex = pass.currentStepIndex ?? 0;
+      const curStep = pass.steps[stepIndex];
+      if (!curStep || curStep.status !== 'pending') return false;
+
+      if (curStep.roleRequired === 'team_leader') {
+        if (curStep.approverId && curStep.approverId.toLowerCase() === currentUser.id.toLowerCase()) return true;
+        return currentUser.role === 'team_leader' && isSameDepartment(currentUser.department, pass.department);
+      }
+
+      if (curStep.roleRequired === 'manager') {
+        if (curStep.approverId && curStep.approverId.toLowerCase() === currentUser.id.toLowerCase()) return true;
+        return currentUser.role === 'manager' && isSameDepartment(currentUser.department, pass.department);
+      }
+
+      return false;
+    }
+
+    // 4. Fallback for legacy passes without steps
     if (currentUser.role === 'manager' || currentUser.role === 'team_leader') {
       if (isSameDepartment(currentUser.department, pass.department)) return true;
       if (pass.managerApproverId && pass.managerApproverId.toLowerCase() === currentUser.id.toLowerCase()) return true;
@@ -361,7 +452,7 @@ export function GatePassView() {
     return false;
   };
 
-  // Manager Approve
+  // Manager / Team Leader Approve
   const handleManagerApprove = async (pass: GatePass) => {
     if (!currentUser) return;
     if (!canApproveGatePass(pass)) {
@@ -372,25 +463,116 @@ export function GatePassView() {
       });
       return;
     }
-    const updated: GatePass = {
-      ...pass,
-      status: 'approved',
-      managerApproverId: currentUser.id,
-      managerApproverName: currentUser.name,
-      managerApprovedAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
-    setPasses(storage.getGatePasses());
-    setSelectedPass(updated);
-    showToast({
-      type: 'success',
-      title: 'Đã phê duyệt thành công',
-      message: `Phiếu ra vào cổng ${updated.id} đã được phê duyệt.`,
-    });
+
+    const now = new Date().toISOString();
+    const updated: GatePass = { ...pass, updatedAt: now };
+
+    if (Array.isArray(updated.steps) && updated.steps.length > 0) {
+      const stepIndex = updated.currentStepIndex ?? 0;
+      const currentStep = updated.steps[stepIndex];
+      if (currentStep) {
+        currentStep.status = 'approved';
+        currentStep.approverId = currentUser.id;
+        currentStep.approverName = currentUser.name;
+        currentStep.actionAt = now;
+
+        if (currentStep.roleRequired === 'team_leader') {
+          updated.teamLeaderApproverId = currentUser.id;
+          updated.teamLeaderApproverName = currentUser.name;
+          updated.teamLeaderApprovedAt = now;
+        } else {
+          updated.managerApproverId = currentUser.id;
+          updated.managerApproverName = currentUser.name;
+          updated.managerApprovedAt = now;
+        }
+      }
+
+      const nextStep = updated.steps[stepIndex + 1];
+      if (nextStep && nextStep.roleRequired === 'manager') {
+        // Advance to manager step
+        updated.currentStepIndex = stepIndex + 1;
+        updated.status = 'pending';
+
+        // Dispatch email to manager
+        const allUsers = storage.getUsers();
+        const emp = allUsers.find((u) => u.id.toLowerCase() === pass.employeeId.toLowerCase());
+        const mgrId = nextStep.approverId || emp?.departmentHeadId;
+        const mgrUser = mgrId ? allUsers.find((u) => u.id.toLowerCase() === mgrId.toLowerCase()) : null;
+        const mgrEmail = (mgrUser?.email || emp?.departmentHeadEmail || '').trim();
+
+        if (mgrEmail) {
+          dispatchApprovalEmail({
+            toEmail: mgrEmail,
+            managerName: mgrUser?.name || 'Trưởng bộ phận',
+            type: 'gate_pass',
+            docId: pass.id,
+            employeeId: pass.employeeId,
+            employeeName: pass.employeeName,
+            department: pass.department,
+            details: {
+              title: 'Thông báo Duyệt Phiếu Ra - Vào Cổng',
+              items: [
+                { label: 'Tổ trưởng đã duyệt', value: `${currentUser.name} (${currentUser.id})` },
+                {
+                  label: 'Hình thức',
+                  value:
+                    pass.timeType === 'nghi_dau_gio'
+                      ? 'Nghỉ đầu giờ'
+                      : pass.timeType === 'nghi_cuoi_gio'
+                      ? 'Nghỉ cuối giờ'
+                      : 'Nghỉ trong giờ làm việc',
+                },
+                { label: 'Lý do ra cổng', value: pass.purpose },
+              ],
+            },
+          }).catch(console.error);
+        }
+
+        storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
+        setPasses(storage.getGatePasses());
+        setSelectedPass(updated);
+        showToast({
+          type: 'success',
+          title: 'Tổ trưởng đã phê duyệt',
+          message: mgrEmail
+            ? `Phiếu ${updated.id} đã được chuyển và gửi email đến Trưởng bộ phận (${mgrUser?.name || 'Trưởng bộ phận'} - ${mgrEmail}).`
+            : `Phiếu ${updated.id} đã được chuyển tiếp đến Trưởng bộ phận phê duyệt trên hệ thống.`,
+        });
+        return;
+      } else {
+        // Management approval finished: pass is approved and ready for Security
+        if (nextStep && nextStep.roleRequired === 'security') {
+          updated.currentStepIndex = stepIndex + 1;
+        }
+        updated.status = 'approved';
+        storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
+        setPasses(storage.getGatePasses());
+        setSelectedPass(updated);
+        showToast({
+          type: 'success',
+          title: 'Đã phê duyệt thành công',
+          message: `Phiếu ra vào cổng ${updated.id} đã được phê duyệt. Sẵn sàng cho bảo vệ quét mã xác nhận ra cổng.`,
+        });
+        return;
+      }
+    } else {
+      // Legacy pass without steps
+      updated.status = 'approved';
+      updated.managerApproverId = currentUser.id;
+      updated.managerApproverName = currentUser.name;
+      updated.managerApprovedAt = now;
+      storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
+      setPasses(storage.getGatePasses());
+      setSelectedPass(updated);
+      showToast({
+        type: 'success',
+        title: 'Đã phê duyệt thành công',
+        message: `Phiếu ra vào cổng ${updated.id} đã được phê duyệt. Sẵn sàng cho bảo vệ quét mã xác nhận ra cổng.`,
+      });
+    }
   };
 
-  // Manager Reject
+  // Manager / Team Leader Reject
   const handleManagerReject = async (pass: GatePass) => {
     if (!currentUser) return;
     if (!canApproveGatePass(pass)) {
@@ -409,15 +591,28 @@ export function GatePassView() {
       });
       return;
     }
-    const updated: GatePass = {
-      ...pass,
-      status: 'rejected',
-      managerApproverId: currentUser.id,
-      managerApproverName: currentUser.name,
-      managerApprovedAt: new Date().toISOString(),
-      rejectionReason: passRejectionReason.trim(),
-      updatedAt: new Date().toISOString(),
-    };
+
+    const now = new Date().toISOString();
+    const updated: GatePass = { ...pass, updatedAt: now };
+
+    if (Array.isArray(updated.steps) && updated.steps.length > 0) {
+      const stepIndex = updated.currentStepIndex ?? 0;
+      const currentStep = updated.steps[stepIndex];
+      if (currentStep) {
+        currentStep.status = 'rejected';
+        currentStep.approverId = currentUser.id;
+        currentStep.approverName = currentUser.name;
+        currentStep.comment = passRejectionReason.trim();
+        currentStep.actionAt = now;
+      }
+    }
+
+    updated.status = 'rejected';
+    updated.managerApproverId = currentUser.id;
+    updated.managerApproverName = currentUser.name;
+    updated.managerApprovedAt = now;
+    updated.rejectionReason = passRejectionReason.trim();
+
     storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
     setPasses(storage.getGatePasses());
     setSelectedPass(updated);
@@ -517,6 +712,15 @@ export function GatePassView() {
       securityReturnGuardId: currentUser.id,
       updatedAt: now,
     };
+    if (Array.isArray(updated.steps)) {
+      const secStep = updated.steps.find((s) => s.roleRequired === 'security');
+      if (secStep) {
+        secStep.status = 'approved';
+        secStep.approverId = currentUser.id;
+        secStep.approverName = currentUser.name;
+        secStep.actionAt = now;
+      }
+    }
     storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
     setPasses(storage.getGatePasses());
     setScannedPass(updated);
@@ -542,6 +746,17 @@ export function GatePassView() {
       securityDepartureGuardId: currentUser.id,
       updatedAt: now,
     };
+    if (Array.isArray(updated.steps)) {
+      const secStep = updated.steps.find((s) => s.roleRequired === 'security');
+      if (secStep) {
+        secStep.approverId = currentUser.id;
+        secStep.approverName = currentUser.name;
+        secStep.actionAt = now;
+        if (newStatus === 'completed') {
+          secStep.status = 'approved';
+        }
+      }
+    }
     storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
     setPasses(storage.getGatePasses());
     setScannedPass(updated);
@@ -569,6 +784,15 @@ export function GatePassView() {
       securityReturnGuardId: currentUser.id,
       updatedAt: now,
     };
+    if (Array.isArray(updated.steps)) {
+      const secStep = updated.steps.find((s) => s.roleRequired === 'security');
+      if (secStep) {
+        secStep.status = 'approved';
+        secStep.approverId = currentUser.id;
+        secStep.approverName = currentUser.name;
+        secStep.actionAt = now;
+      }
+    }
     storage.saveGatePass(updated, { id: currentUser.id, name: currentUser.name });
     setPasses(storage.getGatePasses());
     setScannedPass(updated);
@@ -650,7 +874,7 @@ export function GatePassView() {
           </div>
 
           <button
-            onClick={() => setShowCreateModal(true)}
+            onClick={handleOpenCreateModal}
             className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow-md flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
@@ -861,7 +1085,9 @@ export function GatePassView() {
                         <td className="py-3 px-4">
                           {item.status === 'pending' && (
                             <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
-                              Chờ duyệt
+                              {item.steps && item.steps[item.currentStepIndex ?? 0]?.roleRequired === 'team_leader'
+                                ? 'Chờ Tổ trưởng duyệt'
+                                : 'Chờ Trưởng BP duyệt'}
                             </span>
                           )}
                           {item.status === 'approved' && (
@@ -1383,6 +1609,75 @@ export function GatePassView() {
                 )}
               </div>
 
+              {/* Approval workflow options */}
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                  Cấp phê duyệt yêu cầu:
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <label
+                    className={`flex items-center gap-2 p-2.5 rounded-lg border text-xs cursor-pointer select-none transition-colors ${
+                      needTeamLeader
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 font-semibold'
+                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+                    } ${!hasTeamLeader ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={needTeamLeader}
+                      disabled={!hasTeamLeader}
+                      onChange={(e) => {
+                        if (!hasTeamLeader) return;
+                        if (!e.target.checked && !needManager) return;
+                        setNeedTeamLeader(e.target.checked);
+                      }}
+                      className="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500"
+                    />
+                    <span>Tổ trưởng duyệt</span>
+                  </label>
+
+                  <label
+                    className={`flex items-center gap-2 p-2.5 rounded-lg border text-xs cursor-pointer select-none transition-colors ${
+                      needManager
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 font-semibold'
+                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={needManager}
+                      onChange={(e) => {
+                        if (!e.target.checked && !needTeamLeader) return;
+                        setNeedManager(e.target.checked);
+                      }}
+                      className="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500"
+                    />
+                    <span>Trưởng bộ phận duyệt</span>
+                  </label>
+                </div>
+                {!hasTeamLeader && (
+                  <p className="text-[11px] text-amber-600 dark:text-amber-400 italic">
+                    * Nhân viên chưa được thiết lập mã Tổ trưởng trong hệ thống, mặc định duyệt qua Trưởng bộ phận.
+                  </p>
+                )}
+              </div>
+
+              {/* Dynamic workflow preview */}
+              <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/40 text-[11px] text-emerald-900 dark:text-emerald-300">
+                <span className="font-bold">Quy trình duyệt: </span>
+                <span>
+                  {[
+                    'Nhân viên',
+                    needTeamLeader ? 'Tổ trưởng' : null,
+                    needManager ? 'Trưởng bộ phận' : null,
+                    'Bảo vệ',
+                    'Hoàn thành',
+                  ]
+                    .filter(Boolean)
+                    .join(' → ')}
+                </span>
+              </div>
+
               <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
@@ -1427,11 +1722,11 @@ export function GatePassView() {
             {/* Approval Status notice */}
             {selectedPass.status === 'pending' ? (
               <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-[11px] font-semibold text-amber-800 dark:text-amber-300 text-left">
-                ⚠️ Phiếu đang chờ Trưởng bộ phận phê duyệt. Sau khi duyệt, bảo vệ mới có thể xác nhận cho ra cổng.
+                ⚠️ Phiếu đang chờ {selectedPass.steps && selectedPass.steps[selectedPass.currentStepIndex ?? 0]?.roleRequired === 'team_leader' ? 'Tổ trưởng' : 'Trưởng bộ phận'} phê duyệt. Sau khi duyệt, bảo vệ mới có thể xác nhận cho ra cổng.
               </div>
             ) : selectedPass.status === 'approved' ? (
               <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300 text-left">
-                ✅ Trưởng bộ phận đã phê duyệt. Sẵn sàng cho bảo vệ quét mã để xác nhận ra cổng.
+                ✅ Đã được phê duyệt. Sẵn sàng cho bảo vệ quét mã để xác nhận ra cổng.
               </div>
             ) : selectedPass.status === 'departed' ? (
               <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-300 dark:border-blue-800 text-[11px] font-semibold text-blue-800 dark:text-blue-300 text-left">
@@ -1576,11 +1871,71 @@ export function GatePassView() {
               </div>
             </div>
 
+            {/* Multi-step approval progress tracker */}
+            {selectedPass.steps && selectedPass.steps.length > 0 && (
+              <div className="space-y-2 border-t border-slate-100 dark:border-slate-800 pt-3">
+                <div className="font-bold text-xs text-slate-800 dark:text-slate-200">
+                  Tiến trình phê duyệt:
+                </div>
+                <div className="space-y-1.5">
+                  {selectedPass.steps.map((st, i) => {
+                    const isSkipped = st.status === 'skipped' || (selectedPass.status === 'rejected' && i > (selectedPass.currentStepIndex ?? 0));
+                    const isCurrent = i === (selectedPass.currentStepIndex ?? 0) && selectedPass.status === 'pending';
+                    return (
+                      <div
+                        key={i}
+                        className={`p-2.5 rounded-xl border text-xs flex items-center justify-between ${
+                          st.status === 'approved'
+                            ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900/40 text-emerald-900 dark:text-emerald-300'
+                            : st.status === 'rejected'
+                            ? 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900/40 text-rose-900 dark:text-rose-300'
+                            : isSkipped
+                            ? 'bg-slate-50/60 dark:bg-slate-800/20 border-slate-200 dark:border-slate-800 text-slate-400 opacity-60'
+                            : isCurrent
+                            ? 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-300 dark:border-amber-900/50'
+                            : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-400'
+                        }`}
+                      >
+                        <div>
+                          <div className="font-bold flex items-center gap-1.5">
+                            <span>Bước {i + 1}: {st.stepName}</span>
+                            {st.status === 'approved' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
+                            {st.status === 'rejected' && <XCircle className="w-3.5 h-3.5 text-rose-600" />}
+                            {isSkipped && <MinusCircle className="w-3.5 h-3.5 text-slate-400" />}
+                          </div>
+                          <div className="text-[11px] mt-0.5 text-slate-500">
+                            Người duyệt: <b>{st.approverName}</b>
+                            {st.actionAt && ` (${formatDateTime(st.actionAt)})`}
+                            {st.comment && ` - "${st.comment}"`}
+                          </div>
+                        </div>
+                        <span className={`text-[10px] font-bold uppercase ${
+                          st.status === 'approved'
+                            ? 'text-emerald-700 dark:text-emerald-400'
+                            : st.status === 'rejected'
+                            ? 'text-rose-700 dark:text-rose-400'
+                            : isCurrent
+                            ? 'text-amber-700 dark:text-amber-400'
+                            : 'text-slate-400'
+                        }`}>
+                          {st.status === 'approved' ? 'Đã duyệt' : st.status === 'rejected' ? 'Từ chối' : isCurrent ? 'Chờ duyệt' : 'Chưa đến lượt'}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Manager approval / reject actions */}
             {selectedPass.status === 'pending' && canApproveGatePass(selectedPass) && (
               <div className="p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-200 dark:border-amber-900/40 space-y-2">
                 <span className="text-xs font-bold text-amber-900 dark:text-amber-300 block">
-                  Phê duyệt phiếu ra cổng:
+                  Phê duyệt phiếu ra cổng (
+                  {selectedPass.steps && selectedPass.steps[selectedPass.currentStepIndex ?? 0]
+                    ? selectedPass.steps[selectedPass.currentStepIndex ?? 0].stepName
+                    : 'Cấp quản lý'}
+                  ):
                 </span>
                 {!isRejecting ? (
                   <div className="flex gap-2">
@@ -1589,7 +1944,13 @@ export function GatePassView() {
                       className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5"
                     >
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>✓ Quản lý đồng ý duyệt phiếu</span>
+                      <span>
+                        {selectedPass.steps &&
+                        selectedPass.steps[selectedPass.currentStepIndex ?? 0]?.roleRequired === 'team_leader' &&
+                        selectedPass.steps.some((s, idx) => idx > (selectedPass.currentStepIndex ?? 0) && s.roleRequired === 'manager')
+                          ? '✓ Tổ trưởng duyệt & Chuyển Trưởng BP'
+                          : '✓ Đồng ý phê duyệt phiếu'}
+                      </span>
                     </button>
                     <button
                       onClick={() => setIsRejecting(true)}

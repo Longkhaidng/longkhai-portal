@@ -112,6 +112,27 @@ export function AttendanceView() {
   const [isRejecting, setIsRejecting] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
 
+  // Approval selection options: Tổ trưởng duyệt & Trưởng bộ phận duyệt
+  const [needTeamLeader, setNeedTeamLeader] = useState<boolean>(true);
+  const [needManager, setNeedManager] = useState<boolean>(true);
+
+  // Check if current user has team leader configured
+  const hasTeamLeader = useMemo(() => {
+    if (!currentUser) return false;
+    const users = storage.getUsers();
+    const fresh = users.find((u) => u.id.toLowerCase() === currentUser.id.toLowerCase()) || currentUser;
+    return Boolean(fresh.teamLeaderId && fresh.teamLeaderId.trim());
+  }, [currentUser, showCreateModal]);
+
+  const handleOpenCreateModal = () => {
+    const users = storage.getUsers();
+    const fresh = (currentUser ? users.find((u) => u.id.toLowerCase() === currentUser.id.toLowerCase()) : null) || currentUser;
+    const userHasTL = Boolean(fresh?.teamLeaderId && fresh.teamLeaderId.trim());
+    setNeedTeamLeader(userHasTL);
+    setNeedManager(true);
+    setShowCreateModal(true);
+  };
+
   // Auto-fill times when selecting shift
   const handleShiftChange = (newShift: string) => {
     setShift(newShift);
@@ -175,11 +196,16 @@ export function AttendanceView() {
       : null;
     const managerName = deptHeadUser?.name || 'Trưởng bộ phận';
 
+    const targetLeaderId = freshUser.teamLeaderId || currentUser.teamLeaderId;
+    const teamLeaderUser = targetLeaderId
+      ? allUsers.find((u) => u.id.toLowerCase() === targetLeaderId.toLowerCase())
+      : null;
+    const teamLeaderName = teamLeaderUser?.name || 'Tổ trưởng';
+
     const steps: ApprovalStep[] = [];
 
-    // Luồng duyệt:
-    // Nếu mất thẻ: Nhân viên → Bảo vệ → Trưởng bộ phận → Kế toán → IT → Hoàn thành
-    // Quên thẻ / Thẻ hỏng: Nhân viên → Bảo vệ → Trưởng bộ phận → IT → Hoàn thành
+    // Luồng duyệt theo cấu hình:
+    // Bước 1: Bảo vệ cổng xác nhận vào/ra thực tế
     steps.push({
       stepName: 'Bảo vệ cổng xác nhận vào/ra thực tế',
       roleRequired: 'security',
@@ -187,13 +213,27 @@ export function AttendanceView() {
       status: 'pending',
     });
 
-    steps.push({
-      stepName: 'Trưởng bộ phận phê duyệt giải trình',
-      roleRequired: 'manager',
-      approverId: targetHeadId || undefined,
-      approverName: deptHeadUser?.name || 'Quản lý / Trưởng bộ phận',
-      status: 'pending',
-    });
+    // Bước 2: Tổ trưởng duyệt (nếu được chọn)
+    if (needTeamLeader) {
+      steps.push({
+        stepName: 'Tổ trưởng phê duyệt giải trình',
+        roleRequired: 'team_leader',
+        approverId: targetLeaderId || undefined,
+        approverName: teamLeaderName,
+        status: 'pending',
+      });
+    }
+
+    // Bước 3: Trưởng bộ phận duyệt (nếu được chọn)
+    if (needManager) {
+      steps.push({
+        stepName: 'Trưởng bộ phận phê duyệt giải trình',
+        roleRequired: 'manager',
+        approverId: targetHeadId || undefined,
+        approverName: managerName,
+        status: 'pending',
+      });
+    }
 
     if (issueType === 'mat_the') {
       steps.push({
@@ -340,6 +380,7 @@ export function AttendanceView() {
     // 3. Step Tổ trưởng (nếu có)
     if (roleReq === 'team_leader') {
       if (att.employeeId.toLowerCase() === currentUser.id.toLowerCase()) return false;
+      if (isSuperAdminOrBOD(currentUser)) return true;
       if (currentStep.approverId && currentStep.approverId.toLowerCase() === currentUser.id.toLowerCase()) {
         return true;
       }
@@ -400,8 +441,47 @@ export function AttendanceView() {
     if (nextStep) {
       const allUsers = storage.getUsers();
 
+      // Case 0: Next step is Team Leader (Tổ trưởng)
+      if (nextStep.roleRequired === 'team_leader') {
+        const emp = allUsers.find((u) => u.id.toLowerCase() === updated.employeeId.toLowerCase());
+        const leaderId = nextStep.approverId || emp?.teamLeaderId;
+        const leaderUser = leaderId ? allUsers.find((u) => u.id.toLowerCase() === leaderId.toLowerCase()) : null;
+        const leaderEmail = (leaderUser?.email || '').trim();
+
+        if (leaderEmail) {
+          dispatchApprovalEmail({
+            toEmail: leaderEmail,
+            managerName: leaderUser?.name || nextStep.approverName,
+            type: 'attendance',
+            docId: updated.id,
+            employeeId: updated.employeeId,
+            employeeName: updated.employeeName,
+            department: updated.department,
+            details: {
+              title: 'Thông báo Duyệt Phiếu Xác Nhận Công',
+              items: [
+                { label: 'Sự cố chấm công', value: ISSUE_TYPE_LABELS[updated.issueType]?.text || updated.issueType },
+                { label: 'Ngày & Ca làm việc', value: `${formatDate(updated.date)} (${updated.shift})` },
+                { label: 'Giờ vào - ra thực tế', value: `Vào: ${updated.checkInTime} - Ra: ${updated.checkOutTime}` },
+                { label: 'Lý do giải trình', value: updated.reason },
+                { label: 'Bảo vệ cổng', value: `Đã xác nhận thực tế (${currentUser.name})` },
+                { label: 'Yêu cầu', value: 'Vui lòng xem xét và phê duyệt trên Cổng Portal Long Khải.' },
+              ],
+            },
+          }).catch(console.error);
+        }
+
+        showToast({
+          type: 'success',
+          title: 'Đã xác nhận vào/ra thực tế',
+          message: leaderEmail
+            ? `Phiếu ${updated.id} đã được chuyển và gửi email đến Tổ trưởng (${leaderUser?.name || nextStep.approverName} - ${leaderEmail}).`
+            : `Phiếu ${updated.id} đã được chuyển đến Tổ trưởng (${leaderUser?.name || nextStep.approverName}) phê duyệt.`,
+        });
+      }
+
       // Case 1: Next step is Manager (Trưởng bộ phận)
-      if (nextStep.roleRequired === 'manager') {
+      else if (nextStep.roleRequired === 'manager') {
         const emp = allUsers.find((u) => u.id.toLowerCase() === updated.employeeId.toLowerCase());
         const managerId = nextStep.approverId || emp?.departmentHeadId;
         const managerUser = managerId ? allUsers.find((u) => u.id.toLowerCase() === managerId.toLowerCase()) : null;
@@ -420,11 +500,10 @@ export function AttendanceView() {
               title: 'Thông báo Duyệt Phiếu Xác Nhận Công',
               items: [
                 { label: 'Sự cố chấm công', value: ISSUE_TYPE_LABELS[updated.issueType]?.text || updated.issueType },
-                
                 { label: 'Ngày & Ca làm việc', value: `${formatDate(updated.date)} (${updated.shift})` },
                 { label: 'Giờ vào - ra thực tế', value: `Vào: ${updated.checkInTime} - Ra: ${updated.checkOutTime}` },
                 { label: 'Lý do giải trình', value: updated.reason },
-                { label: 'Bảo vệ cổng', value: `Đã xác nhận thực tế (${currentUser.name})` },
+                { label: 'Cấp trước đã duyệt', value: `${currentUser.name} (${currentUser.id})` },
                 { label: 'Yêu cầu', value: 'Vui lòng xem xét và phê duyệt trên Cổng Portal Long Khải.' },
               ],
             },
@@ -433,7 +512,7 @@ export function AttendanceView() {
 
         showToast({
           type: 'success',
-          title: 'Đã xác nhận vào/ra thực tế',
+          title: 'Đã chuyển bước phê duyệt',
           message: managerEmail
             ? `Phiếu ${updated.id} đã được chuyển và gửi email đến Trưởng bộ phận (${managerUser?.name || nextStep.approverName} - ${managerEmail}).`
             : `Phiếu ${updated.id} đã được chuyển đến Trưởng bộ phận (${managerUser?.name || nextStep.approverName}) phê duyệt.`,
@@ -647,7 +726,7 @@ export function AttendanceView() {
         </div>
 
         <button
-          onClick={() => setShowCreateModal(true)}
+          onClick={handleOpenCreateModal}
           className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs rounded-xl shadow-md flex items-center gap-2 self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
@@ -1093,14 +1172,75 @@ export function AttendanceView() {
                 />
               </div>
 
+              {/* Approval workflow options */}
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                  Cấp phê duyệt yêu cầu:
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <label
+                    className={`flex items-center gap-2 p-2.5 rounded-lg border text-xs cursor-pointer select-none transition-colors ${
+                      needTeamLeader
+                        ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 font-semibold'
+                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+                    } ${!hasTeamLeader ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={needTeamLeader}
+                      disabled={!hasTeamLeader}
+                      onChange={(e) => {
+                        if (!hasTeamLeader) return;
+                        if (!e.target.checked && !needManager) return;
+                        setNeedTeamLeader(e.target.checked);
+                      }}
+                      className="w-4 h-4 text-amber-600 rounded focus:ring-amber-500"
+                    />
+                    <span>Tổ trưởng duyệt</span>
+                  </label>
+
+                  <label
+                    className={`flex items-center gap-2 p-2.5 rounded-lg border text-xs cursor-pointer select-none transition-colors ${
+                      needManager
+                        ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 font-semibold'
+                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={needManager}
+                      onChange={(e) => {
+                        if (!e.target.checked && !needTeamLeader) return;
+                        setNeedManager(e.target.checked);
+                      }}
+                      className="w-4 h-4 text-amber-600 rounded focus:ring-amber-500"
+                    />
+                    <span>Trưởng bộ phận duyệt</span>
+                  </label>
+                </div>
+                {!hasTeamLeader && (
+                  <p className="text-[11px] text-amber-600 dark:text-amber-400 italic">
+                    * Nhân viên chưa được thiết lập mã Tổ trưởng trong hệ thống, mặc định duyệt qua Trưởng bộ phận.
+                  </p>
+                )}
+              </div>
+
               {/* Workflow notification */}
               <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/40 text-[11px] text-amber-900 dark:text-amber-300">
                 <span className="font-bold">Quy trình duyệt: </span>
-                {issueType === 'mat_the' ? (
-                  <span>Nhân viên &rarr; Bảo vệ &rarr; Trưởng bộ phận &rarr; Kế toán &rarr; IT &rarr; Hoàn thành.</span>
-                ) : (
-                  <span>Nhân viên &rarr; Bảo vệ &rarr; Trưởng bộ phận &rarr; IT &rarr; Hoàn thành.</span>
-                )}
+                <span>
+                  {[
+                    'Nhân viên',
+                    'Bảo vệ',
+                    needTeamLeader ? 'Tổ trưởng' : null,
+                    needManager ? 'Trưởng bộ phận' : null,
+                    issueType === 'mat_the' ? 'Kế toán' : null,
+                    'IT',
+                    'Hoàn thành',
+                  ]
+                    .filter(Boolean)
+                    .join(' → ')}
+                </span>
               </div>
 
               <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
@@ -1336,10 +1476,12 @@ export function AttendanceView() {
                       <span>Bước này phải do chính nhân viên IT (Bộ phận CNTT) xác nhận và hoàn thành cập nhật máy chấm công.</span>
                     ) : selectedItem.steps[selectedItem.currentStepIndex]?.roleRequired === 'security' ? (
                       <span>Bước này phải do Bảo vệ cổng kiểm tra và xác nhận vào/ra thực tế.</span>
+                    ) : selectedItem.steps[selectedItem.currentStepIndex]?.roleRequired === 'team_leader' ? (
+                      <span>Đang chờ Tổ trưởng ({selectedItem.steps[selectedItem.currentStepIndex]?.approverName}) xem xét và phê duyệt.</span>
                     ) : selectedItem.steps[selectedItem.currentStepIndex]?.roleRequired === 'accountant' ? (
                       <span>Bước này phải do Bộ phận Kế toán Tài chính kiểm tra và ghi nhận trừ phí phôi thẻ.</span>
                     ) : selectedItem.employeeId.toLowerCase() === currentUser?.id.toLowerCase() ? (
-                      <span>Đang chờ Trưởng bộ phận phê duyệt (Người tạo phiếu không được tự phê duyệt đơn của chính mình).</span>
+                      <span>Đang chờ Quản lý phê duyệt (Người tạo phiếu không được tự phê duyệt đơn của chính mình).</span>
                     ) : (
                       <span>Đang chờ Trưởng bộ phận ({selectedItem.steps[selectedItem.currentStepIndex]?.approverName}) xem xét và phê duyệt.</span>
                     )}

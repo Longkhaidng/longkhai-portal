@@ -258,16 +258,33 @@ export function filterUserGatePasses(
     if (scope === 'approver') {
       return passes.filter((p) => {
         if (p.employeeId.toLowerCase() === uid) return false;
+        if (p.status !== 'pending') return false;
         const isMyDept = isSameDepartment(p.department, user.department);
-        const isAssigned = p.managerApproverId?.toLowerCase() === uid;
-        return p.status === 'pending' && (isMyDept || isAssigned);
+        const isAssigned =
+          p.managerApproverId?.toLowerCase() === uid ||
+          p.teamLeaderApproverId?.toLowerCase() === uid ||
+          p.steps?.some((s) => s.approverId?.toLowerCase() === uid);
+        if (Array.isArray(p.steps) && p.steps.length > 0) {
+          const curStep = p.steps[p.currentStepIndex ?? 0];
+          if (!curStep || curStep.status !== 'pending') return false;
+          if (user.role === 'team_leader') {
+            return curStep.roleRequired === 'team_leader' && (isMyDept || curStep.approverId?.toLowerCase() === uid);
+          }
+          if (user.role === 'manager') {
+            return curStep.roleRequired === 'manager' && (isMyDept || curStep.approverId?.toLowerCase() === uid);
+          }
+        }
+        return isMyDept || isAssigned;
       });
     }
 
     return passes.filter((p) => {
       const isMine = p.employeeId.toLowerCase() === uid;
       const isMyDept = isSameDepartment(p.department, user.department);
-      const isAssigned = p.managerApproverId?.toLowerCase() === uid;
+      const isAssigned =
+        p.managerApproverId?.toLowerCase() === uid ||
+        p.teamLeaderApproverId?.toLowerCase() === uid ||
+        p.steps?.some((s) => s.approverId?.toLowerCase() === uid);
       return isMine || isMyDept || isAssigned;
     });
   }
@@ -376,9 +393,20 @@ export function filterUserAttendances(
     if (scope === 'approver') {
       return attendances.filter((a) => {
         if (a.employeeId.toLowerCase() === uid) return false;
+        if (a.status !== 'pending') return false;
         const isMyDept = isSameDepartment(a.department, user.department);
         const isAssigned = a.steps?.some((s) => s.approverId?.toLowerCase() === uid);
-        return a.status === 'pending' && (isMyDept || isAssigned);
+        if (Array.isArray(a.steps) && a.steps.length > 0) {
+          const curStep = a.steps[a.currentStepIndex ?? 0];
+          if (!curStep || curStep.status !== 'pending') return false;
+          if (user.role === 'team_leader') {
+            return curStep.roleRequired === 'team_leader' && (isMyDept || curStep.approverId?.toLowerCase() === uid);
+          }
+          if (user.role === 'manager') {
+            return curStep.roleRequired === 'manager' && (isMyDept || curStep.approverId?.toLowerCase() === uid);
+          }
+        }
+        return isMyDept || isAssigned;
       });
     }
 

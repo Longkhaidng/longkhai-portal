@@ -1,3 +1,5 @@
+import { ApprovalStep } from './leave';
+
 export type GatePassStatus =
   | 'pending' // Chờ quản lý duyệt
   | 'approved' // Quản lý đã duyệt, phiếu có hiệu lực
@@ -71,6 +73,13 @@ export interface GatePass {
   managerApproverId?: string;
   managerApproverName?: string;
   managerApprovedAt?: string;
+  requireTeamLeader?: boolean;
+  requireManager?: boolean;
+  teamLeaderApproverId?: string;
+  teamLeaderApproverName?: string;
+  teamLeaderApprovedAt?: string;
+  currentStepIndex?: number;
+  steps?: ApprovalStep[];
   securityDepartureGuardId?: string;
   securityReturnGuardId?: string;
   itConfirmedAt?: string;

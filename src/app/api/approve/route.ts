@@ -152,11 +152,49 @@ export async function POST(req: NextRequest) {
       doc.updatedAt = now;
 
     } else if (type === 'gate_pass') {
-      doc.status = isApprove ? 'approved' : 'rejected';
-      doc.managerApproverName = 'Trưởng bộ phận (Email)';
-      doc.managerApprovedAt = now;
-      if (!isApprove) {
-        doc.rejectionReason = 'Từ chối qua Email';
+      const stepIndex = doc.currentStepIndex ?? 0;
+      if (Array.isArray(doc.steps) && doc.steps[stepIndex]) {
+        const curStep = doc.steps[stepIndex];
+        curStep.status = isApprove ? 'approved' : 'rejected';
+        const roleLabel = curStep.roleRequired === 'team_leader' ? 'Tổ trưởng (Email)' : 'Trưởng bộ phận (Email)';
+        curStep.approverName = roleLabel;
+        curStep.comment = isApprove ? 'Đồng ý phê duyệt (qua Email)' : 'Từ chối (qua Email)';
+        curStep.actionAt = now;
+
+        if (curStep.roleRequired === 'team_leader') {
+          doc.teamLeaderApproverName = roleLabel;
+          doc.teamLeaderApprovedAt = now;
+        } else {
+          doc.managerApproverName = roleLabel;
+          doc.managerApprovedAt = now;
+        }
+
+        if (isApprove) {
+          if (doc.currentStepIndex + 1 < doc.steps.length) {
+            const nextRole = doc.steps[doc.currentStepIndex + 1].roleRequired;
+            if (nextRole === 'security') {
+              // Management approval completed, pass is approved for security to scan
+              doc.currentStepIndex += 1;
+              doc.status = 'approved';
+            } else {
+              // Advance to next management step (e.g. manager)
+              doc.currentStepIndex += 1;
+              doc.status = 'pending';
+            }
+          } else {
+            doc.status = 'approved';
+          }
+        } else {
+          doc.status = 'rejected';
+          doc.rejectionReason = 'Từ chối qua Email';
+        }
+      } else {
+        doc.status = isApprove ? 'approved' : 'rejected';
+        doc.managerApproverName = 'Trưởng bộ phận (Email)';
+        doc.managerApprovedAt = now;
+        if (!isApprove) {
+          doc.rejectionReason = 'Từ chối qua Email';
+        }
       }
       doc.updatedAt = now;
 
