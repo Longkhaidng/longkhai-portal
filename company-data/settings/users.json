@@ -4170,7 +4170,7 @@
   {
     "id": "2727",
     "name": "Nguyễn Trâm Bảo Anh",
-    "department": "Phòng Kế Toán Tài Chính",
+    "department": "Phòng Kế Toán",
     "position": "Nhân viên kế toán",
     "role": "accountant",
     "economicStaffId": "1139",
@@ -4185,7 +4185,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-22T05:46:09.032Z"
   },
   {
     "id": "2732",
