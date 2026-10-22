@@ -9,8 +9,8 @@
   "checkOutTime": "16:30",
   "shift": "Ca Hành chính (08:00 - 16:30)",
   "reason": "mất thẻ",
-  "status": "pending",
-  "currentStepIndex": 2,
+  "status": "approved",
+  "currentStepIndex": 3,
   "steps": [
     {
       "stepName": "Bảo vệ cổng xác nhận vào/ra thực tế",
@@ -32,19 +32,24 @@
     {
       "stepName": "Kế toán ghi nhận trừ phí phôi thẻ",
       "roleRequired": "accountant",
-      "approverName": "Bộ phận Kế toán Tài chính",
-      "status": "pending"
+      "approverName": "Trưởng bộ phận (Email)",
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt (qua Email)",
+      "actionAt": "2026-10-22T02:57:11.628Z"
     },
     {
       "stepName": "IT cấp phôi thẻ mới",
       "roleRequired": "it",
-      "approverName": "Bộ phận CNTT (IT)",
-      "status": "pending"
+      "approverName": "Trần Lê Hữu Lực",
+      "status": "approved",
+      "approverId": "2265",
+      "comment": "Đã xác nhận kiểm tra hợp lệ",
+      "actionAt": "2026-10-22T02:58:44.274Z"
     }
   ],
   "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=attendance&id=ATT26-000012",
   "createdAt": "2026-10-22T02:54:38.895Z",
-  "updatedAt": "2026-10-22T02:56:14.061Z",
+  "updatedAt": "2026-10-22T02:58:44.274Z",
   "actualCheckIn": "09:55",
   "actualCheckInGuard": "Trương Văn Hùng",
   "actualCheckInAt": "2026-10-22T02:55:41.143Z",
