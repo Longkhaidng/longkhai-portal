@@ -4706,7 +4706,7 @@
   {
     "id": "2811",
     "name": "Trần Văn Hải",
-    "department": "Phòng Cơ Điện & Bảo Trì",
+    "department": "Cơ điện",
     "position": "Nhân viên vận hành lò hơi",
     "role": "employee",
     "departmentHeadId": "2409",
@@ -4721,7 +4721,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-22T05:45:13.348Z"
   },
   {
     "id": "2816",
