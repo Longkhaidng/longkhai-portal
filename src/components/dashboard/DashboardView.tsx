@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
 import {
@@ -17,10 +17,13 @@ import {
   Building2,
   Globe,
   Users,
+  Bell,
+  Pin,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
+import { Announcement, ANNOUNCEMENT_CATEGORY_LABELS } from '@/types/announcement';
 import {
   filterUserLeaves,
   filterUserGatePasses,
@@ -36,6 +39,8 @@ interface DashboardViewProps {
 
 export function DashboardView({ onNavigateTab }: DashboardViewProps) {
   const { currentUser } = useAuth();
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
+
   const isBOD = isSuperAdminOrBOD(currentUser);
   const isSecurity = isSecurityRole(currentUser);
   const canManageOthers = isApproverRole(currentUser) || isSecurity;
@@ -47,6 +52,16 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
   const departments = storage.getDepartments();
   const users = storage.getUsers();
   const webIntegrations = storage.getWebIntegrations();
+
+  // Announcements list (pinned first, then latest published)
+  const announcements = useMemo(() => {
+    const list = storage.getAnnouncements();
+    return [...list].sort((a, b) => {
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+      return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+    });
+  }, []);
 
   // Filter documents based on user permissions
   const leaves = useMemo(() => {
@@ -134,7 +149,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
         </div>
       </div>
 
-      {/* 5 Key Metric Cards (No PCCC) */}
+      {/* 5 Key Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Card 1: Total Forms */}
         <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
@@ -243,7 +258,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
 
       {/* Main 2-column sections */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column (2 spans): Urgent Approvals */}
+        {/* Left Column (2 spans): Urgent Approvals & Announcements */}
         <div className="lg:col-span-2 space-y-6">
           {/* Pending Leaves List */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs">
@@ -380,6 +395,82 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
               </div>
             )}
           </div>
+
+          {/* Thông Báo & Nội Quy Nhà Máy */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 rounded-xl">
+                  <Bell className="w-4 h-4" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    Thông báo & Nội quy nhà máy
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300">
+                      {announcements.length} tin
+                    </span>
+                  </h2>
+                  <p className="text-xs text-slate-400">
+                    Quy định an toàn lao động, chính sách và tin tức nội bộ mới nhất
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => onNavigateTab('announcements')}
+                className="text-xs text-purple-600 dark:text-purple-400 font-semibold hover:underline flex items-center gap-1"
+              >
+                <span>Xem tất cả</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {announcements.length === 0 ? (
+              <div className="py-6 text-center text-slate-400 text-xs">
+                Hiện chưa có thông báo hoặc nội quy nào được đăng tải.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {announcements.slice(0, 3).map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => setSelectedAnnouncement(item)}
+                    className="p-3.5 rounded-xl border border-slate-100 dark:border-slate-800/80 hover:border-purple-300 dark:hover:border-purple-800 hover:bg-purple-50/30 dark:hover:bg-purple-950/20 cursor-pointer transition-all group"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="space-y-1.5 flex-1">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          {item.isPinned && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-200 dark:border-amber-900">
+                              <Pin className="w-2.5 h-2.5 fill-amber-700 dark:fill-amber-300" />
+                              Ghim
+                            </span>
+                          )}
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                              ANNOUNCEMENT_CATEGORY_LABELS[item.category]?.color ||
+                              'bg-slate-100 text-slate-700'
+                            }`}
+                          >
+                            {ANNOUNCEMENT_CATEGORY_LABELS[item.category]?.title || item.category}
+                          </span>
+                          <span className="text-[11px] text-slate-400">
+                            &bull; {formatDate(item.publishedAt)}
+                          </span>
+                        </div>
+                        <h3 className="font-bold text-xs md:text-sm text-slate-800 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                          {item.title}
+                        </h3>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                          {item.summary || item.contentMarkdown.slice(0, 140)}
+                        </p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 group-hover:translate-x-0.5 transition-all shrink-0 mt-1" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Right Column: Department Leave Distribution & Quick Factory Stats */}
@@ -427,8 +518,8 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
             </div>
             <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
               <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                <span>Ca Hành Chính:</span>
-                <b className="font-mono text-slate-800 dark:text-white">07:30 - 16:30</b>
+                <span>Ca Hành chính:</span>
+                <b className="font-mono text-slate-800 dark:text-white">08:00 - 16:30</b>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex justify-between items-center">
                 <span>Ca 1 (Sáng):</span>
@@ -438,6 +529,10 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
                 <span>Ca 2 (Chiều):</span>
                 <b className="font-mono text-slate-800 dark:text-white">14:00 - 22:00</b>
               </div>
+              <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                <span>Ca 3 (Ca đêm):</span>
+                <b className="font-mono text-slate-800 dark:text-white">22:00 - 06:00</b>
+              </div>
             </div>
             <p className="text-[11px] text-slate-400 italic">
               * Quên hoặc hỏng thẻ vui lòng làm phiếu xác nhận công trong ngày để được tính công chuẩn xác.
@@ -445,6 +540,84 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
           </div>
         </div>
       </div>
+
+      {/* Modal View Full Announcement / Rule */}
+      {selectedAnnouncement && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden max-h-[85vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between gap-4">
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  {selectedAnnouncement.isPinned && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                      <Pin className="w-3 h-3 fill-amber-700 dark:fill-amber-300" />
+                      Đã ghim
+                    </span>
+                  )}
+                  <span
+                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                      ANNOUNCEMENT_CATEGORY_LABELS[selectedAnnouncement.category]?.color ||
+                      'bg-slate-100 text-slate-700'
+                    }`}
+                  >
+                    {ANNOUNCEMENT_CATEGORY_LABELS[selectedAnnouncement.category]?.title ||
+                      selectedAnnouncement.category}
+                  </span>
+                </div>
+                <h2 className="text-base md:text-lg font-bold text-slate-900 dark:text-white">
+                  {selectedAnnouncement.title}
+                </h2>
+                <div className="text-xs text-slate-400 flex items-center gap-3">
+                  <span>
+                    Người đăng: <b>{selectedAnnouncement.authorName}</b>
+                  </span>
+                  <span>&bull;</span>
+                  <span>Ngày ban hành: {formatDate(selectedAnnouncement.publishedAt)}</span>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedAnnouncement(null)}
+                className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 transition-colors text-lg font-bold"
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto space-y-4 text-xs md:text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap font-sans">
+              {selectedAnnouncement.summary && (
+                <div className="p-3.5 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-900/60 font-medium text-purple-900 dark:text-purple-200">
+                  {selectedAnnouncement.summary}
+                </div>
+              )}
+              <div className="prose dark:prose-invert max-w-none text-xs md:text-sm">
+                {selectedAnnouncement.contentMarkdown}
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
+              <button
+                onClick={() => {
+                  setSelectedAnnouncement(null);
+                  onNavigateTab('announcements');
+                }}
+                className="text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1"
+              >
+                <span>Xem trong trang Thông báo & Nội quy</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => setSelectedAnnouncement(null)}
+                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-xl transition-colors"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
