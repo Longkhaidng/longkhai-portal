@@ -5146,7 +5146,7 @@
   {
     "id": "2851",
     "name": "Ông Thị Phước",
-    "department": "Phòng Quản Lý Chất Lượng (QA/QC)",
+    "department": "Phòng KCS",
     "position": "Nhân viên KCS Hoàn Thành",
     "role": "employee",
     "departmentHeadId": "2831",
@@ -5161,7 +5161,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-22T05:49:49.139Z"
   },
   {
     "id": "2852",
