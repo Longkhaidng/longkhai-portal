@@ -16,7 +16,7 @@ import {
   INITIAL_DYNAMIC_FORMS,
 } from './initial-data';
 import { GitHubService } from './github-api';
-import { formatDocId } from './utils';
+import { formatDocId, sortNewestFirst } from './utils';
 
 const STORAGE_KEYS = {
   USERS: 'lk_portal_users',
@@ -157,7 +157,7 @@ class StorageService {
       const data = localStorage.getItem(STORAGE_KEYS.POSITIONS);
       if (data) {
         const parsed = JSON.parse(data);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) return sortNewestFirst(parsed);
       }
     } catch {}
     localStorage.setItem(STORAGE_KEYS.POSITIONS, JSON.stringify(INITIAL_POSITIONS));
@@ -274,7 +274,7 @@ class StorageService {
       const data = localStorage.getItem(STORAGE_KEYS.LEAVE_REQUESTS);
       if (data) {
         const list: LeaveRequest[] = JSON.parse(data);
-        return list.map((r) => ({ ...r, id: formatDocId(r.id) }));
+        return sortNewestFirst(list.map((r) => ({ ...r, id: formatDocId(r.id) })));
       }
     } catch {}
     return [];
@@ -375,7 +375,7 @@ class StorageService {
       const data = localStorage.getItem(STORAGE_KEYS.GATE_PASSES);
       if (data) {
         const passes: GatePass[] = JSON.parse(data);
-        return passes.map((p) => ({ ...p, id: formatDocId(p.id) }));
+        return sortNewestFirst(passes.map((p) => ({ ...p, id: formatDocId(p.id) })));
       }
     } catch {}
     return [];

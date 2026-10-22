@@ -94,3 +94,21 @@ export function downloadBlob(blob: Blob, fileName: string) {
   window.URL.revokeObjectURL(url);
   document.body.removeChild(a);
 }
+
+export function sortNewestFirst<T extends { id: string; createdAt?: string; date?: string; fromDate?: string }>(list: T[]): T[] {
+  return [...list].sort((a, b) => {
+    const timeA = new Date(a.createdAt || a.date || a.fromDate || 0).getTime();
+    const timeB = new Date(b.createdAt || b.date || b.fromDate || 0).getTime();
+    if (timeA && timeB && timeA !== timeB) {
+      return timeB - timeA;
+    }
+    const matchA = a.id.match(/-(\d+)$/);
+    const matchB = b.id.match(/-(\d+)$/);
+    if (matchA && matchB) {
+      const numA = parseInt(matchA[1], 10);
+      const numB = parseInt(matchB[1], 10);
+      if (numA !== numB) return numB - numA;
+    }
+    return (b.id || '').localeCompare(a.id || '');
+  });
+}

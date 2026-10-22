@@ -18,7 +18,7 @@ import {
   Search,
   RotateCcw,
 } from 'lucide-react';
-import { formatDate, formatDateTime } from '@/lib/utils';
+import { formatDate, formatDateTime, sortNewestFirst } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { filterUserLeaves, filterUserAttendances, filterUserGatePasses } from '@/lib/permissions';
@@ -86,7 +86,7 @@ export function ReportsView() {
 
   // 1. Filtered Leaves
   const filteredLeaves = useMemo(() => {
-    return leaves.filter((l) => {
+    return sortNewestFirst(leaves.filter((l) => {
       if (departmentFilter !== 'all' && l.department !== departmentFilter) return false;
       if (statusFilter !== 'all' && l.status !== statusFilter) return false;
       if (searchTerm.trim()) {
@@ -104,12 +104,12 @@ export function ReportsView() {
       if (fromDate && end && end < fromDate) return false;
       if (toDate && start && start > toDate) return false;
       return true;
-    });
+    }));
   }, [leaves, departmentFilter, statusFilter, searchTerm, fromDate, toDate]);
 
   // 2. Filtered Attendances
   const filteredAttendances = useMemo(() => {
-    return attendances.filter((a) => {
+    return sortNewestFirst(attendances.filter((a) => {
       if (departmentFilter !== 'all' && a.department !== departmentFilter) return false;
       if (statusFilter !== 'all' && a.status !== statusFilter) return false;
       if (searchTerm.trim()) {
@@ -127,12 +127,12 @@ export function ReportsView() {
       if (fromDate && aDate && aDate < fromDate) return false;
       if (toDate && aDate && aDate > toDate) return false;
       return true;
-    });
+    }));
   }, [attendances, departmentFilter, statusFilter, searchTerm, fromDate, toDate]);
 
   // 3. Filtered Gate Passes
   const filteredGatePasses = useMemo(() => {
-    return gatePasses.filter((gp) => {
+    return sortNewestFirst(gatePasses.filter((gp) => {
       if (departmentFilter !== 'all' && gp.department !== departmentFilter) return false;
       if (statusFilter !== 'all') {
         if (gp.status !== statusFilter) return false;
@@ -152,12 +152,12 @@ export function ReportsView() {
       if (fromDate && gpDate && gpDate < fromDate) return false;
       if (toDate && gpDate && gpDate > toDate) return false;
       return true;
-    });
+    }));
   }, [gatePasses, departmentFilter, statusFilter, searchTerm, fromDate, toDate]);
 
   // 4. Filtered Meal Cut Leaves
   const filteredMealCutLeaves = useMemo(() => {
-    return mealCutLeaves.filter((l) => {
+    return sortNewestFirst(mealCutLeaves.filter((l) => {
       if (departmentFilter !== 'all' && l.department !== departmentFilter) return false;
       if (statusFilter !== 'all' && l.status !== statusFilter) return false;
       if (searchTerm.trim()) {
@@ -175,7 +175,7 @@ export function ReportsView() {
       if (fromDate && end && end < fromDate) return false;
       if (toDate && start && start > toDate) return false;
       return true;
-    });
+    }));
   }, [mealCutLeaves, departmentFilter, statusFilter, searchTerm, fromDate, toDate]);
 
   // 5. Filtered Departments
@@ -415,7 +415,9 @@ export function ReportsView() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* TOP CONTROLS (Hidden completely on print/PDF) */}
+      <div className="space-y-6 no-print print:hidden">
+        {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -673,9 +675,10 @@ export function ReportsView() {
           </div>
         </div>
       </div>
+      </div>
 
       {/* Printable Paper Document Container */}
-      <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-6">
+      <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-6 print-document print:p-0 print:border-none print:shadow-none print:m-0">
         {/* Factory Formal Letterhead */}
         <div className="border-b-2 border-slate-800 pb-4 flex flex-col md:flex-row justify-between items-start md:items-center text-xs gap-3">
           <div className="flex items-center gap-3">
@@ -753,23 +756,23 @@ export function ReportsView() {
                 ) : (
                   filteredLeaves.map((l) => (
                     <tr key={l.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                      <td className="p-2 border font-mono font-bold text-blue-600">{l.id}</td>
-                      <td className="p-2 border font-mono">{l.employeeId}</td>
+                      <td className="p-2 border text-center font-mono font-bold text-blue-600">{l.id}</td>
+                      <td className="p-2 border text-center font-mono">{l.employeeId}</td>
                       <td className="p-2 border font-semibold text-slate-900 dark:text-white">
                         {l.employeeName}
                       </td>
                       <td className="p-2 border">{l.department}</td>
                       <td className="p-2 border">{LEAVE_TYPE_LABELS[l.leaveType] || l.leaveType}</td>
-                      <td className="p-2 border font-medium">
-                        {formatDate(l.fromDate)} &rarr; {formatDate(l.toDate)}
+                      <td className="p-2 border text-center font-medium">
+                        {formatDate(l.fromDate)} – {formatDate(l.toDate)}
                       </td>
                       <td className="p-2 border text-center font-bold text-rose-600">
                         {l.totalDays}
                       </td>
-                      <td className="p-2 border max-w-xs truncate" title={l.reason}>
-                        {l.reason || '-'}
+                      <td className="p-2 border max-w-xs truncate text-slate-700 dark:text-slate-300" title={l.reason}>
+                        {l.reason || ''}
                       </td>
-                      <td className="p-2 border">
+                      <td className="p-2 border text-center">
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                             l.status === 'approved'
@@ -824,24 +827,24 @@ export function ReportsView() {
                 ) : (
                   filteredAttendances.map((a) => (
                     <tr key={a.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                      <td className="p-2 border font-mono font-bold text-amber-600">{a.id}</td>
-                      <td className="p-2 border font-mono">{a.employeeId}</td>
+                      <td className="p-2 border text-center font-mono font-bold text-blue-600">{a.id}</td>
+                      <td className="p-2 border text-center font-mono">{a.employeeId}</td>
                       <td className="p-2 border font-semibold text-slate-900 dark:text-white">
                         {a.employeeName}
                       </td>
                       <td className="p-2 border">{a.department}</td>
                       <td className="p-2 border">{ISSUE_TYPE_LABELS[a.issueType]?.text || a.issueType}</td>
-                      <td className="p-2 border font-medium">{formatDate(a.date)}</td>
-                      <td className="p-2 border font-medium text-slate-700 dark:text-slate-300">
+                      <td className="p-2 border text-center font-medium">{formatDate(a.date)}</td>
+                      <td className="p-2 border text-center font-medium text-slate-700 dark:text-slate-300">
                         {a.shift}
                       </td>
-                      <td className="p-2 border font-mono font-semibold text-emerald-600 dark:text-emerald-400">
-                        {a.actualCheckIn || '-'}
+                      <td className="p-2 border text-center font-mono font-semibold text-emerald-600 dark:text-emerald-400">
+                        {a.actualCheckIn || ''}
                       </td>
-                      <td className="p-2 border font-mono font-semibold text-blue-600 dark:text-blue-400">
-                        {a.actualCheckOut || '-'}
+                      <td className="p-2 border text-center font-mono font-semibold text-blue-600 dark:text-blue-400">
+                        {a.actualCheckOut || ''}
                       </td>
-                      <td className="p-2 border">
+                      <td className="p-2 border text-center">
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                             a.status === 'approved'
@@ -891,7 +894,7 @@ export function ReportsView() {
                 ) : (
                   filteredGatePasses.map((gp) => (
                     <tr key={gp.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                      <td className="p-2 border font-mono font-bold text-emerald-600">{gp.id}</td>
+                      <td className="p-2 border text-center font-mono font-bold text-blue-600">{gp.id}</td>
                       <td className="p-2 border font-semibold text-slate-900 dark:text-white">
                         {gp.employeeName} ({gp.employeeId})
                       </td>
@@ -904,10 +907,10 @@ export function ReportsView() {
                           </span>
                         ) : null}
                       </td>
-                      <td className="p-2 border font-medium text-slate-700 dark:text-slate-300">
+                      <td className="p-2 border text-center font-medium text-slate-700 dark:text-slate-300">
                         {gp.shift || ''}
                       </td>
-                      <td className="p-2 border">
+                      <td className="p-2 border text-center">
                         {gp.actualDepartureTime
                           ? formatDateTime(gp.actualDepartureTime)
                           : gp.timeType === 'nghi_dau_gio'
@@ -916,7 +919,7 @@ export function ReportsView() {
                           ? `Dự kiến ${formatDateTime(gp.estimatedDepartureTime)}`
                           : ''}
                       </td>
-                      <td className="p-2 border">
+                      <td className="p-2 border text-center">
                         {gp.timeType === 'nghi_cuoi_gio'
                           ? ''
                           : gp.actualReturnTime
@@ -925,7 +928,7 @@ export function ReportsView() {
                           ? `Dự kiến ${formatDateTime(gp.estimatedReturnTime)}`
                           : ''}
                       </td>
-                      <td className="p-2 border">
+                      <td className="p-2 border text-center">
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                             gp.status === 'approved'

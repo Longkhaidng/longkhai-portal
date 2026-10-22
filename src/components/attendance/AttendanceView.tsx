@@ -10,6 +10,7 @@ import {
   AttendanceStatus,
 } from '@/types/attendance';
 import { ApprovalStep } from '@/types/leave';
+import { OTHER_GATE_PASS_SHIFTS } from '@/types/gatePass';
 import {
   Clock,
   Plus,
@@ -103,7 +104,8 @@ export function AttendanceView() {
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [checkInTime, setCheckInTime] = useState('08:00');
   const [checkOutTime, setCheckOutTime] = useState('16:30');
-  const [shift, setShift] = useState('Ca Hành chính (08:00 - 16:30)');
+  const [shift, setShift] = useState('Ca HC (08:00 - 16:30)');
+  const [otherShiftSelect, setOtherShiftSelect] = useState('');
   const [customShift, setCustomShift] = useState('');
   const [reason, setReason] = useState('');
   const [approvalComment, setApprovalComment] = useState('');
@@ -113,7 +115,7 @@ export function AttendanceView() {
   // Auto-fill times when selecting shift
   const handleShiftChange = (newShift: string) => {
     setShift(newShift);
-    if (newShift === 'Ca Hành chính (08:00 - 16:30)') {
+    if (newShift === 'Ca HC (08:00 - 16:30)' || newShift === 'Ca Hành chính (08:00 - 16:30)') {
       setCheckInTime('08:00');
       setCheckOutTime('16:30');
     } else if (newShift === 'Ca 1 (06:00 - 14:00)') {
@@ -125,6 +127,37 @@ export function AttendanceView() {
     } else if (newShift === 'Ca 3 (22:00 - 06:00)') {
       setCheckInTime('22:00');
       setCheckOutTime('06:00');
+    } else if (newShift === 'Ca khác') {
+      setOtherShiftSelect('');
+      setCustomShift('');
+    }
+  };
+
+  const handleOtherShiftChange = (shiftVal: string) => {
+    setOtherShiftSelect(shiftVal);
+    if (shiftVal.includes('07:00 – 15:30') || shiftVal.includes('07:00 - 15:30')) {
+      setCheckInTime('07:00'); setCheckOutTime('15:30');
+    } else if (shiftVal.includes('06:30 – 15:00') || shiftVal.includes('06:30 - 15:00')) {
+      setCheckInTime('06:30'); setCheckOutTime('15:00');
+    } else if (shiftVal.includes('07:30 – 16:00') || shiftVal.includes('07:30 - 16:00')) {
+      setCheckInTime('07:30'); setCheckOutTime('16:00');
+    } else if (shiftVal.includes('12:00 – 20:00') || shiftVal.includes('12:00 - 20:00')) {
+      setCheckInTime('12:00'); setCheckOutTime('20:00');
+    } else if (shiftVal.includes('07:00 – 15:00') || shiftVal.includes('07:00 - 15:00')) {
+      setCheckInTime('07:00'); setCheckOutTime('15:00');
+    } else if (shiftVal.includes('08:00 – 16:00') || shiftVal.includes('08:00 - 16:00')) {
+      setCheckInTime('08:00'); setCheckOutTime('16:00');
+    } else if (shiftVal.includes('18:00 – 02:00') || shiftVal.includes('18:00 - 02:00')) {
+      setCheckInTime('18:00'); setCheckOutTime('02:00');
+    } else if (shiftVal.includes('10:00 – 18:00') || shiftVal.includes('10:00 - 18:00')) {
+      setCheckInTime('10:00'); setCheckOutTime('18:00');
+    } else if (shiftVal.includes('07:30 – 15:30') || shiftVal.includes('07:30 - 15:30')) {
+      setCheckInTime('07:30'); setCheckOutTime('15:30');
+    }
+    if (shiftVal !== 'custom') {
+      setCustomShift(shiftVal);
+    } else {
+      setCustomShift('');
     }
   };
 
@@ -998,28 +1031,50 @@ export function AttendanceView() {
                 <select
                   value={shift}
                   onChange={(e) => handleShiftChange(e.target.value)}
-                  className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                  className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium"
                 >
-                  <option value="Ca Hành chính (08:00 - 16:30)">Ca Hành chính (08:00 - 16:30)</option>
+                  <option value="Ca HC (08:00 - 16:30)">Ca HC (08:00 - 16:30)</option>
                   <option value="Ca 1 (06:00 - 14:00)">Ca 1 (06:00 - 14:00)</option>
                   <option value="Ca 2 (14:00 - 22:00)">Ca 2 (14:00 - 22:00)</option>
                   <option value="Ca 3 (22:00 - 06:00)">Ca 3 (22:00 - 06:00)</option>
-                  <option value="Ca khác">Ca khác (Tự nhập)</option>
+                  <option value="Ca khác">Ca khác (Tự chọn / Nhập)</option>
                 </select>
 
                 {shift === 'Ca khác' && (
-                  <div className="mt-2.5">
+                  <div className="mt-2.5 space-y-2">
                     <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      Nhập ca làm việc của bạn: *
+                      Chọn ca đã tạo sẵn: *
                     </label>
-                    <input
-                      type="text"
+                    <select
                       required
-                      value={customShift}
-                      onChange={(e) => setCustomShift(e.target.value)}
-                      placeholder="VD: Ca gãy (08:00 - 12:00 & 14:00 - 18:00)..."
-                      className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                    />
+                      value={otherShiftSelect}
+                      onChange={(e) => handleOtherShiftChange(e.target.value)}
+                      className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium text-xs"
+                    >
+                      <option value="">-- Chọn ca đã tạo sẵn --</option>
+                      {OTHER_GATE_PASS_SHIFTS.map((s) => (
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
+                      ))}
+                      <option value="custom">-- Tùy chọn khác (tự nhập tay) --</option>
+                    </select>
+
+                    {otherShiftSelect === 'custom' && (
+                      <div>
+                        <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                          Nhập ca làm việc của bạn: *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={customShift}
+                          onChange={(e) => setCustomShift(e.target.value)}
+                          placeholder="VD: Ca gãy (08:00 - 12:00 & 14:00 - 18:00)..."
+                          className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs"
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

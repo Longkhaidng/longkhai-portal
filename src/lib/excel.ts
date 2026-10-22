@@ -415,6 +415,9 @@ export function exportAllUsersToExcel(users: User[]) {
 }
 
 
+import ExcelJS from 'exceljs';
+import { downloadBlob } from './utils';
+
 export interface ExportReportOptions {
   title: string;
   subtitle: string;
@@ -423,44 +426,147 @@ export interface ExportReportOptions {
   rows: (string | number)[][];
   fileName: string;
   colWidths?: number[];
+  centerCols?: number[];
 }
 
-export function exportReportToExcel(opts: ExportReportOptions) {
+export async function exportReportToExcel(opts: ExportReportOptions) {
+  const workbook = new ExcelJS.Workbook();
+  workbook.creator = 'Long Khải Portal';
+  workbook.created = new Date();
+
+  const worksheet = workbook.addWorksheet('Báo Cáo', {
+    pageSetup: { orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0 },
+    views: [{ showGridLines: true }],
+  });
+
   const now = new Date();
   const exportDate = now.toLocaleDateString('vi-VN', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
   });
+  const totalCols = Math.max(opts.headers.length, 9);
 
-  const aoa: any[][] = [
-    ['CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG'],
-    ['Hệ thống Quản trị & Điều hành Sản xuất Nội bộ'],
-    [`Ngày xuất báo cáo: ${exportDate} | Mã tài liệu: ${opts.docCode || 'BC-LK-2026/01'}`],
-    [],
-    [`BÁO CÁO TỔNG HỢP ${opts.title.toUpperCase()}`],
-    [opts.subtitle],
-    [],
-    opts.headers,
-    ...opts.rows,
-  ];
+  // Row 1: Company Name (Left) & Export Date (Right)
+  const row1 = worksheet.addRow([]);
+  row1.getCell(1).value = 'CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG';
+  row1.getCell(1).font = { name: 'Calibri', bold: true, size: 11, color: { argb: 'FF0F172A' } };
+  row1.getCell(totalCols).value = `Ngày xuất báo cáo: ${exportDate}`;
+  row1.getCell(totalCols).font = { name: 'Calibri', size: 9.5, color: { argb: 'FF475569' } };
+  row1.getCell(totalCols).alignment = { horizontal: 'right' };
 
-  const worksheet = XLSX.utils.aoa_to_sheet(aoa);
+  // Row 2: Sub-info (Left) & Doc Code (Right)
+  const row2 = worksheet.addRow([]);
+  row2.getCell(1).value = 'Hệ thống Quản trị & Điều hành Sản xuất Nội bộ';
+  row2.getCell(1).font = { name: 'Calibri', italic: true, size: 9.5, color: { argb: 'FF64748B' } };
+  row2.getCell(totalCols).value = `Mã tài liệu: ${opts.docCode || 'BC-LK-2026/01'}`;
+  row2.getCell(totalCols).font = { name: 'Calibri', size: 9.5, color: { argb: 'FF475569' } };
+  row2.getCell(totalCols).alignment = { horizontal: 'right' };
 
-  if (opts.colWidths && opts.colWidths.length > 0) {
-    worksheet['!cols'] = opts.colWidths.map((w) => ({ wch: w }));
-  } else {
-    worksheet['!cols'] = opts.headers.map((h, i) => {
-      let maxLen = h.length;
-      opts.rows.forEach((r) => {
-        const valStr = String(r[i] || '');
-        if (valStr.length > maxLen) maxLen = valStr.length;
-      });
-      return { wch: Math.min(Math.max(maxLen + 4, 14), 45) };
+  // Row 3: Empty separator
+  worksheet.addRow([]);
+
+  // Row 4: Report Main Title
+  const row4 = worksheet.addRow([]);
+  row4.getCell(1).value = `BÁO CÁO TỔNG HỢP ${opts.title.toUpperCase()}`;
+  row4.getCell(1).font = { name: 'Calibri', bold: true, size: 15, color: { argb: 'FF0F172A' } };
+  row4.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' };
+  worksheet.mergeCells(4, 1, 4, totalCols);
+  row4.height = 24;
+
+  // Row 5: Report Period Subtitle
+  const row5 = worksheet.addRow([]);
+  row5.getCell(1).value = opts.subtitle;
+  row5.getCell(1).font = { name: 'Calibri', italic: true, size: 10, color: { argb: 'FF64748B' } };
+  row5.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' };
+  worksheet.mergeCells(5, 1, 5, totalCols);
+
+  // Row 6: Empty separator
+  worksheet.addRow([]);
+
+  // Row 7: Table Headers
+  const headerRow = worksheet.addRow(opts.headers);
+  headerRow.height = 24;
+  headerRow.eachCell((cell) => {
+    cell.font = { name: 'Calibri', bold: true, size: 10.5, color: { argb: 'FF0F172A' } };
+    cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+    cell.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFF1F5F9' },
+    };
+    cell.border = {
+      top: { style: 'thin', color: { argb: 'FF94A3B8' } },
+      left: { style: 'thin', color: { argb: 'FF94A3B8' } },
+      bottom: { style: 'thin', color: { argb: 'FF94A3B8' } },
+      right: { style: 'thin', color: { argb: 'FF94A3B8' } },
+    };
+  });
+
+  // Row 8+: Data Rows
+  opts.rows.forEach((rowValues) => {
+    const row = worksheet.addRow(rowValues);
+    row.height = 20;
+
+    row.eachCell((cell, colNumber) => {
+      const colIdx = colNumber - 1;
+      const isCentered = opts.centerCols ? opts.centerCols.includes(colIdx) : false;
+
+      cell.border = {
+        top: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+        left: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+        bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+        right: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+      };
+
+      cell.font = { name: 'Calibri', size: 10, color: { argb: 'FF1E293B' } };
+      cell.alignment = {
+        horizontal: isCentered ? 'center' : 'left',
+        vertical: 'middle',
+      };
+
+      const valStr = String(cell.value || '').trim();
+
+      // Doc ID styling (Blue bold)
+      if (colIdx === 0 && /^([A-Z]{2,4}\d{2}-\d+)$/.test(valStr)) {
+        cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FF0284C7' } };
+        cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      }
+
+      // Status column styling
+      if (valStr === 'Đã duyệt' || valStr === 'Hoàn tất' || valStr === 'Đã cắt cơm') {
+        cell.font = { name: 'Calibri', bold: true, size: 9.5, color: { argb: 'FF059669' } };
+        cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      } else if (valStr === 'Từ chối' || valStr === 'Bị từ chối') {
+        cell.font = { name: 'Calibri', bold: true, size: 9.5, color: { argb: 'FFE11D48' } };
+        cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      } else if (valStr === 'Chờ duyệt') {
+        cell.font = { name: 'Calibri', bold: true, size: 9.5, color: { argb: 'FFD97706' } };
+        cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      } else if (valStr === 'Đang ra ngoài') {
+        cell.font = { name: 'Calibri', bold: true, size: 9.5, color: { argb: 'FF0284C7' } };
+        cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      }
+
+      // Red bold for days count column
+      if (opts.headers[colIdx] === 'Số ngày' || opts.headers[colIdx] === 'Số ngày cắt cơm') {
+        cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FFE11D48' } };
+        cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      }
     });
-  }
+  });
 
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Báo cáo');
-  XLSX.writeFile(workbook, `${opts.fileName}.xlsx`);
+  // Calculate Column Widths
+  worksheet.columns.forEach((col, idx) => {
+    let maxLen = opts.headers[idx] ? opts.headers[idx].length : 10;
+    opts.rows.forEach((r) => {
+      const cellVal = String(r[idx] || '');
+      if (cellVal.length > maxLen) maxLen = cellVal.length;
+    });
+    col.width = Math.min(Math.max(maxLen + 4, 13), 38);
+  });
+
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  downloadBlob(blob, `${opts.fileName}.xlsx`);
 }

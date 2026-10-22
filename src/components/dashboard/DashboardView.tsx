@@ -518,7 +518,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
             </div>
             <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
               <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                <span>Ca Hành chính:</span>
+                <span>Ca HC:</span>
                 <b className="font-mono text-slate-800 dark:text-white">08:00 - 16:30</b>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex justify-between items-center">
