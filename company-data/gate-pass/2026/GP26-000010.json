@@ -1,0 +1,21 @@
+{
+  "id": "GP26-000010",
+  "employeeId": "1927",
+  "employeeName": "Phan Hải Đăng",
+  "department": "Phòng Cơ Điện & Bảo Trì",
+  "purpose": "CN - Ra vào trong giờ làm việc",
+  "passType": "personal",
+  "timeType": "nghi_cuoi_gio",
+  "reasonCategory": "ca_nhan",
+  "specificReason": "CN - Ra vào trong giờ làm việc",
+  "shift": "Ca Hành chính (08:00 - 16:30)",
+  "hasAssets": false,
+  "assets": [],
+  "estimatedDepartureTime": "2026-10-22T12:00",
+  "managerApproverId": "2409",
+  "managerApproverName": "Trịnh Anh Tài",
+  "status": "pending",
+  "qrCodeData": "https://longkhai-portal.vercel.app/scan-confirm?type=gate_pass&id=GP26-000010",
+  "createdAt": "2026-10-22T02:17:43.796Z",
+  "updatedAt": "2026-10-22T02:17:43.796Z"
+}
