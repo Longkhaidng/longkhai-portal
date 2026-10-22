@@ -9,14 +9,17 @@
   "totalDays": 2,
   "reason": "bận việc",
   "status": "pending",
-  "currentStepIndex": 0,
+  "currentStepIndex": 1,
   "steps": [
     {
       "stepName": "Trưởng bộ phận phê duyệt",
       "roleRequired": "manager",
       "approverId": "2409",
       "approverName": "Trịnh Anh Tài",
-      "status": "pending"
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-10-22T02:08:31.817Z",
+      "signature": "Trịnh Anh Tài (2409)"
     },
     {
       "stepName": "Nhân viên kinh tế xác nhận cắt cơm",
@@ -27,5 +30,5 @@
     }
   ],
   "createdAt": "2026-10-22T02:08:03.185Z",
-  "updatedAt": "2026-10-22T02:08:03.185Z"
+  "updatedAt": "2026-10-22T02:08:31.817Z"
 }
