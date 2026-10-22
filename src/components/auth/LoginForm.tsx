@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
-import { Factory, Lock, User, AlertCircle, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { Lock, User, AlertCircle, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 export function LoginForm() {
   const { login } = useAuth();
@@ -37,13 +37,17 @@ export function LoginForm() {
       <div className="relative w-full max-w-md">
         {/* Company Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-xl shadow-blue-500/20 text-white mb-4 border border-blue-400/30">
-            <Factory className="w-9 h-9" />
+          <div className="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-white/95 dark:bg-slate-900/90 shadow-2xl p-2.5 mb-4 border border-white/20 backdrop-blur-md">
+            <img
+              src="/logo.png"
+              alt="Long Khai Corporation Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
           <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
             LONG KHAI PORTAL
           </h1>
-          <p className="text-sm font-medium text-blue-200/80 mt-1 uppercase tracking-widest">
+          <p className="text-sm font-medium text-emerald-300 mt-1 uppercase tracking-widest">
             Hệ Thống Thông Tin & Điều Hành Nhà Máy
           </p>
         </div>

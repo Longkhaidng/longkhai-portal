@@ -589,13 +589,20 @@ export function ReportsView() {
       {/* Printable Paper Document Container */}
       <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-6">
         {/* Factory Formal Letterhead */}
-        <div className="border-b-2 border-slate-800 pb-4 flex flex-col md:flex-row justify-between items-start md:items-center text-xs">
-          <div>
-            <div className="font-black text-sm uppercase text-slate-900 dark:text-white tracking-wider">
-              CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG
-            </div>
-            <div className="text-slate-500 text-[11px] mt-0.5">
-              Hệ thống Quản trị & Điều hành Sản xuất Nội bộ
+        <div className="border-b-2 border-slate-800 pb-4 flex flex-col md:flex-row justify-between items-start md:items-center text-xs gap-3">
+          <div className="flex items-center gap-3">
+            <img
+              src="/logo.png"
+              alt="Long Khai Logo"
+              className="w-12 h-12 object-contain shrink-0"
+            />
+            <div>
+              <div className="font-black text-sm uppercase text-slate-900 dark:text-white tracking-wider">
+                CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG
+              </div>
+              <div className="text-slate-500 text-[11px] mt-0.5">
+                Hệ thống Quản trị & Điều hành Sản xuất Nội bộ
+              </div>
             </div>
           </div>
           <div className="text-right text-[11px] text-slate-500 mt-2 md:mt-0">

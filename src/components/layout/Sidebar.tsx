@@ -5,7 +5,6 @@ import { useAuth } from '@/lib/auth-context';
 import { CategoryPermission, WebIntegration } from '@/types/user';
 import { storage } from '@/lib/storage';
 import {
-  Factory,
   LayoutDashboard,
   Building2,
   CalendarDays,
@@ -182,15 +181,19 @@ export function Sidebar({
         {/* Logo & Brand */}
         <div className="h-16 px-5 flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-              <Factory className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl bg-white/10 p-1 flex items-center justify-center shadow-md border border-white/10 shrink-0">
+              <img
+                src="/logo.png"
+                alt="Long Khai Corporation Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <div className="font-black text-sm text-white tracking-wide leading-none">
                 LONG KHAI
               </div>
-              <div className="text-[10px] text-blue-400 font-bold uppercase tracking-wider mt-0.5">
-                PORTAL NỘI BỘ
+              <div className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider mt-0.5">
+                CORPORATION PORTAL
               </div>
             </div>
           </div>

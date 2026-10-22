@@ -238,6 +238,15 @@ function ScanConfirmContent() {
         
         {/* Authoritative Header */}
         <div className="bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 p-5 border-b border-slate-800 text-center relative">
+          <div className="flex justify-center mb-3">
+            <div className="w-14 h-14 p-1.5 rounded-2xl bg-white/95 shadow-lg">
+              <img
+                src="/logo.png"
+                alt="Long Khai Corporation Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
+          </div>
           <div className="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-1">
             CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG
           </div>

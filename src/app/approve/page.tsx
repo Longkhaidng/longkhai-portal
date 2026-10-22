@@ -63,6 +63,15 @@ function QuickApprovalContent() {
         
         {/* Header - Dark, authoritative styling */}
         <div className="bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 p-6 text-white text-center border-b border-slate-700/60">
+          <div className="flex justify-center mb-3">
+            <div className="w-16 h-16 p-2 rounded-2xl bg-white/95 shadow-lg">
+              <img
+                src="/logo.png"
+                alt="Long Khai Corporation Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
+          </div>
           <div className="text-[12px] font-black uppercase tracking-wider text-slate-100 mb-1">
             CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG
           </div>

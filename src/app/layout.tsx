@@ -5,6 +5,11 @@ export const metadata: Metadata = {
   title: "LONG KHAI PORTAL - Cổng Thông Tin & Điều Hành Nhà Máy",
   description:
     "Cổng thông tin quản lý biểu mẫu điện tử, kiểm tra PCCC định kỳ, đơn nghỉ phép, xác nhận công, ra vào cổng và kiến trúc lưu trữ dữ liệu GitHub JSON cho nhà máy sản xuất.",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({

@@ -51,6 +51,18 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
           <Menu className="w-5 h-5" />
         </button>
 
+        {/* Mobile Brand Logo */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <img
+            src="/logo.png"
+            alt="Long Khai Logo"
+            className="w-7 h-7 object-contain"
+          />
+          <span className="font-extrabold text-xs text-slate-900 dark:text-white">
+            LONG KHAI
+          </span>
+        </div>
+
         <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-64 md:w-80">
           <Search className="w-4 h-4 text-slate-400" />
           <input
