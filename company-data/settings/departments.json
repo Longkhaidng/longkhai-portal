@@ -86,10 +86,10 @@
   {
     "id": "PB-IT",
     "code": "IT",
-    "name": "Bộ Phận Công Nghệ Thông Tin (IT)",
+    "name": "Bộ Phận CNTT",
     "description": "Quản trị mạng, máy tính, hệ thống camera và Cổng thông tin nội bộ",
     "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
+    "updatedAt": "2026-10-22T04:23:47.016Z"
   },
   {
     "id": "PB-MAU",
