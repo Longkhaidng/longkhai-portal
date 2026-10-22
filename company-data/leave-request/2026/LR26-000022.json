@@ -10,13 +10,17 @@
   "reason": "Bận việc",
   "emergencyContact": "0919188051",
   "status": "pending",
-  "currentStepIndex": 0,
+  "currentStepIndex": 1,
   "steps": [
     {
       "stepName": "Trưởng bộ phận phê duyệt",
       "roleRequired": "manager",
-      "approverName": "Trưởng phòng / Quản lý",
-      "status": "pending"
+      "approverName": "Trần Lê Hữu Lực",
+      "status": "approved",
+      "approverId": "2265",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-10-22T03:41:53.782Z",
+      "signature": "Trần Lê Hữu Lực (2265)"
     },
     {
       "stepName": "Nhân viên kinh tế xác nhận cắt cơm",
@@ -27,5 +31,5 @@
     }
   ],
   "createdAt": "2026-10-22T03:09:10.780Z",
-  "updatedAt": "2026-10-22T03:09:10.781Z"
+  "updatedAt": "2026-10-22T03:41:53.782Z"
 }
