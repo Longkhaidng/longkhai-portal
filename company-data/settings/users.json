@@ -4584,7 +4584,7 @@
   {
     "id": "2793",
     "name": "Nguyễn Mai Kha",
-    "department": "Phòng Kho Vận & Vật Tư",
+    "department": "Kho",
     "position": "Thủ kho thành phẩm",
     "role": "employee",
     "departmentHeadId": "2745",
@@ -4599,7 +4599,7 @@
     "isActive": true,
     "password": "LK@123456",
     "createdAt": "2026-10-21T06:36:26.793Z",
-    "updatedAt": "2026-10-21T06:36:26.793Z"
+    "updatedAt": "2026-10-22T05:48:17.874Z"
   },
   {
     "id": "2795",
