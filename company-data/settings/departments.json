@@ -94,10 +94,10 @@
   {
     "id": "PB-MAU",
     "code": "MAU",
-    "name": "Phòng công nghệ mẫu",
+    "name": "Phòng Mẫu",
     "description": "Thiết kế, kiểm tra chất lượng mẫu. Phê duyệt mẫu trước khi đưa vào sản xuất đại trà",
     "createdAt": "2026-10-20T04:25:26.627Z",
-    "updatedAt": "2026-10-20T04:25:26.627Z"
+    "updatedAt": "2026-10-22T04:23:59.824Z"
   },
   {
     "id": "PB-QLSX",
