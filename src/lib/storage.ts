@@ -2,6 +2,7 @@ import { User, CATEGORY_DEFINITIONS, Department, WebIntegration, Position } from
 import { LeaveRequest } from '@/types/leave';
 import { AttendanceConfirm } from '@/types/attendance';
 import { GatePass } from '@/types/gatePass';
+import { RepairProposal } from '@/types/repair';
 import { Announcement } from '@/types/announcement';
 import { DynamicFormSchema, DynamicFormSubmission } from '@/types/dynamicForm';
 import { PluginModule, INITIAL_PLUGINS } from '@/types/plugin';
@@ -26,6 +27,7 @@ const STORAGE_KEYS = {
   LEAVE_REQUESTS: 'lk_portal_leave_requests',
   ATTENDANCE_CONFIRMS: 'lk_portal_attendance_confirms',
   GATE_PASSES: 'lk_portal_gate_passes',
+  REPAIR_PROPOSALS: 'lk_portal_repair_proposals',
   ANNOUNCEMENTS: 'lk_portal_announcements',
   DYNAMIC_FORMS: 'lk_portal_dynamic_forms',
   FORM_SUBMISSIONS: 'lk_portal_form_submissions',
@@ -454,6 +456,70 @@ class StorageService {
     }).catch(() => {});
   }
 
+  // --- REPAIR PROPOSALS ---
+  getRepairProposals(): RepairProposal[] {
+    if (!this.isClient()) return [];
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.REPAIR_PROPOSALS);
+      if (data) {
+        const proposals: RepairProposal[] = JSON.parse(data);
+        const map = new Map<string, RepairProposal>();
+        for (const p of proposals) {
+          const normId = formatDocId(p.id);
+          const existing = map.get(normId);
+          if (!existing) {
+            map.set(normId, { ...p, id: normId });
+          } else {
+            const existingTime = new Date(existing.updatedAt || existing.createdAt || 0).getTime();
+            const newTime = new Date(p.updatedAt || p.createdAt || 0).getTime();
+            if (newTime >= existingTime) {
+              map.set(normId, { ...p, id: normId });
+            }
+          }
+        }
+        return sortNewestFirst(Array.from(map.values()));
+      }
+    } catch {}
+    return [];
+  }
+
+  saveRepairProposal(proposal: RepairProposal, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const proposals = this.getRepairProposals();
+    const existingIndex = proposals.findIndex((p) => p.id === proposal.id);
+    const isNew = existingIndex < 0;
+
+    if (isNew) {
+      proposals.unshift(proposal);
+    } else {
+      proposals[existingIndex] = proposal;
+    }
+    localStorage.setItem(STORAGE_KEYS.REPAIR_PROPOSALS, JSON.stringify(proposals));
+
+    this.addAuditLog(
+      isNew ? 'create' : 'update',
+      'repair_proposal',
+      proposal.id,
+      byUser?.id || proposal.employeeId,
+      byUser?.name || proposal.employeeName,
+      `${isNew ? 'Tạo' : 'Cập nhật'} phiếu đề xuất sửa chữa ${proposal.id} - Trạng thái: ${proposal.status}`
+    );
+
+    const year = new Date().getFullYear();
+    this.syncFileToGitHub(`repair-proposal/${year}/${proposal.id}.json`, JSON.stringify(proposal, null, 2), `Update Repair Proposal ${proposal.id}`);
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'repair_proposal', data: proposal }),
+    }).catch(() => {});
+  }
+
+  deleteRepairProposal(id: string): void {
+    if (!this.isClient()) return;
+    const proposals = this.getRepairProposals().filter((p) => p.id !== id);
+    localStorage.setItem(STORAGE_KEYS.REPAIR_PROPOSALS, JSON.stringify(proposals));
+  }
+
   // --- ANNOUNCEMENTS ---
   getAnnouncements(): Announcement[] {
     if (!this.isClient()) return INITIAL_ANNOUNCEMENTS;
@@ -744,6 +810,7 @@ class StorageService {
         leaveRequests,
         gatePasses,
         attendanceConfirms,
+        repairProposals,
         emailConfig,
         githubConfig,
       } = json.data;
@@ -780,6 +847,13 @@ class StorageService {
         local.forEach((a) => map.set(formatDocId(a.id), { ...a, id: formatDocId(a.id) }));
         attendanceConfirms.forEach((a) => map.set(formatDocId(a.id), { ...a, id: formatDocId(a.id) }));
         localStorage.setItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS, JSON.stringify(Array.from(map.values())));
+      }
+      if (Array.isArray(repairProposals)) {
+        const local = this.getRepairProposals();
+        const map = new Map<string, RepairProposal>();
+        local.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
+        repairProposals.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
+        localStorage.setItem(STORAGE_KEYS.REPAIR_PROPOSALS, JSON.stringify(Array.from(map.values())));
       }
       if (emailConfig && emailConfig.googleScriptUrl) {
         localStorage.setItem(STORAGE_KEYS.EMAIL_CONFIG, JSON.stringify(emailConfig));
@@ -834,6 +908,7 @@ class StorageService {
     const leaveRequests = this.getLeaveRequests();
     const gatePasses = this.getGatePasses();
     const attendanceConfirms = this.getAttendanceConfirms();
+    const repairProposals = this.getRepairProposals();
     const users = this.getUsers();
     const departments = this.getDepartments();
     const positions = this.getPositions();
@@ -855,6 +930,7 @@ class StorageService {
         leaveRequests: leaveRequests.length,
         gatePasses: gatePasses.length,
         attendanceConfirms: attendanceConfirms.length,
+        repairProposals: repairProposals.length,
         users: users.length,
         departments: departments.length,
         positions: positions.length,
@@ -867,6 +943,7 @@ class StorageService {
         leaveRequests,
         gatePasses,
         attendanceConfirms,
+        repairProposals,
         users,
         departments,
         positions,
@@ -894,6 +971,7 @@ class StorageService {
       leaveRequests,
       gatePasses,
       attendanceConfirms,
+      repairProposals,
       users,
       departments,
       positions,
@@ -919,6 +997,10 @@ class StorageService {
     if (Array.isArray(attendanceConfirms)) {
       localStorage.setItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS, JSON.stringify(attendanceConfirms));
       restoredCount += attendanceConfirms.length;
+    }
+    if (Array.isArray(repairProposals)) {
+      localStorage.setItem(STORAGE_KEYS.REPAIR_PROPOSALS, JSON.stringify(repairProposals));
+      restoredCount += repairProposals.length;
     }
     if (Array.isArray(users) && users.length > 0) {
       localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));

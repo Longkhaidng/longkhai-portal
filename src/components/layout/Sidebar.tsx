@@ -27,6 +27,7 @@ import {
   BarChart,
   Database,
   LayoutGrid,
+  Wrench,
 } from 'lucide-react';
 
 const ICON_COMPONENTS: Record<string, React.ElementType> = {
@@ -49,6 +50,7 @@ interface SidebarProps {
     leave?: number;
     attendance?: number;
     gatePassActive?: number;
+    repair?: number;
   };
   onSelectIntegratedWeb?: (site: WebIntegration) => void;
 }
@@ -117,6 +119,14 @@ export function Sidebar({
       icon: QrCode,
       badgeCount: pendingCounts.gatePassActive,
       badgeColor: 'bg-emerald-500 text-white',
+    },
+    {
+      id: 'repair',
+      permission: 'repair',
+      label: 'Phiếu đề xuất sửa chữa',
+      icon: Wrench,
+      badgeCount: pendingCounts.repair,
+      badgeColor: 'bg-amber-500 text-white',
     },
     {
       id: 'announcements',

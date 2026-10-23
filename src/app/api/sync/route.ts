@@ -81,6 +81,7 @@ export async function GET() {
     const leaveRequests = scanJsonFiles<any>('leave-request');
     const gatePasses = scanJsonFiles<any>('gate-pass');
     const attendanceConfirms = scanJsonFiles<any>('attendance');
+    const repairProposals = scanJsonFiles<any>('repair-proposal');
 
     return NextResponse.json({
       success: true,
@@ -92,6 +93,7 @@ export async function GET() {
         leaveRequests,
         gatePasses,
         attendanceConfirms,
+        repairProposals,
         emailConfig,
         githubConfig,
       },
@@ -100,6 +102,7 @@ export async function GET() {
         leaveRequests: leaveRequests.length,
         gatePasses: gatePasses.length,
         attendanceConfirms: attendanceConfirms.length,
+        repairProposals: repairProposals.length,
       },
     });
   } catch (err: any) {
@@ -111,7 +114,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { type, data, githubToken } = body as {
-      type: 'users' | 'leave_request' | 'gate_pass' | 'attendance' | 'departments' | 'web_integrations' | 'github_config';
+      type: 'users' | 'leave_request' | 'gate_pass' | 'attendance' | 'repair_proposal' | 'departments' | 'web_integrations' | 'github_config';
       data: any;
       githubToken?: string;
     };
@@ -138,6 +141,10 @@ export async function POST(req: NextRequest) {
       const year = data.date ? new Date(data.date).getFullYear() : new Date().getFullYear();
       relFilePath = `attendance/${year}/${data.id}.json`;
       commitMessage = `Update Attendance ${data.id} (${data.status})`;
+    } else if (type === 'repair_proposal') {
+      const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
+      relFilePath = `repair-proposal/${year}/${data.id}.json`;
+      commitMessage = `Update Repair Proposal ${data.id} (${data.status})`;
     } else if (type === 'departments') {
       relFilePath = 'settings/departments.json';
       commitMessage = `Update departments directory`;

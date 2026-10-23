@@ -16,7 +16,7 @@ export interface EmailConfig {
 export interface SendEmailPayload {
   toEmail: string;
   managerName?: string;
-  type: 'leave' | 'gate_pass' | 'attendance';
+  type: 'leave' | 'gate_pass' | 'attendance' | 'repair';
   docId: string;
   employeeId: string;
   employeeName: string;

@@ -6,7 +6,7 @@ import { CheckCircle2, XCircle, AlertTriangle, FileText, Clock } from 'lucide-re
 
 function QuickApprovalContent() {
   const searchParams = useSearchParams();
-  const type = searchParams.get('type') as 'leave' | 'gate_pass' | 'attendance' | null;
+  const type = searchParams.get('type') as 'leave' | 'gate_pass' | 'attendance' | 'repair' | null;
   const id = searchParams.get('id');
   const action = searchParams.get('action') as 'approve' | 'reject' | null;
 
@@ -55,7 +55,9 @@ function QuickApprovalContent() {
       ? 'Đơn Xin Nghỉ Phép'
       : type === 'gate_pass'
       ? 'Phiếu Ra - Vào Cổng'
-      : 'Phiếu Xác Nhận Công';
+      : type === 'attendance'
+      ? 'Phiếu Xác Nhận Công'
+      : 'Phiếu Đề Xuất Sửa Chữa';
 
   return (
     <div className="min-h-screen bg-slate-900 py-12 px-4 flex flex-col items-center justify-center font-sans">

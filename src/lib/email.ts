@@ -7,7 +7,9 @@ export function generateMailtoUrl(payload: SendEmailPayload, baseUrl: string): s
       ? 'ĐƠN XIN NGHỈ PHÉP'
       : payload.type === 'attendance'
       ? 'PHIẾU XÁC NHẬN CÔNG'
-      : 'PHIẾU RA - VÀO CỔNG';
+      : payload.type === 'gate_pass'
+      ? 'PHIẾU RA - VÀO CỔNG'
+      : 'PHIẾU ĐỀ XUẤT SỬA CHỮA';
   const subject = `[Long Khải Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
 
   const approveUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=approve`;
@@ -49,7 +51,9 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
       ? 'ĐƠN XIN NGHỈ PHÉP'
       : payload.type === 'attendance'
       ? 'PHIẾU XÁC NHẬN CÔNG'
-      : 'PHIẾU RA - VÀO CỔNG';
+      : payload.type === 'gate_pass'
+      ? 'PHIẾU RA - VÀO CỔNG'
+      : 'PHIẾU ĐỀ XUẤT SỬA CHỮA';
   const subject = `[Long Khải Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
 
   const approveUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=approve`;

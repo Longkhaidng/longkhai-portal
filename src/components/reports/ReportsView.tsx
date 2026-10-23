@@ -17,15 +17,17 @@ import {
   Utensils,
   Search,
   RotateCcw,
+  Wrench,
 } from 'lucide-react';
 import { formatDate, formatDateTime, sortNewestFirst } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
-import { filterUserLeaves, filterUserAttendances, filterUserGatePasses } from '@/lib/permissions';
+import { RepairProposal, REPAIR_STATUS_LABELS, REPAIR_STATUS_BADGES } from '@/types/repair';
+import { filterUserLeaves, filterUserAttendances, filterUserGatePasses, filterUserRepairProposals } from '@/lib/permissions';
 
 export function ReportsView() {
   const { currentUser } = useAuth();
-  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'departments'>('leave');
+  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'repair' | 'departments'>('leave');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('all');
@@ -45,6 +47,10 @@ export function ReportsView() {
 
   const gatePasses = useMemo(() => {
     return filterUserGatePasses(storage.getGatePasses(), currentUser, 'all');
+  }, [currentUser]);
+
+  const repairs = useMemo(() => {
+    return filterUserRepairProposals(storage.getRepairProposals(), currentUser, 'all');
   }, [currentUser]);
 
   // All leave requests where Economic staff has confirmed cutting meals
@@ -178,7 +184,31 @@ export function ReportsView() {
     }));
   }, [mealCutLeaves, departmentFilter, statusFilter, searchTerm, fromDate, toDate]);
 
-  // 5. Filtered Departments
+  // 5. Filtered Repair Proposals
+  const filteredRepairs = useMemo(() => {
+    return sortNewestFirst(repairs.filter((p) => {
+      if (departmentFilter !== 'all' && p.department !== departmentFilter) return false;
+      if (statusFilter !== 'all' && p.status !== statusFilter) return false;
+      if (searchTerm.trim()) {
+        const q = searchTerm.toLowerCase().trim();
+        const match =
+          p.id.toLowerCase().includes(q) ||
+          p.employeeId.toLowerCase().includes(q) ||
+          p.employeeName.toLowerCase().includes(q) ||
+          p.department.toLowerCase().includes(q) ||
+          p.location.toLowerCase().includes(q) ||
+          p.issueDescription.toLowerCase().includes(q) ||
+          (p.proposedSolution && p.proposedSolution.toLowerCase().includes(q));
+        if (!match) return false;
+      }
+      const pDate = (p.createdAt || '').slice(0, 10);
+      if (fromDate && pDate && pDate < fromDate) return false;
+      if (toDate && pDate && pDate > toDate) return false;
+      return true;
+    }));
+  }, [repairs, departmentFilter, statusFilter, searchTerm, fromDate, toDate]);
+
+  // 6. Filtered Departments
   const filteredDepartments = useMemo(() => {
     return departments.filter((d) => {
       if (departmentFilter !== 'all' && d.name !== departmentFilter) return false;
@@ -205,6 +235,8 @@ export function ReportsView() {
       ? filteredGatePasses.length
       : reportType === 'meal_cut'
       ? filteredMealCutLeaves.length
+      : reportType === 'repair'
+      ? filteredRepairs.length
       : filteredDepartments.length;
 
   // Export to Excel handler
@@ -379,6 +411,35 @@ export function ReportsView() {
           'Đã cắt cơm',
         ];
       });
+    } else if (reportType === 'repair') {
+      title = 'TỔNG HỢP ĐỀ XUẤT SỬA CHỮA';
+      fileName = `LONGKHAI_Bao_Cao_DE_XUAT_SUA_CHUA_${nowStr}`;
+      headers = [
+        'STT',
+        'Mã phiếu',
+        'Mã NV',
+        'Họ và tên',
+        'Tổ / Bộ phận',
+        'Khu vực thiết bị hỏng',
+        'Tình trạng sự việc',
+        'Đề xuất khắc phục',
+        'Trạng thái',
+        'Thời gian gửi',
+        'Ghi chú Cơ điện',
+      ];
+      rows = filteredRepairs.map((p, idx) => [
+        idx + 1,
+        p.id,
+        p.employeeId,
+        p.employeeName,
+        p.department,
+        p.location,
+        p.issueDescription,
+        p.proposedSolution || '',
+        REPAIR_STATUS_LABELS[p.status] || p.status,
+        formatDateTime(p.createdAt),
+        p.maintenanceNotes || '',
+      ]);
     } else if (reportType === 'departments') {
       title = 'CƠ CẤU PHÒNG BAN';
       fileName = `LONGKHAI_Bao_Cao_PHONG_BAN_${nowStr}`;
@@ -452,7 +513,7 @@ export function ReportsView() {
       </div>
 
       {/* Select Report Type Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <button
           onClick={() => setReportType('leave')}
           className={`p-4 rounded-2xl border text-left transition-all ${
@@ -495,6 +556,21 @@ export function ReportsView() {
           <div className="font-bold text-xs text-slate-900 dark:text-white">Ra vào cổng</div>
           <div className="text-[11px] text-slate-500">
             {filteredGatePasses.length} lượt {hasActiveFilters && `(${gatePasses.length} gốc)`}
+          </div>
+        </button>
+
+        <button
+          onClick={() => setReportType('repair')}
+          className={`p-4 rounded-2xl border text-left transition-all ${
+            reportType === 'repair'
+              ? 'bg-orange-50 dark:bg-orange-950/40 border-orange-500 shadow-sm ring-1 ring-orange-500/30'
+              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
+          }`}
+        >
+          <Wrench className="w-5 h-5 text-orange-600 mb-2" />
+          <div className="font-bold text-xs text-slate-900 dark:text-white">Đề xuất sửa chữa</div>
+          <div className="text-[11px] text-slate-500">
+            {filteredRepairs.length} đề xuất {hasActiveFilters && `(${repairs.length} gốc)`}
           </div>
         </button>
 
@@ -591,6 +667,14 @@ export function ReportsView() {
                   <>
                     <option value="departed">Đang ra ngoài</option>
                     <option value="completed">Đã về lại</option>
+                  </>
+                )}
+                {reportType === 'repair' && (
+                  <>
+                    <option value="pending_manager">Bước 2: Chờ Trưởng BP duyệt</option>
+                    <option value="maintenance_pending">Bước 3: Chờ Cơ điện sửa chữa</option>
+                    <option value="pending_confirmation">Bước 4: Chờ bạn xác nhận hoàn tất</option>
+                    <option value="completed">Đã hoàn tất</option>
                   </>
                 )}
               </select>
@@ -1016,6 +1100,70 @@ export function ReportsView() {
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
                             Đã cắt cơm
                           </span>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          )}
+
+          {/* REPAIR PROPOSALS REPORT TABLE */}
+          {reportType === 'repair' && (
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
+                  <th className="p-2 border text-center w-12">STT</th>
+                  <th className="p-2 border">Mã phiếu</th>
+                  <th className="p-2 border">Người đề xuất</th>
+                  <th className="p-2 border">Tổ / Bộ phận</th>
+                  <th className="p-2 border">Khu vực thiết bị</th>
+                  <th className="p-2 border">Tình trạng sự việc</th>
+                  <th className="p-2 border">Đề xuất khắc phục</th>
+                  <th className="p-2 border">Trạng thái</th>
+                  <th className="p-2 border">Thời gian gửi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredRepairs.length === 0 ? (
+                  <tr>
+                    <td colSpan={9} className="p-8 text-center text-slate-400">
+                      Không tìm thấy đề xuất sửa chữa nào phù hợp với bộ lọc.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredRepairs.map((p, idx) => {
+                    const badge = REPAIR_STATUS_BADGES[p.status] || {
+                      bg: 'bg-slate-100',
+                      text: 'text-slate-700',
+                      border: 'border-slate-200',
+                      label: p.status,
+                    };
+                    return (
+                      <tr key={p.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                        <td className="p-2 border text-center font-bold text-slate-500">{idx + 1}</td>
+                        <td className="p-2 border font-mono font-bold text-amber-600">{p.id}</td>
+                        <td className="p-2 border font-semibold text-slate-900 dark:text-white">
+                          {p.employeeName} ({p.employeeId})
+                        </td>
+                        <td className="p-2 border">{p.department}</td>
+                        <td className="p-2 border font-medium text-slate-800 dark:text-slate-200">{p.location}</td>
+                        <td className="p-2 border max-w-xs truncate" title={p.issueDescription}>
+                          {p.issueDescription}
+                        </td>
+                        <td className="p-2 border max-w-xs truncate" title={p.proposedSolution || ''}>
+                          {p.proposedSolution || '-'}
+                        </td>
+                        <td className="p-2 border">
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${badge.bg} ${badge.text} ${badge.border}`}
+                          >
+                            {badge.label}
+                          </span>
+                        </td>
+                        <td className="p-2 border text-[11px] text-slate-500">
+                          {formatDateTime(p.createdAt)}
                         </td>
                       </tr>
                     );

@@ -2,6 +2,7 @@ import { User } from '@/types/user';
 import { LeaveRequest } from '@/types/leave';
 import { GatePass } from '@/types/gatePass';
 import { AttendanceConfirm } from '@/types/attendance';
+import { RepairProposal } from '@/types/repair';
 
 export type DocumentScope = 'my' | 'approver' | 'all';
 
@@ -111,6 +112,19 @@ export function isAssignedEconomicStaff(
   const uid = user.id.toLowerCase();
   if (allUsers && allUsers.some((u) => u.economicStaffId?.toLowerCase() === uid)) return true;
   if (leaves && leaves.some((l) => l.steps?.some((s) => s.roleRequired === 'economic' && s.approverId?.toLowerCase() === uid))) return true;
+  return false;
+}
+
+/**
+ * Check if the user is Maintenance / Cơ điện staff
+ */
+export function isMaintenanceStaff(user?: User | null): boolean {
+  if (!user) return false;
+  if ((user.role as string) === 'maintenance') return true;
+  const dept = (user.department || '').toLowerCase();
+  if (dept.includes('cơ điện') || dept.includes('co dien') || dept.includes('bảo trì') || dept.includes('bao tri')) return true;
+  const pos = (user.position || '').toLowerCase();
+  if (pos.includes('cơ điện') || pos.includes('co dien') || pos.includes('bảo trì') || pos.includes('bao tri')) return true;
   return false;
 }
 
@@ -419,4 +433,62 @@ export function filterUserAttendances(
   }
 
   return attendances.filter((a) => a.employeeId.toLowerCase() === uid);
+}
+
+/**
+ * Filter Repair Proposals based on user permissions:
+ * - Regular employee: Strictly can only see their own repair proposals.
+ * - Team Leader & Department Head (Tổ trưởng, Trưởng bộ phận): Can see all repair proposals of employees in their department + their own.
+ * - Maintenance Staff (Nhân viên Cơ điện): Can see proposals waiting for maintenance / in maintenance + company proposals.
+ * - Admin & Ban Giám Đốc: Can see all proposals across the entire company.
+ */
+export function filterUserRepairProposals(
+  proposals: RepairProposal[],
+  user?: User | null,
+  scope: DocumentScope = 'all'
+): RepairProposal[] {
+  if (!user) return [];
+  const uid = user.id.toLowerCase();
+
+  // If explicitly requested 'my', return only user's proposals
+  if (scope === 'my') {
+    return proposals.filter((p) => p.employeeId.toLowerCase() === uid);
+  }
+
+  // 1. Admin & Ban Giám Đốc can see all
+  if (isSuperAdminOrBOD(user)) {
+    if (scope === 'approver') {
+      return proposals.filter((p) => p.status === 'pending_manager' && p.employeeId.toLowerCase() !== uid);
+    }
+    return proposals;
+  }
+
+  // 2. Maintenance staff (Cơ điện & Bảo trì)
+  if (isMaintenanceStaff(user)) {
+    if (scope === 'approver') {
+      return proposals.filter((p) => p.status === 'maintenance_pending');
+    }
+    return proposals;
+  }
+
+  // 3. Team Leader & Department Head (Tổ trưởng & Trưởng bộ phận)
+  // "Tổ trưởng chỉ có thể xem được đề xuất của tất cả nhân viên thuộc bộ phận mình quản lý"
+  if (user.role === 'manager' || user.role === 'team_leader') {
+    if (scope === 'approver') {
+      return proposals.filter((p) => {
+        if (p.employeeId.toLowerCase() === uid) return false;
+        if (p.status !== 'pending_manager') return false;
+        return isSameDepartment(p.department, user.department);
+      });
+    }
+
+    return proposals.filter((p) => {
+      const isMine = p.employeeId.toLowerCase() === uid;
+      const isMyDept = isSameDepartment(p.department, user.department);
+      return isMine || isMyDept;
+    });
+  }
+
+  // 4. Regular employee: strictly can only see their own proposals
+  return proposals.filter((p) => p.employeeId.toLowerCase() === uid);
 }

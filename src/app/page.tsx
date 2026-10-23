@@ -10,6 +10,7 @@ import { DepartmentManagementView } from '@/components/departments/DepartmentMan
 import { LeaveView } from '@/components/leave/LeaveView';
 import { AttendanceView } from '@/components/attendance/AttendanceView';
 import { GatePassView } from '@/components/gatepass/GatePassView';
+import { RepairProposalView } from '@/components/repair/RepairProposalView';
 import { AnnouncementView } from '@/components/announcements/AnnouncementView';
 import { DynamicFormsView } from '@/components/forms/DynamicFormsView';
 import { ReportsView } from '@/components/reports/ReportsView';
@@ -26,8 +27,10 @@ import {
   filterUserLeaves,
   filterUserAttendances,
   filterUserGatePasses,
+  filterUserRepairProposals,
   isApproverRole,
   isSecurityRole,
+  isMaintenanceStaff,
 } from '@/lib/permissions';
 
 function PortalAppContent() {
@@ -67,10 +70,21 @@ function PortalAppContent() {
     currentUser,
     canManageOthers || isSecurity ? 'approver' : 'my'
   );
+  const userRepairs = filterUserRepairProposals(
+    storage.getRepairProposals(),
+    currentUser,
+    canManageOthers || isMaintenanceStaff(currentUser) ? 'approver' : 'my'
+  );
 
   const pendingLeaves = userLeaves.filter((l) => l.status === 'pending').length;
   const pendingAtts = userAtts.filter((a) => a.status === 'pending').length;
   const activeGps = userGps.filter((g) => g.status === 'approved' || g.status === 'departed').length;
+  const pendingRepairs = userRepairs.filter((r) => {
+    if (currentUser?.role === 'manager' || currentUser?.role === 'team_leader') return r.status === 'pending_manager';
+    if (isMaintenanceStaff(currentUser)) return r.status === 'maintenance_pending';
+    if (r.employeeId.toLowerCase() === currentUser?.id.toLowerCase()) return r.status === 'pending_confirmation';
+    return false;
+  }).length;
 
   // Render view by tab with RBAC Guard
   const renderActiveView = () => {
@@ -190,6 +204,8 @@ function PortalAppContent() {
         return <AttendanceView />;
       case 'gate_pass':
         return <GatePassView />;
+      case 'repair':
+        return <RepairProposalView />;
       case 'announcements':
         return <AnnouncementView />;
       case 'forms':
@@ -270,6 +286,7 @@ function PortalAppContent() {
           leave: pendingLeaves,
           attendance: pendingAtts,
           gatePassActive: activeGps,
+          repair: pendingRepairs,
         }}
         onSelectIntegratedWeb={(site) => {
           setViewingWebSite(site);

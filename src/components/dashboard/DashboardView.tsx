@@ -19,6 +19,7 @@ import {
   Users,
   Bell,
   Pin,
+  Wrench,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
@@ -141,9 +142,16 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
             </button>
             <button
               onClick={() => onNavigateTab('gate_pass')}
-              className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5"
+              className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <span>+ Phiếu ra cổng</span>
+            </button>
+            <button
+              onClick={() => onNavigateTab('repair')}
+              className="px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <Wrench className="w-3.5 h-3.5" />
+              <span>+ Đề xuất sửa chữa</span>
             </button>
           </div>
         </div>

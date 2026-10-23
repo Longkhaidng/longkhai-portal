@@ -15,9 +15,16 @@ function ensureDir(dirPath: string) {
   } catch {}
 }
 
-function findAndLoadDoc(type: 'leave' | 'gate_pass' | 'attendance', docId: string): { doc: any; relPath: string } | null {
+function findAndLoadDoc(type: 'leave' | 'gate_pass' | 'attendance' | 'repair', docId: string): { doc: any; relPath: string } | null {
   const cleanId = docId.toUpperCase();
-  const subDir = type === 'leave' ? 'leave-request' : type === 'gate_pass' ? 'gate-pass' : 'attendance';
+  const subDir =
+    type === 'leave'
+      ? 'leave-request'
+      : type === 'gate_pass'
+      ? 'gate-pass'
+      : type === 'attendance'
+      ? 'attendance'
+      : 'repair-proposal';
 
   // Helper search in a root directory
   const searchInDir = (rootDir: string): { doc: any; relPath: string } | null => {
@@ -65,7 +72,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { type, id, action } = body as {
-      type: 'leave' | 'gate_pass' | 'attendance';
+      type: 'leave' | 'gate_pass' | 'attendance' | 'repair';
       id: string;
       action: 'approve' | 'reject';
     };
@@ -88,7 +95,14 @@ export async function POST(req: NextRequest) {
     let relPath: string = found?.relPath || '';
 
     if (!doc && ghService) {
-      const subDir = type === 'leave' ? 'leave-request' : type === 'gate_pass' ? 'gate-pass' : 'attendance';
+      const subDir =
+        type === 'leave'
+          ? 'leave-request'
+          : type === 'gate_pass'
+          ? 'gate-pass'
+          : type === 'attendance'
+          ? 'attendance'
+          : 'repair-proposal';
       const year = new Date().getFullYear();
       const possibleRelPath = `${subDir}/${year}/${docId}.json`;
       const ghFile = await ghService.getFile(`${gitConfig.basePath || 'company-data'}/${possibleRelPath}`);
@@ -217,11 +231,36 @@ export async function POST(req: NextRequest) {
         doc.status = 'rejected';
       }
       doc.updatedAt = now;
+    } else if (type === 'repair') {
+      const stepIndex = 1; // Step 2: Trưởng bộ phận duyệt (0-indexed: index 1)
+      if (Array.isArray(doc.steps) && doc.steps[stepIndex]) {
+        doc.steps[stepIndex].status = isApprove ? 'approved' : 'rejected';
+        doc.steps[stepIndex].approverName = 'Trưởng bộ phận (Email)';
+        doc.steps[stepIndex].comment = isApprove ? 'Đồng ý phê duyệt (qua Email)' : 'Từ chối (qua Email)';
+        doc.steps[stepIndex].updatedAt = now;
+      }
+      doc.managerApprovedAt = now;
+      doc.managerName = 'Trưởng bộ phận (Email)';
+      if (isApprove) {
+        doc.status = 'maintenance_pending';
+        doc.currentStepIndex = 2; // Step 3: Cơ điện sửa chữa
+      } else {
+        doc.status = 'rejected';
+        doc.rejectionReason = 'Từ chối qua Email';
+      }
+      doc.updatedAt = now;
     }
 
     // Determine target save path if relPath was not found
     if (!relPath) {
-      const subDir = type === 'leave' ? 'leave-request' : type === 'gate_pass' ? 'gate-pass' : 'attendance';
+      const subDir =
+        type === 'leave'
+          ? 'leave-request'
+          : type === 'gate_pass'
+          ? 'gate-pass'
+          : type === 'attendance'
+          ? 'attendance'
+          : 'repair-proposal';
       const year = new Date().getFullYear();
       relPath = `${subDir}/${year}/${doc.id}.json`;
     }
