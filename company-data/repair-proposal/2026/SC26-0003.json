@@ -5,7 +5,7 @@
   "department": "Phòng HCNS",
   "location": "Văn phòng",
   "issueDescription": "Đèn tại phòng tổng hợp bị cháy. đề xuất cơ điện kiểm tra",
-  "status": "maintenance_pending",
+  "status": "pending_confirmation",
   "steps": [
     {
       "step": 1,
@@ -33,7 +33,11 @@
       "step": 3,
       "title": "Cơ điện sửa chữa",
       "roleRequired": "maintenance",
-      "status": "pending"
+      "status": "completed",
+      "approverId": "2409",
+      "approverName": "Trịnh Anh Tài",
+      "updatedAt": "2026-10-23T08:24:59.466Z",
+      "comment": "Đã sửa chữa xong và bàn giao cho người sử dụng"
     },
     {
       "step": 4,
@@ -45,9 +49,9 @@
       "status": "pending"
     }
   ],
-  "currentStepIndex": 2,
+  "currentStepIndex": 3,
   "createdAt": "2026-10-23T08:17:51.081Z",
-  "updatedAt": "2026-10-23T08:22:10.865Z",
+  "updatedAt": "2026-10-23T08:24:59.466Z",
   "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
   "emailConfig": {
     "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
@@ -58,5 +62,9 @@
   "managerName": "Trần Lê Hữu Lực",
   "managerApprovedAt": "2026-10-23T08:22:10.865Z",
   "managerComment": "",
-  "proposedSolution": "Chuyển bộ phận cơ điện kiểm tra sửa chữa"
+  "proposedSolution": "Chuyển bộ phận cơ điện kiểm tra sửa chữa",
+  "maintenanceStaffId": "2409",
+  "maintenanceStaffName": "Trịnh Anh Tài",
+  "maintenanceCompletedAt": "2026-10-23T08:24:59.466Z",
+  "maintenanceNotes": "Đã hoàn tất sửa chữa"
 }
