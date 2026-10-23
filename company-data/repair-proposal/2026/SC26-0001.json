@@ -5,7 +5,7 @@
   "department": "Phòng HCNS",
   "location": "văn phòng",
   "issueDescription": "máy quạt không chạy.",
-  "status": "pending_confirmation",
+  "status": "completed",
   "steps": [
     {
       "step": 1,
@@ -46,12 +46,14 @@
       "roleRequired": "creator",
       "approverId": "1139",
       "approverName": "Võ Thị Tuyết",
-      "status": "pending"
+      "status": "completed",
+      "updatedAt": "2026-10-23T05:51:05.195Z",
+      "comment": "thiết bị đã hoạt động tốt"
     }
   ],
   "currentStepIndex": 3,
   "createdAt": "2026-10-23T05:36:54.371Z",
-  "updatedAt": "2026-10-23T05:50:08.944Z",
+  "updatedAt": "2026-10-23T05:51:05.195Z",
   "managerId": "1867",
   "managerName": "Trương Anh Như Quỳnh",
   "managerApprovedAt": "2026-10-23T05:46:12.789Z",
@@ -59,5 +61,7 @@
   "maintenanceStaffId": "2409",
   "maintenanceStaffName": "Trịnh Anh Tài",
   "maintenanceCompletedAt": "2026-10-23T05:50:08.944Z",
-  "maintenanceNotes": "đã sửa chữa xong"
+  "maintenanceNotes": "đã sửa chữa xong",
+  "creatorConfirmedAt": "2026-10-23T05:51:05.195Z",
+  "creatorFeedback": "thiết bị đã hoạt động tốt"
 }
