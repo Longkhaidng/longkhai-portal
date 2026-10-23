@@ -1,0 +1,31 @@
+{
+  "id": "LR26-0024",
+  "employeeId": "1867",
+  "employeeName": "Trương Anh Như Quỳnh",
+  "department": "Phòng HCNS",
+  "leaveType": "khac",
+  "fromDate": "2026-10-24",
+  "toDate": "2026-10-24",
+  "totalDays": 1,
+  "reason": "Bận việc nhà",
+  "emergencyContact": "0919188051",
+  "status": "pending",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận phê duyệt",
+      "roleRequired": "manager",
+      "approverName": "Trưởng phòng / Quản lý",
+      "status": "pending"
+    },
+    {
+      "stepName": "Nhân viên kinh tế xác nhận cắt cơm",
+      "roleRequired": "economic",
+      "approverId": "1139",
+      "approverName": "Võ Thị Tuyết",
+      "status": "pending"
+    }
+  ],
+  "createdAt": "2026-10-23T04:45:02.915Z",
+  "updatedAt": "2026-10-23T04:45:02.915Z"
+}
