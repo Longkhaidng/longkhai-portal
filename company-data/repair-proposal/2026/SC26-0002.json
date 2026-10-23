@@ -5,7 +5,7 @@
   "department": "Phòng HCNS",
   "location": "Văn phòng",
   "issueDescription": "Điều hòa không mát. Đề xuất cơ điện kiểm tra",
-  "status": "pending_confirmation",
+  "status": "completed",
   "steps": [
     {
       "step": 1,
@@ -46,12 +46,14 @@
       "roleRequired": "creator",
       "approverId": "2265",
       "approverName": "Trần Lê Hữu Lực",
-      "status": "pending"
+      "status": "completed",
+      "updatedAt": "2026-10-23T07:54:31.330Z",
+      "comment": "Đã hoạt động tốt."
     }
   ],
   "currentStepIndex": 3,
   "createdAt": "2026-10-23T07:47:15.769Z",
-  "updatedAt": "2026-10-23T07:52:30.666Z",
+  "updatedAt": "2026-10-23T07:54:31.330Z",
   "managerId": "1867",
   "managerName": "Trương Anh Như Quỳnh",
   "managerApprovedAt": "2026-10-23T07:49:40.409Z",
@@ -60,5 +62,7 @@
   "maintenanceStaffId": "2409",
   "maintenanceStaffName": "Trịnh Anh Tài",
   "maintenanceCompletedAt": "2026-10-23T07:52:30.666Z",
-  "maintenanceNotes": "Đã xử lý xong"
+  "maintenanceNotes": "Đã xử lý xong",
+  "creatorConfirmedAt": "2026-10-23T07:54:31.330Z",
+  "creatorFeedback": "Đã hoạt động tốt."
 }
