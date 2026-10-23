@@ -1,0 +1,55 @@
+{
+  "id": "SC26-0003",
+  "employeeId": "1139",
+  "employeeName": "Võ Thị Tuyết",
+  "department": "Phòng HCNS",
+  "location": "Văn phòng",
+  "issueDescription": "Đèn tại phòng tổng hợp bị cháy. đề xuất cơ điện kiểm tra",
+  "status": "pending_manager",
+  "steps": [
+    {
+      "step": 1,
+      "title": "Bạn gửi đề xuất",
+      "roleRequired": "employee",
+      "approverId": "1139",
+      "approverName": "Võ Thị Tuyết",
+      "status": "completed",
+      "updatedAt": "2026-10-23T08:17:51.081Z",
+      "comment": "Đã gửi đề xuất sửa chữa lên hệ thống"
+    },
+    {
+      "step": 2,
+      "title": "Trưởng bộ phận duyệt",
+      "subTitle": "qua email",
+      "roleRequired": "manager",
+      "approverId": "1867",
+      "approverName": "Trương Anh Như Quỳnh",
+      "approverEmail": "Quynh.truong@longkhai.com.vn",
+      "status": "pending"
+    },
+    {
+      "step": 3,
+      "title": "Cơ điện sửa chữa",
+      "roleRequired": "maintenance",
+      "status": "pending"
+    },
+    {
+      "step": 4,
+      "title": "Bạn xác nhận hoàn tất",
+      "subTitle": "tab \"Theo dõi đề xuất\"",
+      "roleRequired": "creator",
+      "approverId": "1139",
+      "approverName": "Võ Thị Tuyết",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 1,
+  "createdAt": "2026-10-23T08:17:51.081Z",
+  "updatedAt": "2026-10-23T08:17:51.081Z",
+  "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
+  "emailConfig": {
+    "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
+    "senderName": "Cổng Thông Tin Long Khai",
+    "portalBaseUrl": "https://longkhai-portal.vercel.app"
+  }
+}
