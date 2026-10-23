@@ -216,4 +216,43 @@ export class GitHubService {
       return [];
     }
   }
+
+  /**
+   * Delete a file from GitHub
+   */
+  async deleteFile(path: string, commitMessage: string, sha?: string): Promise<{ success: boolean; error?: string }> {
+    const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+    const url = `${this.baseUrl}/contents/${cleanPath}`;
+
+    try {
+      let targetSha = sha;
+      if (!targetSha) {
+        const existing = await this.getFile(cleanPath);
+        if (!existing) return { success: true };
+        targetSha = existing.sha;
+      }
+
+      const res = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          ...this.headers,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: commitMessage || `Delete ${cleanPath}`,
+          sha: targetSha,
+          branch: this.config.branch || 'main',
+        }),
+      });
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.message || res.statusText);
+      }
+      return { success: true };
+    } catch (err: any) {
+      console.warn(`[GitHub API] deleteFile ${path} failed:`, err.message);
+      return { success: false, error: err.message };
+    }
+  }
 }

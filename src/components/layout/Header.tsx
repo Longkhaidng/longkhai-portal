@@ -14,6 +14,8 @@ import {
   Key,
   Database,
   Building2,
+  HardDrive,
+  DownloadCloud,
 } from 'lucide-react';
 import { storage } from '@/lib/storage';
 
@@ -73,8 +75,45 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
         </div>
       </div>
 
-      {/* Right: Theme toggle, User profile */}
+      {/* Right: Theme toggle, Quick Backup, User profile */}
       <div className="flex items-center gap-2 sm:gap-3">
+
+        {/* Quick Backup for Admin */}
+        {currentUser?.role === 'admin' && (
+          <button
+            onClick={() => {
+              try {
+                const backup = storage.exportFullBackupData();
+                const now = new Date();
+                const yyyy = now.getFullYear();
+                const MM = String(now.getMonth() + 1).padStart(2, '0');
+                const dd = String(now.getDate()).padStart(2, '0');
+                const hh = String(now.getHours()).padStart(2, '0');
+                const mm = String(now.getMinutes()).padStart(2, '0');
+                const jsonStr = JSON.stringify(backup, null, 2);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `LongKhai_Full_Backup_${yyyy}${MM}${dd}_${hh}${mm}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+              } catch (e) {
+                console.error('Lỗi sao lưu nhanh:', e);
+              }
+            }}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:hover:bg-blue-900/80 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/80 transition-colors shadow-xs cursor-pointer"
+            title="Sao lưu nhanh toàn bộ hệ thống về máy tính (.JSON)"
+          >
+            <DownloadCloud className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+            <span>Sao lưu</span>
+            {storage.isBackupDue() && (
+              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" title="Đến hạn sao lưu định kỳ" />
+            )}
+          </button>
+        )}
 
         {/* Theme Toggle */}
         <button
@@ -131,8 +170,19 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
                   }}
                   className="w-full text-left px-4 py-2 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2"
                 >
+                  <HardDrive className="w-4 h-4 text-blue-600" />
+                  <span>Sao lưu & Quản lý dữ liệu</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setShowProfileMenu(false);
+                    onOpenGitHubSettings?.();
+                  }}
+                  className="w-full text-left px-4 py-2 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2"
+                >
                   <Database className="w-4 h-4 text-slate-400" />
-                  <span>Cài đặt kết nối GitHub</span>
+                  <span>Cài đặt kết nối GitHub & Email</span>
                 </button>
               </div>
 

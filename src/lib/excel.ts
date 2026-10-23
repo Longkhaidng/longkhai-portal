@@ -1,5 +1,9 @@
 import * as XLSX from 'xlsx';
 import { User, UserRole, CategoryPermission, CATEGORY_DEFINITIONS } from '@/types/user';
+import { LeaveRequest, LEAVE_TYPE_LABELS } from '@/types/leave';
+import { GatePass } from '@/types/gatePass';
+import { AttendanceConfirm, ISSUE_TYPE_LABELS } from '@/types/attendance';
+import { formatDate, formatDateTime } from '@/lib/utils';
 
 export interface ParsedEmployeeResult {
   users: User[];
@@ -575,4 +579,210 @@ export async function exportReportToExcel(opts: ExportReportOptions) {
   const buffer = await workbook.xlsx.writeBuffer();
   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
   downloadBlob(blob, `${opts.fileName}.xlsx`);
+}
+
+/**
+ * Export full multi-sheet Excel backup containing Leave Requests, Gate Passes, and Attendance Confirms
+ */
+export async function exportDocumentsBackupToExcel(
+  leaveRequests: LeaveRequest[],
+  gatePasses: GatePass[],
+  attendanceConfirms: AttendanceConfirm[],
+  fileName?: string
+) {
+  const workbook = new ExcelJS.Workbook();
+  workbook.creator = 'Long Khải Portal';
+  workbook.created = new Date();
+
+  const primaryFill: ExcelJS.Fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'FF1E3A8A' },
+  };
+
+  const headerFont: Partial<ExcelJS.Font> = {
+    name: 'Calibri',
+    bold: true,
+    size: 11,
+    color: { argb: 'FFFFFFFF' },
+  };
+
+  const thinBorder: Partial<ExcelJS.Borders> = {
+    top: { style: 'thin', color: { argb: 'FFCBD5E1' } },
+    left: { style: 'thin', color: { argb: 'FFCBD5E1' } },
+    bottom: { style: 'thin', color: { argb: 'FFCBD5E1' } },
+    right: { style: 'thin', color: { argb: 'FFCBD5E1' } },
+  };
+
+  const setupSheet = (
+    sheetName: string,
+    title: string,
+    headers: string[],
+    rows: (string | number)[][],
+    centerCols: number[] = [0, 1]
+  ) => {
+    const ws = workbook.addWorksheet(sheetName, {
+      views: [{ showGridLines: true }],
+    });
+
+    ws.mergeCells(1, 1, 1, headers.length);
+    const titleCell = ws.getCell(1, 1);
+    titleCell.value = title.toUpperCase();
+    titleCell.font = { name: 'Calibri', bold: true, size: 14, color: { argb: 'FF1E3A8A' } };
+    titleCell.alignment = { horizontal: 'center', vertical: 'middle' };
+    ws.getRow(1).height = 30;
+
+    ws.mergeCells(2, 1, 2, headers.length);
+    const subCell = ws.getCell(2, 1);
+    subCell.value = `Thời gian sao lưu: ${formatDateTime(new Date().toISOString())} | Tổng số bản ghi: ${rows.length}`;
+    subCell.font = { name: 'Calibri', italic: true, size: 10, color: { argb: 'FF64748B' } };
+    subCell.alignment = { horizontal: 'center', vertical: 'middle' };
+    ws.getRow(2).height = 18;
+
+    ws.getRow(3).height = 8;
+
+    const headerRow = ws.getRow(4);
+    headerRow.height = 26;
+    headers.forEach((h, idx) => {
+      const cell = headerRow.getCell(idx + 1);
+      cell.value = h;
+      cell.fill = primaryFill;
+      cell.font = headerFont;
+      cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+      cell.border = thinBorder;
+    });
+
+    rows.forEach((r, rIdx) => {
+      const row = ws.addRow(r);
+      row.height = 20;
+      const isEven = rIdx % 2 === 0;
+
+      r.forEach((_, cIdx) => {
+        const cell = row.getCell(cIdx + 1);
+        cell.border = thinBorder;
+        cell.font = { name: 'Calibri', size: 10, color: { argb: 'FF1E293B' } };
+        cell.alignment = {
+          horizontal: centerCols.includes(cIdx) ? 'center' : 'left',
+          vertical: 'middle',
+        };
+        if (!isEven) {
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFF8FAFC' },
+          };
+        }
+      });
+    });
+
+    ws.columns.forEach((col, idx) => {
+      let maxLen = headers[idx] ? headers[idx].length : 10;
+      rows.forEach((row) => {
+        const str = String(row[idx] || '');
+        if (str.length > maxLen) maxLen = str.length;
+      });
+      col.width = Math.min(Math.max(maxLen + 4, 12), 40);
+    });
+  };
+
+  // 1. Sheet: Đơn xin nghỉ phép
+  const leaveHeaders = [
+    'Mã đơn',
+    'Mã nhân viên',
+    'Họ và tên',
+    'Phòng ban',
+    'Loại nghỉ phép',
+    'Từ ngày',
+    'Đến ngày',
+    'Số ngày',
+    'Lý do nghỉ',
+    'Trạng thái',
+    'Ngày nộp đơn',
+  ];
+  const leaveRows = leaveRequests.map((l) => [
+    l.id,
+    l.employeeId,
+    l.employeeName,
+    l.department,
+    LEAVE_TYPE_LABELS[l.leaveType] || l.leaveType,
+    formatDate(l.fromDate),
+    formatDate(l.toDate),
+    l.totalDays,
+    l.reason,
+    l.status === 'approved' ? 'Đã duyệt' : l.status === 'rejected' ? 'Bị từ chối' : l.status === 'cancelled' ? 'Đã hủy' : 'Chờ duyệt',
+    formatDateTime(l.createdAt),
+  ]);
+  setupSheet('Đơn xin nghỉ phép', 'DANH SÁCH SAO LƯU ĐƠN XIN NGHỈ PHÉP', leaveHeaders, leaveRows, [0, 1, 5, 6, 7, 9, 10]);
+
+  // 2. Sheet: Phiếu ra vào cổng
+  const gateHeaders = [
+    'Mã phiếu',
+    'Mã nhân viên',
+    'Họ và tên',
+    'Phòng ban',
+    'Hình thức ra vào',
+    'Ca làm việc',
+    'Lý do ra cổng',
+    'TG ra dự kiến',
+    'TG vào dự kiến',
+    'Bảo vệ quét ra',
+    'Bảo vệ quét vào',
+    'Trạng thái',
+    'Ngày tạo',
+  ];
+  const gateRows = gatePasses.map((g) => [
+    g.id,
+    g.employeeId,
+    g.employeeName,
+    g.department,
+    g.timeType === 'nghi_dau_gio' ? 'Nghỉ đầu giờ' : g.timeType === 'nghi_cuoi_gio' ? 'Nghỉ cuối giờ' : 'Nghỉ trong giờ',
+    g.shift || 'Ca HC',
+    g.purpose,
+    g.estimatedDepartureTime ? formatDateTime(g.estimatedDepartureTime) : '-',
+    g.estimatedReturnTime ? formatDateTime(g.estimatedReturnTime) : '-',
+    g.actualDepartureTime ? formatDateTime(g.actualDepartureTime) : '-',
+    g.actualReturnTime ? formatDateTime(g.actualReturnTime) : (g.timeType === 'nghi_cuoi_gio' ? 'Không về lại' : '-'),
+    g.status === 'approved' ? 'Đã duyệt' : g.status === 'departed' ? 'Đang ra ngoài' : g.status === 'completed' ? 'Hoàn tất' : g.status === 'rejected' ? 'Bị từ chối' : 'Chờ duyệt',
+    formatDateTime(g.createdAt),
+  ]);
+  setupSheet('Phiếu ra - vào cổng', 'DANH SÁCH SAO LƯU PHIẾU RA - VÀO CỔNG', gateHeaders, gateRows, [0, 1, 4, 5, 7, 8, 9, 10, 11, 12]);
+
+  // 3. Sheet: Phiếu xác nhận công
+  const attHeaders = [
+    'Mã phiếu',
+    'Mã nhân viên',
+    'Họ và tên',
+    'Phòng ban',
+    'Sự cố',
+    'Ngày xác nhận',
+    'Ca làm việc',
+    'Giờ vào thực tế',
+    'Giờ ra thực tế',
+    'Lý do giải trình',
+    'Trạng thái',
+    'Ngày nộp',
+  ];
+  const attRows = attendanceConfirms.map((a) => [
+    a.id,
+    a.employeeId,
+    a.employeeName,
+    a.department,
+    ISSUE_TYPE_LABELS[a.issueType]?.text || a.issueType,
+    formatDate(a.date),
+    a.shift || 'Ca HC',
+    a.checkInTime,
+    a.checkOutTime,
+    a.reason,
+    a.status === 'approved' ? 'Đã duyệt' : a.status === 'rejected' ? 'Bị từ chối' : 'Chờ duyệt',
+    formatDateTime(a.createdAt),
+  ]);
+  setupSheet('Phiếu xác nhận công', 'DANH SÁCH SAO LƯU PHIẾU XÁC NHẬN CÔNG', attHeaders, attRows, [0, 1, 4, 5, 6, 7, 8, 10, 11]);
+
+  const now = new Date();
+  const dateSuffix = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
+  const outName = fileName || `LONGKHAI_Backup_Phieu_${dateSuffix}`;
+
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  downloadBlob(blob, `${outName}.xlsx`);
 }

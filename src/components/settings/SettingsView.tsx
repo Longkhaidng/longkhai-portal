@@ -24,9 +24,17 @@ import {
   Check,
   Copy,
   Code,
+  FileSpreadsheet,
+  HardDrive,
+  Trash2,
+  Clock,
+  AlertOctagon,
+  FileText,
 } from 'lucide-react';
 import { formatDateTime } from '@/lib/utils';
 import { GitHubService } from '@/lib/github-api';
+import { exportDocumentsBackupToExcel } from '@/lib/excel';
+import { ToastContainer, useToast } from '@/components/common/Toast';
 
 const GOOGLE_SCRIPT_TEMPLATE = `function doPost(e) {
   try {
@@ -60,9 +68,63 @@ const GOOGLE_SCRIPT_TEMPLATE = `function doPost(e) {
   }
 }`;
 
+function downloadJsonFile(data: any, filename: string) {
+  const jsonStr = JSON.stringify(data, null, 2);
+  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function getBackupFilename(ext: 'json' | 'xlsx', prefix = 'LongKhai_Full_Backup') {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const MM = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  return `${prefix}_${yyyy}${MM}${dd}_${hh}${mm}.${ext}`;
+}
+
 export function SettingsView() {
   const { currentUser } = useAuth();
-  const [activeTab, setActiveTab] = useState<'email' | 'github'>('email');
+  const { toasts, showToast, dismissToast } = useToast();
+  const [activeTab, setActiveTab] = useState<'backup' | 'email' | 'github'>('backup');
+
+  // Backup & Data management state
+  const [lastBackupDate, setLastBackupDate] = useState<string | null>(null);
+  const [backupInterval, setBackupInterval] = useState<number>(7);
+  const [isDue, setIsDue] = useState<boolean>(false);
+
+  const [leaveCount, setLeaveCount] = useState<number>(0);
+  const [gatePassCount, setGatePassCount] = useState<number>(0);
+  const [attCount, setAttCount] = useState<number>(0);
+
+  // Clear data state
+  const [showClearModal, setShowClearModal] = useState<boolean>(false);
+  const [clearTargets, setClearTargets] = useState<{
+    gate_pass: boolean;
+    leave_request: boolean;
+    attendance: boolean;
+  }>({
+    gate_pass: true,
+    leave_request: true,
+    attendance: true,
+  });
+  const [confirmDeleteText, setConfirmDeleteText] = useState<string>('');
+  const [isClearing, setIsClearing] = useState<boolean>(false);
+
+  // Restore data state
+  const [restorePreview, setRestorePreview] = useState<{
+    summary: any;
+    rawBackup: any;
+  } | null>(null);
+  const [isRestoring, setIsRestoring] = useState<boolean>(false);
 
   // GitHub & Audit state
   const [config, setConfig] = useState<GitHubConfig>(() => storage.getGitHubConfig());
@@ -103,6 +165,204 @@ export function SettingsView() {
       })
       .catch(() => {});
   }, []);
+
+  const refreshCounts = () => {
+    setLeaveCount(storage.getLeaveRequests().length);
+    setGatePassCount(storage.getGatePasses().length);
+    setAttCount(storage.getAttendanceConfirms().length);
+    setLastBackupDate(storage.getLastBackupDate());
+    setBackupInterval(storage.getBackupIntervalDays());
+    setIsDue(storage.isBackupDue());
+  };
+
+  useEffect(() => {
+    refreshCounts();
+  }, []);
+
+  const handleDownloadJsonBackup = () => {
+    try {
+      const backup = storage.exportFullBackupData();
+      const filename = getBackupFilename('json', 'LongKhai_Full_Backup');
+      downloadJsonFile(backup, filename);
+      refreshCounts();
+      showToast({
+        type: 'success',
+        title: 'Sao lưu dữ liệu thành công',
+        message: `Đã lưu tệp ${filename} vào máy tính!`,
+      });
+    } catch (err: any) {
+      showToast({
+        type: 'error',
+        title: 'Lỗi sao lưu',
+        message: err.message || 'Không thể xuất tệp sao lưu JSON.',
+      });
+    }
+  };
+
+  const handleDownloadExcelBackup = async () => {
+    try {
+      const leaves = storage.getLeaveRequests();
+      const gatePasses = storage.getGatePasses();
+      const atts = storage.getAttendanceConfirms();
+      const filename = getBackupFilename('xlsx', 'LongKhai_TongHop_Phieu');
+      await exportDocumentsBackupToExcel(leaves, gatePasses, atts, filename);
+      storage.setLastBackupDate();
+      refreshCounts();
+      showToast({
+        type: 'success',
+        title: 'Xuất Excel thành công',
+        message: `Đã lưu bảng tính ${filename} vào máy tính!`,
+      });
+    } catch (err: any) {
+      showToast({
+        type: 'error',
+        title: 'Lỗi xuất Excel',
+        message: err.message || 'Không thể xuất tệp Excel.',
+      });
+    }
+  };
+
+  const handleFileSelectedForRestore = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const content = event.target?.result as string;
+        const parsed = JSON.parse(content);
+        if (!parsed || !parsed.data) {
+          showToast({
+            type: 'error',
+            title: 'Tệp sao lưu không hợp lệ',
+            message: 'Tệp JSON không đúng định dạng chuẩn của hệ thống Long Khải Portal.',
+          });
+          return;
+        }
+        setRestorePreview({
+          summary: parsed.summary || {
+            leaveRequests: parsed.data.leaveRequests?.length || 0,
+            gatePasses: parsed.data.gatePasses?.length || 0,
+            attendanceConfirms: parsed.data.attendanceConfirms?.length || 0,
+            users: parsed.data.users?.length || 0,
+            departments: parsed.data.departments?.length || 0,
+          },
+          rawBackup: parsed,
+        });
+      } catch {
+        showToast({
+          type: 'error',
+          title: 'Lỗi đọc tệp',
+          message: 'Không thể giải mã dữ liệu JSON từ tệp tải lên.',
+        });
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
+  const handleConfirmRestore = async () => {
+    if (!restorePreview?.rawBackup) return;
+    setIsRestoring(true);
+    try {
+      const res = await storage.restoreFullBackupData(restorePreview.rawBackup, {
+        id: currentUser?.id || 'ADMIN',
+        name: currentUser?.name || 'Quản trị viên',
+      });
+      if (res.success) {
+        showToast({
+          type: 'success',
+          title: 'Khôi phục dữ liệu thành công',
+          message: res.message,
+        });
+        setRestorePreview(null);
+        refreshCounts();
+      } else {
+        showToast({
+          type: 'error',
+          title: 'Lỗi khôi phục',
+          message: res.message,
+        });
+      }
+    } catch (err: any) {
+      showToast({
+        type: 'error',
+        title: 'Lỗi khôi phục',
+        message: err.message || 'Đã xảy ra sự cố khi nạp lại dữ liệu.',
+      });
+    } finally {
+      setIsRestoring(false);
+    }
+  };
+
+  const handleExecuteClear = async () => {
+    if (confirmDeleteText.trim().toUpperCase() !== 'XÓA') {
+      showToast({
+        type: 'warning',
+        title: 'Chưa xác nhận thao tác',
+        message: 'Vui lòng gõ chính xác từ "XÓA" để thực hiện.',
+      });
+      return;
+    }
+
+    const selectedTargets: ('gate_pass' | 'leave_request' | 'attendance')[] = [];
+    if (clearTargets.gate_pass) selectedTargets.push('gate_pass');
+    if (clearTargets.leave_request) selectedTargets.push('leave_request');
+    if (clearTargets.attendance) selectedTargets.push('attendance');
+
+    if (selectedTargets.length === 0) {
+      showToast({
+        type: 'warning',
+        title: 'Chưa chọn dữ liệu cần xóa',
+        message: 'Vui lòng tích chọn ít nhất 1 loại phiếu muốn xóa sạch.',
+      });
+      return;
+    }
+
+    setIsClearing(true);
+    try {
+      const res = await storage.clearAllDocuments(selectedTargets, {
+        id: currentUser?.id || 'ADMIN',
+        name: currentUser?.name || 'Quản trị viên',
+      });
+
+      if (res.success) {
+        showToast({
+          type: 'success',
+          title: 'Đã xóa dữ liệu thành công',
+          message: res.message,
+        });
+        setShowClearModal(false);
+        setConfirmDeleteText('');
+        refreshCounts();
+      } else {
+        showToast({
+          type: 'error',
+          title: 'Lỗi xóa dữ liệu',
+          message: res.message,
+        });
+      }
+    } catch (err: any) {
+      showToast({
+        type: 'error',
+        title: 'Lỗi hệ thống',
+        message: err.message || 'Không thể hoàn tất việc dọn dẹp dữ liệu.',
+      });
+    } finally {
+      setIsClearing(false);
+    }
+  };
+
+  const handleChangeBackupInterval = (days: number) => {
+    storage.setBackupIntervalDays(days);
+    setBackupInterval(days);
+    setIsDue(storage.isBackupDue());
+    showToast({
+      type: 'info',
+      title: 'Đã lưu chu kỳ sao lưu',
+      message: days === 0 ? 'Đã tắt tính năng nhắc nhở sao lưu.' : `Sẽ nhắc nhở sao lưu sau mỗi ${days} ngày.`,
+    });
+  };
 
   // Save GitHub Config
   const handleSaveConfig = async (e: React.FormEvent) => {
@@ -222,19 +482,34 @@ export function SettingsView() {
             <Settings className="w-5 h-5" />
           </div>
           <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-            Cài Đặt Hệ Thống & Cấu Hình Email Phê Duyệt
+            Cài Đặt Hệ Thống, Sao Lưu & Email Phê Duyệt
           </h1>
         </div>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-          Cấu hình trung chuyển gửi Email thông báo phê duyệt (Google Web App Relay, Microsoft 365, Resend) và cơ sở dữ liệu GitHub
+          Quản lý sao lưu dữ liệu máy tính, dọn dẹp phiếu yêu cầu, cấu hình email phê duyệt và cơ sở dữ liệu GitHub
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 gap-2">
+      <div className="flex border-b border-slate-200 dark:border-slate-800 gap-2 overflow-x-auto">
+        <button
+          onClick={() => setActiveTab('backup')}
+          className={`pb-3 px-4 text-xs font-bold flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
+            activeTab === 'backup'
+              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+              : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+          }`}
+        >
+          <HardDrive className="w-4 h-4" />
+          <span>Sao Lưu & Quản Lý Dữ Liệu</span>
+          {isDue && (
+            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" title="Đến hạn sao lưu định kỳ" />
+          )}
+        </button>
+
         <button
           onClick={() => setActiveTab('email')}
-          className={`pb-3 px-4 text-xs font-bold flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-3 px-4 text-xs font-bold flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeTab === 'email'
               ? 'border-blue-600 text-blue-600 dark:text-blue-400'
               : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
@@ -251,7 +526,7 @@ export function SettingsView() {
 
         <button
           onClick={() => setActiveTab('github')}
-          className={`pb-3 px-4 text-xs font-bold flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-3 px-4 text-xs font-bold flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeTab === 'github'
               ? 'border-blue-600 text-blue-600 dark:text-blue-400'
               : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
@@ -261,6 +536,315 @@ export function SettingsView() {
           <span>GitHub Database & Audit Trail</span>
         </button>
       </div>
+
+      {/* TAB 0: BACKUP & DATA MANAGEMENT */}
+      {activeTab === 'backup' && (
+        <div className="space-y-6">
+          {/* Stat Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-xs">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Phiếu Ra Vào Cổng</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">{gatePassCount}</p>
+                </div>
+                <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
+                  <FileText className="w-6 h-6" />
+                </div>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-2">Dữ liệu lưu tại company-data/gate-pass</p>
+            </div>
+
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-xs">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Đơn Xin Nghỉ Phép</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">{leaveCount}</p>
+                </div>
+                <div className="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
+                  <Clock className="w-6 h-6" />
+                </div>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-2">Dữ liệu lưu tại company-data/leave-request</p>
+            </div>
+
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-xs">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Phiếu Xác Nhận Công</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">{attCount}</p>
+                </div>
+                <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+                  <CheckCircle2 className="w-6 h-6" />
+                </div>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-2">Dữ liệu lưu tại company-data/attendance</p>
+            </div>
+          </div>
+
+          {/* Backup Reminder Banner (if due or overdue) */}
+          {isDue && (
+            <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-800 flex items-start gap-3 shadow-xs">
+              <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div className="flex-1 text-xs">
+                <p className="font-bold text-amber-900 dark:text-amber-200">
+                  Đã đến hạn sao lưu dữ liệu định kỳ!
+                </p>
+                <p className="text-amber-800 dark:text-amber-300 mt-0.5 leading-relaxed">
+                  Lần sao lưu gần nhất: {lastBackupDate ? formatDateTime(lastBackupDate) : 'Chưa có bản sao lưu nào được ghi nhận'}.
+                  Chu kỳ nhắc nhở hiện tại là <b>{backupInterval} ngày</b>. Hãy bấm tải bản sao lưu (.json hoặc .xlsx) bên dưới về máy tính để phòng ngừa rủi ro mất dữ liệu.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Action Sections Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Card 1: Backup Actions */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xs space-y-5">
+              <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+                <HardDrive className="w-5 h-5 text-blue-600" />
+                <h3 className="font-bold text-sm text-slate-900 dark:text-white">
+                  Sao Lưu Dữ Liệu Về Máy Tính
+                </h3>
+              </div>
+
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Tải toàn bộ cơ sở dữ liệu về máy tính cá nhân để lưu trữ dự phòng an toàn. Bạn có thể chọn tải tệp dữ liệu kỹ thuật (.JSON) hoặc xuất bảng tính tổng hợp (.XLSX).
+              </p>
+
+              {/* Status info */}
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-700/80 text-xs space-y-1">
+                <div className="flex justify-between">
+                  <span className="text-slate-500 dark:text-slate-400">Lần sao lưu gần nhất:</span>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                    {lastBackupDate ? formatDateTime(lastBackupDate) : 'Chưa từng sao lưu'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between pt-1">
+                  <span className="text-slate-500 dark:text-slate-400">Chu kỳ nhắc nhở sao lưu:</span>
+                  <select
+                    value={backupInterval}
+                    onChange={(e) => handleChangeBackupInterval(Number(e.target.value))}
+                    className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-xs font-semibold text-slate-800 dark:text-slate-200 outline-none cursor-pointer"
+                  >
+                    <option value={7}>7 ngày (Khuyên dùng)</option>
+                    <option value={14}>14 ngày (2 tuần)</option>
+                    <option value={30}>30 ngày (1 tháng)</option>
+                    <option value={0}>Tắt nhắc nhở</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Download Buttons */}
+              <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={handleDownloadJsonBackup}
+                  className="w-full p-4 rounded-xl bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 dark:hover:bg-blue-900/60 border border-blue-200 dark:border-blue-800 text-left transition-all flex items-center justify-between group cursor-pointer shadow-xs"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+                      <DownloadCloud className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-blue-900 dark:text-blue-200">
+                        Tải Tệp Sao Lưu Toàn Diện (.JSON)
+                      </h4>
+                      <p className="text-[11px] text-blue-700 dark:text-blue-300 mt-0.5">
+                        Đóng gói 100% dữ liệu phiếu, danh mục nhân viên & cấu hình để khôi phục khi cần.
+                      </p>
+                    </div>
+                  </div>
+                  <DownloadCloud className="w-4 h-4 text-blue-600 dark:text-blue-400 opacity-60 group-hover:opacity-100 group-hover:translate-y-0.5 transition-all" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleDownloadExcelBackup}
+                  className="w-full p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-800 text-left transition-all flex items-center justify-between group cursor-pointer shadow-xs"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+                      <FileSpreadsheet className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-emerald-900 dark:text-emerald-200">
+                        Xuất Toàn Bộ Phiếu Ra File Excel (.XLSX)
+                      </h4>
+                      <p className="text-[11px] text-emerald-700 dark:text-emerald-300 mt-0.5">
+                        Đa trang tính (3 Sheet: Nghỉ phép, Ra vào cổng, Xác nhận công) xem trực tiếp trên Excel.
+                      </p>
+                    </div>
+                  </div>
+                  <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400 opacity-60 group-hover:opacity-100 group-hover:translate-y-0.5 transition-all" />
+                </button>
+              </div>
+            </div>
+
+            {/* Card 2: Restore from Backup */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xs space-y-5">
+              <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+                <RefreshCw className="w-5 h-5 text-purple-600" />
+                <h3 className="font-bold text-sm text-slate-900 dark:text-white">
+                  Khôi Phục Dữ Liệu Từ Tệp Sao Lưu
+                </h3>
+              </div>
+
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Tải tệp sao lưu <code>.json</code> đã lưu trước đó từ máy tính của bạn lên để khôi phục lại hệ thống. Thao tác này an toàn và có bước xem trước xác nhận số lượng bản ghi trước khi nạp.
+              </p>
+
+              <div className="p-4 rounded-xl border border-dashed border-purple-300 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-950/20 text-center space-y-3">
+                <div className="w-12 h-12 mx-auto rounded-full bg-purple-100 dark:bg-purple-900/60 text-purple-600 dark:text-purple-300 flex items-center justify-center">
+                  <UploadCloud className="w-6 h-6" />
+                </div>
+                <div className="text-xs text-slate-600 dark:text-slate-300">
+                  <label
+                    htmlFor="restore-file-input"
+                    className="font-bold text-purple-600 dark:text-purple-400 hover:underline cursor-pointer inline-flex items-center gap-1"
+                  >
+                    <span>Nhấp để chọn tệp .json từ máy tính</span>
+                  </label>
+                  <p className="text-[11px] text-slate-400 mt-1">Chỉ chấp nhận file .json chuẩn sao lưu từ Long Khải Portal</p>
+                </div>
+                <input
+                  id="restore-file-input"
+                  type="file"
+                  accept=".json,application/json"
+                  onChange={handleFileSelectedForRestore}
+                  className="hidden"
+                />
+              </div>
+
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-700/80 text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed space-y-1">
+                <p className="font-bold text-slate-700 dark:text-slate-300">Lưu ý khi khôi phục:</p>
+                <ul className="list-disc pl-4 space-y-0.5">
+                  <li>Toàn bộ phiếu và cấu hình trong tệp sẽ được đồng bộ lại vào hệ thống.</li>
+                  <li>Nếu bạn chỉ muốn kiểm tra hoặc xem lại, bạn có thể xem trước nội dung trước khi bấm xác nhận.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* DANGER ZONE: Clear Documents */}
+          <div className="bg-rose-50/50 dark:bg-rose-950/20 border-2 border-rose-200 dark:border-rose-900/50 rounded-2xl p-6 shadow-xs space-y-5">
+            <div className="flex items-center gap-2 border-b border-rose-200 dark:border-rose-800 pb-3">
+              <div className="w-8 h-8 rounded-lg bg-rose-600 text-white flex items-center justify-center font-bold">
+                <Trash2 className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="font-bold text-sm text-rose-900 dark:text-rose-200">
+                  Vùng Dọn Dẹp / Xóa Dữ Liệu Phiếu Hiện Tại (Danger Zone)
+                </h3>
+                <p className="text-[11px] text-rose-700 dark:text-rose-300">
+                  Dành cho quản trị viên khi cần dọn dẹp sạch sẽ toàn bộ dữ liệu phiếu để bắt đầu kỳ mới
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-rose-200 dark:border-rose-900 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-900 dark:text-white">
+                  Chọn các loại phiếu cần xóa sạch:
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setClearTargets({ gate_pass: true, leave_request: true, attendance: true })}
+                    className="text-[11px] text-blue-600 dark:text-blue-400 hover:underline font-semibold cursor-pointer"
+                  >
+                    Chọn tất cả
+                  </button>
+                  <span className="text-slate-300">|</span>
+                  <button
+                    type="button"
+                    onClick={() => setClearTargets({ gate_pass: false, leave_request: false, attendance: false })}
+                    className="text-[11px] text-slate-500 hover:underline font-semibold cursor-pointer"
+                  >
+                    Bỏ chọn
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <label className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-colors ${
+                  clearTargets.gate_pass
+                    ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={clearTargets.gate_pass}
+                    onChange={(e) => setClearTargets({ ...clearTargets, gate_pass: e.target.checked })}
+                    className="rounded text-rose-600 focus:ring-rose-500"
+                  />
+                  <div className="text-xs">
+                    <div>Phiếu ra vào cổng</div>
+                    <div className="text-[10px] font-normal opacity-80 mt-0.5">({gatePassCount} phiếu)</div>
+                  </div>
+                </label>
+
+                <label className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-colors ${
+                  clearTargets.leave_request
+                    ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={clearTargets.leave_request}
+                    onChange={(e) => setClearTargets({ ...clearTargets, leave_request: e.target.checked })}
+                    className="rounded text-rose-600 focus:ring-rose-500"
+                  />
+                  <div className="text-xs">
+                    <div>Đơn xin nghỉ phép</div>
+                    <div className="text-[10px] font-normal opacity-80 mt-0.5">({leaveCount} đơn)</div>
+                  </div>
+                </label>
+
+                <label className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-colors ${
+                  clearTargets.attendance
+                    ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={clearTargets.attendance}
+                    onChange={(e) => setClearTargets({ ...clearTargets, attendance: e.target.checked })}
+                    className="rounded text-rose-600 focus:ring-rose-500"
+                  />
+                  <div className="text-xs">
+                    <div>Phiếu xác nhận công</div>
+                    <div className="text-[10px] font-normal opacity-80 mt-0.5">({attCount} phiếu)</div>
+                  </div>
+                </label>
+              </div>
+
+              <div className="p-3 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-900/60 text-[11px] text-amber-900 dark:text-amber-300 flex items-start gap-2">
+                <AlertOctagon className="w-4 h-4 shrink-0 mt-0.5 text-amber-600" />
+                <div className="leading-relaxed">
+                  <b>Cam kết an toàn hệ thống:</b> Thao tác này chỉ xóa dữ liệu các phiếu đã chọn trên cả máy chủ và trình duyệt. Tuyệt đối <b>KHÔNG</b> làm mất danh mục tài khoản nhân viên, phòng ban, chức vụ hay bất kỳ cấu hình nào khác.
+                </div>
+              </div>
+
+              <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                  Khuyến nghị: Bạn nên bấm <b>"Tải tệp sao lưu (.JSON)"</b> hoặc <b>"Xuất Excel"</b> ở mục trên trước khi tiến hành xóa.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowClearModal(true)}
+                  disabled={!clearTargets.gate_pass && !clearTargets.leave_request && !clearTargets.attendance}
+                  className="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 disabled:opacity-40 text-white rounded-xl font-bold text-xs shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>Xóa sạch dữ liệu đã chọn</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* TAB 1: EMAIL CONFIGURATION */}
       {activeTab === 'email' && (
@@ -709,6 +1293,157 @@ export function SettingsView() {
           </div>
         </div>
       )}
+
+      {/* CLEAR CONFIRMATION MODAL */}
+      {showClearModal && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  Xác nhận xóa sạch dữ liệu phiếu
+                </h3>
+                <p className="text-xs text-rose-600 dark:text-rose-400 font-semibold mt-0.5">
+                  Thao tác này không thể hoàn tác sau khi thực hiện!
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 space-y-2">
+              <p className="font-semibold text-slate-900 dark:text-white">Các mục sẽ bị dọn dẹp sạch sẽ:</p>
+              <ul className="list-disc pl-4 space-y-1 text-[11px]">
+                {clearTargets.gate_pass && <li>Toàn bộ phiếu ra vào cổng ({gatePassCount} phiếu)</li>}
+                {clearTargets.leave_request && <li>Toàn bộ đơn xin nghỉ phép ({leaveCount} đơn)</li>}
+                {clearTargets.attendance && <li>Toàn bộ phiếu xác nhận công ({attCount} phiếu)</li>}
+              </ul>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                Để xác nhận, vui lòng gõ từ <span className="text-rose-600 font-mono">XÓA</span> vào ô dưới đây:
+              </label>
+              <input
+                type="text"
+                value={confirmDeleteText}
+                onChange={(e) => setConfirmDeleteText(e.target.value)}
+                placeholder="Nhập XÓA"
+                className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-rose-300 dark:border-rose-700 rounded-xl font-bold text-center text-rose-600 dark:text-rose-400 outline-none focus:ring-2 focus:ring-rose-500 uppercase"
+              />
+            </div>
+
+            <div className="flex gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowClearModal(false);
+                  setConfirmDeleteText('');
+                }}
+                disabled={isClearing}
+                className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              >
+                Hủy bỏ
+              </button>
+              <button
+                type="button"
+                onClick={handleExecuteClear}
+                disabled={confirmDeleteText.trim().toUpperCase() !== 'XÓA' || isClearing}
+                className="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white text-xs font-bold transition-colors shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                {isClearing ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Đang xóa...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Xác nhận xóa ngay</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* RESTORE PREVIEW MODAL */}
+      {restorePreview && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 flex items-center justify-center shrink-0">
+                <UploadCloud className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  Xem trước dữ liệu tệp sao lưu
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Ngày tạo: {restorePreview.rawBackup.exportedAt ? formatDateTime(restorePreview.rawBackup.exportedAt) : 'Không xác định'}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2.5 text-xs">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                <span className="text-slate-400 block text-[10px]">Phiếu ra vào cổng:</span>
+                <span className="font-bold text-base text-blue-600">{restorePreview.summary.gatePasses ?? 0}</span>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                <span className="text-slate-400 block text-[10px]">Đơn xin nghỉ phép:</span>
+                <span className="font-bold text-base text-purple-600">{restorePreview.summary.leaveRequests ?? 0}</span>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                <span className="text-slate-400 block text-[10px]">Phiếu xác nhận công:</span>
+                <span className="font-bold text-base text-emerald-600">{restorePreview.summary.attendanceConfirms ?? 0}</span>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                <span className="text-slate-400 block text-[10px]">Tài khoản nhân viên:</span>
+                <span className="font-bold text-base text-slate-800 dark:text-white">{restorePreview.summary.users ?? 0}</span>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Bạn có chắc chắn muốn nạp toàn bộ dữ liệu này vào hệ thống? Dữ liệu hiện tại sẽ được cập nhật đồng bộ với tệp sao lưu.
+            </p>
+
+            <div className="flex gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => setRestorePreview(null)}
+                disabled={isRestoring}
+                className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              >
+                Hủy bỏ
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmRestore}
+                disabled={isRestoring}
+                className="flex-1 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-xs font-bold transition-colors shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                {isRestoring ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Đang nạp dữ liệu...</span>
+                  </>
+                ) : (
+                  <>
+                    <UploadCloud className="w-3.5 h-3.5" />
+                    <span>Xác nhận khôi phục</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notifications */}
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
 }

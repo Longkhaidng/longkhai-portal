@@ -34,6 +34,8 @@ const STORAGE_KEYS = {
   EMAIL_CONFIG: 'lk_portal_email_config',
   AUDIT_LOGS: 'lk_portal_audit_logs',
   CURRENT_USER_SESSION: 'lk_portal_current_user_session',
+  LAST_BACKUP_DATE: 'lk_portal_last_backup_date',
+  BACKUP_INTERVAL_DAYS: 'lk_portal_backup_interval_days',
 };
 
 class StorageService {
@@ -751,6 +753,246 @@ class StorageService {
       console.warn('syncFromServer error:', e);
       return false;
     }
+  }
+
+  // --- BACKUP & DATA MANAGEMENT ---
+  getLastBackupDate(): string | null {
+    if (!this.isClient()) return null;
+    return localStorage.getItem(STORAGE_KEYS.LAST_BACKUP_DATE);
+  }
+
+  setLastBackupDate(dateStr?: string): void {
+    if (!this.isClient()) return;
+    const now = dateStr || new Date().toISOString();
+    localStorage.setItem(STORAGE_KEYS.LAST_BACKUP_DATE, now);
+  }
+
+  getBackupIntervalDays(): number {
+    if (!this.isClient()) return 7;
+    const val = localStorage.getItem(STORAGE_KEYS.BACKUP_INTERVAL_DAYS);
+    return val !== null ? Number(val) : 7;
+  }
+
+  setBackupIntervalDays(days: number): void {
+    if (!this.isClient()) return;
+    localStorage.setItem(STORAGE_KEYS.BACKUP_INTERVAL_DAYS, String(days));
+  }
+
+  isBackupDue(): boolean {
+    if (!this.isClient()) return false;
+    const intervalDays = this.getBackupIntervalDays();
+    if (intervalDays <= 0) return false;
+    const lastBackup = this.getLastBackupDate();
+    if (!lastBackup) return true;
+    const lastTime = new Date(lastBackup).getTime();
+    const now = Date.now();
+    const diffDays = (now - lastTime) / (1000 * 60 * 60 * 24);
+    return diffDays >= intervalDays;
+  }
+
+  exportFullBackupData() {
+    const leaveRequests = this.getLeaveRequests();
+    const gatePasses = this.getGatePasses();
+    const attendanceConfirms = this.getAttendanceConfirms();
+    const users = this.getUsers();
+    const departments = this.getDepartments();
+    const positions = this.getPositions();
+    const webIntegrations = this.getWebIntegrations();
+    const announcements = this.getAnnouncements();
+    const dynamicForms = this.getDynamicForms();
+    const formSubmissions = this.getFormSubmissions();
+    const plugins = this.getPlugins();
+    const emailConfig = this.getEmailConfig();
+    const githubConfig = this.getGitHubConfig();
+
+    this.setLastBackupDate();
+
+    return {
+      version: '1.0',
+      portal: 'Long Khải Portal',
+      exportedAt: new Date().toISOString(),
+      summary: {
+        leaveRequests: leaveRequests.length,
+        gatePasses: gatePasses.length,
+        attendanceConfirms: attendanceConfirms.length,
+        users: users.length,
+        departments: departments.length,
+        positions: positions.length,
+        webIntegrations: webIntegrations.length,
+        announcements: announcements.length,
+        dynamicForms: dynamicForms.length,
+        formSubmissions: formSubmissions.length,
+      },
+      data: {
+        leaveRequests,
+        gatePasses,
+        attendanceConfirms,
+        users,
+        departments,
+        positions,
+        webIntegrations,
+        announcements,
+        dynamicForms,
+        formSubmissions,
+        plugins,
+        emailConfig,
+        githubConfig,
+      },
+    };
+  }
+
+  async restoreFullBackupData(
+    backup: any,
+    byUser?: { id: string; name: string }
+  ): Promise<{ success: boolean; message: string; counts?: any }> {
+    if (!this.isClient()) return { success: false, message: 'Chỉ hỗ trợ trên trình duyệt' };
+    if (!backup || !backup.data) {
+      return { success: false, message: 'Tệp sao lưu không đúng định dạng chuẩn của Long Khải Portal.' };
+    }
+
+    const {
+      leaveRequests,
+      gatePasses,
+      attendanceConfirms,
+      users,
+      departments,
+      positions,
+      webIntegrations,
+      announcements,
+      dynamicForms,
+      formSubmissions,
+      plugins,
+      emailConfig,
+      githubConfig,
+    } = backup.data;
+
+    let restoredCount = 0;
+
+    if (Array.isArray(leaveRequests)) {
+      localStorage.setItem(STORAGE_KEYS.LEAVE_REQUESTS, JSON.stringify(leaveRequests));
+      restoredCount += leaveRequests.length;
+    }
+    if (Array.isArray(gatePasses)) {
+      localStorage.setItem(STORAGE_KEYS.GATE_PASSES, JSON.stringify(gatePasses));
+      restoredCount += gatePasses.length;
+    }
+    if (Array.isArray(attendanceConfirms)) {
+      localStorage.setItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS, JSON.stringify(attendanceConfirms));
+      restoredCount += attendanceConfirms.length;
+    }
+    if (Array.isArray(users) && users.length > 0) {
+      localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+    }
+    if (Array.isArray(departments) && departments.length > 0) {
+      localStorage.setItem(STORAGE_KEYS.DEPARTMENTS, JSON.stringify(departments));
+    }
+    if (Array.isArray(positions) && positions.length > 0) {
+      localStorage.setItem(STORAGE_KEYS.POSITIONS, JSON.stringify(positions));
+    }
+    if (Array.isArray(webIntegrations)) {
+      localStorage.setItem(STORAGE_KEYS.WEB_INTEGRATIONS, JSON.stringify(webIntegrations));
+    }
+    if (Array.isArray(announcements)) {
+      localStorage.setItem(STORAGE_KEYS.ANNOUNCEMENTS, JSON.stringify(announcements));
+    }
+    if (Array.isArray(dynamicForms)) {
+      localStorage.setItem(STORAGE_KEYS.DYNAMIC_FORMS, JSON.stringify(dynamicForms));
+    }
+    if (Array.isArray(formSubmissions)) {
+      localStorage.setItem(STORAGE_KEYS.FORM_SUBMISSIONS, JSON.stringify(formSubmissions));
+    }
+    if (Array.isArray(plugins)) {
+      localStorage.setItem(STORAGE_KEYS.PLUGINS, JSON.stringify(plugins));
+    }
+    if (emailConfig) {
+      localStorage.setItem(STORAGE_KEYS.EMAIL_CONFIG, JSON.stringify(emailConfig));
+    }
+    if (githubConfig) {
+      localStorage.setItem(STORAGE_KEYS.GITHUB_CONFIG, JSON.stringify(githubConfig));
+    }
+
+    this.addAuditLog(
+      'update',
+      'settings',
+      'system_restore',
+      byUser?.id || 'ADMIN',
+      byUser?.name || 'Quản trị viên',
+      `Khôi phục dữ liệu từ tệp sao lưu máy tính (${restoredCount} phiếu & dữ liệu cấu hình)`
+    );
+
+    this.setLastBackupDate();
+
+    // Sync restored core datasets to server
+    try {
+      if (Array.isArray(users) && users.length > 0) {
+        await fetch('/api/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'users', data: users }),
+        });
+      }
+      if (Array.isArray(departments) && departments.length > 0) {
+        await fetch('/api/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'departments', data: departments }),
+        });
+      }
+    } catch {}
+
+    return {
+      success: true,
+      message: `Đã khôi phục thành công toàn bộ dữ liệu từ tệp sao lưu!`,
+      counts: backup.summary,
+    };
+  }
+
+  async clearAllDocuments(
+    targets: ('gate_pass' | 'leave_request' | 'attendance')[],
+    byUser?: { id: string; name: string }
+  ): Promise<{ success: boolean; message: string; deletedCounts?: any }> {
+    if (!this.isClient()) return { success: false, message: 'Chỉ hỗ trợ trên trình duyệt' };
+
+    const clearedLabels: string[] = [];
+    if (targets.includes('gate_pass')) {
+      localStorage.setItem(STORAGE_KEYS.GATE_PASSES, '[]');
+      clearedLabels.push('Phiếu ra vào cổng');
+    }
+    if (targets.includes('leave_request')) {
+      localStorage.setItem(STORAGE_KEYS.LEAVE_REQUESTS, '[]');
+      clearedLabels.push('Đơn xin nghỉ phép');
+    }
+    if (targets.includes('attendance')) {
+      localStorage.setItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS, '[]');
+      clearedLabels.push('Phiếu xác nhận công');
+    }
+
+    let serverRes: any = null;
+    try {
+      const res = await fetch('/api/clear-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targets }),
+      });
+      serverRes = await res.json();
+    } catch (e: any) {
+      console.warn('Lỗi gọi /api/clear-data:', e);
+    }
+
+    this.addAuditLog(
+      'delete',
+      'settings',
+      'bulk_clear_documents',
+      byUser?.id || 'ADMIN',
+      byUser?.name || 'Quản trị viên',
+      `Dọn dẹp xóa sạch dữ liệu: ${clearedLabels.join(', ')}`
+    );
+
+    return {
+      success: true,
+      message: `Đã xóa sạch sẽ toàn bộ dữ liệu ${clearedLabels.join(', ')} trên trình duyệt và máy chủ thành công!`,
+      deletedCounts: serverRes?.deletedCounts,
+    };
   }
 }
 
