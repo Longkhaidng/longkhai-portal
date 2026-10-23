@@ -5,7 +5,7 @@
   "department": "Phòng HCNS",
   "location": "Văn phòng",
   "issueDescription": "Đèn tại phòng tổng hợp bị cháy. đề xuất cơ điện kiểm tra",
-  "status": "pending_confirmation",
+  "status": "completed",
   "steps": [
     {
       "step": 1,
@@ -44,14 +44,16 @@
       "title": "Bạn xác nhận hoàn tất",
       "subTitle": "tab \"Theo dõi đề xuất\"",
       "roleRequired": "creator",
-      "approverId": "1139",
-      "approverName": "Võ Thị Tuyết",
-      "status": "pending"
+      "approverId": "2265",
+      "approverName": "Trần Lê Hữu Lực",
+      "status": "completed",
+      "updatedAt": "2026-10-23T08:25:49.761Z",
+      "comment": "Thiết bị hoạt động bình thường, xác nhận hoàn tất"
     }
   ],
   "currentStepIndex": 3,
   "createdAt": "2026-10-23T08:17:51.081Z",
-  "updatedAt": "2026-10-23T08:25:42.018Z",
+  "updatedAt": "2026-10-23T08:25:49.761Z",
   "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
   "emailConfig": {
     "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
@@ -66,5 +68,7 @@
   "maintenanceStaffId": "2265",
   "maintenanceStaffName": "Trần Lê Hữu Lực",
   "maintenanceCompletedAt": "2026-10-23T08:25:42.018Z",
-  "maintenanceNotes": "đã xong"
+  "maintenanceNotes": "đã xong",
+  "creatorConfirmedAt": "2026-10-23T08:25:49.761Z",
+  "creatorFeedback": ""
 }
