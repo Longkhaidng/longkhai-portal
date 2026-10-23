@@ -32,11 +32,12 @@ function QuickApprovalContent() {
   const type = searchParams.get('type') as 'leave' | 'gate_pass' | 'attendance' | 'repair' | null;
   const id = searchParams.get('id');
   const initialAction = (searchParams.get('action') as 'approve' | 'reject' | null) || 'approve';
+  const paramSolution = searchParams.get('proposedSolution') || '';
 
   const [action, setAction] = useState<'approve' | 'reject'>(initialAction);
   const [isLoading, setIsLoading] = useState(true);
   const [doc, setDoc] = useState<any>(null);
-  const [proposedSolution, setProposedSolution] = useState('');
+  const [proposedSolution, setProposedSolution] = useState(paramSolution);
   const [rejectionReason, setRejectionReason] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -118,34 +119,56 @@ function QuickApprovalContent() {
   }, [id, type, initialAction]);
 
   // Submit decision for repair proposal
-  const handleSubmitRepair = (targetAction: 'approve' | 'reject') => {
+  const handleSubmitRepair = async (targetAction: 'approve' | 'reject') => {
     if (!id || !type) return;
     setIsSubmitting(true);
 
-    fetch('/api/approve', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type: 'repair',
-        id,
-        action: targetAction,
-        proposedSolution: proposedSolution.trim() || undefined,
-        comment: targetAction === 'approve' ? proposedSolution.trim() : rejectionReason.trim(),
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setResult(data);
-      })
-      .catch((err) => {
-        setResult({
-          success: false,
-          message: err.message || 'Lỗi kết nối máy chủ khi xử lý phê duyệt.',
-        });
-      })
-      .finally(() => {
-        setIsSubmitting(false);
+    try {
+      // Import storage dynamically if needed for browser config
+      let clientEmailConfig: any = null;
+      try {
+        const { storage } = await import('@/lib/storage');
+        clientEmailConfig = storage.getEmailConfig();
+      } catch {}
+
+      const res = await fetch('/api/approve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'repair',
+          id,
+          action: targetAction,
+          proposedSolution: proposedSolution.trim() || undefined,
+          comment: targetAction === 'approve' ? proposedSolution.trim() : rejectionReason.trim(),
+          emailConfig: clientEmailConfig,
+        }),
       });
+
+      const data = await res.json();
+      setResult(data);
+
+      // If approved, also trigger client-side dispatch guarantee to ensure maintenance head gets notified
+      if (data.success && targetAction === 'approve') {
+        try {
+          const { dispatchMaintenanceNotificationEmail } = await import('@/lib/email');
+          const updatedRecord = data.record || {
+            ...(doc || {}),
+            proposedSolution: proposedSolution.trim() || undefined,
+            status: 'maintenance_pending',
+          };
+          dispatchMaintenanceNotificationEmail(updatedRecord).catch(console.warn);
+        } catch (clientEmailErr) {
+          console.warn('Client email dispatch fallback error:', clientEmailErr);
+        }
+      }
+    } catch (err: any) {
+      setResult({
+        success: false,
+        message: err.message || 'Lỗi kết nối máy chủ khi xử lý phê duyệt.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const typeLabel =

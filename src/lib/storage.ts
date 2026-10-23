@@ -116,6 +116,11 @@ class StorageService {
       'Cập nhật cấu hình gửi email thông báo phê duyệt'
     );
     this.syncFileToGitHub('settings/email-config.json', JSON.stringify(config, null, 2), 'Update email configuration');
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'email_config', data: config, githubToken: this.getGitHubConfig().token }),
+    }).catch(() => {});
   }
 
   // --- AUDIT LOGS ---

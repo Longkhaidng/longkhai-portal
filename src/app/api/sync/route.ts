@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { type, data, githubToken } = body as {
-      type: 'users' | 'leave_request' | 'gate_pass' | 'attendance' | 'repair_proposal' | 'departments' | 'web_integrations' | 'github_config';
+      type: 'users' | 'leave_request' | 'gate_pass' | 'attendance' | 'repair_proposal' | 'departments' | 'web_integrations' | 'github_config' | 'email_config';
       data: any;
       githubToken?: string;
     };
@@ -151,6 +151,9 @@ export async function POST(req: NextRequest) {
     } else if (type === 'web_integrations') {
       relFilePath = 'settings/web_integrations.json';
       commitMessage = `Update web integrations list`;
+    } else if (type === 'email_config') {
+      relFilePath = 'settings/email-config.json';
+      commitMessage = `Update email configuration`;
     }
 
     const jsonString = JSON.stringify(data, null, 2);

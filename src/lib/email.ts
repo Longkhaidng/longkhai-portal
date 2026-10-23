@@ -99,18 +99,23 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
   ];
 
   const rowsHtml = allRows
-    .map(
-      (item, idx) => `
+    .map((item, idx) => {
+      const isProposedSolution = item.label === 'Đề xuất hướng khắc phục';
+      const displayVal = isProposedSolution
+        ? `<span style="display: inline-block; background-color: #fef3c7; border: 1px solid #fde68a; color: #b45309; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">👇 Trưởng bộ phận nhập vào ô bên dưới khi duyệt</span>`
+        : (item.value || '-');
+
+      return `
       <tr style="background-color: ${idx % 2 === 0 ? '#ffffff' : '#f8fafc'};">
         <td style="padding: 11px 16px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569; width: 36%; font-size: 13px;">
           ${item.label}
         </td>
         <td style="padding: 11px 16px; border-bottom: 1px solid #e2e8f0; color: ${item.isPrimary ? '#0284c7' : '#1e293b'}; font-weight: ${item.isPrimary ? '700' : '500'}; font-size: 13px;">
-          ${item.value || '-'}
+          ${displayVal}
         </td>
       </tr>
-    `
-    )
+    `;
+    })
     .join('');
 
   const html = `
@@ -173,6 +178,60 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
               </table>
 
               <!-- Action Buttons Card -->
+              ${payload.type === 'repair' ? `
+              <!-- DÀNH RIÊNG CHO ĐỀ XUẤT SỬA CHỮA: Form nhập đề xuất hướng khắc phục trực tiếp từ email -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fffbeb; border: 2px solid #f59e0b; border-radius: 14px; margin-bottom: 20px;">
+                <tr>
+                  <td style="padding: 22px 18px;">
+                    <div style="font-size: 14px; font-weight: 800; color: #92400e; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">
+                      📝 DÀNH CHO TRƯỞNG BỘ PHẬN PHÊ DUYỆT:
+                    </div>
+                    <div style="font-size: 12.5px; color: #78350f; margin-bottom: 14px; line-height: 1.5;">
+                      Quý Trưởng bộ phận nhập <b>Đề xuất hướng khắc phục</b> (chỉ đạo cho Cơ điện) trực tiếp vào ô bên dưới rồi bấm <b>PHÊ DUYỆT & GỬI CƠ ĐIỆN</b>:
+                    </div>
+
+                    <!-- HTML Form cho ứng dụng email hỗ trợ form gõ trực tiếp -->
+                    <form action="${approveUrl}" method="GET" target="_blank" style="margin: 0; padding: 0;">
+                      <input type="hidden" name="type" value="repair" />
+                      <input type="hidden" name="id" value="${payload.docId}" />
+                      <input type="hidden" name="action" value="approve" />
+                      <textarea name="proposedSolution" rows="3" placeholder="Nhập ý kiến đề xuất hướng khắc phục, chỉ đạo kiểm tra hoặc thay thế linh kiện cho Bộ phận Cơ điện..." style="width: 100%; box-sizing: border-box; border: 1.5px solid #d97706; border-radius: 8px; padding: 10px; font-size: 13px; font-family: inherit; resize: vertical; margin-bottom: 14px; background-color: #ffffff; color: #1e293b;"></textarea>
+                      
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                          <td align="center">
+                            <button type="submit" style="background-color: #d97706; color: #ffffff; padding: 13px 30px; border-radius: 8px; font-size: 13px; font-weight: 800; border: none; cursor: pointer; display: inline-block; letter-spacing: 0.5px;">
+                              ✓ PHÊ DUYỆT & GỬI BỘ PHẬN CƠ ĐIỆN
+                            </button>
+                          </td>
+                        </tr>
+                      </table>
+                    </form>
+
+                    <!-- Nút mở link trực tiếp cho Outlook hoặc ứng dụng email chặn gõ trong mail -->
+                    <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed #cbd5e1; text-align: center;">
+                      <div style="font-size: 11.5px; color: #64748b; margin-bottom: 10px; font-style: italic;">
+                        * Nếu ứng dụng email của bạn (như Outlook) không cho phép gõ trực tiếp trong ô trên, vui lòng bấm nút dưới đây để mở trang duyệt và nhập nội dung:
+                      </div>
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 440px; margin: 0 auto;">
+                        <tr>
+                          <td align="center" style="padding: 4px;">
+                            <a href="${approveUrl}" target="_blank" style="display: block; background-color: #059669; color: #ffffff; text-decoration: none; padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 800; text-align: center;">
+                              👉 MỞ TRANG NHẬP HƯỚNG KHẮC PHỤC & DUYỆT
+                            </a>
+                          </td>
+                          <td align="center" style="padding: 4px; width: 120px;">
+                            <a href="${rejectUrl}" target="_blank" style="display: block; background-color: #e11d48; color: #ffffff; text-decoration: none; padding: 12px 16px; border-radius: 8px; font-size: 13px; font-weight: 800; text-align: center;">
+                              ✕ TỪ CHỐI
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              ` : `
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; margin-bottom: 20px;">
                 <tr>
                   <td style="padding: 22px 18px; text-align: center;">
@@ -203,6 +262,8 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
                   </td>
                 </tr>
               </table>
+              `}
+
 
               <div style="text-align: center; font-size: 12px; color: #94a3b8;">
                 Hoặc đăng nhập vào Cổng Thông Tin: <a href="${baseUrl}" style="color: #0284c7; text-decoration: underline;">${baseUrl}</a>
@@ -449,7 +510,10 @@ export async function dispatchCBNotificationEmail(payload: DispatchCBPayload): P
 export async function dispatchMaintenanceNotificationEmail(
   proposal: RepairProposal
 ): Promise<{ success: boolean; toEmail: string }> {
-  const config = storage.getEmailConfig();
+  const config = {
+    ...storage.getEmailConfig(),
+    googleScriptUrl: proposal.emailRelayUrl || proposal.emailConfig?.googleScriptUrl || storage.getEmailConfig().googleScriptUrl,
+  };
   const allUsers = storage.getUsers();
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   const baseUrl = config.portalBaseUrl || origin || 'https://longkhai-portal.vercel.app';

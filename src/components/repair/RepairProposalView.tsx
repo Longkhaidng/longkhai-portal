@@ -236,6 +236,7 @@ export function RepairProposalView() {
         },
       ];
 
+      const activeEmailCfg = storage.getEmailConfig();
       const newProposal: RepairProposal = {
         id: newId,
         employeeId: currentUser.id,
@@ -248,6 +249,12 @@ export function RepairProposalView() {
         currentStepIndex: 1, // At step 2: Trưởng bộ phận duyệt
         createdAt: now,
         updatedAt: now,
+        emailRelayUrl: activeEmailCfg.googleScriptUrl || undefined,
+        emailConfig: {
+          googleScriptUrl: activeEmailCfg.googleScriptUrl || undefined,
+          senderName: activeEmailCfg.senderName || undefined,
+          portalBaseUrl: activeEmailCfg.portalBaseUrl || undefined,
+        },
       };
 
       storage.saveRepairProposal(newProposal, { id: currentUser.id, name: currentUser.name });

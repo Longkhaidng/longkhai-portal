@@ -69,15 +69,16 @@ function findAndLoadDoc(type: 'leave' | 'gate_pass' | 'attendance' | 'repair', d
 }
 
 // Background email sender to Head of Maintenance
-async function sendMaintenanceEmailServer(doc: any) {
+async function sendMaintenanceEmailServer(doc: any, clientEmailConfig?: any) {
   try {
-    let emailConfig: any = null;
+    let emailConfig: any = clientEmailConfig || null;
     const cfgPath = fs.existsSync(path.join('/tmp', 'email-config.json'))
       ? path.join('/tmp', 'email-config.json')
       : path.join(BASE_DIR, 'settings', 'email-config.json');
     if (fs.existsSync(cfgPath)) {
       try {
-        emailConfig = JSON.parse(fs.readFileSync(cfgPath, 'utf-8'));
+        const fileCfg = JSON.parse(fs.readFileSync(cfgPath, 'utf-8'));
+        emailConfig = { ...fileCfg, ...(clientEmailConfig || {}) };
       } catch {}
     }
 
@@ -106,6 +107,7 @@ async function sendMaintenanceEmailServer(doc: any) {
 
     const subject = `[Long Khải Portal] Yêu cầu sửa chữa thiết bị: Mã ${doc.id} - ${doc.location} (${doc.department})`;
     const baseUrl = emailConfig?.portalBaseUrl || 'https://longkhai-portal.vercel.app';
+    const solutionText = doc.proposedSolution || doc.managerComment || 'Đồng ý phê duyệt sửa chữa';
 
     const html = `
 <!DOCTYPE html>
@@ -129,7 +131,7 @@ async function sendMaintenanceEmailServer(doc: any) {
           <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600;">Tổ / Bộ phận</td><td style="padding: 10px 14px;">${doc.department}</td></tr>
           <tr><td style="padding: 10px 14px; font-weight: 600;">Khu vực thiết bị hỏng</td><td style="padding: 10px 14px; font-weight: bold; color: #e11d48;">${doc.location}</td></tr>
           <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600;">Tình trạng sự việc</td><td style="padding: 10px 14px; white-space: pre-line;">${doc.issueDescription}</td></tr>
-          <tr style="background-color: #fef3c7;"><td style="padding: 10px 14px; font-weight: 700; color: #92400e;">Đề xuất hướng khắc phục (Trưởng BP đã duyệt)</td><td style="padding: 10px 14px; font-weight: 600; color: #92400e; white-space: pre-line;">${doc.proposedSolution || doc.managerComment || 'Không có ghi chú'}</td></tr>
+          <tr style="background-color: #fef3c7;"><td style="padding: 10px 14px; font-weight: 700; color: #92400e;">Đề xuất hướng khắc phục (Trưởng BP đã duyệt)</td><td style="padding: 10px 14px; font-weight: bold; color: #92400e; white-space: pre-line; background-color: #fffbeb;">${solutionText}</td></tr>
         </tbody>
       </table>
       <div style="text-align: center; margin: 24px 0 10px 0;">
@@ -146,39 +148,103 @@ async function sendMaintenanceEmailServer(doc: any) {
 </html>
 `;
 
-    if (emailConfig?.googleScriptUrl) {
-      fetch(emailConfig.googleScriptUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          to: toEmail,
-          subject,
-          html,
-          fromName: emailConfig.senderName || 'Cổng Thông Tin Long Khải',
-        }),
-      }).catch(console.error);
-    } else if (emailConfig?.smtpUser && emailConfig?.smtpPassword) {
+    const plainText = `CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG
+YÊU CẦU SỬA CHỮA THIẾT BỊ
+Mã phiếu: ${doc.id}
+Người đề xuất: ${doc.employeeName} (${doc.employeeId})
+Tổ / Bộ phận: ${doc.department}
+Khu vực: ${doc.location}
+Tình trạng: ${doc.issueDescription}
+Đề xuất hướng khắc phục (Trưởng BP duyệt): ${solutionText}
+Vui lòng truy cập ${baseUrl} để tiếp nhận và cập nhật kết quả sửa chữa.`;
+
+    // 1. Determine Google Apps Script Relay URL
+    const googleScriptUrl =
+      clientEmailConfig?.googleScriptUrl ||
+      doc.emailRelayUrl ||
+      doc.emailConfig?.googleScriptUrl ||
+      emailConfig?.googleScriptUrl ||
+      process.env.GOOGLE_SCRIPT_URL;
+
+    if (googleScriptUrl && googleScriptUrl.trim()) {
       try {
-        const nodemailer = require('nodemailer');
-        const transporter = nodemailer.createTransport({
-          host: emailConfig.smtpHost || 'smtp.gmail.com',
-          port: emailConfig.smtpPort || 587,
-          secure: emailConfig.smtpSecure || false,
-          auth: { user: emailConfig.smtpUser, pass: emailConfig.smtpPassword },
+        console.log('[sendMaintenanceEmailServer] Sending via Google Script Relay to:', toEmail);
+        const scriptRes = await fetch(googleScriptUrl.trim(), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8',
+          },
+          body: JSON.stringify({
+            toEmail,
+            subject,
+            html,
+            text: plainText,
+            senderName: emailConfig?.senderName || 'Cổng Thông Tin Long Khải',
+          }),
+          redirect: 'follow',
         });
-        transporter.sendMail({
+        const respText = await scriptRes.text();
+        console.log('[sendMaintenanceEmailServer] Google Script response:', respText);
+        return { success: true, toEmail };
+      } catch (err: any) {
+        console.error('[sendMaintenanceEmailServer] Google Script error:', err.message);
+      }
+    }
+
+    // 2. SMTP fallback
+    if (emailConfig?.smtpUser && emailConfig?.smtpPassword && emailConfig.smtpPassword !== '********') {
+      try {
+        const nodemailer = (await import('nodemailer')).default;
+        const transporter = nodemailer.createTransport({
+          host: emailConfig.smtpHost || 'smtp.office365.com',
+          port: Number(emailConfig.smtpPort || 587),
+          secure: Number(emailConfig.smtpPort) === 465,
+          auth: { user: emailConfig.smtpUser, pass: emailConfig.smtpPassword },
+          tls: { rejectUnauthorized: false },
+        });
+        await transporter.sendMail({
           from: `"${emailConfig.senderName || 'Cổng Thông Tin Long Khải'}" <${emailConfig.senderEmail || emailConfig.smtpUser}>`,
           to: toEmail,
           subject,
           html,
-        }).catch(console.error);
-      } catch {}
+          text: plainText,
+        });
+        console.log('[sendMaintenanceEmailServer] SMTP email sent successfully to:', toEmail);
+        return { success: true, toEmail };
+      } catch (smtpErr: any) {
+        console.warn('[sendMaintenanceEmailServer] SMTP failed:', smtpErr.message);
+      }
+    }
+
+    // 3. Direct MX fallback
+    try {
+      const nodemailer = (await import('nodemailer')).default;
+      const directTransporter = nodemailer.createTransport({
+        host: 'longkhai-com-vn.mail.protection.outlook.com',
+        port: 25,
+        secure: false,
+        connectionTimeout: 4000,
+        greetingTimeout: 4000,
+        socketTimeout: 4000,
+        tls: { rejectUnauthorized: false },
+      });
+      await directTransporter.sendMail({
+        from: `"${emailConfig?.senderName || 'Cổng Thông Tin Long Khải'}" <no-reply@longkhai.com.vn>`,
+        to: toEmail,
+        subject,
+        html,
+        text: plainText,
+      });
+      console.log('[sendMaintenanceEmailServer] Direct MX email sent to:', toEmail);
+      return { success: true, toEmail };
+    } catch (mxErr: any) {
+      console.warn('[sendMaintenanceEmailServer] Direct MX delivery failed:', mxErr.message);
     }
   } catch (err: any) {
-    console.warn('sendMaintenanceEmailServer error:', err.message);
+    console.error('Lỗi sendMaintenanceEmailServer:', err);
   }
+  return { success: false };
 }
-
 // GET: Fetch document details for online approval page
 export async function GET(req: NextRequest) {
   try {
@@ -197,26 +263,44 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: true, doc: found.doc });
     }
 
-    // Try GitHub if configured
+    // Try GitHub API or raw github content
+    const subDir =
+      type === 'leave'
+        ? 'leave-request'
+        : type === 'gate_pass'
+        ? 'gate-pass'
+        : type === 'attendance'
+        ? 'attendance'
+        : 'repair-proposal';
+    const currentYear = new Date().getFullYear();
+    const candidateYears = [currentYear, currentYear - 1];
+
     const gitConfig = resolveServerGitHubConfig();
     if (gitConfig.token && gitConfig.owner && gitConfig.repo) {
       const ghService = new GitHubService(gitConfig);
-      const subDir =
-        type === 'leave'
-          ? 'leave-request'
-          : type === 'gate_pass'
-          ? 'gate-pass'
-          : type === 'attendance'
-          ? 'attendance'
-          : 'repair-proposal';
-      const year = new Date().getFullYear();
-      const possibleRelPath = `${subDir}/${year}/${docId}.json`;
-      const ghFile = await ghService.getFile(`${gitConfig.basePath || 'company-data'}/${possibleRelPath}`);
-      if (ghFile?.content) {
-        try {
-          return NextResponse.json({ success: true, doc: JSON.parse(ghFile.content) });
-        } catch {}
+      for (const y of candidateYears) {
+        const possibleRelPath = `${subDir}/${y}/${docId}.json`;
+        const ghFile = await ghService.getFile(`${gitConfig.basePath || 'company-data'}/${possibleRelPath}`);
+        if (ghFile?.content) {
+          try {
+            return NextResponse.json({ success: true, doc: JSON.parse(ghFile.content) });
+          } catch {}
+        }
       }
+    }
+
+    // Direct public GitHub raw fetch fallback
+    for (const y of candidateYears) {
+      try {
+        const rawUrl = `https://raw.githubusercontent.com/${gitConfig.owner || 'Longkhaidng'}/${gitConfig.repo || 'longkhai-portal'}/${gitConfig.branch || 'main'}/company-data/${subDir}/${y}/${docId}.json`;
+        const rawRes = await fetch(rawUrl, { cache: 'no-store' });
+        if (rawRes.ok) {
+          const rawDoc = await rawRes.json();
+          if (rawDoc && rawDoc.id) {
+            return NextResponse.json({ success: true, doc: rawDoc });
+          }
+        }
+      } catch {}
     }
 
     return NextResponse.json({ success: false, message: `Không tìm thấy hồ sơ ${docId}` }, { status: 404 });
@@ -228,12 +312,14 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { type, id, action, proposedSolution, comment } = body as {
+    const { type, id, action, proposedSolution, comment, emailConfig, githubToken } = body as {
       type: 'leave' | 'gate_pass' | 'attendance' | 'repair';
       id: string;
       action: 'approve' | 'reject';
       proposedSolution?: string;
       comment?: string;
+      emailConfig?: any;
+      githubToken?: string;
     };
 
     if (!type || !id || !action) {
@@ -463,7 +549,7 @@ export async function POST(req: NextRequest) {
 
     // 4. If repair proposal approved, dispatch email to Head of Maintenance
     if (type === 'repair' && isApprove) {
-      sendMaintenanceEmailServer(doc);
+      await sendMaintenanceEmailServer(doc, emailConfig);
     }
 
     return NextResponse.json({

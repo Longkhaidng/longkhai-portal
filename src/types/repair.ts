@@ -57,6 +57,14 @@ export interface RepairProposal {
 
   createdAt: string;
   updatedAt: string;
+
+  // Email Relay & Forwarding metadata
+  emailRelayUrl?: string;
+  emailConfig?: {
+    googleScriptUrl?: string;
+    senderName?: string;
+    portalBaseUrl?: string;
+  };
 }
 
 export const REPAIR_STATUS_LABELS: Record<RepairProposalStatus, string> = {

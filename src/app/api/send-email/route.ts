@@ -72,6 +72,12 @@ export async function POST(req: NextRequest) {
     }
 
     const activeConfig = resolveServerEmailConfig(emailConfig);
+    // Persist activeConfig to /tmp/email-config.json for serverless cross-endpoint availability
+    if (activeConfig.googleScriptUrl) {
+      try {
+        fs.writeFileSync(TMP_CONFIG_PATH, JSON.stringify(activeConfig, null, 2), 'utf-8');
+      } catch {}
+    }
     const host = activeConfig.smtpHost || 'smtp.office365.com';
     const port = Number(activeConfig.smtpPort || 587);
     const user = activeConfig.smtpUser?.trim();
