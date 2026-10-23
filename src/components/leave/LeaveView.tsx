@@ -58,6 +58,15 @@ export function LeaveView() {
     }
   }, [isAssignedEconomic]);
 
+  // Listen for storage changes to keep leaves synchronized
+  React.useEffect(() => {
+    const handleStorageChange = () => {
+      setLeaves(storage.getLeaveRequests());
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   // Count leaves currently waiting for this economic staff to confirm meal cutting
   const pendingMealCutCount = useMemo(() => {
     if (!currentUser) return 0;
@@ -453,16 +462,44 @@ export function LeaveView() {
   // Filter list strictly based on user permissions
   const userVisibleLeaves = useMemo(() => {
     return filterUserLeaves(leaves, currentUser, scopeFilter, allUsers);
-  }, [leaves, currentUser, scopeFilter]);
+  }, [leaves, currentUser, scopeFilter, allUsers]);
 
-  const filteredLeaves = userVisibleLeaves.filter((item) => {
-    const matchesSearch =
-      item.employeeName.toLowerCase().includes(search.toLowerCase()) ||
-      item.employeeId.toLowerCase().includes(search.toLowerCase()) ||
-      item.department.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  const filteredLeaves = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    return userVisibleLeaves.filter((item) => {
+      const typeLabel = (LEAVE_TYPE_LABELS[item.leaveType] || '').toLowerCase();
+      const matchesSearch =
+        !q ||
+        item.id.toLowerCase().includes(q) ||
+        item.employeeName.toLowerCase().includes(q) ||
+        item.employeeId.toLowerCase().includes(q) ||
+        item.department.toLowerCase().includes(q) ||
+        typeLabel.includes(q) ||
+        (item.reason && item.reason.toLowerCase().includes(q));
+
+      if (!matchesSearch) return false;
+
+      if (statusFilter === 'all') return true;
+      if (statusFilter === 'pending') {
+        return item.status === 'pending';
+      }
+      if (statusFilter === 'pending_manager') {
+        const curStep = item.steps[item.currentStepIndex];
+        return item.status === 'pending' && curStep?.roleRequired !== 'economic';
+      }
+      if (statusFilter === 'pending_economic') {
+        const curStep = item.steps[item.currentStepIndex];
+        return item.status === 'pending' && curStep?.roleRequired === 'economic';
+      }
+      if (statusFilter === 'approved') {
+        return item.status === 'approved';
+      }
+      if (statusFilter === 'rejected') {
+        return item.status === 'rejected';
+      }
+      return item.status === statusFilter;
+    });
+  }, [userVisibleLeaves, search, statusFilter]);
 
   return (
     <div className="space-y-6">
@@ -581,13 +618,28 @@ export function LeaveView() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none"
+            className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
           >
             <option value="all">Tất cả trạng thái</option>
-            <option value="pending">Chờ phê duyệt</option>
+            <option value="pending">Chờ phê duyệt (Tất cả đơn chờ)</option>
+            <option value="pending_manager">Chờ quản lý / Trưởng BP duyệt</option>
+            <option value="pending_economic">Chờ xác nhận cắt cơm</option>
             <option value="approved">Đã duyệt hoàn thành</option>
             <option value="rejected">Bị từ chối</option>
           </select>
+
+          {(statusFilter !== 'all' || search.trim() !== '') && (
+            <button
+              type="button"
+              onClick={() => {
+                setStatusFilter('all');
+                setSearch('');
+              }}
+              className="text-xs text-blue-600 dark:text-blue-400 hover:underline px-2 py-1 font-semibold whitespace-nowrap cursor-pointer"
+            >
+              Đặt lại
+            </button>
+          )}
         </div>
       </div>
 
@@ -614,9 +666,9 @@ export function LeaveView() {
                   </td>
                 </tr>
               ) : (
-                filteredLeaves.map((l) => (
+                filteredLeaves.map((l, idx) => (
                   <tr
-                    key={l.id}
+                    key={`${l.id}-${idx}`}
                     onClick={() => setSelectedLeave(l)}
                     className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 cursor-pointer transition-colors"
                   >

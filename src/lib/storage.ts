@@ -276,7 +276,21 @@ class StorageService {
       const data = localStorage.getItem(STORAGE_KEYS.LEAVE_REQUESTS);
       if (data) {
         const list: LeaveRequest[] = JSON.parse(data);
-        return sortNewestFirst(list.map((r) => ({ ...r, id: formatDocId(r.id) })));
+        const map = new Map<string, LeaveRequest>();
+        for (const r of list) {
+          const normId = formatDocId(r.id);
+          const existing = map.get(normId);
+          if (!existing) {
+            map.set(normId, { ...r, id: normId });
+          } else {
+            const existingTime = new Date(existing.updatedAt || existing.createdAt || 0).getTime();
+            const newTime = new Date(r.updatedAt || r.createdAt || 0).getTime();
+            if (newTime >= existingTime) {
+              map.set(normId, { ...r, id: normId });
+            }
+          }
+        }
+        return sortNewestFirst(Array.from(map.values()));
       }
     } catch {}
     return [];
@@ -320,20 +334,32 @@ class StorageService {
       const data = localStorage.getItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS);
       if (data) {
         const parsed: AttendanceConfirm[] = JSON.parse(data);
+        const map = new Map<string, AttendanceConfirm>();
         let modified = false;
-        parsed.forEach((c) => {
-          c.id = formatDocId(c.id);
+        for (const c of parsed) {
+          const normId = formatDocId(c.id);
           c.steps?.forEach((s) => {
             if (s.roleRequired === 'accountant' && (s.approverName === 'Bộ phận Kế toán Tiền lương' || !s.approverName)) {
               s.approverName = 'Bộ phận Kế toán Tài chính';
               modified = true;
             }
           });
-        });
-        if (modified) {
-          localStorage.setItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS, JSON.stringify(parsed));
+          const existing = map.get(normId);
+          if (!existing) {
+            map.set(normId, { ...c, id: normId });
+          } else {
+            const existingTime = new Date(existing.updatedAt || existing.createdAt || 0).getTime();
+            const newTime = new Date(c.updatedAt || c.createdAt || 0).getTime();
+            if (newTime >= existingTime) {
+              map.set(normId, { ...c, id: normId });
+            }
+          }
         }
-        return parsed;
+        const result = Array.from(map.values());
+        if (modified || result.length !== parsed.length) {
+          localStorage.setItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS, JSON.stringify(result));
+        }
+        return sortNewestFirst(result);
       }
     } catch {}
     return [];
@@ -377,7 +403,21 @@ class StorageService {
       const data = localStorage.getItem(STORAGE_KEYS.GATE_PASSES);
       if (data) {
         const passes: GatePass[] = JSON.parse(data);
-        return sortNewestFirst(passes.map((p) => ({ ...p, id: formatDocId(p.id) })));
+        const map = new Map<string, GatePass>();
+        for (const p of passes) {
+          const normId = formatDocId(p.id);
+          const existing = map.get(normId);
+          if (!existing) {
+            map.set(normId, { ...p, id: normId });
+          } else {
+            const existingTime = new Date(existing.updatedAt || existing.createdAt || 0).getTime();
+            const newTime = new Date(p.updatedAt || p.createdAt || 0).getTime();
+            if (newTime >= existingTime) {
+              map.set(normId, { ...p, id: normId });
+            }
+          }
+        }
+        return sortNewestFirst(Array.from(map.values()));
       }
     } catch {}
     return [];
@@ -723,22 +763,22 @@ class StorageService {
       if (Array.isArray(leaveRequests)) {
         const local = this.getLeaveRequests();
         const map = new Map<string, LeaveRequest>();
-        local.forEach((r) => map.set(r.id, r));
-        leaveRequests.forEach((r) => map.set(r.id, r));
+        local.forEach((r) => map.set(formatDocId(r.id), { ...r, id: formatDocId(r.id) }));
+        leaveRequests.forEach((r) => map.set(formatDocId(r.id), { ...r, id: formatDocId(r.id) }));
         localStorage.setItem(STORAGE_KEYS.LEAVE_REQUESTS, JSON.stringify(Array.from(map.values())));
       }
       if (Array.isArray(gatePasses)) {
         const local = this.getGatePasses();
         const map = new Map<string, GatePass>();
-        local.forEach((p) => map.set(p.id, p));
-        gatePasses.forEach((p) => map.set(p.id, p));
+        local.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
+        gatePasses.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
         localStorage.setItem(STORAGE_KEYS.GATE_PASSES, JSON.stringify(Array.from(map.values())));
       }
       if (Array.isArray(attendanceConfirms)) {
         const local = this.getAttendanceConfirms();
         const map = new Map<string, AttendanceConfirm>();
-        local.forEach((a) => map.set(a.id, a));
-        attendanceConfirms.forEach((a) => map.set(a.id, a));
+        local.forEach((a) => map.set(formatDocId(a.id), { ...a, id: formatDocId(a.id) }));
+        attendanceConfirms.forEach((a) => map.set(formatDocId(a.id), { ...a, id: formatDocId(a.id) }));
         localStorage.setItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS, JSON.stringify(Array.from(map.values())));
       }
       if (emailConfig && emailConfig.googleScriptUrl) {

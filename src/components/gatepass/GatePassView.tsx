@@ -32,6 +32,7 @@ import {
   LogOut,
   LogIn,
   Trash2,
+  RotateCcw,
 } from 'lucide-react';
 import { formatDate, formatDateTime, generateDocId } from '@/lib/utils';
 import { generateQrDataUrl, getQrConfirmUrl } from '@/lib/qr';
@@ -64,6 +65,15 @@ export function GatePassView() {
   const [qrModalUrl, setQrModalUrl] = useState<string | null>(null);
   const [isRejecting, setIsRejecting] = useState(false);
   const [passRejectionReason, setPassRejectionReason] = useState('');
+
+  // Listen for storage changes to keep gate passes synchronized
+  React.useEffect(() => {
+    const handleStorageChange = () => {
+      setPasses(storage.getGatePasses());
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   // Security Gate scan input
   const [scanCode, setScanCode] = useState('');
@@ -811,15 +821,21 @@ export function GatePassView() {
     return filterUserGatePasses(passes, currentUser, scopeFilter);
   }, [passes, currentUser, scopeFilter]);
 
-  const filtered = userVisiblePasses.filter((p) => {
-    const matchesSearch =
-      p.employeeName.toLowerCase().includes(search.toLowerCase()) ||
-      p.employeeId.toLowerCase().includes(search.toLowerCase()) ||
-      p.id.toLowerCase().includes(search.toLowerCase()) ||
-      p.purpose.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    return userVisiblePasses.filter((p) => {
+      const matchesSearch =
+        !q ||
+        p.id.toLowerCase().includes(q) ||
+        p.employeeName.toLowerCase().includes(q) ||
+        p.employeeId.toLowerCase().includes(q) ||
+        p.department.toLowerCase().includes(q) ||
+        (p.purpose && p.purpose.toLowerCase().includes(q));
+
+      const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [userVisiblePasses, search, statusFilter]);
 
   return (
     <div className="space-y-6">
@@ -951,7 +967,23 @@ export function GatePassView() {
                 <option value="approved">Đã duyệt (Có hiệu lực QR)</option>
                 <option value="departed">Đang ở ngoài (Đã ra cổng)</option>
                 <option value="completed">Đã về lại (Hoàn tất)</option>
+                <option value="rejected">Bị từ chối</option>
               </select>
+
+              {(statusFilter !== 'all' || search.trim() !== '') && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStatusFilter('all');
+                    setSearch('');
+                  }}
+                  className="flex items-center gap-1 px-3 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-xl transition-colors cursor-pointer"
+                  title="Đặt lại bộ lọc"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Đặt lại</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -980,9 +1012,9 @@ export function GatePassView() {
                       </td>
                     </tr>
                   ) : (
-                    filtered.map((item) => (
+                    filtered.map((item, idx) => (
                       <tr
-                        key={item.id}
+                        key={`${item.id}-${idx}`}
                         className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 cursor-pointer transition-colors"
                         onClick={() => setSelectedPass(item)}
                       >

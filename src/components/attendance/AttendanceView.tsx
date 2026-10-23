@@ -67,6 +67,15 @@ export function AttendanceView() {
     }
   }, [isAccountant, isIT]);
 
+  // Listen for storage changes to keep attendances synchronized
+  React.useEffect(() => {
+    const handleStorageChange = () => {
+      setAttendances(storage.getAttendanceConfirms());
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   // Count attendance slips waiting for Accountant to record card fee (Step 3)
   const pendingAccountantCount = useMemo(() => {
     if (!currentUser) return 0;
@@ -687,15 +696,22 @@ export function AttendanceView() {
     return filterUserAttendances(attendances, currentUser, scopeFilter);
   }, [attendances, currentUser, scopeFilter]);
 
-  const filtered = userVisibleAttendances.filter((item) => {
-    const matchesSearch =
-      item.employeeName.toLowerCase().includes(search.toLowerCase()) ||
-      item.employeeId.toLowerCase().includes(search.toLowerCase()) ||
-      item.department.toLowerCase().includes(search.toLowerCase());
-    const matchesIssue = issueFilter === 'all' || item.issueType === issueFilter;
-    const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
-    return matchesSearch && matchesIssue && matchesStatus;
-  });
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    return userVisibleAttendances.filter((item) => {
+      const matchesSearch =
+        !q ||
+        item.id.toLowerCase().includes(q) ||
+        item.employeeName.toLowerCase().includes(q) ||
+        item.employeeId.toLowerCase().includes(q) ||
+        item.department.toLowerCase().includes(q) ||
+        (item.reason && item.reason.toLowerCase().includes(q));
+
+      const matchesIssue = issueFilter === 'all' || item.issueType === issueFilter;
+      const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
+      return matchesSearch && matchesIssue && matchesStatus;
+    });
+  }, [userVisibleAttendances, search, issueFilter, statusFilter]);
 
   return (
     <div className="space-y-6">
@@ -867,13 +883,27 @@ export function AttendanceView() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none"
+            className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="pending">Chờ xử lý</option>
             <option value="approved">Đã hoàn thành</option>
             <option value="rejected">Bị từ chối</option>
           </select>
+
+          {(statusFilter !== 'all' || issueFilter !== 'all' || search.trim() !== '') && (
+            <button
+              type="button"
+              onClick={() => {
+                setStatusFilter('all');
+                setIssueFilter('all');
+                setSearch('');
+              }}
+              className="text-xs text-amber-600 dark:text-amber-400 hover:underline px-2 py-1 font-semibold whitespace-nowrap cursor-pointer"
+            >
+              Đặt lại
+            </button>
+          )}
         </div>
       </div>
 
@@ -902,9 +932,9 @@ export function AttendanceView() {
                   </td>
                 </tr>
               ) : (
-                filtered.map((item) => (
+                filtered.map((item, idx) => (
                   <tr
-                    key={item.id}
+                    key={`${item.id}-${idx}`}
                     onClick={() => setSelectedItem(item)}
                     className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 cursor-pointer transition-colors"
                   >
