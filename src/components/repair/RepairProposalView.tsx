@@ -18,7 +18,7 @@ import {
   DocumentScope,
 } from '@/lib/permissions';
 import { generateDocId, formatDateTime, formatDate } from '@/lib/utils';
-import { dispatchApprovalEmail } from '@/lib/email';
+import { dispatchApprovalEmail, dispatchMaintenanceNotificationEmail } from '@/lib/email';
 import { ToastContainer, useToast } from '@/components/common/Toast';
 import {
   Wrench,
@@ -44,6 +44,23 @@ import {
   Check,
 } from 'lucide-react';
 
+
+const capitalizeFirstLetter = (text: string) => {
+  if (!text) return text;
+  return text
+    .split('\n')
+    .map((line) => {
+      const trimmedIndex = line.search(/\S/);
+      if (trimmedIndex === -1) return line;
+      return (
+        line.slice(0, trimmedIndex) +
+        line.charAt(trimmedIndex).toUpperCase() +
+        line.slice(trimmedIndex + 1)
+      );
+    })
+    .join('\n');
+};
+
 export function RepairProposalView() {
   const { currentUser } = useAuth();
   const { toasts, showToast, dismissToast } = useToast();
@@ -62,7 +79,7 @@ export function RepairProposalView() {
   const [department, setDepartment] = useState(() => currentUser?.department || 'Xưởng Sản Xuất 1 (Cơ Khí & CNC)');
   const [location, setLocation] = useState('');
   const [issueDescription, setIssueDescription] = useState('');
-  const [proposedSolution, setProposedSolution] = useState('');
+  const [modalProposedSolution, setModalProposedSolution] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Table Filter & Search
@@ -93,6 +110,15 @@ export function RepairProposalView() {
       if (fresh) setSelectedProposal(fresh);
     }
   }, [proposals]);
+
+  // Sync manager proposal solution on select
+  useEffect(() => {
+    if (selectedProposal) {
+      setModalProposedSolution(selectedProposal.proposedSolution || '');
+    } else {
+      setModalProposedSolution('');
+    }
+  }, [selectedProposal]);
 
   const departments = useMemo(() => storage.getDepartments(), []);
   const allUsers = useMemo(() => storage.getUsers(), []);
@@ -215,9 +241,8 @@ export function RepairProposalView() {
         employeeId: currentUser.id,
         employeeName: currentUser.name,
         department: department.trim(),
-        location: location.trim(),
-        issueDescription: issueDescription.trim(),
-        proposedSolution: proposedSolution.trim() || undefined,
+        location: capitalizeFirstLetter(location.trim()),
+        issueDescription: capitalizeFirstLetter(issueDescription.trim()),
         status: 'pending_manager',
         steps,
         currentStepIndex: 1, // At step 2: Trưởng bộ phận duyệt
@@ -244,7 +269,7 @@ export function RepairProposalView() {
               { label: 'Tổ / Bộ phận', value: newProposal.department },
               { label: 'Khu vực thiết bị hỏng', value: newProposal.location },
               { label: 'Tình trạng sự việc', value: newProposal.issueDescription },
-              { label: 'Hướng khắc phục đề xuất', value: newProposal.proposedSolution || 'Không có đề xuất' },
+              { label: 'Đề xuất hướng khắc phục', value: '(Trưởng bộ phận nhập khi duyệt đơn)' },
               { label: 'Thời gian gửi', value: formatDateTime(now) },
             ],
           },
@@ -260,7 +285,6 @@ export function RepairProposalView() {
       // Reset form
       setLocation('');
       setIssueDescription('');
-      setProposedSolution('');
       // Switch to tracking tab
       setActiveTab('list');
     } catch (err: any) {
@@ -297,8 +321,17 @@ export function RepairProposalView() {
     updated.managerComment = managerComment.trim();
 
     if (isApprove) {
+      if (modalProposedSolution.trim()) {
+        updated.proposedSolution = capitalizeFirstLetter(modalProposedSolution.trim());
+      }
       updated.status = 'maintenance_pending';
       updated.currentStepIndex = 2; // Move to Step 3: Cơ điện sửa chữa
+
+      // Dispatch notification email to Head of Maintenance
+      dispatchMaintenanceNotificationEmail(updated).catch((err) =>
+        console.warn('Maintenance notification email error:', err)
+      );
+
       showToast({
         type: 'success',
         title: 'Phê duyệt thành công',
@@ -409,7 +442,7 @@ export function RepairProposalView() {
                 Phiếu đề xuất sửa chữa
               </h1>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Chọn Tổ/bộ phận mô tả tình trạng sự việc, khu vực và hướng khắc phục đề xuất, rồi bấm "Gửi đề xuất". Trưởng bộ phận của Tổ đã chọn sẽ nhận email để duyệt.
+                Chọn Tổ/bộ phận, mô tả khu vực và tình trạng sự việc, rồi bấm "Gửi đề xuất". Trưởng bộ phận của Tổ đã chọn sẽ nhận email để duyệt và đề xuất hướng khắc phục.
               </p>
             </div>
           </div>
@@ -583,7 +616,8 @@ export function RepairProposalView() {
                 type="text"
                 required
                 value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={(e) => setLocation(capitalizeFirstLetter(e.target.value))}
+                onBlur={() => setLocation((prev) => capitalizeFirstLetter(prev.trim()))}
                 placeholder="Ví dụ: Máy tiện CNC 02 - Xưởng 1, Quạt thông gió line 3, Trạm bơm khí nén..."
                 className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
               />
@@ -596,36 +630,21 @@ export function RepairProposalView() {
                 <span>Tình trạng sự việc</span>
                 <span className="text-rose-500 font-bold">*</span>
                 <span className="text-[10px] font-normal text-slate-400 ml-1">
-                  (Mô tả hiện tượng hỏng hóc, sự cố - Bắt buộc)
+                  (Mô tả hiện tượng hỏng hóc, sự cố - ý kiến đề xuất xử lý - Bắt buộc)
                 </span>
               </label>
               <textarea
                 required
                 rows={4}
                 value={issueDescription}
-                onChange={(e) => setIssueDescription(e.target.value)}
-                placeholder="Mô tả chi tiết tình trạng sự việc thiết bị gặp phải, triệu chứng hư hỏng, thời điểm phát hiện, ảnh hưởng tới sản xuất..."
+                onChange={(e) => setIssueDescription(capitalizeFirstLetter(e.target.value))}
+                onBlur={() => setIssueDescription((prev) => capitalizeFirstLetter(prev.trim()))}
+                placeholder="Mô tả chi tiết tình trạng sự việc thiết bị gặp phải, triệu chứng hư hỏng, thời điểm phát hiện, ý kiến đề xuất xử lý..."
                 className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-y"
               />
             </div>
 
-            {/* Field 4: Đề xuất hướng khắc phục */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
-                <Lightbulb className="w-3.5 h-3.5 text-blue-500" />
-                <span>Đề xuất hướng khắc phục</span>
-                <span className="text-[10px] font-normal text-slate-400 ml-1">
-                  (Ý kiến đề xuất xử lý - Không bắt buộc)
-                </span>
-              </label>
-              <textarea
-                rows={3}
-                value={proposedSolution}
-                onChange={(e) => setProposedSolution(e.target.value)}
-                placeholder="Gợi ý phương án sửa chữa, thay thế linh kiện, căn chỉnh hoặc lưu ý thêm cho bộ phận Cơ điện (nếu có)..."
-                className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-y"
-              />
-            </div>
+
 
             {/* Actions */}
             <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3">
@@ -634,7 +653,6 @@ export function RepairProposalView() {
                 onClick={() => {
                   setLocation('');
                   setIssueDescription('');
-                  setProposedSolution('');
                 }}
                 className="px-4 py-2.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
               >
@@ -1056,14 +1074,21 @@ export function RepairProposalView() {
                   </div>
 
                   {!isRejecting ? (
-                    <div>
-                      <input
-                        type="text"
-                        value={managerComment}
-                        onChange={(e) => setManagerComment(e.target.value)}
-                        placeholder="Ý kiến phê duyệt (tùy chọn)..."
-                        className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs mb-3 text-slate-800 dark:text-white"
-                      />
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1.5">
+                          <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+                          <span>Đề xuất hướng khắc phục (chỉ đạo cho Cơ điện):</span>
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={modalProposedSolution}
+                          onChange={(e) => setModalProposedSolution(capitalizeFirstLetter(e.target.value))}
+                          onBlur={() => setModalProposedSolution((prev) => capitalizeFirstLetter(prev.trim()))}
+                          placeholder="Nhập đề xuất hướng khắc phục, phương án xử lý chỉ đạo cho Bộ phận Cơ điện..."
+                          className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-y"
+                        />
+                      </div>
                       <div className="flex items-center gap-2">
                         <button
                           type="button"

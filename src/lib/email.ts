@@ -1,5 +1,7 @@
 import { storage } from './storage';
 import { SendEmailPayload, EmailConfig } from '@/types/email';
+import { RepairProposal } from '@/types/repair';
+import { formatDateTime } from './utils';
 
 export function generateMailtoUrl(payload: SendEmailPayload, baseUrl: string): string {
   const typeTitle =
@@ -438,4 +440,126 @@ export async function dispatchCBNotificationEmail(payload: DispatchCBPayload): P
   }
 
   return { success: successCount > 0, count: successCount };
+}
+
+/**
+ * Dispatch notification email to Head of Maintenance (Cơ điện & Bảo trì)
+ * when Department Head has approved the repair proposal.
+ */
+export async function dispatchMaintenanceNotificationEmail(
+  proposal: RepairProposal
+): Promise<{ success: boolean; toEmail: string }> {
+  const config = storage.getEmailConfig();
+  const allUsers = storage.getUsers();
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const baseUrl = config.portalBaseUrl || origin || 'https://longkhai-portal.vercel.app';
+
+  // Find Maintenance Manager (Trưởng phòng Cơ điện / Cơ điện & Bảo trì)
+  const maintenanceManager =
+    allUsers.find(
+      (u) =>
+        (u.position && /trưởng phòng cơ điện|truong phong co dien/i.test(u.position)) ||
+        (u.department && /cơ điện|co dien|bảo trì/i.test(u.department) && (u.role === 'manager' || u.role === 'admin'))
+    ) || allUsers.find((u) => u.id === '2409');
+
+  const toEmail = maintenanceManager?.email || 'tai.trinh@longkhai.com.vn';
+  const managerName = maintenanceManager?.name || 'Trưởng phòng Cơ điện';
+
+  const subject = `[Long Khải Portal] Yêu cầu sửa chữa thiết bị: Mã ${proposal.id} - ${proposal.location} (${proposal.department})`;
+
+  const viewUrl = `${baseUrl}`;
+
+  const html = `
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <title>${subject}</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #334155; line-height: 1.6;">
+  <div style="max-width: 600px; margin: 30px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0;">
+    <div style="background: linear-gradient(135deg, #d97706 0%, #b45309 100%); padding: 26px 20px; text-align: center; color: #ffffff;">
+      <h1 style="margin: 0; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+        YÊU CẦU SỬA CHỮA THIẾT BỊ
+      </h1>
+      <p style="margin: 6px 0 0 0; font-size: 12px; opacity: 0.95;">
+        Mã phiếu: <b>${proposal.id}</b> &bull; Đã được Trưởng bộ phận phê duyệt
+      </p>
+    </div>
+
+    <div style="padding: 24px;">
+      <p style="font-size: 14px; margin-top: 0;">
+        Kính gửi <b>${managerName}</b>,
+      </p>
+      <p style="font-size: 13px; color: #475569;">
+        Đề xuất sửa chữa từ nhân viên <b>${proposal.employeeName}</b> (${proposal.employeeId}) thuộc <b>${proposal.department}</b> đã được Trưởng bộ phận <b>${proposal.managerName || 'phê duyệt'}</b> vào lúc <b>${formatDateTime(proposal.managerApprovedAt)}</b>.
+      </p>
+
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin: 18px 0; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+        <tbody>
+          <tr style="background-color: #f8fafc;">
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569; width: 38%;">Mã phiếu</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: bold; color: #d97706; font-family: monospace;">${proposal.id}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569;">Người đề xuất</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: bold; color: #0284c7;">${proposal.employeeName} (${proposal.employeeId})</td>
+          </tr>
+          <tr style="background-color: #f8fafc;">
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569;">Tổ / Bộ phận</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0;">${proposal.department}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569;">Khu vực thiết bị hỏng</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #e11d48;">${proposal.location}</td>
+          </tr>
+          <tr style="background-color: #f8fafc;">
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569;">Tình trạng sự việc</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; color: #1e293b; white-space: pre-line;">${proposal.issueDescription}</td>
+          </tr>
+          <tr style="background-color: #fef3c7;">
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 700; color: #92400e;">Đề xuất hướng khắc phục (Trưởng BP đã duyệt)</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #92400e; white-space: pre-line;">${proposal.proposedSolution || proposal.managerComment || 'Chưa có ghi chú'}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 14px; font-weight: 600; color: #475569;">Thời gian gửi</td>
+            <td style="padding: 10px 14px; color: #64748b;">${formatDateTime(proposal.createdAt)}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="text-align: center; margin: 26px 0 10px 0;">
+        <a href="${viewUrl}" style="display: inline-block; background-color: #d97706; color: #ffffff; text-decoration: none; padding: 12px 28px; font-size: 13px; font-weight: 700; border-radius: 12px; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);">
+          TIẾP NHẬN & CẬP NHẬT KẾT QUẢ SỬA CHỮA
+        </a>
+      </div>
+
+      <div style="text-align: center; margin-top: 24px; padding-top: 18px; border-top: 1px dashed #cbd5e1; font-size: 12px; color: #64748b;">
+        Hệ thống Quản trị & Điều hành Nội bộ Long Khải Portal &bull; Tự động thông báo
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  try {
+    await fetch('/api/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        toEmail,
+        subject,
+        html,
+        type: 'repair',
+        docId: proposal.id,
+        employeeName: proposal.employeeName,
+        emailConfig: config,
+      }),
+    });
+    return { success: true, toEmail };
+  } catch (err: any) {
+    console.warn('Lỗi dispatchMaintenanceNotificationEmail:', err);
+    return { success: false, toEmail };
+  }
 }

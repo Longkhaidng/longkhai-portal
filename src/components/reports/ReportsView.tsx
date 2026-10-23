@@ -412,33 +412,33 @@ export function ReportsView() {
         ];
       });
     } else if (reportType === 'repair') {
-      title = 'TỔNG HỢP ĐỀ XUẤT SỬA CHỮA';
+      title = 'ĐỀ XUẤT SỬA CHỮA';
       fileName = `LONGKHAI_Bao_Cao_DE_XUAT_SUA_CHUA_${nowStr}`;
       headers = [
         'STT',
         'Mã phiếu',
-        'Mã NV',
-        'Họ và tên',
-        'Tổ / Bộ phận',
-        'Khu vực thiết bị hỏng',
-        'Tình trạng sự việc',
-        'Đề xuất khắc phục',
-        'Trạng thái',
         'Thời gian gửi',
-        'Ghi chú Cơ điện',
+        'MSNV',
+        'Họ tên nhân viên',
+        'Tổ / Bộ phận',
+        'Khu vực thiết bị',
+        'Tình trạng sự việc',
+        'Đề xuất hướng khắc phục',
+        'Trạng thái',
+        'Thời gian hoàn thành',
       ];
       rows = filteredRepairs.map((p, idx) => [
         idx + 1,
         p.id,
+        formatDateTime(p.createdAt),
         p.employeeId,
         p.employeeName,
         p.department,
         p.location,
         p.issueDescription,
-        p.proposedSolution || '',
+        p.proposedSolution || p.managerComment || '',
         REPAIR_STATUS_LABELS[p.status] || p.status,
-        formatDateTime(p.createdAt),
-        p.maintenanceNotes || '',
+        p.creatorConfirmedAt ? formatDateTime(p.creatorConfirmedAt) : '',
       ]);
     } else if (reportType === 'departments') {
       title = 'CƠ CẤU PHÒNG BAN';
@@ -798,6 +798,8 @@ export function ReportsView() {
               ? 'XÁC NHẬN CÔNG'
               : reportType === 'gate_pass'
               ? 'RA VÀO CỔNG & TÀI SẢN'
+              : reportType === 'repair'
+              ? 'ĐỀ XUẤT SỬA CHỮA'
               : 'CƠ CẤU PHÒNG BAN'}
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -1116,19 +1118,21 @@ export function ReportsView() {
                 <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
                   <th className="p-2 border text-center w-12">STT</th>
                   <th className="p-2 border">Mã phiếu</th>
-                  <th className="p-2 border">Người đề xuất</th>
+                  <th className="p-2 border">Thời gian gửi</th>
+                  <th className="p-2 border">MSNV</th>
+                  <th className="p-2 border">Họ tên nhân viên</th>
                   <th className="p-2 border">Tổ / Bộ phận</th>
                   <th className="p-2 border">Khu vực thiết bị</th>
                   <th className="p-2 border">Tình trạng sự việc</th>
-                  <th className="p-2 border">Đề xuất khắc phục</th>
+                  <th className="p-2 border">Đề xuất hướng khắc phục</th>
                   <th className="p-2 border">Trạng thái</th>
-                  <th className="p-2 border">Thời gian gửi</th>
+                  <th className="p-2 border">Thời gian hoàn thành</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredRepairs.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="p-8 text-center text-slate-400">
+                    <td colSpan={11} className="p-8 text-center text-slate-400">
                       Không tìm thấy đề xuất sửa chữa nào phù hợp với bộ lọc.
                     </td>
                   </tr>
@@ -1144,16 +1148,20 @@ export function ReportsView() {
                       <tr key={p.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
                         <td className="p-2 border text-center font-bold text-slate-500">{idx + 1}</td>
                         <td className="p-2 border font-mono font-bold text-amber-600">{p.id}</td>
-                        <td className="p-2 border font-semibold text-slate-900 dark:text-white">
-                          {p.employeeName} ({p.employeeId})
+                        <td className="p-2 border text-[11px] text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                          {formatDateTime(p.createdAt)}
+                        </td>
+                        <td className="p-2 border font-mono text-slate-700 dark:text-slate-300">{p.employeeId}</td>
+                        <td className="p-2 border font-bold text-slate-900 dark:text-white">
+                          {p.employeeName}
                         </td>
                         <td className="p-2 border">{p.department}</td>
                         <td className="p-2 border font-medium text-slate-800 dark:text-slate-200">{p.location}</td>
-                        <td className="p-2 border max-w-xs truncate" title={p.issueDescription}>
+                        <td className="p-2 border max-w-xs whitespace-pre-line" title={p.issueDescription}>
                           {p.issueDescription}
                         </td>
-                        <td className="p-2 border max-w-xs truncate" title={p.proposedSolution || ''}>
-                          {p.proposedSolution || '-'}
+                        <td className="p-2 border max-w-xs whitespace-pre-line text-slate-700 dark:text-slate-300" title={p.proposedSolution || p.managerComment || ''}>
+                          {p.proposedSolution || p.managerComment || '-'}
                         </td>
                         <td className="p-2 border">
                           <span
@@ -1162,8 +1170,8 @@ export function ReportsView() {
                             {badge.label}
                           </span>
                         </td>
-                        <td className="p-2 border text-[11px] text-slate-500">
-                          {formatDateTime(p.createdAt)}
+                        <td className="p-2 border text-[11px] text-slate-600 dark:text-slate-400 whitespace-nowrap">
+                          {p.creatorConfirmedAt ? formatDateTime(p.creatorConfirmedAt) : '-'}
                         </td>
                       </tr>
                     );

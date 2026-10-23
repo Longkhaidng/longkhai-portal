@@ -68,13 +68,172 @@ function findAndLoadDoc(type: 'leave' | 'gate_pass' | 'attendance' | 'repair', d
   return null;
 }
 
+// Background email sender to Head of Maintenance
+async function sendMaintenanceEmailServer(doc: any) {
+  try {
+    let emailConfig: any = null;
+    const cfgPath = fs.existsSync(path.join('/tmp', 'email-config.json'))
+      ? path.join('/tmp', 'email-config.json')
+      : path.join(BASE_DIR, 'settings', 'email-config.json');
+    if (fs.existsSync(cfgPath)) {
+      try {
+        emailConfig = JSON.parse(fs.readFileSync(cfgPath, 'utf-8'));
+      } catch {}
+    }
+
+    let toEmail = 'tai.trinh@longkhai.com.vn';
+    let managerName = 'Trưởng phòng Cơ điện';
+
+    // Find maintenance manager from users.json
+    const usersPath = fs.existsSync(path.join(TMP_DIR, 'settings', 'users.json'))
+      ? path.join(TMP_DIR, 'settings', 'users.json')
+      : path.join(BASE_DIR, 'settings', 'users.json');
+    if (fs.existsSync(usersPath)) {
+      try {
+        const users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
+        if (Array.isArray(users)) {
+          const foundM =
+            users.find((u) => u.position && /trưởng phòng cơ điện|truong phong co dien/i.test(u.position)) ||
+            users.find((u) => u.department && /cơ điện|co dien|bảo trì/i.test(u.department) && u.role === 'manager') ||
+            users.find((u) => u.id === '2409');
+          if (foundM?.email) {
+            toEmail = foundM.email;
+            managerName = foundM.name || managerName;
+          }
+        }
+      } catch {}
+    }
+
+    const subject = `[Long Khải Portal] Yêu cầu sửa chữa thiết bị: Mã ${doc.id} - ${doc.location} (${doc.department})`;
+    const baseUrl = emailConfig?.portalBaseUrl || 'https://longkhai-portal.vercel.app';
+
+    const html = `
+<!DOCTYPE html>
+<html lang="vi">
+<head><meta charset="utf-8"><title>${subject}</title></head>
+<body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #334155; line-height: 1.6;">
+  <div style="max-width: 600px; margin: 30px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0;">
+    <div style="background: linear-gradient(135deg, #d97706 0%, #b45309 100%); padding: 26px 20px; text-align: center; color: #ffffff;">
+      <h1 style="margin: 0; font-size: 18px; font-weight: 800; text-transform: uppercase;">YÊU CẦU SỬA CHỮA THIẾT BỊ</h1>
+      <p style="margin: 6px 0 0 0; font-size: 12px; opacity: 0.95;">Mã phiếu: <b>${doc.id}</b> &bull; Đã được Trưởng bộ phận phê duyệt</p>
+    </div>
+    <div style="padding: 24px;">
+      <p style="font-size: 14px; margin-top: 0;">Kính gửi <b>${managerName}</b>,</p>
+      <p style="font-size: 13px; color: #475569;">
+        Đề xuất sửa chữa từ nhân viên <b>${doc.employeeName}</b> (${doc.employeeId}) thuộc <b>${doc.department}</b> đã được Trưởng bộ phận <b>${doc.managerName || 'phê duyệt'}</b>.
+      </p>
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin: 18px 0; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+        <tbody>
+          <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600; width: 38%;">Mã phiếu</td><td style="padding: 10px 14px; font-weight: bold; color: #d97706;">${doc.id}</td></tr>
+          <tr><td style="padding: 10px 14px; font-weight: 600;">Người đề xuất</td><td style="padding: 10px 14px; font-weight: bold; color: #0284c7;">${doc.employeeName} (${doc.employeeId})</td></tr>
+          <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600;">Tổ / Bộ phận</td><td style="padding: 10px 14px;">${doc.department}</td></tr>
+          <tr><td style="padding: 10px 14px; font-weight: 600;">Khu vực thiết bị hỏng</td><td style="padding: 10px 14px; font-weight: bold; color: #e11d48;">${doc.location}</td></tr>
+          <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600;">Tình trạng sự việc</td><td style="padding: 10px 14px; white-space: pre-line;">${doc.issueDescription}</td></tr>
+          <tr style="background-color: #fef3c7;"><td style="padding: 10px 14px; font-weight: 700; color: #92400e;">Đề xuất hướng khắc phục (Trưởng BP đã duyệt)</td><td style="padding: 10px 14px; font-weight: 600; color: #92400e; white-space: pre-line;">${doc.proposedSolution || doc.managerComment || 'Không có ghi chú'}</td></tr>
+        </tbody>
+      </table>
+      <div style="text-align: center; margin: 24px 0 10px 0;">
+        <a href="${baseUrl}" style="display: inline-block; background-color: #d97706; color: #ffffff; text-decoration: none; padding: 12px 28px; font-size: 13px; font-weight: 700; border-radius: 12px;">
+          TIẾP NHẬN & CẬP NHẬT KẾT QUẢ SỬA CHỮA
+        </a>
+      </div>
+      <div style="text-align: center; margin-top: 24px; padding-top: 18px; border-top: 1px dashed #cbd5e1; font-size: 12px; color: #64748b;">
+        Hệ thống Quản trị & Điều hành Nội bộ Long Khải Portal &bull; Tự động thông báo
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+    if (emailConfig?.googleScriptUrl) {
+      fetch(emailConfig.googleScriptUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: toEmail,
+          subject,
+          html,
+          fromName: emailConfig.senderName || 'Cổng Thông Tin Long Khải',
+        }),
+      }).catch(console.error);
+    } else if (emailConfig?.smtpUser && emailConfig?.smtpPassword) {
+      try {
+        const nodemailer = require('nodemailer');
+        const transporter = nodemailer.createTransport({
+          host: emailConfig.smtpHost || 'smtp.gmail.com',
+          port: emailConfig.smtpPort || 587,
+          secure: emailConfig.smtpSecure || false,
+          auth: { user: emailConfig.smtpUser, pass: emailConfig.smtpPassword },
+        });
+        transporter.sendMail({
+          from: `"${emailConfig.senderName || 'Cổng Thông Tin Long Khải'}" <${emailConfig.senderEmail || emailConfig.smtpUser}>`,
+          to: toEmail,
+          subject,
+          html,
+        }).catch(console.error);
+      } catch {}
+    }
+  } catch (err: any) {
+    console.warn('sendMaintenanceEmailServer error:', err.message);
+  }
+}
+
+// GET: Fetch document details for online approval page
+export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const type = searchParams.get('type') as 'leave' | 'gate_pass' | 'attendance' | 'repair' | null;
+    const id = searchParams.get('id');
+
+    if (!type || !id) {
+      return NextResponse.json({ success: false, message: 'Thiếu tham số' }, { status: 400 });
+    }
+
+    const docId = id.trim().toUpperCase();
+    const found = findAndLoadDoc(type, docId);
+
+    if (found?.doc) {
+      return NextResponse.json({ success: true, doc: found.doc });
+    }
+
+    // Try GitHub if configured
+    const gitConfig = resolveServerGitHubConfig();
+    if (gitConfig.token && gitConfig.owner && gitConfig.repo) {
+      const ghService = new GitHubService(gitConfig);
+      const subDir =
+        type === 'leave'
+          ? 'leave-request'
+          : type === 'gate_pass'
+          ? 'gate-pass'
+          : type === 'attendance'
+          ? 'attendance'
+          : 'repair-proposal';
+      const year = new Date().getFullYear();
+      const possibleRelPath = `${subDir}/${year}/${docId}.json`;
+      const ghFile = await ghService.getFile(`${gitConfig.basePath || 'company-data'}/${possibleRelPath}`);
+      if (ghFile?.content) {
+        try {
+          return NextResponse.json({ success: true, doc: JSON.parse(ghFile.content) });
+        } catch {}
+      }
+    }
+
+    return NextResponse.json({ success: false, message: `Không tìm thấy hồ sơ ${docId}` }, { status: 404 });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, message: err.message }, { status: 500 });
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { type, id, action } = body as {
+    const { type, id, action, proposedSolution, comment } = body as {
       type: 'leave' | 'gate_pass' | 'attendance' | 'repair';
       id: string;
       action: 'approve' | 'reject';
+      proposedSolution?: string;
+      comment?: string;
     };
 
     if (!type || !id || !action) {
@@ -233,20 +392,27 @@ export async function POST(req: NextRequest) {
       doc.updatedAt = now;
     } else if (type === 'repair') {
       const stepIndex = 1; // Step 2: Trưởng bộ phận duyệt (0-indexed: index 1)
+      const finalProposal = (proposedSolution || comment || '').trim();
       if (Array.isArray(doc.steps) && doc.steps[stepIndex]) {
         doc.steps[stepIndex].status = isApprove ? 'approved' : 'rejected';
-        doc.steps[stepIndex].approverName = 'Trưởng bộ phận (Email)';
-        doc.steps[stepIndex].comment = isApprove ? 'Đồng ý phê duyệt (qua Email)' : 'Từ chối (qua Email)';
+        doc.steps[stepIndex].approverName = 'Trưởng bộ phận';
+        doc.steps[stepIndex].comment = isApprove
+          ? finalProposal || 'Đồng ý phê duyệt đề xuất sửa chữa'
+          : finalProposal || 'Từ chối (qua Email)';
         doc.steps[stepIndex].updatedAt = now;
       }
       doc.managerApprovedAt = now;
-      doc.managerName = 'Trưởng bộ phận (Email)';
+      doc.managerName = doc.managerName || 'Trưởng bộ phận';
+      if (finalProposal) {
+        doc.proposedSolution = finalProposal;
+        doc.managerComment = finalProposal;
+      }
       if (isApprove) {
         doc.status = 'maintenance_pending';
         doc.currentStepIndex = 2; // Step 3: Cơ điện sửa chữa
       } else {
         doc.status = 'rejected';
-        doc.rejectionReason = 'Từ chối qua Email';
+        doc.rejectionReason = finalProposal || 'Từ chối qua Email';
       }
       doc.updatedAt = now;
     }
@@ -293,6 +459,11 @@ export async function POST(req: NextRequest) {
       ghService.saveFile(ghPath, jsonString, commitMsg).catch((err) => {
         console.warn('[Approve API] GitHub commit error:', err.message);
       });
+    }
+
+    // 4. If repair proposal approved, dispatch email to Head of Maintenance
+    if (type === 'repair' && isApprove) {
+      sendMaintenanceEmailServer(doc);
     }
 
     return NextResponse.json({
