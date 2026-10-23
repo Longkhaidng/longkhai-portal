@@ -5,7 +5,7 @@
   "department": "Phòng HCNS",
   "location": "Văn phòng",
   "issueDescription": "Điều hòa không mát. Đề xuất cơ điện kiểm tra",
-  "status": "pending_manager",
+  "status": "maintenance_pending",
   "steps": [
     {
       "step": 1,
@@ -25,7 +25,9 @@
       "approverId": "1867",
       "approverName": "Trương Anh Như Quỳnh",
       "approverEmail": "Quynh.truong@longkhai.com.vn",
-      "status": "pending"
+      "status": "approved",
+      "updatedAt": "2026-10-23T07:49:40.409Z",
+      "comment": "Đồng ý phê duyệt đề xuất sửa chữa"
     },
     {
       "step": 3,
@@ -43,7 +45,12 @@
       "status": "pending"
     }
   ],
-  "currentStepIndex": 1,
+  "currentStepIndex": 2,
   "createdAt": "2026-10-23T07:47:15.769Z",
-  "updatedAt": "2026-10-23T07:47:15.769Z"
+  "updatedAt": "2026-10-23T07:49:40.409Z",
+  "managerId": "1867",
+  "managerName": "Trương Anh Như Quỳnh",
+  "managerApprovedAt": "2026-10-23T07:49:40.409Z",
+  "managerComment": "",
+  "proposedSolution": "Chuyển Cơ điện ktra và xử lý"
 }
