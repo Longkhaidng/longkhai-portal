@@ -1,12 +1,5 @@
 [
   {
-    "id": "VPP-016",
-    "name": "Bìa nút My Clear A4",
-    "unit": "Cái",
-    "category": "File hồ sơ",
-    "isActive": true
-  },
-  {
     "id": "VPP-017",
     "name": "Bìa lỗ A4 (Xấp 100 cái)",
     "unit": "Xấp",
