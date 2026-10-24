@@ -1,12 +1,5 @@
 [
   {
-    "id": "VPP-010",
-    "name": "Giấy in A4 Double A 80gsm (500 tờ/ram)",
-    "unit": "Ram",
-    "category": "Giấy in",
-    "isActive": true
-  },
-  {
     "id": "VPP-011",
     "name": "Giấy in A3 Double A 70gsm",
     "unit": "Ram",
