@@ -1,12 +1,5 @@
 [
   {
-    "id": "VPP-006",
-    "name": "Bút dạ quang HL-03 (Cam)",
-    "unit": "Cây",
-    "category": "Bút viết",
-    "isActive": true
-  },
-  {
     "id": "VPP-007",
     "name": "Bút lông bảng trắng Thiên Long WB-03 (Xanh)",
     "unit": "Cây",
