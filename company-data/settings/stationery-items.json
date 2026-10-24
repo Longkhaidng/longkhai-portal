@@ -1,12 +1,5 @@
 [
   {
-    "id": "VPP-004",
-    "name": "Bút bi bấm xóa được Frixion Pilot (Xanh)",
-    "unit": "Cây",
-    "category": "Bút viết",
-    "isActive": true
-  },
-  {
     "id": "VPP-005",
     "name": "Bút dạ quang HL-03 (Vàng chanh)",
     "unit": "Cây",
