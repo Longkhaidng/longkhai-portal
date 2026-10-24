@@ -1,12 +1,5 @@
 [
   {
-    "id": "VPP-001",
-    "name": "Bút bi Thiên Long TL-027 (Xanh)",
-    "unit": "Cây",
-    "category": "Bút viết",
-    "isActive": true
-  },
-  {
     "id": "VPP-002",
     "name": "Bút bi Thiên Long TL-027 (Đỏ)",
     "unit": "Cây",
