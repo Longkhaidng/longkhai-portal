@@ -1,12 +1,5 @@
 [
   {
-    "id": "VPP-005",
-    "name": "Bút dạ quang HL-03 (Vàng chanh)",
-    "unit": "Cây",
-    "category": "Bút viết",
-    "isActive": true
-  },
-  {
     "id": "VPP-006",
     "name": "Bút dạ quang HL-03 (Cam)",
     "unit": "Cây",
