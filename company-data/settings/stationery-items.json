@@ -1,12 +1,5 @@
 [
   {
-    "id": "VPP-013",
-    "name": "Băng keo trong 5cm (100 yard)",
-    "unit": "Cuộn",
-    "category": "Băng keo",
-    "isActive": true
-  },
-  {
     "id": "VPP-014",
     "name": "Băng keo 2 mặt 2.4cm",
     "unit": "Cuộn",
