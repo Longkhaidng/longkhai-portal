@@ -575,6 +575,38 @@ class StorageService {
     }).catch(() => {});
   }
 
+  saveStationeryItems(newItems: StationeryItem[], byUser?: { id: string; name: string }): void {
+    if (!this.isClient() || newItems.length === 0) return;
+    const items = this.getStationeryItems();
+    const now = new Date().toISOString();
+
+    for (const item of newItems) {
+      const idx = items.findIndex((i) => i.id.toUpperCase() === item.id.toUpperCase());
+      if (idx >= 0) {
+        items[idx] = { ...items[idx], ...item, updatedAt: now };
+      } else {
+        items.push({ ...item, createdAt: now, updatedAt: now });
+      }
+    }
+
+    localStorage.setItem(STORAGE_KEYS.STATIONERY_ITEMS, JSON.stringify(items));
+    this.addAuditLog(
+      'update',
+      'proposals',
+      'stationery_items',
+      byUser?.id || 'ADMIN',
+      byUser?.name || 'Quản trị viên',
+      `Nhập ${newItems.length} mặt hàng VPP từ file Excel mẫu`
+    );
+
+    this.syncFileToGitHub('settings/stationery-items.json', JSON.stringify(items, null, 2), `Import ${newItems.length} stationery items from Excel`);
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'stationery_items', data: items, githubToken: this.getGitHubConfig().token }),
+    }).catch(() => {});
+  }
+
   deleteStationeryItem(id: string, byUser?: { id: string; name: string }): void {
     if (!this.isClient()) return;
     const items = this.getStationeryItems().filter((i) => i.id !== id);

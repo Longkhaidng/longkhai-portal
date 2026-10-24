@@ -521,13 +521,16 @@ export function ReportsView() {
         'MSNV',
         'Họ tên nhân viên',
         'Tổ / Bộ phận',
-        'Danh mục mặt hàng',
-        'Người nhận xử lý',
+        'Mã VPP',
+        'Tên văn phòng phẩm đề xuất',
+        'Số lượng',
         'Trạng thái',
         'Ghi chú',
       ];
       rows = filteredStationeries.map((p, idx) => {
-        const itemsSummary = p.items.map((i) => `${i.itemName} (SL: ${i.quantity} ${i.unit})`).join('; ');
+        const itemCodes = p.items.map((i) => i.itemId).join('\n');
+        const itemNames = p.items.map((i) => i.itemName).join('\n');
+        const itemQuantities = p.items.map((i) => `${i.quantity} ${i.unit}`).join('\n');
         return [
           idx + 1,
           p.id,
@@ -535,8 +538,9 @@ export function ReportsView() {
           p.employeeId,
           p.employeeName,
           p.department,
-          itemsSummary,
-          p.receiverStaffName || 'Võ Thị Tuyết (1139)',
+          itemCodes,
+          itemNames,
+          itemQuantities,
           STATIONERY_STATUS_LABELS[p.status] || p.status,
           p.notes || '',
         ];
@@ -958,6 +962,10 @@ export function ReportsView() {
               ? 'RA VÀO CỔNG & TÀI SẢN'
               : reportType === 'repair'
               ? 'ĐỀ XUẤT SỬA CHỮA'
+              : reportType === 'stationery'
+              ? 'ĐỀ XUẤT VĂN PHÒNG PHẨM'
+              : reportType === 'general'
+              ? 'ĐỀ XUẤT KHÁC'
               : 'CƠ CẤU PHÒNG BAN'}
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -1350,8 +1358,9 @@ export function ReportsView() {
                   <th className="p-2 border">MSNV</th>
                   <th className="p-2 border">Họ tên nhân viên</th>
                   <th className="p-2 border">Tổ / Bộ phận</th>
-                  <th className="p-2 border">Mặt hàng đề xuất</th>
-                  <th className="p-2 border">Người nhận xử lý</th>
+                  <th className="p-2 border">Mã VPP</th>
+                  <th className="p-2 border">Tên văn phòng phẩm đề xuất</th>
+                  <th className="p-2 border text-center">Số lượng</th>
                   <th className="p-2 border">Trạng thái</th>
                   <th className="p-2 border">Ghi chú</th>
                 </tr>
@@ -1359,7 +1368,7 @@ export function ReportsView() {
               <tbody>
                 {filteredStationeries.length === 0 ? (
                   <tr>
-                    <td colSpan={10} className="p-8 text-center text-slate-400">
+                    <td colSpan={11} className="p-8 text-center text-slate-400">
                       Không tìm thấy đề xuất văn phòng phẩm nào phù hợp với bộ lọc.
                     </td>
                   </tr>
@@ -1371,7 +1380,9 @@ export function ReportsView() {
                       border: 'border-slate-200',
                       label: p.status,
                     };
-                    const itemsSummary = p.items.map((i) => `${i.itemName} (SL: ${i.quantity} ${i.unit})`).join('; ');
+                    const itemCodes = p.items.map((i) => i.itemId).join('\n');
+                    const itemNames = p.items.map((i) => i.itemName).join('\n');
+                    const itemQuantities = p.items.map((i) => `${i.quantity} ${i.unit}`).join('\n');
                     return (
                       <tr key={p.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
                         <td className="p-2 border text-center font-bold text-slate-500">{idx + 1}</td>
@@ -1382,9 +1393,14 @@ export function ReportsView() {
                         <td className="p-2 border font-mono text-slate-700 dark:text-slate-300">{p.employeeId}</td>
                         <td className="p-2 border font-bold text-slate-900 dark:text-white">{p.employeeName}</td>
                         <td className="p-2 border">{p.department}</td>
-                        <td className="p-2 border max-w-xs truncate" title={itemsSummary}>{itemsSummary}</td>
-                        <td className="p-2 border text-blue-700 dark:text-blue-300 font-medium">
-                          {p.receiverStaffName || 'Võ Thị Tuyết (1139)'}
+                        <td className="p-2 border font-mono font-bold text-blue-600 dark:text-blue-400 whitespace-pre-line">
+                          {itemCodes}
+                        </td>
+                        <td className="p-2 border font-medium text-slate-900 dark:text-white whitespace-pre-line">
+                          {itemNames}
+                        </td>
+                        <td className="p-2 border text-center font-bold text-slate-700 dark:text-slate-300 whitespace-pre-line">
+                          {itemQuantities}
                         </td>
                         <td className="p-2 border">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${badge.bg} ${badge.text} ${badge.border}`}>
