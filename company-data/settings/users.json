@@ -1,5 +1,22 @@
 [
   {
+    "id": "BOD",
+    "name": "Phạm Đình Tú",
+    "department": "Ban Giám Đốc",
+    "position": "Giám đốc sản xuất",
+    "role": "manager",
+    "permissions": [
+      "dashboard",
+      "announcements",
+      "reports"
+    ],
+    "allowedWebIntegrations": [],
+    "isActive": true,
+    "password": "Lk@123",
+    "createdAt": "2026-10-24T03:20:45.118Z",
+    "updatedAt": "2026-10-24T03:20:45.118Z"
+  },
+  {
     "id": "2864",
     "name": "Nguyễn Đình Linh",
     "department": "Phòng quản lý sản xuất",
