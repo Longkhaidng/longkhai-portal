@@ -1,19 +1,5 @@
 [
   {
-    "id": "VPP-020",
-    "name": "Kẹp bướm 19mm (Hộp 12 cái)",
-    "unit": "Hộp",
-    "category": "Dụng cụ văn phòng",
-    "isActive": true
-  },
-  {
-    "id": "VPP-021",
-    "name": "Kẹp bướm 25mm (Hộp 12 cái)",
-    "unit": "Hộp",
-    "category": "Dụng cụ văn phòng",
-    "isActive": true
-  },
-  {
     "id": "VPP-022",
     "name": "Kéo văn phòng Deli 17.5cm",
     "unit": "Cái",
