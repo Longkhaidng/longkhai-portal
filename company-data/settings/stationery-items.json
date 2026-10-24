@@ -1,12 +1,5 @@
 [
   {
-    "id": "VPP-011",
-    "name": "Giấy in A3 Double A 70gsm",
-    "unit": "Ram",
-    "category": "Giấy in",
-    "isActive": true
-  },
-  {
     "id": "VPP-012",
     "name": "Giấy ghi chú Post-it 3x3 (76x76mm)",
     "unit": "Xấp",
