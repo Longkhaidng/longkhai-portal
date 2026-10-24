@@ -1,19 +1,5 @@
 [
   {
-    "id": "VPP-018",
-    "name": "Bấm kim số 10 Plus",
-    "unit": "Cái",
-    "category": "Dụng cụ văn phòng",
-    "isActive": true
-  },
-  {
-    "id": "VPP-019",
-    "name": "Kim bấm số 10 Plus",
-    "unit": "Hộp",
-    "category": "Dụng cụ văn phòng",
-    "isActive": true
-  },
-  {
     "id": "VPP-020",
     "name": "Kẹp bướm 19mm (Hộp 12 cái)",
     "unit": "Hộp",
