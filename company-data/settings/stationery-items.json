@@ -1,19 +1,5 @@
 [
   {
-    "id": "VPP-008",
-    "name": "Bút lông dầu Thiên Long PM-09 (2 đầu)",
-    "unit": "Cây",
-    "category": "Bút viết",
-    "isActive": true
-  },
-  {
-    "id": "VPP-009",
-    "name": "Giấy in A4 Double A 70gsm (500 tờ/ram)",
-    "unit": "Ram",
-    "category": "Giấy in",
-    "isActive": true
-  },
-  {
     "id": "VPP-010",
     "name": "Giấy in A4 Double A 80gsm (500 tờ/ram)",
     "unit": "Ram",
