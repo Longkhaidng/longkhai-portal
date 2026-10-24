@@ -11,12 +11,13 @@ export interface EmailConfig {
   googleScriptUrl?: string; // Web App URL của Google Apps Script
   isEnabled: boolean;
   portalBaseUrl?: string; // Ví dụ: https://longkhai-portal.vercel.app
+  bodEmails?: string[]; // Email Ban Giám Đốc nhận thông báo
 }
 
 export interface SendEmailPayload {
   toEmail: string;
   managerName?: string;
-  type: 'leave' | 'gate_pass' | 'attendance' | 'repair';
+  type: 'leave' | 'gate_pass' | 'attendance' | 'repair' | 'stationery' | 'general';
   docId: string;
   employeeId: string;
   employeeName: string;

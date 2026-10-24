@@ -9,9 +9,12 @@ import {
   FileText,
   Clock,
   Wrench,
+  Package,
+  FileQuestion,
   Send,
   Building,
   MapPin,
+  Check,
 } from 'lucide-react';
 
 const capitalizeFirstLetter = (text: string): string => {
@@ -29,7 +32,14 @@ const capitalizeFirstLetter = (text: string): string => {
 
 function QuickApprovalContent() {
   const searchParams = useSearchParams();
-  const type = searchParams.get('type') as 'leave' | 'gate_pass' | 'attendance' | 'repair' | null;
+  const type = searchParams.get('type') as
+    | 'leave'
+    | 'gate_pass'
+    | 'attendance'
+    | 'repair'
+    | 'stationery'
+    | 'general'
+    | null;
   const id = searchParams.get('id');
   const initialAction = (searchParams.get('action') as 'approve' | 'reject' | null) || 'approve';
   const paramSolution = searchParams.get('proposedSolution') || '';
@@ -38,6 +48,7 @@ function QuickApprovalContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [doc, setDoc] = useState<any>(null);
   const [proposedSolution, setProposedSolution] = useState(paramSolution);
+  const [approverComment, setApproverComment] = useState('');
   const [rejectionReason, setRejectionReason] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -59,23 +70,46 @@ function QuickApprovalContent() {
       return;
     }
 
-    // For repair proposal: Load document details first so manager can enter "Đề xuất hướng khắc phục"
-    if (type === 'repair') {
-      fetch(`/api/approve?type=repair&id=${encodeURIComponent(id)}`)
+    // Interactive flow for repair, stationery, and general: load doc first so approver sees details
+    if (type === 'repair' || type === 'stationery' || type === 'general') {
+      fetch(`/api/approve?type=${encodeURIComponent(type)}&id=${encodeURIComponent(id)}`)
         .then((res) => res.json())
         .then((data) => {
           if (data.success && data.doc) {
             setDoc(data.doc);
-            if (data.doc.status !== 'pending_manager') {
+            const status = data.doc.status;
+            const isCompleted = status === 'completed' || status === 'approved';
+            const isRejected = status === 'rejected';
+
+            if (type === 'repair' && status !== 'pending_manager') {
               setResult({
                 success: true,
                 alreadyProcessed: true,
-                message:
-                  data.doc.status === 'rejected'
-                    ? `Đề xuất ${data.doc.id} đã bị từ chối trước đó.`
-                    : `Đề xuất ${data.doc.id} đã được phê duyệt trước đó và chuyển sang Cơ điện.`,
+                message: isRejected
+                  ? `Đề xuất ${data.doc.id} đã bị từ chối trước đó.`
+                  : `Đề xuất ${data.doc.id} đã được phê duyệt trước đó và chuyển sang Cơ điện.`,
                 record: data.doc,
-                action: data.doc.status === 'rejected' ? 'reject' : 'approve',
+                action: isRejected ? 'reject' : 'approve',
+              });
+            } else if (type === 'stationery' && (isCompleted || isRejected)) {
+              setResult({
+                success: true,
+                alreadyProcessed: true,
+                message: isRejected
+                  ? `Đề xuất văn phòng phẩm ${data.doc.id} đã bị từ chối trước đó.`
+                  : `Đề xuất văn phòng phẩm ${data.doc.id} đã được phê duyệt hoàn tất trước đó.`,
+                record: data.doc,
+                action: isRejected ? 'reject' : 'approve',
+              });
+            } else if (type === 'general' && (isCompleted || isRejected)) {
+              setResult({
+                success: true,
+                alreadyProcessed: true,
+                message: isRejected
+                  ? `Đề xuất ${data.doc.id} đã bị từ chối trước đó.`
+                  : `Đề xuất ${data.doc.id} đã được phê duyệt hoàn tất trước đó.`,
+                record: data.doc,
+                action: isRejected ? 'reject' : 'approve',
               });
             }
           } else {
@@ -118,28 +152,32 @@ function QuickApprovalContent() {
       });
   }, [id, type, initialAction]);
 
-  // Submit decision for repair proposal
-  const handleSubmitRepair = async (targetAction: 'approve' | 'reject') => {
+  // Submit decision for repair, stationery, or general proposal
+  const handleSubmitProposal = async (targetAction: 'approve' | 'reject') => {
     if (!id || !type) return;
     setIsSubmitting(true);
 
     try {
-      // Import storage dynamically if needed for browser config
       let clientEmailConfig: any = null;
       try {
         const { storage } = await import('@/lib/storage');
         clientEmailConfig = storage.getEmailConfig();
       } catch {}
 
+      const commentText =
+        targetAction === 'approve'
+          ? (type === 'repair' ? proposedSolution.trim() : approverComment.trim())
+          : rejectionReason.trim();
+
       const res = await fetch('/api/approve', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          type: 'repair',
+          type,
           id,
           action: targetAction,
-          proposedSolution: proposedSolution.trim() || undefined,
-          comment: targetAction === 'approve' ? proposedSolution.trim() : rejectionReason.trim(),
+          proposedSolution: type === 'repair' ? proposedSolution.trim() || undefined : undefined,
+          comment: commentText,
           emailConfig: clientEmailConfig,
         }),
       });
@@ -147,16 +185,17 @@ function QuickApprovalContent() {
       const data = await res.json();
       setResult(data);
 
-      // If approved, also trigger client-side dispatch guarantee to ensure maintenance head gets notified
-      if (data.success && targetAction === 'approve') {
+      // Client-side dispatch fallbacks for repair
+      if (type === 'repair' && data.success && targetAction === 'approve') {
         try {
-          const { dispatchMaintenanceNotificationEmail } = await import('@/lib/email');
+          const { dispatchMaintenanceNotificationEmail, dispatchBODNotificationEmail } = await import('@/lib/email');
           const updatedRecord = data.record || {
             ...(doc || {}),
             proposedSolution: proposedSolution.trim() || undefined,
             status: 'maintenance_pending',
           };
           dispatchMaintenanceNotificationEmail(updatedRecord).catch(console.warn);
+          dispatchBODNotificationEmail(updatedRecord).catch(console.warn);
         } catch (clientEmailErr) {
           console.warn('Client email dispatch fallback error:', clientEmailErr);
         }
@@ -178,6 +217,10 @@ function QuickApprovalContent() {
       ? 'Phiếu Ra - Vào Cổng'
       : type === 'attendance'
       ? 'Phiếu Xác Nhận Công'
+      : type === 'stationery'
+      ? 'Phiếu Đề Xuất Văn Phòng Phẩm'
+      : type === 'general'
+      ? 'Phiếu Đề Xuất Khác'
       : 'Phiếu Đề Xuất Sửa Chữa';
 
   return (
@@ -219,7 +262,7 @@ function QuickApprovalContent() {
             </div>
           )}
 
-          {/* REPAIR INTERACTIVE APPROVAL FORM (Trưởng bộ phận nhập đề xuất trực tiếp từ email) */}
+          {/* 1. REPAIR INTERACTIVE APPROVAL FORM */}
           {!isLoading && !result && type === 'repair' && doc && (
             <div className="space-y-5 text-left text-xs">
               <div className="bg-amber-50 dark:bg-amber-950/30 p-3.5 rounded-2xl border border-amber-200/70 dark:border-amber-900/40 text-amber-900 dark:text-amber-200 text-xs">
@@ -228,7 +271,7 @@ function QuickApprovalContent() {
                   <span>Xét duyệt đề xuất sửa chữa</span>
                 </div>
                 <p className="text-[11px] text-amber-800/80 dark:text-amber-300/80 leading-relaxed">
-                  Trưởng bộ phận xem xét tình trạng sự việc, nhập <b>đề xuất hướng khắc phục</b> và bấm phê duyệt. Hệ thống sẽ tự động chuyển tiếp qua email cho Trưởng bộ phận Cơ điện.
+                  Trưởng bộ phận xem xét tình trạng sự việc, nhập <b>đề xuất hướng khắc phục</b> và bấm phê duyệt. Hệ thống sẽ tự động chuyển tiếp qua email cho Trưởng bộ phận Cơ điện và Ban Giám Đốc.
                 </p>
               </div>
 
@@ -280,7 +323,7 @@ function QuickApprovalContent() {
                     <button
                       type="button"
                       disabled={isSubmitting}
-                      onClick={() => handleSubmitRepair('approve')}
+                      onClick={() => handleSubmitProposal('approve')}
                       className="flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
                     >
                       <CheckCircle2 className="w-4 h-4" />
@@ -316,11 +359,264 @@ function QuickApprovalContent() {
                     <button
                       type="button"
                       disabled={isSubmitting}
-                      onClick={() => handleSubmitRepair('reject')}
+                      onClick={() => handleSubmitProposal('reject')}
                       className="flex-1 py-3 px-4 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
                     >
                       <XCircle className="w-4 h-4" />
                       <span>{isSubmitting ? 'Đang xử lý...' : '✕ XÁC NHẬN TỪ CHỐI ĐƠN'}</span>
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={() => setAction('approve')}
+                      className="py-3 px-4 bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 font-bold rounded-xl text-xs transition-colors cursor-pointer"
+                    >
+                      Quay lại duyệt
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 2. STATIONERY INTERACTIVE APPROVAL FORM */}
+          {!isLoading && !result && type === 'stationery' && doc && (
+            <div className="space-y-5 text-left text-xs">
+              <div className="bg-blue-50 dark:bg-blue-950/30 p-3.5 rounded-2xl border border-blue-200/70 dark:border-blue-900/40 text-blue-900 dark:text-blue-200 text-xs">
+                <div className="font-bold flex items-center gap-1.5 text-sm mb-1 text-blue-700 dark:text-blue-400">
+                  <Package className="w-4 h-4" />
+                  <span>Xét duyệt đề xuất văn phòng phẩm</span>
+                </div>
+                <p className="text-[11px] text-blue-800/80 dark:text-blue-300/80 leading-relaxed">
+                  Xem chi tiết các mặt hàng văn phòng phẩm đề xuất và bấm phê duyệt để tiếp tục quy trình cấp phát.
+                </p>
+              </div>
+
+              {/* Proposal Summary Card */}
+              <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2.5">
+                <div className="flex justify-between items-start border-b border-slate-200 dark:border-slate-700 pb-2">
+                  <span className="text-slate-500">Người yêu cầu:</span>
+                  <span className="font-bold text-slate-900 dark:text-white">
+                    {doc.employeeName} ({doc.employeeId})
+                  </span>
+                </div>
+                <div className="flex justify-between items-start border-b border-slate-200 dark:border-slate-700 pb-2">
+                  <span className="text-slate-500">Tổ / Bộ phận:</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{doc.department}</span>
+                </div>
+
+                {/* Items Table */}
+                <div>
+                  <span className="text-slate-500 block mb-1 font-semibold">Danh mục mặt hàng:</span>
+                  <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                    <table className="w-full text-left text-[11px]">
+                      <thead className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold">
+                        <tr>
+                          <th className="px-2.5 py-1.5">Mặt hàng</th>
+                          <th className="px-2 py-1.5 text-center w-14">ĐVT</th>
+                          <th className="px-2 py-1.5 text-center w-14">SL</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                        {(doc.items || []).map((it: any, idx: number) => (
+                          <tr key={idx} className="bg-white dark:bg-slate-900">
+                            <td className="px-2.5 py-1.5 font-medium text-slate-800 dark:text-slate-200">
+                              {it.itemName}
+                              {it.notes && (
+                                <div className="text-[10px] text-slate-400 italic">{it.notes}</div>
+                              )}
+                            </td>
+                            <td className="px-2 py-1.5 text-center text-slate-500">{it.unit}</td>
+                            <td className="px-2 py-1.5 text-center font-bold text-blue-600 dark:text-blue-400">
+                              {it.quantity}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {doc.notes && (
+                  <div>
+                    <span className="text-slate-500 block mb-0.5">Ghi chú:</span>
+                    <div className="text-slate-700 dark:text-slate-300 italic">{doc.notes}</div>
+                  </div>
+                )}
+              </div>
+
+              {/* Action Form */}
+              {action === 'approve' ? (
+                <div className="space-y-3">
+                  <div>
+                    <label className="block font-bold text-slate-800 dark:text-white mb-1.5">
+                      Ghi chú / Ý kiến phê duyệt (tùy chọn):
+                    </label>
+                    <input
+                      type="text"
+                      value={approverComment}
+                      onChange={(e) => setApproverComment(capitalizeFirstLetter(e.target.value))}
+                      placeholder="Nhập ghi chú hoặc ý kiến phê duyệt..."
+                      className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                    <button
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={() => handleSubmitProposal('approve')}
+                      className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+                    >
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>{isSubmitting ? 'Đang xử lý...' : '✓ PHÊ DUYỆT ĐỀ XUẤT VPP'}</span>
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={() => setAction('reject')}
+                      className="py-3 px-4 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 dark:bg-slate-800 dark:hover:bg-rose-950/40 dark:text-slate-300 font-bold rounded-xl text-xs transition-colors cursor-pointer"
+                    >
+                      Từ chối...
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div>
+                    <label className="block font-bold text-rose-600 dark:text-rose-400 mb-1.5">
+                      Lý do từ chối:
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={rejectionReason}
+                      onChange={(e) => setRejectionReason(capitalizeFirstLetter(e.target.value))}
+                      placeholder="Nhập lý do từ chối..."
+                      className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-900 border border-rose-300 dark:border-rose-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    />
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                    <button
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={() => handleSubmitProposal('reject')}
+                      className="flex-1 py-3 px-4 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+                    >
+                      <XCircle className="w-4 h-4" />
+                      <span>{isSubmitting ? 'Đang xử lý...' : '✕ XÁC NHẬN TỪ CHỐI'}</span>
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={() => setAction('approve')}
+                      className="py-3 px-4 bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 font-bold rounded-xl text-xs transition-colors cursor-pointer"
+                    >
+                      Quay lại duyệt
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 3. GENERAL PROPOSAL INTERACTIVE APPROVAL FORM */}
+          {!isLoading && !result && type === 'general' && doc && (
+            <div className="space-y-5 text-left text-xs">
+              <div className="bg-purple-50 dark:bg-purple-950/30 p-3.5 rounded-2xl border border-purple-200/70 dark:border-purple-900/40 text-purple-900 dark:text-purple-200 text-xs">
+                <div className="font-bold flex items-center gap-1.5 text-sm mb-1 text-purple-700 dark:text-purple-400">
+                  <FileQuestion className="w-4 h-4" />
+                  <span>Xét duyệt đề xuất khác</span>
+                </div>
+                <p className="text-[11px] text-purple-800/80 dark:text-purple-300/80 leading-relaxed">
+                  Xem chi tiết nội dung đề xuất và bấm phê duyệt để tiếp tục quy trình xử lý.
+                </p>
+              </div>
+
+              {/* Proposal Summary Card */}
+              <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2.5">
+                <div className="flex justify-between items-start border-b border-slate-200 dark:border-slate-700 pb-2">
+                  <span className="text-slate-500">Người yêu cầu:</span>
+                  <span className="font-bold text-slate-900 dark:text-white">
+                    {doc.employeeName} ({doc.employeeId})
+                  </span>
+                </div>
+                <div className="flex justify-between items-start border-b border-slate-200 dark:border-slate-700 pb-2">
+                  <span className="text-slate-500">Tổ / Bộ phận:</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{doc.department}</span>
+                </div>
+                <div className="flex justify-between items-start border-b border-slate-200 dark:border-slate-700 pb-2">
+                  <span className="text-slate-500">Tiêu đề đề xuất:</span>
+                  <span className="font-bold text-purple-700 dark:text-purple-300">{doc.title}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block mb-1">Nội dung chi tiết:</span>
+                  <div className="p-2.5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 whitespace-pre-line leading-relaxed">
+                    {doc.content}
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Form */}
+              {action === 'approve' ? (
+                <div className="space-y-3">
+                  <div>
+                    <label className="block font-bold text-slate-800 dark:text-white mb-1.5">
+                      Ý kiến phê duyệt / Chỉ đạo thực hiện:
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={approverComment}
+                      onChange={(e) => setApproverComment(capitalizeFirstLetter(e.target.value))}
+                      placeholder="Nhập ý kiến hoặc ghi chú xử lý..."
+                      className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                    <button
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={() => handleSubmitProposal('approve')}
+                      className="flex-1 py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+                    >
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>{isSubmitting ? 'Đang xử lý...' : '✓ PHÊ DUYỆT ĐỀ XUẤT'}</span>
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={() => setAction('reject')}
+                      className="py-3 px-4 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 dark:bg-slate-800 dark:hover:bg-rose-950/40 dark:text-slate-300 font-bold rounded-xl text-xs transition-colors cursor-pointer"
+                    >
+                      Từ chối...
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div>
+                    <label className="block font-bold text-rose-600 dark:text-rose-400 mb-1.5">
+                      Lý do từ chối:
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={rejectionReason}
+                      onChange={(e) => setRejectionReason(capitalizeFirstLetter(e.target.value))}
+                      placeholder="Nhập lý do từ chối..."
+                      className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-900 border border-rose-300 dark:border-rose-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    />
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                    <button
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={() => handleSubmitProposal('reject')}
+                      className="flex-1 py-3 px-4 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+                    >
+                      <XCircle className="w-4 h-4" />
+                      <span>{isSubmitting ? 'Đang xử lý...' : '✕ XÁC NHẬN TỪ CHỐI'}</span>
                     </button>
                     <button
                       type="button"
@@ -359,7 +655,7 @@ function QuickApprovalContent() {
                       </p>
                       {type === 'repair' && (
                         <p className="text-xs text-amber-700 dark:text-amber-400 font-semibold bg-amber-50 dark:bg-amber-950/40 p-2.5 rounded-xl border border-amber-200 dark:border-amber-800 mt-2">
-                          Đơn đã được tự động chuyển tiếp qua email tới Trưởng bộ phận Cơ điện (Anh Trịnh Anh Tài) để tiếp nhận sửa chữa.
+                          Đơn đã được tự động chuyển tiếp qua email tới Trưởng bộ phận Cơ điện (Anh Trịnh Anh Tài) và Ban Giám Đốc.
                         </p>
                       )}
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-700/60">

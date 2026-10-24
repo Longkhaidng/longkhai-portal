@@ -3,6 +3,8 @@ import { LeaveRequest } from '@/types/leave';
 import { AttendanceConfirm } from '@/types/attendance';
 import { GatePass } from '@/types/gatePass';
 import { RepairProposal } from '@/types/repair';
+import { StationeryItem, StationeryProposal, GeneralProposal } from '@/types/proposal';
+import { INITIAL_STATIONERY_ITEMS } from './initial-data';
 import { Announcement } from '@/types/announcement';
 import { DynamicFormSchema, DynamicFormSubmission } from '@/types/dynamicForm';
 import { PluginModule, INITIAL_PLUGINS } from '@/types/plugin';
@@ -28,6 +30,9 @@ const STORAGE_KEYS = {
   ATTENDANCE_CONFIRMS: 'lk_portal_attendance_confirms',
   GATE_PASSES: 'lk_portal_gate_passes',
   REPAIR_PROPOSALS: 'lk_portal_repair_proposals',
+  STATIONERY_ITEMS: 'lk_portal_stationery_items',
+  STATIONERY_PROPOSALS: 'lk_portal_stationery_proposals',
+  GENERAL_PROPOSALS: 'lk_portal_general_proposals',
   ANNOUNCEMENTS: 'lk_portal_announcements',
   DYNAMIC_FORMS: 'lk_portal_dynamic_forms',
   FORM_SUBMISSIONS: 'lk_portal_form_submissions',
@@ -525,6 +530,182 @@ class StorageService {
     localStorage.setItem(STORAGE_KEYS.REPAIR_PROPOSALS, JSON.stringify(proposals));
   }
 
+  // --- STATIONERY ITEMS CATALOG (DANH MỤC VĂN PHÒNG PHẨM) ---
+  getStationeryItems(): StationeryItem[] {
+    if (!this.isClient()) return (INITIAL_STATIONERY_ITEMS as StationeryItem[]) || [];
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.STATIONERY_ITEMS);
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    const defaults = (INITIAL_STATIONERY_ITEMS as StationeryItem[]) || [];
+    localStorage.setItem(STORAGE_KEYS.STATIONERY_ITEMS, JSON.stringify(defaults));
+    return defaults;
+  }
+
+  saveStationeryItem(item: StationeryItem, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const items = this.getStationeryItems();
+    const existingIndex = items.findIndex((i) => i.id === item.id);
+    const isNew = existingIndex < 0;
+
+    if (existingIndex >= 0) {
+      items[existingIndex] = { ...items[existingIndex], ...item, updatedAt: new Date().toISOString() };
+    } else {
+      items.push({ ...item, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+    }
+
+    localStorage.setItem(STORAGE_KEYS.STATIONERY_ITEMS, JSON.stringify(items));
+    this.addAuditLog(
+      isNew ? 'create' : 'update',
+      'proposals',
+      'stationery_items',
+      byUser?.id || 'ADMIN',
+      byUser?.name || 'Quản trị viên',
+      `${isNew ? 'Thêm' : 'Cập nhật'} mặt hàng VPP: ${item.name} (${item.id})`
+    );
+
+    this.syncFileToGitHub('settings/stationery-items.json', JSON.stringify(items, null, 2), `Update stationery catalog (${items.length} items)`);
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'stationery_items', data: items, githubToken: this.getGitHubConfig().token }),
+    }).catch(() => {});
+  }
+
+  deleteStationeryItem(id: string, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const items = this.getStationeryItems().filter((i) => i.id !== id);
+    localStorage.setItem(STORAGE_KEYS.STATIONERY_ITEMS, JSON.stringify(items));
+    this.addAuditLog(
+      'delete',
+      'proposals',
+      'stationery_items',
+      byUser?.id || 'ADMIN',
+      byUser?.name || 'Quản trị viên',
+      `Xóa mặt hàng VPP: ${id}`
+    );
+    this.syncFileToGitHub('settings/stationery-items.json', JSON.stringify(items, null, 2), `Delete stationery item ${id}`);
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'stationery_items', data: items, githubToken: this.getGitHubConfig().token }),
+    }).catch(() => {});
+  }
+
+  // --- STATIONERY PROPOSALS (ĐỀ XUẤT VĂN PHÒNG PHẨM) ---
+  getStationeryProposals(): StationeryProposal[] {
+    if (!this.isClient()) return [];
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.STATIONERY_PROPOSALS);
+      if (data) {
+        const proposals: StationeryProposal[] = JSON.parse(data);
+        const map = new Map<string, StationeryProposal>();
+        proposals.forEach((p) => {
+          const fid = formatDocId(p.id);
+          map.set(fid, { ...p, id: fid });
+        });
+        return sortNewestFirst(Array.from(map.values()));
+      }
+    } catch {}
+    return [];
+  }
+
+  saveStationeryProposal(proposal: StationeryProposal, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const proposals = this.getStationeryProposals();
+    const existingIndex = proposals.findIndex((p) => p.id === proposal.id);
+    const isNew = existingIndex < 0;
+
+    if (existingIndex >= 0) {
+      proposals[existingIndex] = proposal;
+    } else {
+      proposals.unshift(proposal);
+    }
+
+    localStorage.setItem(STORAGE_KEYS.STATIONERY_PROPOSALS, JSON.stringify(proposals));
+    this.addAuditLog(
+      isNew ? 'create' : 'update',
+      'proposals',
+      'stationery_proposal',
+      byUser?.id || proposal.employeeId,
+      byUser?.name || proposal.employeeName,
+      `${isNew ? 'Tạo' : 'Cập nhật'} phiếu đề xuất VPP ${proposal.id} - Trạng thái: ${proposal.status}`
+    );
+
+    const year = new Date().getFullYear();
+    this.syncFileToGitHub(`stationery-proposal/${year}/${proposal.id}.json`, JSON.stringify(proposal, null, 2), `Update Stationery Proposal ${proposal.id}`);
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'stationery_proposal', data: proposal, githubToken: this.getGitHubConfig().token }),
+    }).catch(() => {});
+  }
+
+  deleteStationeryProposal(id: string): void {
+    if (!this.isClient()) return;
+    const proposals = this.getStationeryProposals().filter((p) => p.id !== id);
+    localStorage.setItem(STORAGE_KEYS.STATIONERY_PROPOSALS, JSON.stringify(proposals));
+  }
+
+  // --- GENERAL PROPOSALS (ĐỀ XUẤT KHÁC) ---
+  getGeneralProposals(): GeneralProposal[] {
+    if (!this.isClient()) return [];
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.GENERAL_PROPOSALS);
+      if (data) {
+        const proposals: GeneralProposal[] = JSON.parse(data);
+        const map = new Map<string, GeneralProposal>();
+        proposals.forEach((p) => {
+          const fid = formatDocId(p.id);
+          map.set(fid, { ...p, id: fid });
+        });
+        return sortNewestFirst(Array.from(map.values()));
+      }
+    } catch {}
+    return [];
+  }
+
+  saveGeneralProposal(proposal: GeneralProposal, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const proposals = this.getGeneralProposals();
+    const existingIndex = proposals.findIndex((p) => p.id === proposal.id);
+    const isNew = existingIndex < 0;
+
+    if (existingIndex >= 0) {
+      proposals[existingIndex] = proposal;
+    } else {
+      proposals.unshift(proposal);
+    }
+
+    localStorage.setItem(STORAGE_KEYS.GENERAL_PROPOSALS, JSON.stringify(proposals));
+    this.addAuditLog(
+      isNew ? 'create' : 'update',
+      'proposals',
+      'general_proposal',
+      byUser?.id || proposal.employeeId,
+      byUser?.name || proposal.employeeName,
+      `${isNew ? 'Tạo' : 'Cập nhật'} phiếu đề xuất khác ${proposal.id} - Trạng thái: ${proposal.status}`
+    );
+
+    const year = new Date().getFullYear();
+    this.syncFileToGitHub(`general-proposal/${year}/${proposal.id}.json`, JSON.stringify(proposal, null, 2), `Update General Proposal ${proposal.id}`);
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'general_proposal', data: proposal, githubToken: this.getGitHubConfig().token }),
+    }).catch(() => {});
+  }
+
+  deleteGeneralProposal(id: string): void {
+    if (!this.isClient()) return;
+    const proposals = this.getGeneralProposals().filter((p) => p.id !== id);
+    localStorage.setItem(STORAGE_KEYS.GENERAL_PROPOSALS, JSON.stringify(proposals));
+  }
+
+
   // --- ANNOUNCEMENTS ---
   getAnnouncements(): Announcement[] {
     if (!this.isClient()) return INITIAL_ANNOUNCEMENTS;
@@ -816,6 +997,9 @@ class StorageService {
         gatePasses,
         attendanceConfirms,
         repairProposals,
+        stationeryProposals,
+        generalProposals,
+        stationeryItems,
         emailConfig,
         githubConfig,
       } = json.data;
@@ -859,6 +1043,23 @@ class StorageService {
         local.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
         repairProposals.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
         localStorage.setItem(STORAGE_KEYS.REPAIR_PROPOSALS, JSON.stringify(Array.from(map.values())));
+      }
+      if (Array.isArray(stationeryProposals)) {
+        const local = this.getStationeryProposals();
+        const map = new Map<string, StationeryProposal>();
+        local.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
+        stationeryProposals.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
+        localStorage.setItem(STORAGE_KEYS.STATIONERY_PROPOSALS, JSON.stringify(Array.from(map.values())));
+      }
+      if (Array.isArray(generalProposals)) {
+        const local = this.getGeneralProposals();
+        const map = new Map<string, GeneralProposal>();
+        local.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
+        generalProposals.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
+        localStorage.setItem(STORAGE_KEYS.GENERAL_PROPOSALS, JSON.stringify(Array.from(map.values())));
+      }
+      if (Array.isArray(stationeryItems) && stationeryItems.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.STATIONERY_ITEMS, JSON.stringify(stationeryItems));
       }
       if (emailConfig && emailConfig.googleScriptUrl) {
         localStorage.setItem(STORAGE_KEYS.EMAIL_CONFIG, JSON.stringify(emailConfig));

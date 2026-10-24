@@ -3,6 +3,7 @@ import { LeaveRequest } from '@/types/leave';
 import { GatePass } from '@/types/gatePass';
 import { AttendanceConfirm } from '@/types/attendance';
 import { RepairProposal } from '@/types/repair';
+import { StationeryProposal, GeneralProposal } from '@/types/proposal';
 
 export type DocumentScope = 'my' | 'approver' | 'all';
 
@@ -490,5 +491,121 @@ export function filterUserRepairProposals(
   }
 
   // 4. Regular employee: strictly can only see their own proposals
+  return proposals.filter((p) => p.employeeId.toLowerCase() === uid);
+}
+
+/**
+ * Filter stationery proposals based on RBAC rules:
+ * - Nhân viên 1139 (Võ Thị Tuyết) / HR: sees Step 1 pending_hr
+ * - Trưởng phòng HCNS 1867 (Trương Anh Như Quỳnh): sees Step 2 pending_manager
+ * - Admin & BOD: sees all
+ * - Employee: sees their own proposals
+ */
+export function filterUserStationeryProposals(
+  proposals: StationeryProposal[],
+  user?: User | null,
+  scope: DocumentScope = 'all'
+): StationeryProposal[] {
+  if (!user) return [];
+  const uid = user.id.toLowerCase();
+
+  if (scope === 'my') {
+    return proposals.filter((p) => p.employeeId.toLowerCase() === uid);
+  }
+
+  // 1. Admin & BOD
+  if (isSuperAdminOrBOD(user)) {
+    if (scope === 'approver') {
+      return proposals.filter((p) => (p.status === 'pending_hr' || p.status === 'pending_manager') && p.employeeId.toLowerCase() !== uid);
+    }
+    return proposals;
+  }
+
+  // 2. Chuyên viên HCNS (1139) / HR
+  const isHRStaff = user.id === '1139' || user.role === 'hr' || (user.department && /hcns|nhân sự/i.test(user.department) && user.role !== 'manager');
+  const isHRManager = user.id === '1867' || (user.role === 'manager' && user.department && /hcns|nhân sự/i.test(user.department));
+
+  if (scope === 'approver') {
+    if (isHRManager) {
+      return proposals.filter((p) => p.status === 'pending_manager' && p.employeeId.toLowerCase() !== uid);
+    }
+    if (isHRStaff) {
+      return proposals.filter((p) => p.status === 'pending_hr' && p.employeeId.toLowerCase() !== uid);
+    }
+    return [];
+  }
+
+  // Scope 'all'
+  if (isHRManager || isHRStaff) {
+    return proposals;
+  }
+
+  return proposals.filter((p) => p.employeeId.toLowerCase() === uid);
+}
+
+/**
+ * Filter general proposals based on RBAC rules:
+ * - Receiver department / receiver user: sees pending_receiver
+ * - Manager of receiver department: sees pending_manager
+ * - Admin & BOD: sees all
+ * - Employee: sees their own proposals
+ */
+export function filterUserGeneralProposals(
+  proposals: GeneralProposal[],
+  user?: User | null,
+  scope: DocumentScope = 'all'
+): GeneralProposal[] {
+  if (!user) return [];
+  const uid = user.id.toLowerCase();
+
+  if (scope === 'my') {
+    return proposals.filter((p) => p.employeeId.toLowerCase() === uid);
+  }
+
+  // 1. Admin & BOD
+  if (isSuperAdminOrBOD(user)) {
+    if (scope === 'approver') {
+      return proposals.filter((p) => (p.status === 'pending_receiver' || p.status === 'pending_manager') && p.employeeId.toLowerCase() !== uid);
+    }
+    return proposals;
+  }
+
+  // 2. Approver scope
+  if (scope === 'approver') {
+    return proposals.filter((p) => {
+      if (p.employeeId.toLowerCase() === uid) return false;
+      // Step 2: Receiver
+      if (p.status === 'pending_receiver') {
+        const isTargetUser = p.receiverUserId && p.receiverUserId.toLowerCase() === uid;
+        const isTargetDept = isSameDepartment(p.receiverDepartment, user.department);
+        const isIT = isITStaff(user) && /cntt|it/i.test(p.receiverDepartment);
+        return isTargetUser || isTargetDept || isIT;
+      }
+      // Step 3: Manager
+      if (p.status === 'pending_manager') {
+        if (user.role === 'manager') {
+          return isSameDepartment(p.receiverDepartment, user.department);
+        }
+      }
+      return false;
+    });
+  }
+
+  // Scope 'all'
+  const isManagerOrReceiver =
+    user.role === 'manager' ||
+    isITStaff(user) ||
+    proposals.some((p) => p.receiverUserId?.toLowerCase() === uid || isSameDepartment(p.receiverDepartment, user.department));
+
+  if (isManagerOrReceiver) {
+    return proposals.filter((p) => {
+      const isMine = p.employeeId.toLowerCase() === uid;
+      const isTargetUser = p.receiverUserId && p.receiverUserId.toLowerCase() === uid;
+      const isTargetDept = isSameDepartment(p.receiverDepartment, user.department);
+      const isIT = isITStaff(user) && /cntt|it/i.test(p.receiverDepartment);
+      return isMine || isTargetUser || isTargetDept || isIT;
+    });
+  }
+
   return proposals.filter((p) => p.employeeId.toLowerCase() === uid);
 }

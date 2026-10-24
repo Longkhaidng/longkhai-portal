@@ -18,16 +18,26 @@ import {
   Search,
   RotateCcw,
   Wrench,
+  Package,
+  FileQuestion,
 } from 'lucide-react';
 import { formatDate, formatDateTime, sortNewestFirst } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { RepairProposal, REPAIR_STATUS_LABELS, REPAIR_STATUS_BADGES } from '@/types/repair';
-import { filterUserLeaves, filterUserAttendances, filterUserGatePasses, filterUserRepairProposals } from '@/lib/permissions';
+import {
+  StationeryProposal,
+  GeneralProposal,
+  STATIONERY_STATUS_LABELS,
+  STATIONERY_STATUS_BADGES,
+  GENERAL_STATUS_LABELS,
+  GENERAL_STATUS_BADGES,
+} from '@/types/proposal';
+import { filterUserLeaves, filterUserAttendances, filterUserGatePasses, filterUserRepairProposals, filterUserStationeryProposals, filterUserGeneralProposals } from '@/lib/permissions';
 
 export function ReportsView() {
   const { currentUser } = useAuth();
-  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'repair' | 'departments'>('leave');
+  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'repair' | 'stationery' | 'general' | 'departments'>('leave');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('all');
@@ -51,6 +61,14 @@ export function ReportsView() {
 
   const repairs = useMemo(() => {
     return filterUserRepairProposals(storage.getRepairProposals(), currentUser, 'all');
+  }, [currentUser]);
+
+  const stationeries = useMemo(() => {
+    return filterUserStationeryProposals(storage.getStationeryProposals(), currentUser, 'all');
+  }, [currentUser]);
+
+  const generals = useMemo(() => {
+    return filterUserGeneralProposals(storage.getGeneralProposals(), currentUser, 'all');
   }, [currentUser]);
 
   // All leave requests where Economic staff has confirmed cutting meals
@@ -208,6 +226,55 @@ export function ReportsView() {
     }));
   }, [repairs, departmentFilter, statusFilter, searchTerm, fromDate, toDate]);
 
+  // 5b. Filtered Stationery Proposals
+  const filteredStationeries = useMemo(() => {
+    return sortNewestFirst(stationeries.filter((p) => {
+      if (departmentFilter !== 'all' && p.department !== departmentFilter) return false;
+      if (statusFilter !== 'all' && p.status !== statusFilter) return false;
+      if (searchTerm.trim()) {
+        const q = searchTerm.toLowerCase().trim();
+        const itemsStr = p.items.map((i) => `${i.itemId} ${i.itemName}`).join(' ').toLowerCase();
+        const match =
+          p.id.toLowerCase().includes(q) ||
+          p.employeeId.toLowerCase().includes(q) ||
+          p.employeeName.toLowerCase().includes(q) ||
+          p.department.toLowerCase().includes(q) ||
+          itemsStr.includes(q) ||
+          (p.notes && p.notes.toLowerCase().includes(q));
+        if (!match) return false;
+      }
+      const pDate = (p.createdAt || '').slice(0, 10);
+      if (fromDate && pDate && pDate < fromDate) return false;
+      if (toDate && pDate && pDate > toDate) return false;
+      return true;
+    }));
+  }, [stationeries, departmentFilter, statusFilter, searchTerm, fromDate, toDate]);
+
+  // 5c. Filtered General Proposals
+  const filteredGenerals = useMemo(() => {
+    return sortNewestFirst(generals.filter((p) => {
+      if (departmentFilter !== 'all' && p.department !== departmentFilter) return false;
+      if (statusFilter !== 'all' && p.status !== statusFilter) return false;
+      if (searchTerm.trim()) {
+        const q = searchTerm.toLowerCase().trim();
+        const match =
+          p.id.toLowerCase().includes(q) ||
+          p.employeeId.toLowerCase().includes(q) ||
+          p.employeeName.toLowerCase().includes(q) ||
+          p.department.toLowerCase().includes(q) ||
+          p.receiverDepartment.toLowerCase().includes(q) ||
+          (p.receiverUserName && p.receiverUserName.toLowerCase().includes(q)) ||
+          p.title.toLowerCase().includes(q) ||
+          p.content.toLowerCase().includes(q);
+        if (!match) return false;
+      }
+      const pDate = (p.createdAt || '').slice(0, 10);
+      if (fromDate && pDate && pDate < fromDate) return false;
+      if (toDate && pDate && pDate > toDate) return false;
+      return true;
+    }));
+  }, [generals, departmentFilter, statusFilter, searchTerm, fromDate, toDate]);
+
   // 6. Filtered Departments
   const filteredDepartments = useMemo(() => {
     return departments.filter((d) => {
@@ -237,6 +304,10 @@ export function ReportsView() {
       ? filteredMealCutLeaves.length
       : reportType === 'repair'
       ? filteredRepairs.length
+      : reportType === 'stationery'
+      ? filteredStationeries.length
+      : reportType === 'general'
+      ? filteredGenerals.length
       : filteredDepartments.length;
 
   // Export to Excel handler
@@ -440,6 +511,63 @@ export function ReportsView() {
         REPAIR_STATUS_LABELS[p.status] || p.status,
         p.creatorConfirmedAt ? formatDateTime(p.creatorConfirmedAt) : '',
       ]);
+    } else if (reportType === 'stationery') {
+      title = 'ĐỀ XUẤT VĂN PHÒNG PHẨM';
+      fileName = `LONGKHAI_Bao_Cao_DE_XUAT_VPP_${nowStr}`;
+      headers = [
+        'STT',
+        'Mã phiếu',
+        'Thời gian gửi',
+        'MSNV',
+        'Họ tên nhân viên',
+        'Tổ / Bộ phận',
+        'Danh mục mặt hàng',
+        'Người nhận xử lý',
+        'Trạng thái',
+        'Ghi chú',
+      ];
+      rows = filteredStationeries.map((p, idx) => {
+        const itemsSummary = p.items.map((i) => `${i.itemName} (SL: ${i.quantity} ${i.unit})`).join('; ');
+        return [
+          idx + 1,
+          p.id,
+          formatDateTime(p.createdAt),
+          p.employeeId,
+          p.employeeName,
+          p.department,
+          itemsSummary,
+          p.receiverStaffName || 'Võ Thị Tuyết (1139)',
+          STATIONERY_STATUS_LABELS[p.status] || p.status,
+          p.notes || '',
+        ];
+      });
+    } else if (reportType === 'general') {
+      title = 'ĐỀ XUẤT KHÁC';
+      fileName = `LONGKHAI_Bao_Cao_DE_XUAT_KHAC_${nowStr}`;
+      headers = [
+        'STT',
+        'Mã phiếu',
+        'Thời gian gửi',
+        'MSNV',
+        'Họ tên nhân viên',
+        'Tổ / Bộ phận',
+        'Bộ phận tiếp nhận',
+        'Tiêu đề đề xuất',
+        'Nội dung chi tiết',
+        'Trạng thái',
+      ];
+      rows = filteredGenerals.map((p, idx) => [
+        idx + 1,
+        p.id,
+        formatDateTime(p.createdAt),
+        p.employeeId,
+        p.employeeName,
+        p.department,
+        p.receiverUserName ? `${p.receiverUserName} (${p.receiverDepartment})` : p.receiverDepartment,
+        p.title,
+        p.content,
+        GENERAL_STATUS_LABELS[p.status] || p.status,
+      ]);
     } else if (reportType === 'departments') {
       title = 'CƠ CẤU PHÒNG BAN';
       fileName = `LONGKHAI_Bao_Cao_PHONG_BAN_${nowStr}`;
@@ -513,7 +641,7 @@ export function ReportsView() {
       </div>
 
       {/* Select Report Type Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
         <button
           onClick={() => setReportType('leave')}
           className={`p-4 rounded-2xl border text-left transition-all ${
@@ -586,6 +714,36 @@ export function ReportsView() {
           <div className="font-bold text-xs text-slate-900 dark:text-white">Cắt cơm</div>
           <div className="text-[11px] text-slate-500">
             {filteredMealCutLeaves.length} lượt {hasActiveFilters && `(${mealCutLeaves.length} gốc)`}
+          </div>
+        </button>
+
+        <button
+          onClick={() => setReportType('stationery')}
+          className={`p-4 rounded-2xl border text-left transition-all ${
+            reportType === 'stationery'
+              ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-500 shadow-sm ring-1 ring-blue-500/30'
+              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
+          }`}
+        >
+          <Package className="w-5 h-5 text-blue-600 mb-2" />
+          <div className="font-bold text-xs text-slate-900 dark:text-white">Văn phòng phẩm</div>
+          <div className="text-[11px] text-slate-500">
+            {filteredStationeries.length} đề xuất {hasActiveFilters && `(${stationeries.length} gốc)`}
+          </div>
+        </button>
+
+        <button
+          onClick={() => setReportType('general')}
+          className={`p-4 rounded-2xl border text-left transition-all ${
+            reportType === 'general'
+              ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-500 shadow-sm ring-1 ring-purple-500/30'
+              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
+          }`}
+        >
+          <FileQuestion className="w-5 h-5 text-purple-600 mb-2" />
+          <div className="font-bold text-xs text-slate-900 dark:text-white">Đề xuất khác</div>
+          <div className="text-[11px] text-slate-500">
+            {filteredGenerals.length} đề xuất {hasActiveFilters && `(${generals.length} gốc)`}
           </div>
         </button>
 
@@ -1172,6 +1330,133 @@ export function ReportsView() {
                         </td>
                         <td className="p-2 border text-[11px] text-slate-600 dark:text-slate-400 whitespace-nowrap">
                           {p.creatorConfirmedAt ? formatDateTime(p.creatorConfirmedAt) : '-'}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          )}
+
+          {/* STATIONERY REPORT TABLE */}
+          {reportType === 'stationery' && (
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
+                  <th className="p-2 border text-center w-12">STT</th>
+                  <th className="p-2 border">Mã phiếu</th>
+                  <th className="p-2 border">Thời gian gửi</th>
+                  <th className="p-2 border">MSNV</th>
+                  <th className="p-2 border">Họ tên nhân viên</th>
+                  <th className="p-2 border">Tổ / Bộ phận</th>
+                  <th className="p-2 border">Mặt hàng đề xuất</th>
+                  <th className="p-2 border">Người nhận xử lý</th>
+                  <th className="p-2 border">Trạng thái</th>
+                  <th className="p-2 border">Ghi chú</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredStationeries.length === 0 ? (
+                  <tr>
+                    <td colSpan={10} className="p-8 text-center text-slate-400">
+                      Không tìm thấy đề xuất văn phòng phẩm nào phù hợp với bộ lọc.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredStationeries.map((p, idx) => {
+                    const badge = STATIONERY_STATUS_BADGES[p.status] || {
+                      bg: 'bg-slate-100',
+                      text: 'text-slate-700',
+                      border: 'border-slate-200',
+                      label: p.status,
+                    };
+                    const itemsSummary = p.items.map((i) => `${i.itemName} (SL: ${i.quantity} ${i.unit})`).join('; ');
+                    return (
+                      <tr key={p.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                        <td className="p-2 border text-center font-bold text-slate-500">{idx + 1}</td>
+                        <td className="p-2 border font-mono font-bold text-blue-600">{p.id}</td>
+                        <td className="p-2 border text-[11px] text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                          {formatDateTime(p.createdAt)}
+                        </td>
+                        <td className="p-2 border font-mono text-slate-700 dark:text-slate-300">{p.employeeId}</td>
+                        <td className="p-2 border font-bold text-slate-900 dark:text-white">{p.employeeName}</td>
+                        <td className="p-2 border">{p.department}</td>
+                        <td className="p-2 border max-w-xs truncate" title={itemsSummary}>{itemsSummary}</td>
+                        <td className="p-2 border text-blue-700 dark:text-blue-300 font-medium">
+                          {p.receiverStaffName || 'Võ Thị Tuyết (1139)'}
+                        </td>
+                        <td className="p-2 border">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${badge.bg} ${badge.text} ${badge.border}`}>
+                            {badge.label}
+                          </span>
+                        </td>
+                        <td className="p-2 border text-slate-500 italic max-w-xs truncate" title={p.notes || ''}>
+                          {p.notes || '-'}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          )}
+
+          {/* GENERAL REPORT TABLE */}
+          {reportType === 'general' && (
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
+                  <th className="p-2 border text-center w-12">STT</th>
+                  <th className="p-2 border">Mã phiếu</th>
+                  <th className="p-2 border">Thời gian gửi</th>
+                  <th className="p-2 border">MSNV</th>
+                  <th className="p-2 border">Họ tên nhân viên</th>
+                  <th className="p-2 border">Tổ / Bộ phận</th>
+                  <th className="p-2 border">Bộ phận tiếp nhận</th>
+                  <th className="p-2 border">Tiêu đề đề xuất</th>
+                  <th className="p-2 border">Nội dung chi tiết</th>
+                  <th className="p-2 border">Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredGenerals.length === 0 ? (
+                  <tr>
+                    <td colSpan={10} className="p-8 text-center text-slate-400">
+                      Không tìm thấy đề xuất khác nào phù hợp với bộ lọc.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredGenerals.map((p, idx) => {
+                    const badge = GENERAL_STATUS_BADGES[p.status] || {
+                      bg: 'bg-slate-100',
+                      text: 'text-slate-700',
+                      border: 'border-slate-200',
+                      label: p.status,
+                    };
+                    return (
+                      <tr key={p.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                        <td className="p-2 border text-center font-bold text-slate-500">{idx + 1}</td>
+                        <td className="p-2 border font-mono font-bold text-purple-600">{p.id}</td>
+                        <td className="p-2 border text-[11px] text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                          {formatDateTime(p.createdAt)}
+                        </td>
+                        <td className="p-2 border font-mono text-slate-700 dark:text-slate-300">{p.employeeId}</td>
+                        <td className="p-2 border font-bold text-slate-900 dark:text-white">{p.employeeName}</td>
+                        <td className="p-2 border">{p.department}</td>
+                        <td className="p-2 border text-purple-700 dark:text-purple-300 font-medium">
+                          {p.receiverUserName ? `${p.receiverUserName} (${p.receiverDepartment})` : p.receiverDepartment}
+                        </td>
+                        <td className="p-2 border font-semibold text-slate-900 dark:text-white max-w-xs truncate" title={p.title}>
+                          {p.title}
+                        </td>
+                        <td className="p-2 border max-w-xs whitespace-pre-line text-slate-700 dark:text-slate-300" title={p.content}>
+                          {p.content}
+                        </td>
+                        <td className="p-2 border">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${badge.bg} ${badge.text} ${badge.border}`}>
+                            {badge.label}
+                          </span>
                         </td>
                       </tr>
                     );

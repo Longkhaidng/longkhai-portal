@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { CategoryPermission, WebIntegration } from '@/types/user';
 import { storage } from '@/lib/storage';
@@ -19,6 +19,7 @@ import {
   BookOpen,
   X,
   ChevronRight,
+  ChevronDown,
   Globe,
   ExternalLink,
   Monitor,
@@ -28,6 +29,9 @@ import {
   Database,
   LayoutGrid,
   Wrench,
+  Package,
+  FileQuestion,
+  ClipboardList,
 } from 'lucide-react';
 
 const ICON_COMPONENTS: Record<string, React.ElementType> = {
@@ -41,6 +45,22 @@ const ICON_COMPONENTS: Record<string, React.ElementType> = {
   ExternalLink,
 };
 
+interface SubMenuItem {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+}
+
+interface MenuItem {
+  id: string;
+  permission?: CategoryPermission;
+  label: string;
+  icon: React.ElementType;
+  badgeCount?: number;
+  badgeColor?: string;
+  subItems?: SubMenuItem[];
+}
+
 interface SidebarProps {
   currentTab: string;
   onSelectTab: (tabId: string) => void;
@@ -51,17 +71,9 @@ interface SidebarProps {
     attendance?: number;
     gatePassActive?: number;
     repair?: number;
+    proposals?: number;
   };
   onSelectIntegratedWeb?: (site: WebIntegration) => void;
-}
-
-interface MenuItem {
-  id: string;
-  permission?: CategoryPermission;
-  label: string;
-  icon: React.ElementType;
-  badgeCount?: number;
-  badgeColor?: string;
 }
 
 export function Sidebar({
@@ -74,12 +86,29 @@ export function Sidebar({
 }: SidebarProps) {
   const { currentUser, hasPermission } = useAuth();
   const allWebIntegrations = storage.getWebIntegrations().filter((w) => w.isActive);
-  
+
+  // Submenu open state for proposals
+  const [isProposalsOpen, setIsProposalsOpen] = useState(() => {
+    return (
+      currentTab === 'proposals' ||
+      currentTab === 'repair' ||
+      currentTab.startsWith('proposals_')
+    );
+  });
+
+  useEffect(() => {
+    if (
+      currentTab === 'proposals' ||
+      currentTab === 'repair' ||
+      currentTab.startsWith('proposals_')
+    ) {
+      setIsProposalsOpen(true);
+    }
+  }, [currentTab]);
+
   // Filter integrated websites based on employee individual permissions
   const accessibleWebIntegrations = allWebIntegrations.filter((site) => {
-    // Admin can see all active websites
     if (currentUser?.role === 'admin') return true;
-    // Check if this specific site is allowed for this user
     return currentUser?.allowedWebIntegrations?.includes(site.id) ?? false;
   });
 
@@ -121,12 +150,29 @@ export function Sidebar({
       badgeColor: 'bg-emerald-500 text-white',
     },
     {
-      id: 'repair',
-      permission: 'repair',
-      label: 'Phiếu đề xuất sửa chữa',
-      icon: Wrench,
-      badgeCount: pendingCounts.repair,
+      id: 'proposals',
+      permission: 'repair', // keeps backward compatibility for all users who had 'repair' permission
+      label: 'Phiếu đề xuất',
+      icon: ClipboardList,
+      badgeCount: pendingCounts.proposals ?? pendingCounts.repair,
       badgeColor: 'bg-amber-500 text-white',
+      subItems: [
+        {
+          id: 'proposals_repair',
+          label: 'Sửa chữa máy móc thiết bị',
+          icon: Wrench,
+        },
+        {
+          id: 'proposals_stationery',
+          label: 'Văn phòng phẩm',
+          icon: Package,
+        },
+        {
+          id: 'proposals_general',
+          label: 'Đề xuất khác',
+          icon: FileQuestion,
+        },
+      ],
     },
     {
       id: 'announcements',
@@ -210,7 +256,7 @@ export function Sidebar({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 lg:hidden"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 lg:hidden cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -242,8 +288,101 @@ export function Sidebar({
 
           {accessibleMenuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = currentTab === item.id;
+            const hasSub = Boolean(item.subItems && item.subItems.length > 0);
+            const isGroupActive =
+              currentTab === item.id ||
+              (item.id === 'proposals' &&
+                (currentTab === 'repair' || currentTab.startsWith('proposals_')));
+            const isParentActive = currentTab === item.id || (item.id === 'proposals' && currentTab === 'repair');
 
+            if (hasSub) {
+              return (
+                <div key={item.id} className="space-y-1">
+                  {/* Parent item */}
+                  <div
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                      isParentActive
+                        ? 'bg-blue-600 text-white font-semibold shadow-md shadow-blue-600/30'
+                        : isGroupActive
+                        ? 'bg-slate-800/90 text-white font-semibold'
+                        : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onSelectTab(item.id);
+                        setIsProposalsOpen(true);
+                        onClose();
+                      }}
+                      className="flex items-center gap-3 flex-1 text-left cursor-pointer truncate"
+                    >
+                      <Icon className={`w-4 h-4 shrink-0 ${isGroupActive ? 'text-white' : 'text-slate-400'}`} />
+                      <span className="truncate">{item.label}</span>
+                    </button>
+
+                    <div className="flex items-center gap-1.5">
+                      {item.badgeCount && item.badgeCount > 0 ? (
+                        <span
+                          className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                            item.badgeColor || 'bg-blue-500 text-white'
+                          }`}
+                        >
+                          {item.badgeCount}
+                        </span>
+                      ) : null}
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsProposalsOpen((prev) => !prev);
+                        }}
+                        className="p-1 rounded-md hover:bg-white/10 text-slate-400 hover:text-white cursor-pointer transition-colors"
+                        title={isProposalsOpen ? 'Thu gọn' : 'Mở rộng'}
+                      >
+                        {isProposalsOpen ? (
+                          <ChevronDown className="w-3.5 h-3.5" />
+                        ) : (
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Sub items */}
+                  {isProposalsOpen && (
+                    <div className="pl-4 pr-1 py-1 space-y-0.5 border-l-2 border-slate-800 ml-4">
+                      {item.subItems!.map((sub) => {
+                        const SubIcon = sub.icon;
+                        const isSubActive = currentTab === sub.id;
+
+                        return (
+                          <button
+                            key={sub.id}
+                            type="button"
+                            onClick={() => {
+                              onSelectTab(sub.id);
+                              onClose();
+                            }}
+                            className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[11px] font-medium transition-all cursor-pointer ${
+                              isSubActive
+                                ? 'bg-blue-600/30 text-blue-300 font-bold border-l-2 border-blue-400'
+                                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                            }`}
+                          >
+                            <SubIcon className={`w-3.5 h-3.5 shrink-0 ${isSubActive ? 'text-blue-400' : 'text-slate-500'}`} />
+                            <span className="truncate">{sub.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            const isActive = currentTab === item.id;
             return (
               <button
                 key={item.id}
@@ -251,7 +390,7 @@ export function Sidebar({
                   onSelectTab(item.id);
                   onClose();
                 }}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                   isActive
                     ? 'bg-blue-600 text-white font-semibold shadow-md shadow-blue-600/30'
                     : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
@@ -277,7 +416,7 @@ export function Sidebar({
             );
           })}
 
-          {/* DYNAMIC INTEGRATED WEBSITES SECTION IN SIDEBAR (FILTERED BY USER PERMISSION) */}
+          {/* DYNAMIC INTEGRATED WEBSITES SECTION IN SIDEBAR */}
           {accessibleWebIntegrations.length > 0 && (
             <div className="pt-3 mt-3 border-t border-slate-800">
               <div className="px-3 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center justify-between">
@@ -304,7 +443,7 @@ export function Sidebar({
                       }
                       onClose();
                     }}
-                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                       isSiteActive
                         ? 'bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-600/30'
                         : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'

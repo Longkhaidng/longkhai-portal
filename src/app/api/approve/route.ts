@@ -15,7 +15,7 @@ function ensureDir(dirPath: string) {
   } catch {}
 }
 
-function findAndLoadDoc(type: 'leave' | 'gate_pass' | 'attendance' | 'repair', docId: string): { doc: any; relPath: string } | null {
+function findAndLoadDoc(type: 'leave' | 'gate_pass' | 'attendance' | 'repair' | 'stationery' | 'general', docId: string): { doc: any; relPath: string } | null {
   const cleanId = docId.toUpperCase();
   const subDir =
     type === 'leave'
@@ -24,6 +24,10 @@ function findAndLoadDoc(type: 'leave' | 'gate_pass' | 'attendance' | 'repair', d
       ? 'gate-pass'
       : type === 'attendance'
       ? 'attendance'
+      : type === 'stationery'
+      ? 'stationery-proposal'
+      : type === 'general'
+      ? 'general-proposal'
       : 'repair-proposal';
 
   // Helper search in a root directory
@@ -66,6 +70,109 @@ function findAndLoadDoc(type: 'leave' | 'gate_pass' | 'attendance' | 'repair', d
   if (baseRes) return baseRes;
 
   return null;
+}
+
+
+async function sendBODNotificationEmailServer(doc: any, clientEmailConfig?: any) {
+  try {
+    let emailConfig: any = clientEmailConfig || null;
+    const cfgPath = fs.existsSync(path.join('/tmp', 'email-config.json'))
+      ? path.join('/tmp', 'email-config.json')
+      : path.join(BASE_DIR, 'settings', 'email-config.json');
+    if (fs.existsSync(cfgPath)) {
+      try {
+        const fileCfg = JSON.parse(fs.readFileSync(cfgPath, 'utf-8'));
+        emailConfig = { ...fileCfg, ...(clientEmailConfig || {}) };
+      } catch {}
+    }
+
+    const defaultBODEmails = [
+      'tu.pham@vitex.com.vn',
+      'tu.pham@longkhai.com.vn',
+      'buithuanh@vitex.com.vn',
+    ];
+
+    const subject = `[THÔNG BÁO TIẾN ĐỘ] Đề xuất sửa chữa đã được Trưởng BP duyệt: Mã ${doc.id} - ${doc.location} (${doc.department})`;
+    const baseUrl = emailConfig?.portalBaseUrl || 'https://longkhai-portal.vercel.app';
+    const solutionText = doc.proposedSolution || doc.managerComment || 'Đồng ý phê duyệt sửa chữa';
+
+    const html = `
+<!DOCTYPE html>
+<html lang="vi">
+<head><meta charset="utf-8"><title>${subject}</title></head>
+<body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #334155; line-height: 1.6;">
+  <div style="max-width: 600px; margin: 30px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0;">
+    <div style="background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); padding: 26px 20px; text-align: center; color: #ffffff; border-bottom: 3px solid #38bdf8;">
+      <h1 style="margin: 0; font-size: 18px; font-weight: 800; text-transform: uppercase;">BÁO CÁO TIẾN ĐỘ SỬA CHỮA THIẾT BỊ</h1>
+      <p style="margin: 6px 0 0 0; font-size: 12px; opacity: 0.9;">Kính gửi Ban Giám Đốc (Báo cáo thông tin &bull; Không cần phê duyệt)</p>
+    </div>
+    <div style="padding: 24px;">
+      <p style="font-size: 14px; margin-top: 0; color: #1e293b;">Kính gửi <b>Quý Ban Giám Đốc</b>,</p>
+      <p style="font-size: 13px; color: #475569;">
+        Hệ thống xin trân trọng thông báo: Phiếu đề xuất sửa chữa thiết bị <b>${doc.id}</b> từ nhân viên <b>${doc.employeeName}</b> (${doc.employeeId}) thuộc <b>${doc.department}</b> đã được Trưởng bộ phận <b>${doc.managerName || 'phê duyệt'}</b> chấp thuận và chuyển giao cho Bộ phận Cơ điện xử lý.
+      </p>
+
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin: 18px 0; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+        <tbody>
+          <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600; width: 38%;">Mã phiếu</td><td style="padding: 10px 14px; font-weight: bold; color: #d97706; font-family: monospace;">${doc.id}</td></tr>
+          <tr><td style="padding: 10px 14px; font-weight: 600;">Người đề xuất</td><td style="padding: 10px 14px; font-weight: bold; color: #0284c7;">${doc.employeeName} (${doc.employeeId})</td></tr>
+          <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600;">Tổ / Bộ phận</td><td style="padding: 10px 14px;">${doc.department}</td></tr>
+          <tr><td style="padding: 10px 14px; font-weight: 600;">Khu vực thiết bị hỏng</td><td style="padding: 10px 14px; font-weight: 600; color: #e11d48;">${doc.location}</td></tr>
+          <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600;">Tình trạng sự việc</td><td style="padding: 10px 14px; white-space: pre-line;">${doc.issueDescription}</td></tr>
+          <tr style="background-color: #fef3c7;"><td style="padding: 10px 14px; font-weight: 700; color: #92400e;">Đề xuất hướng khắc phục (Trưởng BP duyệt)</td><td style="padding: 10px 14px; font-weight: 600; color: #92400e; white-space: pre-line;">${solutionText}</td></tr>
+          <tr><td style="padding: 10px 14px; font-weight: 600;">Trưởng bộ phận phê duyệt</td><td style="padding: 10px 14px; color: #059669; font-weight: 600;">${doc.managerName || 'Trưởng bộ phận'}</td></tr>
+          <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600;">Bộ phận tiếp nhận</td><td style="padding: 10px 14px; color: #0284c7; font-weight: 600;">Phòng Cơ Điện (Trịnh Anh Tài - tai.trinh@longkhai.com.vn)</td></tr>
+        </tbody>
+      </table>
+
+      <!-- Note for BOD: NO action buttons needed -->
+      <div style="background-color: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 12px 16px; margin: 20px 0; font-size: 12px; color: #166534; text-align: center;">
+        ℹ️ <b>Báo cáo nắm tình hình:</b> Email này gửi tự động để Quý Ban Giám Đốc theo dõi tiến độ sản xuất. <b>Không yêu cầu thao tác phê duyệt trên email này.</b>
+      </div>
+
+      <div style="text-align: center; margin: 20px 0 10px 0;">
+        <a href="${baseUrl}" style="display: inline-block; background-color: #1e3a8a; color: #ffffff; text-decoration: none; padding: 11px 24px; font-size: 12.5px; font-weight: 700; border-radius: 10px;">
+          XEM TRÊN CỔNG THÔNG TIN LONG KHẢI
+        </a>
+      </div>
+
+      <div style="text-align: center; margin-top: 24px; padding-top: 18px; border-top: 1px dashed #cbd5e1; font-size: 11.5px; color: #64748b;">
+        Hệ thống Quản trị & Điều hành Nội bộ Long Khải Portal &bull; Tự động thông báo Ban Giám Đốc
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+    const googleScriptUrl =
+      clientEmailConfig?.googleScriptUrl ||
+      doc.emailRelayUrl ||
+      doc.emailConfig?.googleScriptUrl ||
+      emailConfig?.googleScriptUrl ||
+      process.env.GOOGLE_SCRIPT_URL;
+
+    for (const toEmail of defaultBODEmails) {
+      if (googleScriptUrl && googleScriptUrl.trim()) {
+        try {
+          await fetch(googleScriptUrl.trim(), {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              toEmail,
+              subject,
+              html,
+              text: `Báo cáo tiến độ sửa chữa thiết bị: Mã ${doc.id} - ${doc.location}`,
+              senderName: emailConfig?.senderName || 'Cổng Thông Tin Long Khải',
+            }),
+            redirect: 'follow',
+          });
+        } catch (e) {}
+      }
+    }
+  } catch (err: any) {
+    console.warn('Lỗi sendBODNotificationEmailServer:', err.message);
+  }
 }
 
 // Background email sender to Head of Maintenance
@@ -249,7 +356,7 @@ Vui lòng truy cập ${baseUrl} để tiếp nhận và cập nhật kết quả
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const type = searchParams.get('type') as 'leave' | 'gate_pass' | 'attendance' | 'repair' | null;
+    const type = searchParams.get('type') as 'leave' | 'gate_pass' | 'attendance' | 'repair' | 'stationery' | 'general' | null;
     const id = searchParams.get('id');
 
     if (!type || !id) {
@@ -313,7 +420,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { type, id, action, proposedSolution, comment, emailConfig, githubToken } = body as {
-      type: 'leave' | 'gate_pass' | 'attendance' | 'repair';
+      type: 'leave' | 'gate_pass' | 'attendance' | 'repair' | 'stationery' | 'general';
       id: string;
       action: 'approve' | 'reject';
       proposedSolution?: string;
@@ -476,6 +583,76 @@ export async function POST(req: NextRequest) {
         doc.status = 'rejected';
       }
       doc.updatedAt = now;
+    } else if (type === 'stationery') {
+      const now = new Date().toISOString();
+      if (doc.status === 'pending_hr') {
+        const stepIndex = 1;
+        if (doc.steps && doc.steps[stepIndex]) {
+          doc.steps[stepIndex].status = isApprove ? 'approved' : 'rejected';
+          doc.steps[stepIndex].updatedAt = now;
+          doc.steps[stepIndex].comment = comment || (isApprove ? 'NV HCNS đã duyệt đề xuất' : 'Từ chối');
+        }
+        doc.receiverApprovedAt = now;
+        doc.receiverComment = comment || (isApprove ? 'NV HCNS đã duyệt' : 'Từ chối');
+        if (isApprove) {
+          doc.status = 'pending_manager';
+          doc.currentStepIndex = 2; // Chuyển Trưởng phòng HCNS
+        } else {
+          doc.status = 'rejected';
+          doc.rejectionReason = comment || 'NV HCNS từ chối';
+        }
+      } else if (doc.status === 'pending_manager') {
+        const stepIndex = 2;
+        if (doc.steps && doc.steps[stepIndex]) {
+          doc.steps[stepIndex].status = isApprove ? 'approved' : 'rejected';
+          doc.steps[stepIndex].updatedAt = now;
+          doc.steps[stepIndex].comment = comment || (isApprove ? 'Trưởng phòng HCNS đã duyệt cấp phát' : 'Từ chối');
+        }
+        doc.managerApprovedAt = now;
+        doc.managerComment = comment || (isApprove ? 'Trưởng phòng HCNS phê duyệt' : 'Từ chối');
+        if (isApprove) {
+          doc.status = 'completed';
+        } else {
+          doc.status = 'rejected';
+          doc.rejectionReason = comment || 'Trưởng phòng HCNS từ chối';
+        }
+      }
+      doc.updatedAt = now;
+    } else if (type === 'general') {
+      const now = new Date().toISOString();
+      if (doc.status === 'pending_receiver') {
+        const stepIndex = 1;
+        if (doc.steps && doc.steps[stepIndex]) {
+          doc.steps[stepIndex].status = isApprove ? 'approved' : 'rejected';
+          doc.steps[stepIndex].updatedAt = now;
+          doc.steps[stepIndex].comment = comment || (isApprove ? 'Bộ phận tiếp nhận đã xử lý' : 'Từ chối');
+        }
+        doc.receiverProcessedAt = now;
+        doc.receiverNotes = comment || (isApprove ? 'Đã tiếp nhận xử lý' : 'Từ chối');
+        if (isApprove) {
+          doc.status = 'pending_manager';
+          doc.currentStepIndex = 2;
+        } else {
+          doc.status = 'rejected';
+          doc.rejectionReason = comment || 'Từ chối tiếp nhận';
+        }
+      } else if (doc.status === 'pending_manager') {
+        const stepIndex = 2;
+        if (doc.steps && doc.steps[stepIndex]) {
+          doc.steps[stepIndex].status = isApprove ? 'approved' : 'rejected';
+          doc.steps[stepIndex].updatedAt = now;
+          doc.steps[stepIndex].comment = comment || (isApprove ? 'Trưởng bộ phận phê duyệt' : 'Từ chối');
+        }
+        doc.managerApprovedAt = now;
+        doc.managerComment = comment || (isApprove ? 'Trưởng bộ phận phê duyệt' : 'Từ chối');
+        if (isApprove) {
+          doc.status = 'completed';
+        } else {
+          doc.status = 'rejected';
+          doc.rejectionReason = comment || 'Trưởng bộ phận từ chối';
+        }
+      }
+      doc.updatedAt = now;
     } else if (type === 'repair') {
       const stepIndex = 1; // Step 2: Trưởng bộ phận duyệt (0-indexed: index 1)
       const finalProposal = (proposedSolution || comment || '').trim();
@@ -547,9 +724,10 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // 4. If repair proposal approved, dispatch email to Head of Maintenance
+    // 4. If repair proposal approved, dispatch email to Head of Maintenance AND Ban Giám Đốc
     if (type === 'repair' && isApprove) {
       await sendMaintenanceEmailServer(doc, emailConfig);
+      await sendBODNotificationEmailServer(doc, emailConfig);
     }
 
     return NextResponse.json({

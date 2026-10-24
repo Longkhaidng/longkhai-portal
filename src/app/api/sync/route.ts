@@ -82,6 +82,9 @@ export async function GET() {
     const gatePasses = scanJsonFiles<any>('gate-pass');
     const attendanceConfirms = scanJsonFiles<any>('attendance');
     const repairProposals = scanJsonFiles<any>('repair-proposal');
+    const stationeryProposals = scanJsonFiles<any>('stationery-proposal');
+    const generalProposals = scanJsonFiles<any>('general-proposal');
+    const stationeryItems = readJsonFile<any[]>('settings/stationery-items.json', []);
 
     return NextResponse.json({
       success: true,
@@ -94,6 +97,9 @@ export async function GET() {
         gatePasses,
         attendanceConfirms,
         repairProposals,
+        stationeryProposals,
+        generalProposals,
+        stationeryItems,
         emailConfig,
         githubConfig,
       },
@@ -103,6 +109,9 @@ export async function GET() {
         gatePasses: gatePasses.length,
         attendanceConfirms: attendanceConfirms.length,
         repairProposals: repairProposals.length,
+        stationeryProposals: stationeryProposals.length,
+        generalProposals: generalProposals.length,
+        stationeryItems: stationeryItems.length,
       },
     });
   } catch (err: any) {
@@ -114,7 +123,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { type, data, githubToken } = body as {
-      type: 'users' | 'leave_request' | 'gate_pass' | 'attendance' | 'repair_proposal' | 'departments' | 'web_integrations' | 'github_config' | 'email_config';
+      type: 'users' | 'leave_request' | 'gate_pass' | 'attendance' | 'repair_proposal' | 'stationery_proposal' | 'general_proposal' | 'stationery_items' | 'departments' | 'web_integrations' | 'github_config' | 'email_config';
       data: any;
       githubToken?: string;
     };
@@ -145,6 +154,17 @@ export async function POST(req: NextRequest) {
       const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
       relFilePath = `repair-proposal/${year}/${data.id}.json`;
       commitMessage = `Update Repair Proposal ${data.id} (${data.status})`;
+    } else if (type === 'stationery_proposal') {
+      const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
+      relFilePath = `stationery-proposal/${year}/${data.id}.json`;
+      commitMessage = `Update Stationery Proposal ${data.id} (${data.status})`;
+    } else if (type === 'general_proposal') {
+      const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
+      relFilePath = `general-proposal/${year}/${data.id}.json`;
+      commitMessage = `Update General Proposal ${data.id} (${data.status})`;
+    } else if (type === 'stationery_items') {
+      relFilePath = 'settings/stationery-items.json';
+      commitMessage = `Update stationery catalog (${Array.isArray(data) ? data.length : 1} items)`;
     } else if (type === 'departments') {
       relFilePath = 'settings/departments.json';
       commitMessage = `Update departments directory`;

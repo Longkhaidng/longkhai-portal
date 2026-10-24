@@ -10,7 +10,7 @@ import { DepartmentManagementView } from '@/components/departments/DepartmentMan
 import { LeaveView } from '@/components/leave/LeaveView';
 import { AttendanceView } from '@/components/attendance/AttendanceView';
 import { GatePassView } from '@/components/gatepass/GatePassView';
-import { RepairProposalView } from '@/components/repair/RepairProposalView';
+import { ProposalHubView } from '@/components/proposals/ProposalHubView';
 import { AnnouncementView } from '@/components/announcements/AnnouncementView';
 import { DynamicFormsView } from '@/components/forms/DynamicFormsView';
 import { ReportsView } from '@/components/reports/ReportsView';
@@ -28,6 +28,8 @@ import {
   filterUserAttendances,
   filterUserGatePasses,
   filterUserRepairProposals,
+  filterUserStationeryProposals,
+  filterUserGeneralProposals,
   isApproverRole,
   isSecurityRole,
   isMaintenanceStaff,
@@ -75,16 +77,55 @@ function PortalAppContent() {
     currentUser,
     canManageOthers || isMaintenanceStaff(currentUser) ? 'approver' : 'my'
   );
+  const userStationeries = filterUserStationeryProposals(
+    storage.getStationeryProposals(),
+    currentUser,
+    canManageOthers ? 'approver' : 'my'
+  );
+  const userGenerals = filterUserGeneralProposals(
+    storage.getGeneralProposals(),
+    currentUser,
+    canManageOthers ? 'approver' : 'my'
+  );
 
   const pendingLeaves = userLeaves.filter((l) => l.status === 'pending').length;
   const pendingAtts = userAtts.filter((a) => a.status === 'pending').length;
   const activeGps = userGps.filter((g) => g.status === 'approved' || g.status === 'departed').length;
+
   const pendingRepairs = userRepairs.filter((r) => {
     if (currentUser?.role === 'manager' || currentUser?.role === 'team_leader') return r.status === 'pending_manager';
     if (isMaintenanceStaff(currentUser)) return r.status === 'maintenance_pending';
     if (r.employeeId.toLowerCase() === currentUser?.id.toLowerCase()) return r.status === 'pending_confirmation';
     return false;
   }).length;
+
+  const isHRStaff =
+    currentUser?.id === '1139' ||
+    currentUser?.role === 'hr' ||
+    (Boolean(currentUser?.department) && /hcns|nhân sự/i.test(currentUser!.department) && currentUser?.role !== 'manager');
+  const isHRManager =
+    currentUser?.id === '1867' ||
+    (currentUser?.role === 'manager' && Boolean(currentUser?.department) && /hcns|nhân sự/i.test(currentUser!.department));
+
+  const pendingStationeries = userStationeries.filter((s) => {
+    if (isHRStaff && s.status === 'pending_hr') return true;
+    if (isHRManager && s.status === 'pending_manager') return true;
+    return false;
+  }).length;
+
+  const pendingGenerals = userGenerals.filter((g) => {
+    if (g.status === 'pending_receiver') {
+      const isTarget = g.receiverUserId?.toLowerCase() === currentUser?.id.toLowerCase();
+      const isIT = (currentUser?.role === 'admin' || /cntt|it/i.test(currentUser?.department || '')) && /cntt|it/i.test(g.receiverDepartment);
+      return isTarget || isIT;
+    }
+    if (g.status === 'pending_manager') {
+      return (currentUser?.role === 'manager' || currentUser?.role === 'team_leader') && g.receiverDepartment.toLowerCase() === (currentUser?.department || '').toLowerCase();
+    }
+    return false;
+  }).length;
+
+  const totalPendingProposals = pendingRepairs + pendingStationeries + pendingGenerals;
 
   // Render view by tab with RBAC Guard
   const renderActiveView = () => {
@@ -150,6 +191,31 @@ function PortalAppContent() {
       return <DeploymentGuideView />;
     }
 
+    // Proposal Hub RBAC Guard (preserves backward compatibility with 'repair' permission)
+    if (currentTab === 'proposals' || currentTab.startsWith('proposals_')) {
+      if (!hasPermission('repair')) {
+        return (
+          <div className="min-h-[50vh] flex flex-col items-center justify-center text-center p-8 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
+            <div className="p-4 bg-rose-50 dark:bg-rose-950/60 text-rose-600 rounded-2xl mb-3">
+              <Lock className="w-8 h-8" />
+            </div>
+            <h2 className="text-base font-bold text-slate-900 dark:text-white">
+              Từ chối truy cập danh mục
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mt-1">
+              Tài khoản <b className="text-slate-800 dark:text-slate-200">{currentUser.name}</b> ({currentUser.id}) chưa được phân quyền truy cập danh mục Phiếu đề xuất. Vui lòng liên hệ Quản trị viên để được cấp quyền.
+            </p>
+            <button
+              onClick={() => setCurrentTab('dashboard')}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white font-bold text-xs rounded-xl shadow-xs"
+            >
+              Quay lại Dashboard
+            </button>
+          </div>
+        );
+      }
+    }
+
     // Permission check for protected categories
     const isCategory = (tab: string): tab is CategoryPermission => {
       return [
@@ -158,6 +224,7 @@ function PortalAppContent() {
         'leave',
         'attendance',
         'gate_pass',
+        'repair',
         'announcements',
         'forms',
         'reports',
@@ -204,8 +271,15 @@ function PortalAppContent() {
         return <AttendanceView />;
       case 'gate_pass':
         return <GatePassView />;
+      case 'proposals':
       case 'repair':
-        return <RepairProposalView />;
+        return <ProposalHubView initialCategory="repair" />;
+      case 'proposals_repair':
+        return <ProposalHubView initialCategory="repair" />;
+      case 'proposals_stationery':
+        return <ProposalHubView initialCategory="stationery" />;
+      case 'proposals_general':
+        return <ProposalHubView initialCategory="general" />;
       case 'announcements':
         return <AnnouncementView />;
       case 'forms':
@@ -286,7 +360,8 @@ function PortalAppContent() {
           leave: pendingLeaves,
           attendance: pendingAtts,
           gatePassActive: activeGps,
-          repair: pendingRepairs,
+          repair: totalPendingProposals,
+          proposals: totalPendingProposals,
         }}
         onSelectIntegratedWeb={(site) => {
           setViewingWebSite(site);
@@ -298,13 +373,11 @@ function PortalAppContent() {
         <Header
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
           onOpenGitHubSettings={() => {
-            setViewingWebSite(null);
             setCurrentTab('settings');
           }}
         />
 
-        {/* Content Body */}
-        <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
           {renderActiveView()}
         </main>
       </div>

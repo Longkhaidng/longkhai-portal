@@ -1,6 +1,7 @@
 import { storage } from './storage';
 import { SendEmailPayload, EmailConfig } from '@/types/email';
 import { RepairProposal } from '@/types/repair';
+import { StationeryProposal, GeneralProposal } from '@/types/proposal';
 import { formatDateTime } from './utils';
 
 export function generateMailtoUrl(payload: SendEmailPayload, baseUrl: string): string {
@@ -11,6 +12,10 @@ export function generateMailtoUrl(payload: SendEmailPayload, baseUrl: string): s
       ? 'PHIẾU XÁC NHẬN CÔNG'
       : payload.type === 'gate_pass'
       ? 'PHIẾU RA - VÀO CỔNG'
+      : payload.type === 'stationery'
+      ? 'PHIẾU ĐỀ XUẤT VĂN PHÒNG PHẨM'
+      : payload.type === 'general'
+      ? 'PHIẾU ĐỀ XUẤT KHÁC'
       : 'PHIẾU ĐỀ XUẤT SỬA CHỮA';
   const subject = `[Long Khải Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
 
@@ -55,6 +60,10 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
       ? 'PHIẾU XÁC NHẬN CÔNG'
       : payload.type === 'gate_pass'
       ? 'PHIẾU RA - VÀO CỔNG'
+      : payload.type === 'stationery'
+      ? 'PHIẾU ĐỀ XUẤT VĂN PHÒNG PHẨM'
+      : payload.type === 'general'
+      ? 'PHIẾU ĐỀ XUẤT KHÁC'
       : 'PHIẾU ĐỀ XUẤT SỬA CHỮA';
   const subject = `[Long Khải Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
 
@@ -626,4 +635,205 @@ export async function dispatchMaintenanceNotificationEmail(
     console.warn('Lỗi dispatchMaintenanceNotificationEmail:', err);
     return { success: false, toEmail };
   }
+}
+
+
+/**
+ * Dispatch informational notification email to Ban Giám Đốc (BOD)
+ * when Department Head has approved the repair proposal.
+ * NOTE: This email contains NO approve or reject buttons!
+ */
+export async function dispatchBODNotificationEmail(
+  proposal: RepairProposal
+): Promise<{ success: boolean; count: number }> {
+  const config = {
+    ...storage.getEmailConfig(),
+    googleScriptUrl: proposal.emailRelayUrl || proposal.emailConfig?.googleScriptUrl || storage.getEmailConfig().googleScriptUrl,
+  };
+  const allUsers = storage.getUsers();
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const baseUrl = config.portalBaseUrl || origin || 'https://longkhai-portal.vercel.app';
+
+  // Default BOD emails according to company governance
+  const defaultBODEmails = [
+    'tu.pham@vitex.com.vn',
+    'tu.pham@longkhai.com.vn',
+    'buithuanh@vitex.com.vn',
+  ];
+
+  // Also include any users with role bod or director
+  const bodUsers = allUsers.filter(
+    (u) =>
+      u.role === 'admin' ||
+      (u.role as string) === 'bod' ||
+      (u.position && /giám đốc|giam doc/i.test(u.position)) ||
+      (u.department && /ban giám đốc|ban giam doc/i.test(u.department))
+  );
+
+  const targetEmails = Array.from(
+    new Set([
+      ...defaultBODEmails,
+      ...bodUsers.map((u) => u.email).filter(Boolean) as string[],
+      ...(config.bodEmails || []),
+    ])
+  );
+
+  const subject = `[THÔNG BÁO TIẾN ĐỘ] Đề xuất sửa chữa đã được Trưởng BP duyệt: Mã ${proposal.id} - ${proposal.location} (${proposal.department})`;
+  const solutionText = proposal.proposedSolution || proposal.managerComment || 'Đồng ý phê duyệt sửa chữa';
+
+  const html = `
+<!DOCTYPE html>
+<html lang="vi">
+<head><meta charset="utf-8"><title>${subject}</title></head>
+<body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #334155; line-height: 1.6;">
+  <div style="max-width: 600px; margin: 30px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0;">
+    <div style="background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); padding: 26px 20px; text-align: center; color: #ffffff; border-bottom: 3px solid #38bdf8;">
+      <h1 style="margin: 0; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">BÁO CÁO TIẾN ĐỘ SỬA CHỮA THIẾT BỊ</h1>
+      <p style="margin: 6px 0 0 0; font-size: 12px; opacity: 0.9;">Kính gửi Ban Giám Đốc (Báo cáo thông tin &bull; Không cần phê duyệt)</p>
+    </div>
+    <div style="padding: 24px;">
+      <p style="font-size: 14px; margin-top: 0; color: #1e293b;">Kính gửi <b>Quý Ban Giám Đốc</b>,</p>
+      <p style="font-size: 13px; color: #475569;">
+        Hệ thống xin trân trọng thông báo: Phiếu đề xuất sửa chữa thiết bị <b>${proposal.id}</b> từ nhân viên <b>${proposal.employeeName}</b> (${proposal.employeeId}) thuộc <b>${proposal.department}</b> đã được Trưởng bộ phận <b>${proposal.managerName || 'phê duyệt'}</b> chấp thuận và chuyển giao cho Bộ phận Cơ điện xử lý.
+      </p>
+
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin: 18px 0; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+        <tbody>
+          <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600; width: 38%; border-bottom: 1px solid #e2e8f0;">Mã phiếu</td><td style="padding: 10px 14px; font-weight: bold; color: #d97706; font-family: monospace; border-bottom: 1px solid #e2e8f0;">${proposal.id}</td></tr>
+          <tr><td style="padding: 10px 14px; font-weight: 600; border-bottom: 1px solid #e2e8f0;">Người đề xuất</td><td style="padding: 10px 14px; font-weight: bold; color: #0284c7; border-bottom: 1px solid #e2e8f0;">${proposal.employeeName} (${proposal.employeeId})</td></tr>
+          <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600; border-bottom: 1px solid #e2e8f0;">Tổ / Bộ phận</td><td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0;">${proposal.department}</td></tr>
+          <tr><td style="padding: 10px 14px; font-weight: 600; border-bottom: 1px solid #e2e8f0;">Khu vực thiết bị hỏng</td><td style="padding: 10px 14px; font-weight: 600; color: #e11d48; border-bottom: 1px solid #e2e8f0;">${proposal.location}</td></tr>
+          <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600; border-bottom: 1px solid #e2e8f0;">Tình trạng sự việc</td><td style="padding: 10px 14px; white-space: pre-line; border-bottom: 1px solid #e2e8f0;">${proposal.issueDescription}</td></tr>
+          <tr style="background-color: #fef3c7;"><td style="padding: 10px 14px; font-weight: 700; color: #92400e; border-bottom: 1px solid #e2e8f0;">Đề xuất hướng khắc phục (Trưởng BP đã duyệt)</td><td style="padding: 10px 14px; font-weight: 600; color: #92400e; white-space: pre-line; border-bottom: 1px solid #e2e8f0;">${solutionText}</td></tr>
+          <tr><td style="padding: 10px 14px; font-weight: 600; border-bottom: 1px solid #e2e8f0;">Trưởng bộ phận phê duyệt</td><td style="padding: 10px 14px; color: #059669; font-weight: 600; border-bottom: 1px solid #e2e8f0;">${proposal.managerName || 'Trưởng bộ phận'} (${formatDateTime(proposal.managerApprovedAt || new Date().toISOString())})</td></tr>
+          <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600;">Bộ phận tiếp nhận sửa chữa</td><td style="padding: 10px 14px; color: #0284c7; font-weight: 600;">Phòng Cơ Điện (Trịnh Anh Tài - tai.trinh@longkhai.com.vn)</td></tr>
+        </tbody>
+      </table>
+
+      <!-- Note for BOD: NO action buttons needed -->
+      <div style="background-color: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 12px 16px; margin: 20px 0; font-size: 12px; color: #166534; text-align: center;">
+        ℹ️ <b>Báo cáo nắm tình hình:</b> Email này được gửi tự động để Quý Ban Giám Đốc theo dõi tiến độ sản xuất. <b>Không yêu cầu thao tác phê duyệt trên email này.</b>
+      </div>
+
+      <div style="text-align: center; margin: 20px 0 10px 0;">
+        <a href="${baseUrl}" style="display: inline-block; background-color: #1e3a8a; color: #ffffff; text-decoration: none; padding: 11px 24px; font-size: 12.5px; font-weight: 700; border-radius: 10px; box-shadow: 0 2px 8px rgba(30, 58, 138, 0.25);">
+          XEM TRÊN CỔNG THÔNG TIN LONG KHẢI
+        </a>
+      </div>
+
+      <div style="text-align: center; margin-top: 24px; padding-top: 18px; border-top: 1px dashed #cbd5e1; font-size: 11.5px; color: #64748b;">
+        Hệ thống Quản trị & Điều hành Nội bộ Long Khải Portal &bull; Tự động thông báo Ban Giám Đốc
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  let sentCount = 0;
+  for (const toEmail of targetEmails) {
+    try {
+      await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          toEmail,
+          subject,
+          html,
+          type: 'repair',
+          docId: proposal.id,
+          employeeName: proposal.employeeName,
+          emailConfig: config,
+        }),
+      });
+      sentCount++;
+    } catch (e) {
+      console.warn('Lỗi gửi email BOD:', toEmail, e);
+    }
+  }
+
+  return { success: sentCount > 0, count: sentCount };
+}
+
+/**
+ * Dispatch Stationery Proposal Approval Email
+ * Step 'hr': to Chuyên viên HCNS (1139 - Võ Thị Tuyết)
+ * Step 'manager': to Trưởng phòng HCNS (1867 - Trương Anh Như Quỳnh)
+ */
+export async function dispatchStationeryApprovalEmail(
+  proposal: StationeryProposal,
+  targetStep: 'hr' | 'manager'
+): Promise<DispatchEmailResult> {
+  const config = {
+    ...storage.getEmailConfig(),
+    googleScriptUrl: proposal.emailRelayUrl || proposal.emailConfig?.googleScriptUrl || storage.getEmailConfig().googleScriptUrl,
+  };
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const baseUrl = config.portalBaseUrl || origin || 'https://longkhai-portal.vercel.app';
+
+  const toEmail = targetStep === 'hr' ? 'tuyet.vo@longkhai.com.vn' : 'Quynh.truong@longkhai.com.vn';
+  const managerName = targetStep === 'hr' ? 'Chị Võ Thị Tuyết (HCNS)' : 'Chị Trương Anh Như Quỳnh (Trưởng phòng HCNS)';
+
+  const itemsListFormatted = proposal.items
+    .map((item, idx) => `${idx + 1}. [${item.itemId}] ${item.itemName} - SL: ${item.quantity} ${item.unit}${item.notes ? ` (${item.notes})` : ''}`)
+    .join('<br/>');
+
+  const payload: SendEmailPayload = {
+    toEmail,
+    managerName,
+    type: 'stationery',
+    docId: proposal.id,
+    employeeId: proposal.employeeId,
+    employeeName: proposal.employeeName,
+    department: proposal.department,
+    details: {
+      title: 'Chi tiết đề xuất văn phòng phẩm',
+      items: [
+        { label: 'Tổ / Bộ phận', value: proposal.department },
+        { label: 'Người nhận xử lý', value: targetStep === 'hr' ? 'Võ Thị Tuyết (Chuyên viên HCNS - 1139)' : 'Trương Anh Như Quỳnh (Trưởng phòng HCNS)' },
+        { label: 'Danh mục mặt hàng đề xuất', value: itemsListFormatted },
+        { label: 'Ghi chú đề xuất', value: proposal.notes || 'Không có ghi chú' },
+        { label: 'Thời gian gửi', value: formatDateTime(proposal.createdAt) },
+      ],
+    },
+  };
+
+  return dispatchApprovalEmail(payload);
+}
+
+/**
+ * Dispatch General Proposal Approval Email
+ */
+export async function dispatchGeneralApprovalEmail(
+  proposal: GeneralProposal,
+  targetStep: 'receiver' | 'manager'
+): Promise<DispatchEmailResult> {
+  const config = {
+    ...storage.getEmailConfig(),
+    googleScriptUrl: proposal.emailRelayUrl || proposal.emailConfig?.googleScriptUrl || storage.getEmailConfig().googleScriptUrl,
+  };
+  const toEmail = targetStep === 'receiver' ? (proposal.receiverUserEmail || 'it@longkhai.com.vn') : (proposal.managerEmail || 'it@longkhai.com.vn');
+  const managerName = targetStep === 'receiver' ? (proposal.receiverUserName || proposal.receiverDepartment) : (proposal.managerName || 'Trưởng bộ phận');
+
+  const payload: SendEmailPayload = {
+    toEmail,
+    managerName,
+    type: 'general',
+    docId: proposal.id,
+    employeeId: proposal.employeeId,
+    employeeName: proposal.employeeName,
+    department: proposal.department,
+    details: {
+      title: 'Chi tiết phiếu đề xuất',
+      items: [
+        { label: 'Tổ / Bộ phận', value: proposal.department },
+        { label: 'Bộ phận tiếp nhận', value: proposal.receiverDepartment },
+        { label: 'Tiêu đề đề xuất', value: proposal.title },
+        { label: 'Nội dung chi tiết', value: proposal.content },
+        { label: 'Thời gian gửi', value: formatDateTime(proposal.createdAt) },
+      ],
+    },
+  };
+
+  return dispatchApprovalEmail(payload);
 }
