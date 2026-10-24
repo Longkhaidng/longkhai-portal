@@ -5,5 +5,1139 @@
     "unit": "Cuốn",
     "category": "Sổ sách",
     "isActive": true
+  },
+  {
+    "id": "BAM1",
+    "name": "Bấm 10 Plus",
+    "unit": "cái",
+    "category": "BẤM",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BAM2",
+    "name": "Bấm đại 50SA (100 tờ)",
+    "unit": "cái",
+    "category": "BẤM",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BAM3",
+    "name": "Bấm lỗ 987 (30 tờ)",
+    "unit": "cái",
+    "category": "BẤM",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BK1",
+    "name": "Băng keo trong 2.4F",
+    "unit": "cuộn",
+    "category": "BĂNG KEO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BK2",
+    "name": "Băng keo trong 5F",
+    "unit": "cuộn",
+    "category": "BĂNG KEO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BK3",
+    "name": "Băng keo trong 7F",
+    "unit": "cuộn",
+    "category": "BĂNG KEO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BK4",
+    "name": "Băng keo vàng 5F",
+    "unit": "cuộn",
+    "category": "BĂNG KEO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BK5",
+    "name": "Băng keo si 3F6",
+    "unit": "cuộn",
+    "category": "BĂNG KEO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BK6",
+    "name": "Băng keo si 4F8",
+    "unit": "cuộn",
+    "category": "BĂNG KEO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BK7",
+    "name": "Băng keo 2 mặt 2F4",
+    "unit": "cuộn",
+    "category": "BĂNG KEO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BK8",
+    "name": "Băng keo 2 mặt 4F8",
+    "unit": "cuộn",
+    "category": "BĂNG KEO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BK9",
+    "name": "Băng keo xốp 2m 1F2",
+    "unit": "cuộn",
+    "category": "BĂNG KEO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BK10",
+    "name": "Băng keo xốp 2m 2F4",
+    "unit": "cuộn",
+    "category": "BĂNG KEO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BK11",
+    "name": "Băng keo xôp 2m 4F8",
+    "unit": "cuộn",
+    "category": "BĂNG KEO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BT1",
+    "name": "Bì thư A4 (25x35)",
+    "unit": "cái",
+    "category": "BÌ THƯ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BT2",
+    "name": "Bì thư A4:2 (17x23)",
+    "unit": "cái",
+    "category": "BÌ THƯ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BT3",
+    "name": "Bì thư A4:3 (12x22)",
+    "unit": "cái",
+    "category": "BÌ THƯ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BIA1",
+    "name": "Bìa lỗ",
+    "unit": "tập",
+    "category": "BÌA",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BIA2",
+    "name": "Bìa lá A4",
+    "unit": "cái",
+    "category": "BÌA",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BIA3",
+    "name": "Bìa trình ký 2m nhựa",
+    "unit": "cái",
+    "category": "BÌA",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BIA4",
+    "name": "Bìa trình ký 1m nhựa",
+    "unit": "cái",
+    "category": "BÌA",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BIA5",
+    "name": "Bìa trình ký 2m da sọc",
+    "unit": "cái",
+    "category": "BÌA",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BIA6",
+    "name": "Bìa clear F4",
+    "unit": "cái",
+    "category": "BÌA",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BIA7",
+    "name": "Bìa gương A4",
+    "unit": "ram",
+    "category": "BÌA",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BIA8",
+    "name": "Bìa 3 dây 7cm",
+    "unit": "cái",
+    "category": "BÌA",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT1",
+    "name": "Bút dán bàn",
+    "unit": "cặp",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT2",
+    "name": "Bút bi Thiên Long (xanh)",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT3",
+    "name": "Bút bi Thiên Long (đen)",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT4",
+    "name": "Bút bi Thiên Long (đỏ)",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT5",
+    "name": "Bút bi 4 màu",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT6",
+    "name": "Bút chì Deli",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT7",
+    "name": "Bút chì kim Nhật",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT8",
+    "name": "Bút ghi đĩa (xanh)",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT9",
+    "name": "Bút lông dầu (đen)",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT10",
+    "name": "Bút lông bảng",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT11",
+    "name": "Bút dạ quang (màu vàng)",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT12",
+    "name": "Bút dạ quang (màu xanh)",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT13",
+    "name": "Bút dạ quang (màu hồng)",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT14",
+    "name": "Bút xóa kéo",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT15",
+    "name": "Bút xóa nước",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT16",
+    "name": "Bút dạ quang lớn (màu vàng)",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "BUT17",
+    "name": "Bút GEL xóa được",
+    "unit": "cây",
+    "category": "BÚT",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "CK1",
+    "name": "Cắt băng keo 5F",
+    "unit": "cái",
+    "category": "CẮT KEO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "CK2",
+    "name": "Cắt băng keo 7F",
+    "unit": "cái",
+    "category": "CẮT KEO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "CO1",
+    "name": "Còng 5F",
+    "unit": "cái",
+    "category": "CÒNG",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "CO2",
+    "name": "Còng 7F",
+    "unit": "cái",
+    "category": "CÒNG",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "CO3",
+    "name": "Còng A3",
+    "unit": "cái",
+    "category": "CÒNG",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "LD1",
+    "name": "Dao rọc giấy SDI lớn",
+    "unit": "cái",
+    "category": "DAO - LƯỠI DAO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "LD2",
+    "name": "Lưỡi dao SDI lớn",
+    "unit": "hộp",
+    "category": "DAO - LƯỠI DAO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "DAY1",
+    "name": "Dây chun co giãn",
+    "unit": "cuộn",
+    "category": "DÂY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "DAY2",
+    "name": "Dây rút nhựa (8x300 mm)",
+    "unit": "gói",
+    "category": "DÂY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "DAY3",
+    "name": "Dây đeo bảng tên móc nhựa",
+    "unit": "dây",
+    "category": "DÂY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "DG1",
+    "name": "Đinh bấm 10PLUS",
+    "unit": "hộp",
+    "category": "ĐINH - GHIM",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "DG2",
+    "name": "Đinh bấm 10KW-TRIO",
+    "unit": "hộp",
+    "category": "ĐINH - GHIM",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "DG3",
+    "name": "Đinh 24/6 (2-30 tờ)",
+    "unit": "hộp",
+    "category": "ĐINH - GHIM",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "DG4",
+    "name": "Đinh 23/8 (35-50 tờ)",
+    "unit": "hộp",
+    "category": "ĐINH - GHIM",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "DG5",
+    "name": "Đinh 23/10 (50-70 tờ)",
+    "unit": "hộp",
+    "category": "ĐINH - GHIM",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "DG6",
+    "name": "Đinh 23/15 (70-100 tờ)",
+    "unit": "hộp",
+    "category": "ĐINH - GHIM",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "CG7",
+    "name": "Ghim kẹp C32",
+    "unit": "hộp",
+    "category": "ĐINH - GHIM",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY1",
+    "name": "[object Object]",
+    "unit": "ram",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY2",
+    "name": "Giấy dán Tommy A4 137",
+    "unit": "ram",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY3",
+    "name": "Giấy A3 Plus",
+    "unit": "ram",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY4",
+    "name": "Giấy A4 Plus ĐL 70",
+    "unit": "ram",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY5",
+    "name": "Giấy A5 70 Plus",
+    "unit": "ram",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY6",
+    "name": "Giấy bìa cứng (xanh dương)",
+    "unit": "tập",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY7",
+    "name": "Giấy bìa cứng (vàng)",
+    "unit": "tập",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY8",
+    "name": "Giấy bìa cứng (trắng)",
+    "unit": "tập",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY9",
+    "name": "Giấy bìa cứng (hồng)",
+    "unit": "tập",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY10",
+    "name": "Giấy note 3*4",
+    "unit": "tập",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY11",
+    "name": "Giấy note nhỏ 5*1.5",
+    "unit": "tập",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY12",
+    "name": "Giấy dán Please Sign",
+    "unit": "tập",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY13",
+    "name": "Giấy niêm phong",
+    "unit": "tập",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY14",
+    "name": "Giấy phân trang A4 (nhiều màu)",
+    "unit": "tập",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY15",
+    "name": "Giấy Decal A4",
+    "unit": "tập",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY16",
+    "name": "Giấy màu (vàng/hồng) A4, bìa mỏng",
+    "unit": "tập",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GIAY17",
+    "name": "Giấy bìa cứng (vàng)",
+    "unit": "tập",
+    "category": "GIẤY",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GOT1",
+    "name": "Gọt chì nhỏ",
+    "unit": "cái",
+    "category": "GỌT CHÌ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "GOT2",
+    "name": "Gọt chì lớn",
+    "unit": "cái",
+    "category": "GỌT CHÌ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "HOP1",
+    "name": "Hộp đựng bút",
+    "unit": "cái",
+    "category": "HỘP",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "HOP2",
+    "name": "Hộp đựng hồ sơ",
+    "unit": "cái",
+    "category": "HỘP",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "KEP1",
+    "name": "Kẹp 3 dây 7F",
+    "unit": "cái",
+    "category": "KẸP",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "KEP2",
+    "name": "Kẹp 3 dây 10F",
+    "unit": "cái",
+    "category": "KẸP",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "KEP3",
+    "name": "Kẹp đen 19",
+    "unit": "hộp",
+    "category": "KẸP",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "KEP4",
+    "name": "Kẹp đen 25",
+    "unit": "hộp",
+    "category": "KẸP",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "KEP5",
+    "name": "Kẹp đen 32",
+    "unit": "hộp",
+    "category": "KẸP",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "KEP6",
+    "name": "Kẹp đen 41",
+    "unit": "hộp",
+    "category": "KẸP",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "KEP7",
+    "name": "Kẹp đen 51",
+    "unit": "hộp",
+    "category": "KẸP",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "KEO1",
+    "name": "Kéo văn phòng",
+    "unit": "cái",
+    "category": "KÉO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "KEO2",
+    "name": "Kéo lớn",
+    "unit": "cái",
+    "category": "KÉO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "KEO3",
+    "name": "Kéo bấm chỉ",
+    "unit": "cái",
+    "category": "KÉO",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "KE1",
+    "name": "Kệ 2 tầng nhựa",
+    "unit": "cái",
+    "category": "KỆ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "KE2",
+    "name": "Kệ 3 tầng nhựa",
+    "unit": "cái",
+    "category": "KỆ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "KE3",
+    "name": "Kệ 1 ngăn nhựa",
+    "unit": "cái",
+    "category": "KỆ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "KE4",
+    "name": "Kệ 3 ngăn nhựa",
+    "unit": "cái",
+    "category": "KỆ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "MT1",
+    "name": "Máy tính lớn",
+    "unit": "cái",
+    "category": "MÁY TÍNH",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "MT2",
+    "name": "Máy tính nhỏ",
+    "unit": "cái",
+    "category": "MÁY TÍNH",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "MUC1",
+    "name": "Mực lông dầu (đen)",
+    "unit": "lọ",
+    "category": "MỰC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "MUC2",
+    "name": "Mực lông bản",
+    "unit": "lọ",
+    "category": "MỰC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "MUC3",
+    "name": "Mực dấu shiny",
+    "unit": "lọ",
+    "category": "MỰC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "NEP",
+    "name": "Nẹp giấy (xâu lỗ)",
+    "unit": "tập",
+    "category": "NẸP",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "PIN1",
+    "name": "Pin tiểu panasonic",
+    "unit": "cặp",
+    "category": "PIN",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "PIN2",
+    "name": "Pin đũa panasonic",
+    "unit": "cặp",
+    "category": "PIN",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "SO1",
+    "name": "Sổ cắt đầu",
+    "unit": "cuốn",
+    "category": "SỔ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "SO2",
+    "name": "Sổ CK7 dày",
+    "unit": "cuốn",
+    "category": "SỔ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "SO3",
+    "name": "Sổ CK7 mỏng",
+    "unit": "cuốn",
+    "category": "SỔ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "SO4",
+    "name": "Sổ lò xo A4",
+    "unit": "cuốn",
+    "category": "SỔ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "SO5",
+    "name": "Sổ lò xo A5 dày",
+    "unit": "cuốn",
+    "category": "SỔ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "SO6",
+    "name": "Sổ kẻ ngang A4",
+    "unit": "cuốn",
+    "category": "SỔ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "SO7",
+    "name": "Sổ kẻ ngang A5",
+    "unit": "cuốn",
+    "category": "SỔ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "SO8",
+    "name": "Sổ đen CK10 dày",
+    "unit": "cuốn",
+    "category": "SỔ",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "T1",
+    "name": "Thước 20",
+    "unit": "cái",
+    "category": "THƯỚC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "T2",
+    "name": "Thước 30",
+    "unit": "cái",
+    "category": "THƯỚC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "T3",
+    "name": "Thước 50",
+    "unit": "cái",
+    "category": "THƯỚC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "OT1",
+    "name": "Lau bảng có tay cầm",
+    "unit": "cái",
+    "category": "KHÁC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "OT2",
+    "name": "Ruột bút chì",
+    "unit": "vỉ",
+    "category": "KHÁC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "OT3",
+    "name": "Ruột băng xóa kéo",
+    "unit": "cái",
+    "category": "KHÁC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "OT4",
+    "name": "Hồ kho",
+    "unit": "hộp",
+    "category": "KHÁC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "OT5",
+    "name": "Hồ nước",
+    "unit": "lọ",
+    "category": "KHÁC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "OT6",
+    "name": "Phấn màu",
+    "unit": "hộp",
+    "category": "KHÁC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "OT7",
+    "name": "Phấn trắng",
+    "unit": "hộp",
+    "category": "KHÁC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "OT8",
+    "name": "Tẩy",
+    "unit": "viên",
+    "category": "KHÁC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "OT9",
+    "name": "Bao đựng rác (tiểu/màu)",
+    "unit": "kg",
+    "category": "KHÁC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "OT10",
+    "name": "Bao đựng rác (trung/đen)",
+    "unit": "kg",
+    "category": "KHÁC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "OT11",
+    "name": "Bao đựng rác (đại/màu)",
+    "unit": "kg",
+    "category": "KHÁC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "OT12",
+    "name": "Kim khâu tải",
+    "unit": "cây",
+    "category": "KHÁC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
+  },
+  {
+    "id": "OT13",
+    "name": "Thẻ đeo nhân viên",
+    "unit": "cái",
+    "category": "KHÁC",
+    "isActive": true,
+    "createdAt": "2026-10-24T06:22:16.888Z",
+    "updatedAt": "2026-10-24T06:22:16.888Z"
   }
 ]
