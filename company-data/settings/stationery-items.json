@@ -1,12 +1,5 @@
 [
   {
-    "id": "VPP-022",
-    "name": "Kéo văn phòng Deli 17.5cm",
-    "unit": "Cái",
-    "category": "Dụng cụ văn phòng",
-    "isActive": true
-  },
-  {
     "id": "VPP-023",
     "name": "Sổ tay ghi chép A5 (200 trang)",
     "unit": "Cuốn",
