@@ -5,6 +5,7 @@
     "department": "Ban Giám Đốc",
     "position": "Giám đốc sản xuất",
     "role": "manager",
+    "email": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
       "announcements",
@@ -14,7 +15,7 @@
     "isActive": true,
     "password": "Lk@123",
     "createdAt": "2026-10-24T03:20:45.118Z",
-    "updatedAt": "2026-10-24T03:20:45.118Z"
+    "updatedAt": "2026-10-24T03:21:11.949Z"
   },
   {
     "id": "2864",
