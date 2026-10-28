@@ -6,6 +6,7 @@ export interface StationeryItem {
   name: string; // Tên văn phòng phẩm
   unit: string; // Đơn vị tính: Cây, Ram, Hộp, Cuộn, Cái...
   category?: string; // Nhóm VPP
+  monthlyQuota?: number; // Định mức / tháng
   notes?: string;
   isActive: boolean;
   createdAt?: string;
@@ -16,6 +17,7 @@ export interface StationeryProposalItem {
   itemId: string; // Mã VPP
   itemName: string; // Tên VPP
   unit: string; // ĐVT
+  monthlyQuota?: number; // Định mức theo tháng đã định sẵn
   quantity: number; // Số lượng đặt hàng
   notes?: string; // Ghi chú riêng từng món
 }

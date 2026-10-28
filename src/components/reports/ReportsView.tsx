@@ -955,8 +955,8 @@ export function ReportsView() {
       {/* Printable Paper Document Container */}
       <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-6 print-document print:p-0 print:border-none print:shadow-none print:m-0">
         {/* Factory Formal Letterhead */}
-        <div className="border-b-2 border-slate-800 pb-4 flex flex-col md:flex-row justify-between items-start md:items-center text-xs gap-3">
-          <div className="flex items-center gap-3">
+        <div className="border-b-2 border-slate-800 pb-4 flex flex-row justify-between items-start text-xs gap-4 w-full print-header-letterhead">
+          <div className="flex items-center gap-3 shrink-0">
             <img
               src="/logo.png"
               alt="Long Khai Logo"
@@ -971,9 +971,11 @@ export function ReportsView() {
               </div>
             </div>
           </div>
-          <div className="text-right text-[11px] text-slate-500 mt-2 md:mt-0">
-            <div>Ngày xuất báo cáo: {formatDate(new Date().toISOString())}</div>
-            <div className="font-mono">Mã tài liệu: BC-LK-2026/01</div>
+          <div className="text-right text-[11px] text-slate-600 dark:text-slate-400 ml-auto shrink-0 print-header-right">
+            <div className="whitespace-nowrap font-medium">Ngày xuất báo cáo: {formatDate(new Date().toISOString())}</div>
+            <div className="font-mono font-bold whitespace-nowrap">
+              {reportType === 'pccc' ? 'Mã tài liệu: BC-LK-PCCC/2026' : 'Mã tài liệu: BC-LK-2026/01'}
+            </div>
           </div>
         </div>
 

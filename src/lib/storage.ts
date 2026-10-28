@@ -541,7 +541,13 @@ class StorageService {
       const data = localStorage.getItem(STORAGE_KEYS.STATIONERY_ITEMS);
       if (data) {
         const parsed = JSON.parse(data);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const defaultMap = new Map((INITIAL_STATIONERY_ITEMS as StationeryItem[]).map((i) => [i.id, i.monthlyQuota]));
+          return parsed.map((item: StationeryItem) => ({
+            ...item,
+            monthlyQuota: item.monthlyQuota !== undefined ? item.monthlyQuota : defaultMap.get(item.id),
+          }));
+        }
       }
     } catch {}
     const defaults = (INITIAL_STATIONERY_ITEMS as StationeryItem[]) || [];

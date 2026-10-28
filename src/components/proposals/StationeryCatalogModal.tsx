@@ -43,6 +43,7 @@ export function StationeryCatalogModal({
   const [name, setName] = useState('');
   const [unit, setUnit] = useState('Cây');
   const [category, setCategory] = useState('Bút viết');
+  const [monthlyQuota, setMonthlyQuota] = useState<number | ''>('');
   const [notes, setNotes] = useState('');
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -62,6 +63,7 @@ export function StationeryCatalogModal({
     setName('');
     setUnit('Cây');
     setCategory('Bút viết');
+    setMonthlyQuota('');
     setNotes('');
   };
 
@@ -72,6 +74,7 @@ export function StationeryCatalogModal({
     setName(item.name);
     setUnit(item.unit);
     setCategory(item.category || 'Văn phòng phẩm');
+    setMonthlyQuota(item.monthlyQuota !== undefined && item.monthlyQuota !== null ? item.monthlyQuota : '');
     setNotes(item.notes || '');
   };
 
@@ -95,6 +98,7 @@ export function StationeryCatalogModal({
       name: name.trim(),
       unit: unit.trim(),
       category: category.trim(),
+      monthlyQuota: monthlyQuota !== '' ? Number(monthlyQuota) : undefined,
       notes: notes.trim() || undefined,
       isActive: true,
     };
@@ -135,6 +139,7 @@ export function StationeryCatalogModal({
         { header: 'Mã VPP', key: 'id', width: 16 },
         { header: 'Tên văn phòng phẩm', key: 'name', width: 38 },
         { header: 'Đơn vị tính', key: 'unit', width: 14 },
+        { header: 'Định mức / tháng', key: 'monthlyQuota', width: 18 },
         { header: 'Nhóm mặt hàng', key: 'category', width: 22 },
         { header: 'Ghi chú quy cách', key: 'notes', width: 26 },
       ];
@@ -160,9 +165,9 @@ export function StationeryCatalogModal({
 
       // Sample data rows
       const sampleRows = [
-        { id: 'VPP-001', name: 'Bút bi Thiên Long TL-027 (Xanh)', unit: 'Cây', category: 'Bút viết', notes: 'Hộp 20 cây' },
-        { id: 'VPP-002', name: 'Bút bi Thiên Long TL-027 (Đỏ)', unit: 'Cây', category: 'Bút viết', notes: 'Hộp 20 cây' },
-        { id: 'VPP-003', name: 'Giấy in A4 Double A 70gsm', unit: 'Ram', category: 'Giấy in', notes: '500 tờ/ram' },
+        { id: 'VPP-001', name: 'Bút bi Thiên Long TL-027 (Xanh)', unit: 'Cây', monthlyQuota: 20, category: 'Bút viết', notes: 'Hộp 20 cây' },
+        { id: 'VPP-002', name: 'Bút bi Thiên Long TL-027 (Đỏ)', unit: 'Cây', monthlyQuota: 10, category: 'Bút viết', notes: 'Hộp 20 cây' },
+        { id: 'VPP-003', name: 'Giấy in A4 Double A 70gsm', unit: 'Ram', monthlyQuota: 5, category: 'Giấy in', notes: '500 tờ/ram' },
         { id: 'VPP-004', name: 'Kim bấm số 10 Max', unit: 'Hộp', category: 'Dụng cụ văn phòng', notes: 'Hộp nhỏ' },
         { id: 'VPP-005', name: 'Băng keo trong 5cm 100 yard', unit: 'Cuộn', category: 'Băng keo', notes: 'Cây 6 cuộn' },
       ];
@@ -238,6 +243,7 @@ export function StationeryCatalogModal({
       let nameCol = 2;
       let unitCol = 3;
       let categoryCol = 4;
+      let quotaCol = -1;
       let notesCol = 5;
 
       worksheet.eachRow((row, rowNumber) => {
@@ -251,6 +257,8 @@ export function StationeryCatalogModal({
             nameCol = colNumber;
           } else if (val.includes('đvt') || val.includes('đơn vị')) {
             unitCol = colNumber;
+          } else if (val.includes('định mức') || val.includes('quota') || val.includes('hạn mức')) {
+            quotaCol = colNumber;
           } else if (val.includes('nhóm') || val.includes('loại')) {
             categoryCol = colNumber;
           } else if (val.includes('ghi chú') || val.includes('quy cách')) {
@@ -277,6 +285,8 @@ export function StationeryCatalogModal({
 
         const rawUnit = getVal(unitCol) || 'Cây';
         const rawCategory = getVal(categoryCol) || 'Văn phòng phẩm';
+        const rawQuota = quotaCol > 0 ? getVal(quotaCol) : '';
+        const parsedQuota = rawQuota !== '' && !isNaN(Number(rawQuota)) ? Number(rawQuota) : undefined;
         const rawNotes = getVal(notesCol) || undefined;
 
         parsedItems.push({
@@ -284,6 +294,7 @@ export function StationeryCatalogModal({
           name: rawName,
           unit: rawUnit,
           category: rawCategory,
+          monthlyQuota: parsedQuota,
           notes: rawNotes,
           isActive: true,
         });
@@ -543,13 +554,14 @@ export function StationeryCatalogModal({
                     <th className="p-2.5">Mã VPP</th>
                     <th className="p-2.5">Tên văn phòng phẩm</th>
                     <th className="p-2.5 text-center">ĐVT</th>
+                    <th className="p-2.5 text-center">Định mức/tháng</th>
                     <th className="p-2.5 text-right">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {filteredItems.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="p-6 text-center text-slate-400">
+                      <td colSpan={5} className="p-6 text-center text-slate-400">
                         Không tìm thấy mặt hàng nào phù hợp.
                       </td>
                     </tr>

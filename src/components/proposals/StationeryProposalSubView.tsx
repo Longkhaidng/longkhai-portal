@@ -17,6 +17,7 @@ import {
   DocumentScope,
 } from '@/lib/permissions';
 import { generateDocId, formatDateTime } from '@/lib/utils';
+import { StationeryCatalogModal } from './StationeryCatalogModal';
 import { dispatchStationeryApprovalEmail } from '@/lib/email';
 import { ToastContainer, useToast } from '@/components/common/Toast';
 import {
@@ -38,6 +39,7 @@ import {
   Printer,
   Check,
   Sparkles,
+  Settings,
 } from 'lucide-react';
 
 const capitalizeFirstLetter = (text: string) => {
@@ -64,6 +66,7 @@ interface ProposalFormRow {
   itemId: string;
   itemName: string;
   unit: string;
+  monthlyQuota?: number;
   quantity: number;
   notes: string;
 }
@@ -91,6 +94,7 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
     currentUser?.id === '1867' ||
     (currentUser?.role === 'manager' && Boolean(currentUser?.department) && /hcns|nhân sự/i.test(currentUser!.department));
   const canManageOthers = isBOD || isHRStaff || isHRManager;
+  const canManageCatalog = isBOD || currentUser?.role === 'admin' || currentUser?.id === '1139' || currentUser?.id === '1867' || (Boolean(currentUser?.department) && /hcns|nhân sự/i.test(currentUser!.department));
 
   const [scopeFilter, setScopeFilter] = useState<DocumentScope>(() =>
     canManageOthers ? 'all' : 'my'
@@ -99,10 +103,11 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
   // Form State
   const [department, setDepartment] = useState(() => currentUser?.department || 'Văn Phòng');
   const [formRows, setFormRows] = useState<ProposalFormRow[]>([
-    { itemId: '', itemName: '', unit: '', quantity: 1, notes: '' },
+    { itemId: '', itemName: '', unit: '', monthlyQuota: undefined, quantity: 1, notes: '' },
   ]);
   const [generalNotes, setGeneralNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCatalogModalOpen, setIsCatalogModalOpen] = useState(false);
 
   // Table Filter & Search
   const [search, setSearch] = useState('');
@@ -172,7 +177,7 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
   const handleAddRow = () => {
     setFormRows((prev) => [
       ...prev,
-      { itemId: '', itemName: '', unit: '', quantity: 1, notes: '' },
+      { itemId: '', itemName: '', unit: '', monthlyQuota: undefined, quantity: 1, notes: '' },
     ]);
   };
 
@@ -192,13 +197,14 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
       prev.map((row, idx) => {
         if (idx !== index) return row;
         if (!found) {
-          return { ...row, itemId: '', itemName: '', unit: '' };
+          return { ...row, itemId: '', itemName: '', unit: '', monthlyQuota: undefined };
         }
         return {
           ...row,
           itemId: found.id,
           itemName: found.name,
           unit: found.unit,
+          monthlyQuota: found.monthlyQuota,
         };
       })
     );
@@ -244,6 +250,7 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
         itemId: r.itemId,
         itemName: r.itemName,
         unit: r.unit,
+        monthlyQuota: r.monthlyQuota,
         quantity: r.quantity,
         notes: r.notes.trim() || undefined,
       }));
@@ -616,14 +623,27 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
                   <span>Danh mục văn phòng phẩm đề xuất</span>
                   <span className="text-rose-500">*</span>
                 </label>
-                <button
-                  type="button"
-                  onClick={handleAddRow}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/50 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 text-xs font-bold transition-all cursor-pointer"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Thêm mặt hàng</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  {canManageCatalog && (
+                    <button
+                      type="button"
+                      onClick={() => setIsCatalogModalOpen(true)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all cursor-pointer shadow-xs"
+                      title="Chỉnh sửa mã VPP, tên, đơn vị tính và định mức cấp phát hàng tháng"
+                    >
+                      <Settings className="w-3.5 h-3.5 text-blue-500" />
+                      <span>Quản lý danh mục & Định mức</span>
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleAddRow}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/50 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 text-xs font-bold transition-all cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Thêm mặt hàng</span>
+                  </button>
+                </div>
               </div>
 
               <div className="border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs">
@@ -633,8 +653,9 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
                       <th className="px-3 py-2.5 w-12 text-center">STT</th>
                       <th className="px-3 py-2.5 w-56">Mã VPP</th>
                       <th className="px-3 py-2.5 min-w-[200px]">Tên văn phòng phẩm</th>
-                      <th className="px-3 py-2.5 w-24">ĐVT</th>
-                      <th className="px-3 py-2.5 w-32">Số lượng đặt</th>
+                      <th className="px-3 py-2.5 w-20 text-center">ĐVT</th>
+                      <th className="px-3 py-2.5 w-28 text-center text-blue-600 dark:text-blue-400">Định mức</th>
+                      <th className="px-3 py-2.5 w-28 text-center">Số lượng đặt</th>
                       <th className="px-3 py-2.5 min-w-[150px]">Ghi chú</th>
                       <th className="px-3 py-2.5 w-12 text-center">Xóa</th>
                     </tr>
@@ -666,7 +687,7 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
                             <span className="text-slate-400 italic">Tự động điền theo mã VPP</span>
                           )}
                         </td>
-                        <td className="px-3 py-2.5 text-slate-600 dark:text-slate-400 font-medium">
+                        <td className="px-3 py-2.5 text-center text-slate-600 dark:text-slate-400 font-medium">
                           {row.unit ? (
                             <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[11px] font-semibold">
                               {row.unit}
@@ -675,14 +696,39 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
                             <span className="text-slate-400 italic">--</span>
                           )}
                         </td>
+                        <td className="px-3 py-2.5 text-center whitespace-nowrap">
+                          {row.monthlyQuota !== undefined && row.monthlyQuota !== null ? (
+                            <span
+                              className="px-2 py-0.5 rounded-md font-mono text-[11px] font-bold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 inline-flex items-center gap-1"
+                              title={`Định mức: ${row.monthlyQuota} ${row.unit}/tháng`}
+                            >
+                              {row.monthlyQuota} {row.unit}
+                            </span>
+                          ) : row.itemId ? (
+                            <span className="text-slate-400 text-[11px] italic">Không giới hạn</span>
+                          ) : (
+                            <span className="text-slate-400 italic">--</span>
+                          )}
+                        </td>
                         <td className="px-3 py-2.5">
-                          <input
-                            type="number"
-                            min={1}
-                            value={row.quantity}
-                            onChange={(e) => handleUpdateQuantity(index, parseInt(e.target.value) || 1)}
-                            className="w-full px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-900 dark:text-white text-center font-bold focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          />
+                          <div className="relative">
+                            <input
+                              type="number"
+                              min={1}
+                              value={row.quantity}
+                              onChange={(e) => handleUpdateQuantity(index, parseInt(e.target.value) || 1)}
+                              className={`w-full px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border rounded-lg text-xs text-slate-900 dark:text-white text-center font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                row.monthlyQuota !== undefined && row.quantity > row.monthlyQuota
+                                  ? 'border-amber-400 text-amber-600 dark:text-amber-400 ring-1 ring-amber-300'
+                                  : 'border-slate-200 dark:border-slate-700'
+                              }`}
+                            />
+                            {row.monthlyQuota !== undefined && row.quantity > row.monthlyQuota && (
+                              <div className="text-[9px] text-amber-600 dark:text-amber-400 text-center font-semibold mt-0.5">
+                                Vượt định mức ({row.quantity - row.monthlyQuota})
+                              </div>
+                            )}
+                          </div>
                         </td>
                         <td className="px-3 py-2.5">
                           <input
@@ -1065,6 +1111,7 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
                         <th className="px-3 py-2 w-32">Mã VPP</th>
                         <th className="px-3 py-2">Tên văn phòng phẩm</th>
                         <th className="px-3 py-2 w-20 text-center">ĐVT</th>
+                        <th className="px-3 py-2 w-28 text-center text-blue-600 dark:text-blue-400">Định mức</th>
                         <th className="px-3 py-2 w-24 text-center">Số lượng</th>
                         <th className="px-3 py-2">Ghi chú</th>
                       </tr>
@@ -1085,6 +1132,15 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
                             <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[11px] font-semibold">
                               {it.unit}
                             </span>
+                          </td>
+                          <td className="px-3 py-2 text-center whitespace-nowrap">
+                            {it.monthlyQuota !== undefined && it.monthlyQuota !== null ? (
+                              <span className="px-2 py-0.5 rounded-md font-mono text-[11px] font-bold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 inline-flex items-center">
+                                {it.monthlyQuota} {it.unit}
+                              </span>
+                            ) : (
+                              <span className="text-slate-400 text-[11px] italic">--</span>
+                            )}
                           </td>
                           <td className="px-3 py-2 text-center font-bold text-blue-600 dark:text-blue-400">
                             {it.quantity}
@@ -1325,6 +1381,17 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
             </div>
           </div>
         </div>
+      )}
+
+      {/* Catalog Management Modal */}
+      {canManageCatalog && (
+        <StationeryCatalogModal
+          isOpen={isCatalogModalOpen}
+          onClose={() => setIsCatalogModalOpen(false)}
+          onCatalogUpdated={() => {
+            setStationeryCatalog(storage.getStationeryItems().filter((item) => item.isActive));
+          }}
+        />
       )}
     </div>
   );
