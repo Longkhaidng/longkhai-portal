@@ -543,7 +543,7 @@ export function ReportsView() {
         proposals: filteredStationeries,
         subtitle,
         docCode: 'BC-LK-2026/01',
-        fileName: `LONGKHAI_Bao_Cao_DE_XUAT_VPP_${nowStr}`,
+        fileName: `LONGKHAI_Bao_Cao_TONG_HOP_VPP_${nowStr}`,
       });
       return;
     } else if (reportType === 'general') {
@@ -746,7 +746,7 @@ export function ReportsView() {
           <Package className="w-5 h-5 text-blue-600 mb-2" />
           <div className="font-bold text-xs text-slate-900 dark:text-white">Văn phòng phẩm</div>
           <div className="text-[11px] text-slate-500">
-            {filteredStationeries.length} đề xuất {hasActiveFilters && `(${stationeries.length} gốc)`}
+            {filteredStationeries.length} phiếu {hasActiveFilters && `(${stationeries.length} gốc)`}
           </div>
         </button>
 
@@ -994,7 +994,7 @@ export function ReportsView() {
               : reportType === 'repair'
               ? 'ĐỀ XUẤT SỬA CHỮA'
               : reportType === 'stationery'
-              ? 'ĐỀ XUẤT VĂN PHÒNG PHẨM'
+              ? 'VĂN PHÒNG PHẨM'
               : reportType === 'general'
               ? 'ĐỀ XUẤT KHÁC'
               : reportType === 'pccc'
@@ -1392,8 +1392,8 @@ export function ReportsView() {
                   <th className="p-2 border border-slate-300 dark:border-slate-600">Họ tên nhân viên</th>
                   <th className="p-2 border border-slate-300 dark:border-slate-600">Tổ / Bộ phận</th>
                   <th className="p-2 border border-slate-300 dark:border-slate-600 text-center">Mã VPP</th>
-                  <th className="p-2 border border-slate-300 dark:border-slate-600">Tên văn phòng phẩm đề xuất</th>
-                  <th className="p-2 border border-slate-300 dark:border-slate-600 text-center">Số lượng</th>
+                  <th className="p-2 border border-slate-300 dark:border-slate-600">Tên văn phòng phẩm</th>
+                  <th className="p-2 border border-slate-300 dark:border-slate-600 text-center">Số lượng duyệt</th>
                   <th className="p-2 border border-slate-300 dark:border-slate-600 text-center">Trạng thái</th>
                   <th className="p-2 border border-slate-300 dark:border-slate-600 text-center w-24">Ký nhận</th>
                   <th className="p-2 border border-slate-300 dark:border-slate-600">Ghi chú</th>
@@ -1403,7 +1403,7 @@ export function ReportsView() {
                 {filteredStationeries.length === 0 ? (
                   <tr>
                     <td colSpan={12} className="p-8 text-center text-slate-400">
-                      Không tìm thấy đề xuất văn phòng phẩm nào phù hợp với bộ lọc.
+                      Không tìm thấy dữ liệu văn phòng phẩm nào phù hợp với bộ lọc.
                     </td>
                   </tr>
                 ) : (
@@ -1416,6 +1416,33 @@ export function ReportsView() {
                     };
                     const items = p.items && p.items.length > 0 ? p.items : [{ itemId: '-', itemName: '-', unit: '', quantity: 0 }];
                     const rowSpan = items.length;
+
+                    const renderQuantityCell = (item: any) => {
+                      if (p.status === 'rejected') {
+                        return <span className="text-rose-500 font-semibold italic text-[11px]">Từ chối</span>;
+                      }
+                      if (p.status === 'pending_hr' || p.status === 'pending_manager') {
+                        return (
+                          <span className="text-amber-600 dark:text-amber-400 font-medium text-[11px] italic">
+                            Chờ duyệt ({item.quantity} {item.unit || ''})
+                          </span>
+                        );
+                      }
+                      const finalQty = item.approvedQuantity !== undefined ? item.approvedQuantity : item.quantity;
+                      const hasDiff = item.approvedQuantity !== undefined && item.approvedQuantity !== item.quantity;
+                      return (
+                        <div className="flex flex-col items-center justify-center">
+                          <span className="font-bold text-slate-800 dark:text-slate-200">
+                            {finalQty} {item.unit || ''}
+                          </span>
+                          {hasDiff && (
+                            <span className="text-[10px] text-slate-400 font-normal italic">
+                              (Đề xuất: {item.quantity})
+                            </span>
+                          )}
+                        </div>
+                      );
+                    };
 
                     return (
                       <React.Fragment key={p.id}>
@@ -1446,7 +1473,7 @@ export function ReportsView() {
                             {items[0].itemName}
                           </td>
                           <td className="p-2 border border-slate-300 dark:border-slate-700 text-center font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                            {items[0].quantity ? `${items[0].quantity} ${items[0].unit || ''}`.trim() : '-'}
+                            {renderQuantityCell(items[0])}
                           </td>
                           <td rowSpan={rowSpan} className="p-2 border border-slate-300 dark:border-slate-700 text-center align-middle">
                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border inline-block whitespace-nowrap ${badge.bg} ${badge.text} ${badge.border}`}>
@@ -1471,7 +1498,7 @@ export function ReportsView() {
                               {item.itemName}
                             </td>
                             <td className="p-2 border border-slate-300 dark:border-slate-700 text-center font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                              {item.quantity ? `${item.quantity} ${item.unit || ''}`.trim() : '-'}
+                              {renderQuantityCell(item)}
                             </td>
                           </tr>
                         ))}

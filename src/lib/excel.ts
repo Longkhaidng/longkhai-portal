@@ -599,7 +599,7 @@ export async function exportStationeryReportToExcel(opts: ExportStationeryReport
   workbook.creator = 'Long Khải Portal';
   workbook.created = new Date();
 
-  const worksheet = workbook.addWorksheet('Đề Xuất VPP', {
+  const worksheet = workbook.addWorksheet('Tổng Hợp VPP', {
     pageSetup: { orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0 },
     views: [{ showGridLines: true }],
   });
@@ -641,7 +641,7 @@ export async function exportStationeryReportToExcel(opts: ExportStationeryReport
 
   // Row 4: Report Main Title
   const row4 = worksheet.addRow([]);
-  row4.getCell(1).value = 'BÁO CÁO TỔNG HỢP ĐỀ XUẤT VĂN PHÒNG PHẨM';
+  row4.getCell(1).value = 'BÁO CÁO TỔNG HỢP VĂN PHÒNG PHẨM';
   row4.getCell(1).font = { name: 'Calibri', bold: true, size: 15, color: { argb: 'FF000000' } };
   row4.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' };
   worksheet.mergeCells(4, 1, 4, totalCols);
@@ -666,8 +666,8 @@ export async function exportStationeryReportToExcel(opts: ExportStationeryReport
     'Họ tên nhân viên',
     'Tổ / Bộ phận',
     'Mã VPP',
-    'Tên văn phòng phẩm đề xuất',
-    'Số lượng',
+    'Tên văn phòng phẩm',
+    'Số lượng duyệt',
     'Trạng thái',
     'Ký nhận',
     'Ghi chú',
@@ -694,7 +694,19 @@ export async function exportStationeryReportToExcel(opts: ExportStationeryReport
     const statusText = STATIONERY_STATUS_LABELS[p.status] || p.status;
 
     items.forEach((item) => {
-      const quantityText = item.quantity ? `${item.quantity} ${item.unit || ''}`.trim() : '-';
+      let quantityText = '-';
+      if (p.status === 'rejected') {
+        quantityText = 'Từ chối';
+      } else if (p.status === 'pending_hr' || p.status === 'pending_manager') {
+        quantityText = `Chờ duyệt (${item.quantity} ${item.unit || ''})`.trim();
+      } else {
+        const finalQty = item.approvedQuantity !== undefined ? item.approvedQuantity : item.quantity;
+        const diffStr =
+          item.approvedQuantity !== undefined && item.approvedQuantity !== item.quantity
+            ? ` (ĐX: ${item.quantity})`
+            : '';
+        quantityText = `${finalQty} ${item.unit || ''}${diffStr}`.trim();
+      }
       const rowData = [
         stt,
         p.id,
