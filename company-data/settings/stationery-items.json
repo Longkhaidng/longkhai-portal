@@ -1132,16 +1132,5 @@
     "isActive": true,
     "createdAt": "2026-10-24T06:22:16.888Z",
     "updatedAt": "2026-10-24T06:22:16.888Z"
-  },
-  {
-    "id": "VPP-001",
-    "name": "Bút bi Thiên Long TL-027 (Xanh)",
-    "unit": "Cây",
-    "category": "Bút viết",
-    "monthlyQuota": 20,
-    "notes": "Hộp 20 cây",
-    "isActive": true,
-    "createdAt": "2026-10-28T06:50:28.921Z",
-    "updatedAt": "2026-10-28T06:50:28.921Z"
   }
 ]
