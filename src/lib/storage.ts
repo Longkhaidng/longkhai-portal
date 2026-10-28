@@ -3,7 +3,7 @@ import { LeaveRequest } from '@/types/leave';
 import { AttendanceConfirm } from '@/types/attendance';
 import { GatePass } from '@/types/gatePass';
 import { RepairProposal } from '@/types/repair';
-import { PCCCDevice, PCCCInspection } from '@/types/pccc';
+import { PCCCDevice, PCCCInspection, formatPCCCDate } from '@/types/pccc';
 import { INITIAL_PCCC_DEVICES, INITIAL_PCCC_INSPECTIONS } from './pccc-data';
 import { StationeryItem, StationeryProposal, GeneralProposal } from '@/types/proposal';
 import { INITIAL_STATIONERY_ITEMS } from './initial-data';
@@ -1353,7 +1353,10 @@ class StorageService {
       if (data) {
         const parsed = JSON.parse(data);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          return parsed.map((d: PCCCDevice) => ({
+            ...d,
+            inspectionExpiry: formatPCCCDate(d.inspectionExpiry),
+          }));
         }
       }
     } catch {}
@@ -1363,8 +1366,12 @@ class StorageService {
 
   savePCCCDevices(devices: PCCCDevice[]): void {
     if (!this.isClient()) return;
-    localStorage.setItem(STORAGE_KEYS.PCCC_DEVICES, JSON.stringify(devices));
-    this.syncFileToGitHub('pccc/master_devices.json', JSON.stringify(devices, null, 2), 'Update PCCC Master Devices');
+    const cleanDevices = devices.map((d) => ({
+      ...d,
+      inspectionExpiry: formatPCCCDate(d.inspectionExpiry),
+    }));
+    localStorage.setItem(STORAGE_KEYS.PCCC_DEVICES, JSON.stringify(cleanDevices));
+    this.syncFileToGitHub('pccc/master_devices.json', JSON.stringify(cleanDevices, null, 2), 'Update PCCC Master Devices');
   }
 
   updatePCCCDevice(updated: PCCCDevice): void {

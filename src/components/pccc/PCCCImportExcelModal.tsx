@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { PCCCDevice, PCCCCategory } from '@/types/pccc';
+import { PCCCDevice, PCCCCategory, formatPCCCDate } from '@/types/pccc';
 import { storage } from '@/lib/storage';
 import { useAuth } from '@/lib/auth-context';
 import { downloadPCCCDevicesTemplate } from '@/lib/excel';
@@ -144,7 +144,8 @@ export function PCCCImportExcelModal({
         const rawCat = getVal(catCol);
         const rawLoc = getVal(locCol);
         const rawSpecs = getVal(specsCol) || '-';
-        const rawExpiry = getVal(expiryCol) || '20/12/2026';
+        const cellExpiry = row.getCell(expiryCol).value;
+        const rawExpiry = formatPCCCDate(cellExpiry);
         const rawNotes = getVal(notesCol) || '';
 
         // Ignore empty lines

@@ -26,7 +26,7 @@ import { formatDate, formatDateTime, sortNewestFirst } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { RepairProposal, REPAIR_STATUS_LABELS, REPAIR_STATUS_BADGES } from '@/types/repair';
-import { PCCCDevice, PCCCInspection, PCCC_CATEGORIES } from '@/types/pccc';
+import { PCCCDevice, PCCCInspection, PCCC_CATEGORIES, formatPCCCDate } from '@/types/pccc';
 import {
   StationeryProposal,
   GeneralProposal,
@@ -1622,7 +1622,7 @@ export function ReportsView() {
                         </td>
                         <td className="p-2 border leading-tight">{d.location}</td>
                         <td className="p-2 border text-center font-mono whitespace-nowrap">{d.specs}</td>
-                        <td className="p-2 border text-center whitespace-nowrap font-mono">{d.inspectionExpiry}</td>
+                        <td className="p-2 border text-center whitespace-nowrap font-mono">{formatPCCCDate(d.inspectionExpiry)}</td>
                         <td className="p-2 border text-center text-[11px] whitespace-nowrap font-mono text-slate-600 dark:text-slate-300">
                           {d.lastInspection?.date || insp?.inspectedAt || '-'}
                         </td>

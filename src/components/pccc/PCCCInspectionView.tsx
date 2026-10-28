@@ -9,6 +9,7 @@ import {
   PCCCDevice,
   PCCCInspection,
   PCCC_CATEGORIES,
+  formatPCCCDate,
 } from '@/types/pccc';
 import { PCCCInspectionModal } from './PCCCInspectionModal';
 import { PCCCQrScannerModal } from './PCCCQrScannerModal';
@@ -692,7 +693,7 @@ export function PCCCInspectionView() {
                             {d.specs}
                           </td>
                           <td className="py-2 px-3 text-center text-slate-600 dark:text-slate-400 whitespace-nowrap font-mono">
-                            {d.inspectionExpiry}
+                            {formatPCCCDate(d.inspectionExpiry)}
                           </td>
                           <td className="py-2 px-3 whitespace-nowrap">
                             {hasLast ? (
@@ -890,7 +891,7 @@ export function PCCCInspectionView() {
                       </td>
                       <td className="py-2 px-3 text-center font-mono text-slate-600 dark:text-slate-400 whitespace-nowrap">{d.specs}</td>
                       <td className="py-2 px-3 text-center text-slate-600 dark:text-slate-400 whitespace-nowrap font-mono">
-                        {d.inspectionExpiry}
+                        {formatPCCCDate(d.inspectionExpiry)}
                       </td>
                       <td className="py-2 px-3 text-slate-500 italic max-w-xs truncate" title={d.notes || ''}>
                         {d.notes || '-'}

@@ -4,7 +4,7 @@ import { LeaveRequest, LEAVE_TYPE_LABELS } from '@/types/leave';
 import { GatePass } from '@/types/gatePass';
 import { AttendanceConfirm, ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { StationeryProposal, STATIONERY_STATUS_LABELS } from '@/types/proposal';
-import { PCCCDevice, PCCCInspection, PCCC_CATEGORIES } from '@/types/pccc';
+import { PCCCDevice, PCCCInspection, PCCC_CATEGORIES, formatPCCCDate } from '@/types/pccc';
 import { formatDate, formatDateTime } from '@/lib/utils';
 
 export interface ParsedEmployeeResult {
@@ -1026,7 +1026,7 @@ export async function exportPCCCReportToExcel(opts: ExportPCCCReportOptions) {
       catName,
       d.location,
       d.specs,
-      d.inspectionExpiry,
+      formatPCCCDate(d.inspectionExpiry),
       inspDate,
       inspName,
       details,

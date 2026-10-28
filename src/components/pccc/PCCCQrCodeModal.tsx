@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { PCCCDevice, PCCC_CATEGORIES } from '@/types/pccc';
+import { PCCCDevice, PCCC_CATEGORIES, formatPCCCDate } from '@/types/pccc';
 import { generateQrDataUrl } from '@/lib/qr';
 import { X, Printer, Download, QrCode } from 'lucide-react';
 
@@ -143,7 +143,7 @@ export function PCCCQrCodeModal({
                       📍 {d.location}
                     </div>
                     <div className="text-slate-500 font-medium text-[10px]">
-                      Hạn KĐ: <span className="font-bold text-slate-800">{d.inspectionExpiry}</span>
+                      Hạn KĐ: <span className="font-bold text-slate-800">{formatPCCCDate(d.inspectionExpiry)}</span>
                     </div>
                   </div>
                 </div>

@@ -181,3 +181,47 @@ export interface PCCCInspection {
   checklist: PCCCChecklistDetails;
   createdAt: string;
 }
+
+/**
+ * Chuẩn hóa và định dạng ngày tháng sang dd/MM/yyyy (ví dụ: 20/12/2026)
+ */
+export function formatPCCCDate(val: any): string {
+  if (!val) return '20/12/2026';
+  if (val instanceof Date) {
+    if (isNaN(val.getTime())) return '20/12/2026';
+    const day = String(val.getDate()).padStart(2, '0');
+    const month = String(val.getMonth() + 1).padStart(2, '0');
+    const year = val.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+  const str = String(val).trim();
+  if (!str) return '20/12/2026';
+
+  // Format: dd/MM/yyyy hoặc d/M/yyyy (có thể dùng dấu / hoặc -)
+  const dmyMatch = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if (dmyMatch) {
+    const day = String(dmyMatch[1]).padStart(2, '0');
+    const month = String(dmyMatch[2]).padStart(2, '0');
+    const year = dmyMatch[3];
+    return `${day}/${month}/${year}`;
+  }
+
+  // Format: yyyy-MM-dd hoặc yyyy/MM/dd
+  const ymdMatch = str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+  if (ymdMatch) {
+    const year = ymdMatch[1];
+    const month = String(ymdMatch[2]).padStart(2, '0');
+    const day = String(ymdMatch[3]).padStart(2, '0');
+    return `${day}/${month}/${year}`;
+  }
+
+  // Thử parse Date thông thường (ví dụ: "Sun Dec 20 2026 07:00:00 GMT+0700...", ISO...)
+  const parsed = new Date(str);
+  if (!isNaN(parsed.getTime())) {
+    const day = String(parsed.getDate()).padStart(2, '0');
+    const month = String(parsed.getMonth() + 1).padStart(2, '0');
+    const year = parsed.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+  return str;
+}
