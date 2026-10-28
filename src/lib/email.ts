@@ -775,7 +775,11 @@ export async function dispatchStationeryApprovalEmail(
   const managerName = targetStep === 'hr' ? 'Chị Võ Thị Tuyết (HCNS)' : 'Chị Trương Anh Như Quỳnh (Trưởng phòng HCNS)';
 
   const itemsListFormatted = proposal.items
-    .map((item, idx) => `${idx + 1}. [${item.itemId}] ${item.itemName} - SL: ${item.quantity} ${item.unit}${item.notes ? ` (${item.notes})` : ''}`)
+    .map((item, idx) => {
+      const approvedStr = item.approvedQuantity !== undefined ? ` (Duyệt: ${item.approvedQuantity} ${item.unit})` : '';
+      const quotaStr = item.monthlyQuota ? ` [Định mức: ${item.monthlyQuota} ${item.unit}]` : '';
+      return `${idx + 1}. [${item.itemId}] ${item.itemName} - SL: ${item.quantity} ${item.unit}${approvedStr}${quotaStr}${item.notes ? ` (${item.notes})` : ''}`;
+    })
     .join('<br/>');
 
   const payload: SendEmailPayload = {

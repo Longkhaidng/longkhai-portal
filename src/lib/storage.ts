@@ -617,6 +617,33 @@ class StorageService {
     }).catch(() => {});
   }
 
+  replaceStationeryItems(newItems: StationeryItem[], byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const now = new Date().toISOString();
+    const items: StationeryItem[] = newItems.map((item) => ({
+      ...item,
+      createdAt: item.createdAt || now,
+      updatedAt: now,
+    }));
+
+    localStorage.setItem(STORAGE_KEYS.STATIONERY_ITEMS, JSON.stringify(items));
+    this.addAuditLog(
+      'update',
+      'proposals',
+      'stationery_items',
+      byUser?.id || 'ADMIN',
+      byUser?.name || 'Quản trị viên',
+      `Thay thế toàn bộ danh mục VPP bằng ${items.length} mặt hàng từ file Excel`
+    );
+
+    this.syncFileToGitHub('settings/stationery-items.json', JSON.stringify(items, null, 2), `Replace stationery catalog (${items.length} items) from Excel`);
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'stationery_items', data: items, githubToken: this.getGitHubConfig().token }),
+    }).catch(() => {});
+  }
+
   deleteStationeryItem(id: string, byUser?: { id: string; name: string }): void {
     if (!this.isClient()) return;
     const items = this.getStationeryItems().filter((i) => i.id !== id);

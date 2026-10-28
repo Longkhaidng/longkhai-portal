@@ -118,6 +118,25 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
   const [approverComment, setApproverComment] = useState('');
   const [isRejecting, setIsRejecting] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
+  const [approvedQuantities, setApprovedQuantities] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    if (selectedProposal) {
+      const initialMap: Record<string, number> = {};
+      selectedProposal.items.forEach((it) => {
+        initialMap[it.itemId] = it.approvedQuantity !== undefined ? it.approvedQuantity : it.quantity;
+      });
+      setApprovedQuantities(initialMap);
+    } else {
+      setApprovedQuantities({});
+    }
+  }, [selectedProposal]);
+
+  const canEditApprovedQuantity = Boolean(
+    selectedProposal &&
+      ((selectedProposal.status === 'pending_hr' && (isHRStaff || isBOD)) ||
+        (selectedProposal.status === 'pending_manager' && (isHRManager || isBOD)))
+  );
 
   // Storage listener to sync across tabs
   useEffect(() => {
@@ -352,7 +371,17 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
   const handleProposalApproval = (isApprove: boolean) => {
     if (!selectedProposal || !currentUser) return;
     const now = new Date().toISOString();
-    const updated: StationeryProposal = { ...selectedProposal };
+    const updatedItems = selectedProposal.items.map((it) => ({
+      ...it,
+      approvedQuantity:
+        approvedQuantities[it.itemId] !== undefined
+          ? approvedQuantities[it.itemId]
+          : (it.approvedQuantity ?? it.quantity),
+    }));
+    const updated: StationeryProposal = {
+      ...selectedProposal,
+      items: isApprove ? updatedItems : selectedProposal.items,
+    };
 
     if (updated.status === 'pending_hr') {
       // Step 2: HR Staff action
@@ -1113,6 +1142,7 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
                         <th className="px-3 py-2 w-20 text-center">ĐVT</th>
                         <th className="px-3 py-2 w-28 text-center text-blue-600 dark:text-blue-400">Định mức</th>
                         <th className="px-3 py-2 w-24 text-center">Số lượng</th>
+                        <th className="px-3 py-2 w-28 text-center text-emerald-600 dark:text-emerald-400">Số lượng duyệt</th>
                         <th className="px-3 py-2">Ghi chú</th>
                       </tr>
                     </thead>
@@ -1144,6 +1174,33 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
                           </td>
                           <td className="px-3 py-2 text-center font-bold text-blue-600 dark:text-blue-400">
                             {it.quantity}
+                          </td>
+                          <td className="px-3 py-2 text-center">
+                            {canEditApprovedQuantity ? (
+                              <div className="flex items-center justify-center gap-1">
+                                <input
+                                  type="number"
+                                  min="0"
+                                  value={approvedQuantities[it.itemId] ?? it.approvedQuantity ?? it.quantity}
+                                  onChange={(e) => {
+                                    const val = e.target.value === '' ? 0 : Math.max(0, parseInt(e.target.value) || 0);
+                                    setApprovedQuantities((prev) => ({ ...prev, [it.itemId]: val }));
+                                  }}
+                                  className="w-16 px-2 py-1 text-center font-bold text-emerald-700 dark:text-emerald-300 bg-white dark:bg-slate-900 border border-emerald-300 dark:border-emerald-700 rounded-lg text-xs print:hidden shadow-2xs focus:ring-1 focus:ring-emerald-500"
+                                />
+                                <span className="hidden print:inline font-bold text-emerald-700 text-xs">
+                                  {approvedQuantities[it.itemId] ?? it.approvedQuantity ?? it.quantity}
+                                </span>
+                              </div>
+                            ) : it.approvedQuantity !== undefined ? (
+                              <span className="px-2 py-0.5 rounded-md font-mono text-[11px] font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 inline-flex items-center">
+                                {it.approvedQuantity}
+                              </span>
+                            ) : (
+                              <span className="text-slate-400 text-[11px] italic">
+                                {selectedProposal.status === 'completed' ? it.quantity : '--'}
+                              </span>
+                            )}
                           </td>
                           <td className="px-3 py-2 text-slate-500 italic">
                             {it.notes || '--'}

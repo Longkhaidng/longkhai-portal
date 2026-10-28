@@ -19,6 +19,7 @@ export interface StationeryProposalItem {
   unit: string; // ĐVT
   monthlyQuota?: number; // Định mức theo tháng đã định sẵn
   quantity: number; // Số lượng đặt hàng
+  approvedQuantity?: number; // Số lượng duyệt (bước 2 hoặc 3 duyệt)
   notes?: string; // Ghi chú riêng từng món
 }
 

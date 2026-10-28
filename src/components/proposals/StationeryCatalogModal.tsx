@@ -16,6 +16,7 @@ import {
   FileSpreadsheet,
   Upload,
   Download,
+  RefreshCw,
 } from 'lucide-react';
 
 interface StationeryCatalogModalProps {
@@ -37,6 +38,7 @@ export function StationeryCatalogModal({
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isImporting, setIsImporting] = useState(false);
+  const [importMode, setImportMode] = useState<'update_new' | 'replace_all'>('update_new');
 
   // Form State
   const [code, setCode] = useState('');
@@ -47,6 +49,27 @@ export function StationeryCatalogModal({
   const [notes, setNotes] = useState('');
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleTriggerUpdateNew = () => {
+    setImportMode('update_new');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleTriggerReplaceAll = () => {
+    const confirmed = window.confirm(
+      'CẢNH BÁO XÓA & THAY THẾ TOÀN BỘ:\n\nThao tác này sẽ XÓA TOÀN BỘ danh mục VPP hiện có trên hệ thống và thay thế hoàn toàn bằng danh sách từ file Excel đã chọn.\n\nBạn có chắc chắn muốn tiếp tục?'
+    );
+    if (!confirmed) return;
+    setImportMode('replace_all');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+      fileInputRef.current.click();
+    }
+  };
+
 
   if (!isOpen) return null;
 
@@ -309,17 +332,78 @@ export function StationeryCatalogModal({
         return;
       }
 
-      storage.saveStationeryItems(parsedItems, {
-        id: currentUser?.id || 'ADMIN',
-        name: currentUser?.name || 'Quản trị viên',
-      });
+      if (importMode === 'update_new') {
+        const currentCatalog = storage.getStationeryItems();
+        const existingNames = new Set(currentCatalog.map((i) => i.name.trim().toLowerCase()));
+        const existingIds = new Set(currentCatalog.map((i) => i.id.toUpperCase()));
+        const itemsToAdd: StationeryItem[] = [];
+        let duplicateCount = 0;
 
-      refreshList();
-      showToast({
-        type: 'success',
-        title: 'Nhập thành công từ Excel',
-        message: `Đã nạp thành công ${parsedItems.length} mặt hàng vào danh mục văn phòng phẩm!`,
-      });
+        for (const item of parsedItems) {
+          const normName = item.name.trim().toLowerCase();
+          if (existingNames.has(normName)) {
+            duplicateCount++;
+            continue;
+          }
+
+          let finalId = item.id.toUpperCase();
+          if (existingIds.has(finalId)) {
+            finalId = `VPP-${String(currentCatalog.length + itemsToAdd.length + 1).padStart(3, '0')}`;
+          }
+
+          existingNames.add(normName);
+          existingIds.add(finalId);
+          itemsToAdd.push({
+            ...item,
+            id: finalId,
+          });
+        }
+
+        if (itemsToAdd.length === 0) {
+          showToast({
+            type: 'info',
+            title: 'Không có mặt hàng mới',
+            message: `Tất cả ${parsedItems.length} mặt hàng trong file Excel đều đã có tên trong danh mục (đã bỏ qua ${duplicateCount} mặt hàng trùng tên).`,
+          });
+          return;
+        }
+
+        storage.saveStationeryItems(itemsToAdd, {
+          id: currentUser?.id || 'ADMIN',
+          name: currentUser?.name || 'Quản trị viên',
+        });
+
+        refreshList();
+        showToast({
+          type: 'success',
+          title: 'Cập nhật VPP mới thành công',
+          message: `Đã nạp thêm ${itemsToAdd.length} mặt hàng mới vào danh mục (${duplicateCount} mặt hàng trùng tên đã được bỏ qua).`,
+        });
+      } else {
+        // replace_all: xóa tất cả VPP hiện tại trên hệ thống và thêm mới VPP từ danh sách trong file excel
+        const uniqueItems: StationeryItem[] = [];
+        const seenIds = new Set<string>();
+        parsedItems.forEach((item, index) => {
+          let finalId = item.id.toUpperCase();
+          if (seenIds.has(finalId)) {
+            finalId = `${finalId}-${index + 1}`;
+          }
+          seenIds.add(finalId);
+          uniqueItems.push({ ...item, id: finalId });
+        });
+
+        storage.replaceStationeryItems(uniqueItems, {
+          id: currentUser?.id || 'ADMIN',
+          name: currentUser?.name || 'Quản trị viên',
+        });
+
+        refreshList();
+        showToast({
+          type: 'success',
+          title: 'Đã thay thế toàn bộ danh mục',
+          message: `Đã xóa danh mục cũ và nạp mới toàn bộ ${uniqueItems.length} mặt hàng từ file Excel thành công!`,
+        });
+      }
     } catch (err: any) {
       showToast({
         type: 'error',
@@ -421,7 +505,7 @@ export function StationeryCatalogModal({
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-3 gap-2.5">
                   <div>
                     <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
                       Đơn vị tính: <span className="text-rose-500">*</span>
@@ -431,8 +515,21 @@ export function StationeryCatalogModal({
                       required
                       value={unit}
                       onChange={(e) => setUnit(e.target.value)}
-                      placeholder="Cây, Ram, Hộp, Cuộn..."
+                      placeholder="Cây, Ram..."
                       className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-blue-600 dark:text-blue-400 mb-1">
+                      Định mức / tháng:
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={monthlyQuota}
+                      onChange={(e) => setMonthlyQuota(e.target.value === '' ? '' : Math.max(0, parseInt(e.target.value) || 0))}
+                      placeholder="VD: 10"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-blue-200 dark:border-blue-700/60 rounded-xl text-xs text-slate-900 dark:text-white font-medium"
                     />
                   </div>
                   <div>
@@ -443,7 +540,7 @@ export function StationeryCatalogModal({
                       type="text"
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
-                      placeholder="Bút viết, Giấy in..."
+                      placeholder="Bút viết..."
                       className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white"
                     />
                   </div>
@@ -502,17 +599,30 @@ export function StationeryCatalogModal({
                   </button>
                 </div>
                 <p className="text-[11px] text-emerald-800/80 dark:text-emerald-300/80 leading-relaxed">
-                  Tải file mẫu, điền danh sách mặt hàng và bấm nút bên dưới để thêm tự động:
+                  Tải file mẫu, điền danh sách mặt hàng và chọn phương thức tải lên:
                 </p>
-                <button
-                  type="button"
-                  disabled={isImporting}
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-full py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold rounded-xl text-xs shadow-sm flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-50"
-                >
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>{isImporting ? 'Đang đọc file Excel...' : 'Thêm vào từ file excel mẫu'}</span>
-                </button>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-0.5">
+                  <button
+                    type="button"
+                    disabled={isImporting}
+                    onClick={handleTriggerUpdateNew}
+                    className="w-full py-2.5 px-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold rounded-xl text-xs shadow-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all disabled:opacity-50 text-center"
+                    title="Chỉ tải lên những VPP chưa có tên trong danh sách"
+                  >
+                    <Upload className="w-3.5 h-3.5 shrink-0" />
+                    <span>Cập nhật VPP mới</span>
+                  </button>
+                  <button
+                    type="button"
+                    disabled={isImporting}
+                    onClick={handleTriggerReplaceAll}
+                    className="w-full py-2.5 px-2 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold rounded-xl text-xs shadow-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all disabled:opacity-50 text-center"
+                    title="Xóa tất cả VPP hiện tại trên hệ thống và thêm mới từ Excel"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5 shrink-0" />
+                    <span>Thay thế toàn bộ</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -534,15 +644,26 @@ export function StationeryCatalogModal({
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer whitespace-nowrap"
-                  title="Thêm danh mục VPP từ file Excel mẫu"
+                  disabled={isImporting}
+                  onClick={handleTriggerUpdateNew}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer whitespace-nowrap disabled:opacity-50"
+                  title="Chỉ nạp những VPP chưa có tên trong danh sách"
                 >
-                  <FileSpreadsheet className="w-3.5 h-3.5" />
-                  <span>Thêm từ Excel mẫu</span>
+                  <Upload className="w-3.5 h-3.5" />
+                  <span>Cập nhật VPP mới</span>
                 </button>
-                <span className="text-[11px] text-slate-400 whitespace-nowrap">
-                  Tổng cộng: <b>{filteredItems.length}</b> mặt hàng
+                <button
+                  type="button"
+                  disabled={isImporting}
+                  onClick={handleTriggerReplaceAll}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer whitespace-nowrap disabled:opacity-50"
+                  title="Xóa tất cả VPP hiện tại và nạp lại từ file Excel"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Thay thế toàn bộ</span>
+                </button>
+                <span className="text-[11px] text-slate-400 whitespace-nowrap hidden sm:inline">
+                  Tổng: <b>{filteredItems.length}</b>
                 </span>
               </div>
             </div>
@@ -579,6 +700,15 @@ export function StationeryCatalogModal({
                         </td>
                         <td className="p-2.5 text-center font-semibold text-slate-600 dark:text-slate-300">
                           {item.unit}
+                        </td>
+                        <td className="p-2.5 text-center font-medium text-slate-700 dark:text-slate-200">
+                          {item.monthlyQuota !== undefined && item.monthlyQuota !== null ? (
+                            <span className="px-2 py-0.5 rounded-md font-mono text-[11px] font-bold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 inline-flex items-center">
+                              {item.monthlyQuota} {item.unit}
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 italic">--</span>
+                          )}
                         </td>
                         <td className="p-2.5 text-right whitespace-nowrap">
                           <button
