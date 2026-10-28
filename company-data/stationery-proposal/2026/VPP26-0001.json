@@ -35,7 +35,7 @@
   "managerId": "1867",
   "managerName": "Trương Anh Như Quỳnh",
   "managerEmail": "Quynh.truong@longkhai.com.vn",
-  "status": "pending_hr",
+  "status": "pending_manager",
   "steps": [
     {
       "step": 1,
@@ -55,7 +55,9 @@
       "approverId": "1139",
       "approverName": "Võ Thị Tuyết",
       "approverEmail": "tuyet.vo@longkhai.com.vn",
-      "status": "pending"
+      "status": "approved",
+      "updatedAt": "2026-10-28T01:38:30.657Z",
+      "comment": "Chuyên viên HCNS đồng ý đề xuất và chuyển duyệt"
     },
     {
       "step": 3,
@@ -68,13 +70,15 @@
       "status": "pending"
     }
   ],
-  "currentStepIndex": 1,
+  "currentStepIndex": 2,
   "createdAt": "2026-10-28T01:35:11.692Z",
-  "updatedAt": "2026-10-28T01:35:11.692Z",
+  "updatedAt": "2026-10-28T01:38:30.657Z",
   "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
   "emailConfig": {
     "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
     "senderName": "Cổng Thông Tin Long Khai",
     "portalBaseUrl": "https://longkhai-portal.vercel.app"
-  }
+  },
+  "receiverApprovedAt": "2026-10-28T01:38:30.657Z",
+  "receiverComment": ""
 }
