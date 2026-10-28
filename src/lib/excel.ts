@@ -3,6 +3,7 @@ import { User, UserRole, CategoryPermission, CATEGORY_DEFINITIONS } from '@/type
 import { LeaveRequest, LEAVE_TYPE_LABELS } from '@/types/leave';
 import { GatePass } from '@/types/gatePass';
 import { AttendanceConfirm, ISSUE_TYPE_LABELS } from '@/types/attendance';
+import { StationeryProposal, STATIONERY_STATUS_LABELS } from '@/types/proposal';
 import { formatDate, formatDateTime } from '@/lib/utils';
 
 export interface ParsedEmployeeResult {
@@ -580,6 +581,196 @@ export async function exportReportToExcel(opts: ExportReportOptions) {
   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
   downloadBlob(blob, `${opts.fileName}.xlsx`);
 }
+
+export interface ExportStationeryReportOptions {
+  proposals: StationeryProposal[];
+  subtitle: string;
+  docCode?: string;
+  fileName: string;
+}
+
+/**
+ * Export Stationery Proposal Report to Excel matching official factory template
+ * with multi-row item splitting and vertically merged proposal metadata.
+ */
+export async function exportStationeryReportToExcel(opts: ExportStationeryReportOptions) {
+  const workbook = new ExcelJS.Workbook();
+  workbook.creator = 'Long Khải Portal';
+  workbook.created = new Date();
+
+  const worksheet = workbook.addWorksheet('Đề Xuất VPP', {
+    pageSetup: { orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0 },
+    views: [{ showGridLines: true }],
+  });
+
+  const now = new Date();
+  const exportDate = now.toLocaleDateString('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+  const totalCols = 12;
+
+  // Border style for table cells: solid black thin border
+  const solidBlackBorder: Partial<ExcelJS.Borders> = {
+    top: { style: 'thin', color: { argb: 'FF000000' } },
+    left: { style: 'thin', color: { argb: 'FF000000' } },
+    bottom: { style: 'thin', color: { argb: 'FF000000' } },
+    right: { style: 'thin', color: { argb: 'FF000000' } },
+  };
+
+  // Row 1: Company Name (Left) & Export Date (Right)
+  const row1 = worksheet.addRow([]);
+  row1.getCell(1).value = 'CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG';
+  row1.getCell(1).font = { name: 'Calibri', bold: true, size: 11, color: { argb: 'FF000000' } };
+  row1.getCell(totalCols).value = `Ngày xuất báo cáo: ${exportDate}`;
+  row1.getCell(totalCols).font = { name: 'Calibri', size: 9.5, color: { argb: 'FF475569' } };
+  row1.getCell(totalCols).alignment = { horizontal: 'right' };
+
+  // Row 2: Sub-info (Left) & Doc Code (Right)
+  const row2 = worksheet.addRow([]);
+  row2.getCell(1).value = 'Hệ thống Quản trị & Điều hành Sản xuất Nội bộ';
+  row2.getCell(1).font = { name: 'Calibri', italic: true, size: 9.5, color: { argb: 'FF64748B' } };
+  row2.getCell(totalCols).value = `Mã tài liệu: ${opts.docCode || 'BC-LK-2026/01'}`;
+  row2.getCell(totalCols).font = { name: 'Calibri', size: 9.5, color: { argb: 'FF475569' } };
+  row2.getCell(totalCols).alignment = { horizontal: 'right' };
+
+  // Row 3: Empty separator
+  worksheet.addRow([]);
+
+  // Row 4: Report Main Title
+  const row4 = worksheet.addRow([]);
+  row4.getCell(1).value = 'BÁO CÁO TỔNG HỢP ĐỀ XUẤT VĂN PHÒNG PHẨM';
+  row4.getCell(1).font = { name: 'Calibri', bold: true, size: 15, color: { argb: 'FF000000' } };
+  row4.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' };
+  worksheet.mergeCells(4, 1, 4, totalCols);
+  row4.height = 24;
+
+  // Row 5: Report Period Subtitle
+  const row5 = worksheet.addRow([]);
+  row5.getCell(1).value = opts.subtitle;
+  row5.getCell(1).font = { name: 'Calibri', italic: true, size: 10, color: { argb: 'FF64748B' } };
+  row5.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' };
+  worksheet.mergeCells(5, 1, 5, totalCols);
+
+  // Row 6: Empty separator
+  worksheet.addRow([]);
+
+  // Row 7: Table Headers
+  const headers = [
+    'STT',
+    'Mã phiếu',
+    'Thời gian gửi',
+    'MSNV',
+    'Họ tên nhân viên',
+    'Tổ / Bộ phận',
+    'Mã VPP',
+    'Tên văn phòng phẩm đề xuất',
+    'Số lượng',
+    'Trạng thái',
+    'Ký nhận',
+    'Ghi chú',
+  ];
+  const headerRow = worksheet.addRow(headers);
+  headerRow.height = 24;
+  for (let c = 1; c <= totalCols; c++) {
+    const cell = headerRow.getCell(c);
+    cell.font = { name: 'Calibri', bold: true, size: 10.5, color: { argb: 'FF000000' } };
+    cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+    cell.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFF1F5F9' },
+    };
+    cell.border = solidBlackBorder;
+  }
+
+  // Row 8+: Data rows with multi-row item splitting and vertical merging
+  opts.proposals.forEach((p, pIdx) => {
+    const items = p.items && p.items.length > 0 ? p.items : [{ itemId: '-', itemName: '-', unit: '', quantity: 0 }];
+    const startRow = worksheet.lastRow ? worksheet.lastRow.number + 1 : 8;
+    const stt = pIdx + 1;
+    const statusText = STATIONERY_STATUS_LABELS[p.status] || p.status;
+
+    items.forEach((item) => {
+      const quantityText = item.quantity ? `${item.quantity} ${item.unit || ''}`.trim() : '-';
+      const rowData = [
+        stt,
+        p.id,
+        formatDateTime(p.createdAt),
+        p.employeeId,
+        p.employeeName,
+        p.department,
+        item.itemId || '-',
+        item.itemName || '-',
+        quantityText,
+        statusText,
+        '', // Ký nhận (ký tay khi nhận bàn giao)
+        p.notes || '',
+      ];
+
+      const row = worksheet.addRow(rowData);
+      row.height = 20;
+
+      for (let c = 1; c <= totalCols; c++) {
+        const cell = row.getCell(c);
+        cell.border = solidBlackBorder;
+        cell.font = { name: 'Calibri', size: 10, color: { argb: 'FF1E293B' } };
+
+        // Default alignment
+        const isCenter = [1, 2, 3, 4, 7, 9, 10, 11].includes(c);
+        cell.alignment = {
+          horizontal: isCenter ? 'center' : 'left',
+          vertical: 'middle',
+        };
+
+        // Specific styling
+        if (c === 2) {
+          // Mã phiếu: Blue bold
+          cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FF0284C7' } };
+        } else if (c === 5) {
+          // Họ tên nhân viên: bold
+          cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FF0F172A' } };
+        } else if (c === 7) {
+          // Mã VPP: bold
+          cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FF334155' } };
+        } else if (c === 9) {
+          // Số lượng: bold
+          cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FF0F172A' } };
+        } else if (c === 10) {
+          // Trạng thái badge color
+          if (p.status === 'completed') {
+            cell.font = { name: 'Calibri', bold: true, size: 9.5, color: { argb: 'FF059669' } };
+          } else if (p.status === 'rejected') {
+            cell.font = { name: 'Calibri', bold: true, size: 9.5, color: { argb: 'FFE11D48' } };
+          } else {
+            cell.font = { name: 'Calibri', bold: true, size: 9.5, color: { argb: 'FFD97706' } };
+          }
+        }
+      }
+    });
+
+    const endRow = startRow + items.length - 1;
+    if (items.length > 1) {
+      // Merge common columns vertically: 1, 2, 3, 4, 5, 6, 10, 11, 12
+      const mergeCols = [1, 2, 3, 4, 5, 6, 10, 11, 12];
+      for (const col of mergeCols) {
+        worksheet.mergeCells(startRow, col, endRow, col);
+      }
+    }
+  });
+
+  // Column Widths
+  const colWidths = [6, 15, 18, 10, 22, 20, 12, 30, 12, 18, 14, 24];
+  worksheet.columns.forEach((col, idx) => {
+    col.width = colWidths[idx] || 15;
+  });
+
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  downloadBlob(blob, `${opts.fileName}.xlsx`);
+}
+
 
 /**
  * Export full multi-sheet Excel backup containing Leave Requests, Gate Passes, and Attendance Confirms

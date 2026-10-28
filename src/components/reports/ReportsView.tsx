@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
-import { exportReportToExcel } from '@/lib/excel';
+import { exportReportToExcel, exportStationeryReportToExcel } from '@/lib/excel';
 import {
   BarChart3,
   Download,
@@ -512,39 +512,17 @@ export function ReportsView() {
         p.creatorConfirmedAt ? formatDateTime(p.creatorConfirmedAt) : '',
       ]);
     } else if (reportType === 'stationery') {
-      title = 'ĐỀ XUẤT VĂN PHÒNG PHẨM';
-      fileName = `LONGKHAI_Bao_Cao_DE_XUAT_VPP_${nowStr}`;
-      headers = [
-        'STT',
-        'Mã phiếu',
-        'Thời gian gửi',
-        'MSNV',
-        'Họ tên nhân viên',
-        'Tổ / Bộ phận',
-        'Mã VPP',
-        'Tên văn phòng phẩm đề xuất',
-        'Số lượng',
-        'Trạng thái',
-        'Ghi chú',
-      ];
-      rows = filteredStationeries.map((p, idx) => {
-        const itemCodes = p.items.map((i) => i.itemId).join('\n');
-        const itemNames = p.items.map((i) => i.itemName).join('\n');
-        const itemQuantities = p.items.map((i) => `${i.quantity} ${i.unit}`).join('\n');
-        return [
-          idx + 1,
-          p.id,
-          formatDateTime(p.createdAt),
-          p.employeeId,
-          p.employeeName,
-          p.department,
-          itemCodes,
-          itemNames,
-          itemQuantities,
-          STATIONERY_STATUS_LABELS[p.status] || p.status,
-          p.notes || '',
-        ];
+      if (filteredStationeries.length === 0) {
+        alert('Không có dữ liệu phù hợp với bộ lọc hiện tại để xuất file Excel.');
+        return;
+      }
+      exportStationeryReportToExcel({
+        proposals: filteredStationeries,
+        subtitle,
+        docCode: 'BC-LK-2026/01',
+        fileName: `LONGKHAI_Bao_Cao_DE_XUAT_VPP_${nowStr}`,
       });
+      return;
     } else if (reportType === 'general') {
       title = 'ĐỀ XUẤT KHÁC';
       fileName = `LONGKHAI_Bao_Cao_DE_XUAT_KHAC_${nowStr}`;
@@ -1352,23 +1330,24 @@ export function ReportsView() {
             <table className="w-full text-left border-collapse text-xs">
               <thead>
                 <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
-                  <th className="p-2 border text-center w-12">STT</th>
-                  <th className="p-2 border">Mã phiếu</th>
-                  <th className="p-2 border">Thời gian gửi</th>
-                  <th className="p-2 border">MSNV</th>
-                  <th className="p-2 border">Họ tên nhân viên</th>
-                  <th className="p-2 border">Tổ / Bộ phận</th>
-                  <th className="p-2 border">Mã VPP</th>
-                  <th className="p-2 border">Tên văn phòng phẩm đề xuất</th>
-                  <th className="p-2 border text-center">Số lượng</th>
-                  <th className="p-2 border">Trạng thái</th>
-                  <th className="p-2 border">Ghi chú</th>
+                  <th className="p-2 border border-slate-300 dark:border-slate-600 text-center w-12">STT</th>
+                  <th className="p-2 border border-slate-300 dark:border-slate-600 text-center">Mã phiếu</th>
+                  <th className="p-2 border border-slate-300 dark:border-slate-600 text-center">Thời gian gửi</th>
+                  <th className="p-2 border border-slate-300 dark:border-slate-600 text-center">MSNV</th>
+                  <th className="p-2 border border-slate-300 dark:border-slate-600">Họ tên nhân viên</th>
+                  <th className="p-2 border border-slate-300 dark:border-slate-600">Tổ / Bộ phận</th>
+                  <th className="p-2 border border-slate-300 dark:border-slate-600 text-center">Mã VPP</th>
+                  <th className="p-2 border border-slate-300 dark:border-slate-600">Tên văn phòng phẩm đề xuất</th>
+                  <th className="p-2 border border-slate-300 dark:border-slate-600 text-center">Số lượng</th>
+                  <th className="p-2 border border-slate-300 dark:border-slate-600 text-center">Trạng thái</th>
+                  <th className="p-2 border border-slate-300 dark:border-slate-600 text-center w-24">Ký nhận</th>
+                  <th className="p-2 border border-slate-300 dark:border-slate-600">Ghi chú</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredStationeries.length === 0 ? (
                   <tr>
-                    <td colSpan={11} className="p-8 text-center text-slate-400">
+                    <td colSpan={12} className="p-8 text-center text-slate-400">
                       Không tìm thấy đề xuất văn phòng phẩm nào phù hợp với bộ lọc.
                     </td>
                   </tr>
@@ -1380,37 +1359,68 @@ export function ReportsView() {
                       border: 'border-slate-200',
                       label: p.status,
                     };
-                    const itemCodes = p.items.map((i) => i.itemId).join('\n');
-                    const itemNames = p.items.map((i) => i.itemName).join('\n');
-                    const itemQuantities = p.items.map((i) => `${i.quantity} ${i.unit}`).join('\n');
+                    const items = p.items && p.items.length > 0 ? p.items : [{ itemId: '-', itemName: '-', unit: '', quantity: 0 }];
+                    const rowSpan = items.length;
+
                     return (
-                      <tr key={p.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                        <td className="p-2 border text-center font-bold text-slate-500">{idx + 1}</td>
-                        <td className="p-2 border font-mono font-bold text-blue-600">{p.id}</td>
-                        <td className="p-2 border text-[11px] text-slate-600 dark:text-slate-300 whitespace-nowrap">
-                          {formatDateTime(p.createdAt)}
-                        </td>
-                        <td className="p-2 border font-mono text-slate-700 dark:text-slate-300">{p.employeeId}</td>
-                        <td className="p-2 border font-bold text-slate-900 dark:text-white">{p.employeeName}</td>
-                        <td className="p-2 border">{p.department}</td>
-                        <td className="p-2 border font-mono font-bold text-blue-600 dark:text-blue-400 whitespace-pre-line">
-                          {itemCodes}
-                        </td>
-                        <td className="p-2 border font-medium text-slate-900 dark:text-white whitespace-pre-line">
-                          {itemNames}
-                        </td>
-                        <td className="p-2 border text-center font-bold text-slate-700 dark:text-slate-300 whitespace-pre-line">
-                          {itemQuantities}
-                        </td>
-                        <td className="p-2 border">
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${badge.bg} ${badge.text} ${badge.border}`}>
-                            {badge.label}
-                          </span>
-                        </td>
-                        <td className="p-2 border text-slate-500 italic max-w-xs truncate" title={p.notes || ''}>
-                          {p.notes || '-'}
-                        </td>
-                      </tr>
+                      <React.Fragment key={p.id}>
+                        {/* First Item Row with merged common cells */}
+                        <tr className="border-b border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                          <td rowSpan={rowSpan} className="p-2 border border-slate-300 dark:border-slate-700 text-center font-bold text-slate-500 align-middle">
+                            {idx + 1}
+                          </td>
+                          <td rowSpan={rowSpan} className="p-2 border border-slate-300 dark:border-slate-700 font-mono font-bold text-blue-600 text-center align-middle whitespace-nowrap">
+                            {p.id}
+                          </td>
+                          <td rowSpan={rowSpan} className="p-2 border border-slate-300 dark:border-slate-700 text-[11px] text-center text-slate-600 dark:text-slate-300 whitespace-nowrap align-middle">
+                            {formatDateTime(p.createdAt)}
+                          </td>
+                          <td rowSpan={rowSpan} className="p-2 border border-slate-300 dark:border-slate-700 font-mono text-center text-slate-700 dark:text-slate-300 align-middle">
+                            {p.employeeId}
+                          </td>
+                          <td rowSpan={rowSpan} className="p-2 border border-slate-300 dark:border-slate-700 font-bold text-slate-900 dark:text-white align-middle">
+                            {p.employeeName}
+                          </td>
+                          <td rowSpan={rowSpan} className="p-2 border border-slate-300 dark:border-slate-700 align-middle">
+                            {p.department}
+                          </td>
+                          <td className="p-2 border border-slate-300 dark:border-slate-700 font-mono font-bold text-center text-slate-700 dark:text-slate-300">
+                            {items[0].itemId}
+                          </td>
+                          <td className="p-2 border border-slate-300 dark:border-slate-700 font-medium text-slate-900 dark:text-white">
+                            {items[0].itemName}
+                          </td>
+                          <td className="p-2 border border-slate-300 dark:border-slate-700 text-center font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                            {items[0].quantity ? `${items[0].quantity} ${items[0].unit || ''}`.trim() : '-'}
+                          </td>
+                          <td rowSpan={rowSpan} className="p-2 border border-slate-300 dark:border-slate-700 text-center align-middle">
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border inline-block whitespace-nowrap ${badge.bg} ${badge.text} ${badge.border}`}>
+                              {badge.label}
+                            </span>
+                          </td>
+                          <td rowSpan={rowSpan} className="p-2 border border-slate-300 dark:border-slate-700 text-center align-middle">
+                            {/* Ký nhận bàn giao thực tế */}
+                          </td>
+                          <td rowSpan={rowSpan} className="p-2 border border-slate-300 dark:border-slate-700 text-slate-500 italic max-w-xs align-middle" title={p.notes || ''}>
+                            {p.notes || ''}
+                          </td>
+                        </tr>
+
+                        {/* Subsequent Item Rows (only columns 7, 8, 9) */}
+                        {items.slice(1).map((item, itemIdx) => (
+                          <tr key={`${p.id}-item-${itemIdx + 1}`} className="border-b border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                            <td className="p-2 border border-slate-300 dark:border-slate-700 font-mono font-bold text-center text-slate-700 dark:text-slate-300">
+                              {item.itemId}
+                            </td>
+                            <td className="p-2 border border-slate-300 dark:border-slate-700 font-medium text-slate-900 dark:text-white">
+                              {item.itemName}
+                            </td>
+                            <td className="p-2 border border-slate-300 dark:border-slate-700 text-center font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                              {item.quantity ? `${item.quantity} ${item.unit || ''}`.trim() : '-'}
+                            </td>
+                          </tr>
+                        ))}
+                      </React.Fragment>
                     );
                   })
                 )}
