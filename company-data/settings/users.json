@@ -3034,12 +3034,14 @@
       "attendance",
       "gate_pass",
       "announcements",
-      "reports"
+      "reports",
+      "pccc"
     ],
     "isActive": true,
     "password": "2409",
     "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "updatedAt": "2026-10-28T05:47:40.886Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "2410",
