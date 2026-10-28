@@ -1,0 +1,57 @@
+{
+  "id": "DK26-0001",
+  "employeeId": "1139",
+  "employeeName": "Võ Thị Tuyết",
+  "department": "Phòng HCNS",
+  "title": "Sửa chữa máy tính",
+  "content": "Máy tính không nhận mail được",
+  "receiverDepartment": "Bộ phận CNTT",
+  "receiverUserId": "2265",
+  "receiverUserName": "Trần Lê Hữu Lực",
+  "receiverUserEmail": "it@longkhai.com.vn",
+  "managerId": "2265",
+  "managerName": "Trần Lê Hữu Lực",
+  "managerEmail": "it@longkhai.com.vn",
+  "status": "pending_receiver",
+  "steps": [
+    {
+      "step": 1,
+      "title": "Bạn gửi đề xuất",
+      "roleRequired": "employee",
+      "approverId": "1139",
+      "approverName": "Võ Thị Tuyết",
+      "status": "completed",
+      "updatedAt": "2026-10-28T04:07:26.957Z",
+      "comment": "Đã gửi phiếu đề xuất khác lên hệ thống"
+    },
+    {
+      "step": 2,
+      "title": "Bộ phận tiếp nhận xử lý",
+      "subTitle": "Trần Lê Hữu Lực (2265) - Bộ phận CNTT",
+      "roleRequired": "receiver",
+      "approverId": "2265",
+      "approverName": "Trần Lê Hữu Lực",
+      "approverEmail": "it@longkhai.com.vn",
+      "status": "pending"
+    },
+    {
+      "step": 3,
+      "title": "Trưởng bộ phận phê duyệt",
+      "subTitle": "Trần Lê Hữu Lực",
+      "roleRequired": "manager",
+      "approverId": "2265",
+      "approverName": "Trần Lê Hữu Lực",
+      "approverEmail": "it@longkhai.com.vn",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 1,
+  "createdAt": "2026-10-28T04:07:26.957Z",
+  "updatedAt": "2026-10-28T04:07:26.957Z",
+  "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
+  "emailConfig": {
+    "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
+    "senderName": "Cổng Thông Tin Long Khai",
+    "portalBaseUrl": "https://longkhai-portal.vercel.app"
+  }
+}
