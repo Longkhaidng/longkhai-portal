@@ -813,6 +813,99 @@ export interface ExportPCCCReportOptions {
 /**
  * Export PCCC Inspection & Master Data Report to Excel
  */
+
+/**
+ * Download Excel template for PCCC Devices bulk upload
+ */
+export async function downloadPCCCDevicesTemplate() {
+  const workbook = new ExcelJS.Workbook();
+  workbook.creator = 'Long Khải Portal';
+  workbook.created = new Date();
+
+  const worksheet = workbook.addWorksheet('Danh Mục PCCC Mẫu');
+
+  const thinBorder: Partial<ExcelJS.Borders> = {
+    top: { style: 'thin', color: { argb: 'FFCBD5E1' } },
+    left: { style: 'thin', color: { argb: 'FFCBD5E1' } },
+    bottom: { style: 'thin', color: { argb: 'FFCBD5E1' } },
+    right: { style: 'thin', color: { argb: 'FFCBD5E1' } },
+  };
+
+  const row1 = worksheet.addRow(['CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG']);
+  row1.getCell(1).font = { name: 'Calibri', bold: true, size: 11, color: { argb: 'FF1E293B' } };
+
+  const row2 = worksheet.addRow(['DANH MỤC THIẾT BỊ PHÒNG CHÁY CHỮA CHÁY (PCCC)']);
+  row2.getCell(1).font = { name: 'Calibri', bold: true, size: 14, color: { argb: 'FFE11D48' } };
+  worksheet.mergeCells(2, 1, 2, 7);
+  row2.height = 24;
+
+  const row3 = worksheet.addRow(['Chủng loại hợp lệ: Bình Bột | Bình CO2 | Báo Cháy | Tủ Vách Tường | Trạm Bơm | Tủ Trung Tâm']);
+  row3.getCell(1).font = { name: 'Calibri', italic: true, size: 9.5, color: { argb: 'FF64748B' } };
+  worksheet.mergeCells(3, 1, 3, 7);
+
+  worksheet.addRow([]);
+
+  const headers = [
+    'Mã thiết bị (*)',
+    'Tên thiết bị (*)',
+    'Chủng loại (*)',
+    'Vị trí đặt (*)',
+    'Chuẩn kỹ thuật',
+    'Hạn kiểm định (dd/mm/yyyy)',
+    'Ghi chú',
+  ];
+  const headerRow = worksheet.addRow(headers);
+  headerRow.height = 26;
+  for (let c = 1; c <= 7; c++) {
+    const cell = headerRow.getCell(c);
+    cell.font = { name: 'Calibri', bold: true, size: 10.5, color: { argb: 'FFFFFFFF' } };
+    cell.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFE11D48' },
+    };
+    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    cell.border = thinBorder;
+  }
+
+  const samples = [
+    ['HT-BOT-01', 'Bình chữa cháy bột MFZ4 số 01', 'Bình Bột', 'Xưởng may 1 - Cột A1', '4.0 kg', '20/12/2026', 'Đạt chuẩn PCCC'],
+    ['HT-BOT-02', 'Bình chữa cháy bột MFZ4 số 02', 'Bình Bột', 'Xưởng may 1 - Cột A3', '4.0 kg', '20/12/2026', ''],
+    ['HT-CO2-01', 'Bình chữa cháy CO2 MT3 số 01', 'Bình CO2', 'PXHT - Khu vực đóng kiện', '10 kg', '20/12/2026', ''],
+    ['HT-CO2-02', 'Bình chữa cháy CO2 MT3 số 02', 'Bình CO2', 'PXHT - Khu vực dò kim loại', '10 kg', '20/12/2026', ''],
+    ['HT-BC-01', 'Tổ hợp chuông đèn nút nhấn số 01', 'Báo Cháy', 'Xưởng may 1 - Cửa thoát hiểm 1', '24VDC', '20/12/2026', ''],
+    ['HT-TV-01', 'Tủ vòi chữa cháy vách tường số 01', 'Tủ Vách Tường', 'Vách tường xưởng may 1 - Cột A2', 'D50 - 20m', '20/12/2026', ''],
+    ['HT-TB-01', 'Trạm bơm PCCC trung tâm nhà máy', 'Trạm Bơm', 'Khu bể ngầm PCCC sau xưởng 2', '3 bơm 7-9 bar', '20/12/2026', ''],
+    ['HT-TT-01', 'Tủ điều khiển báo cháy trung tâm YunYang', 'Tủ Trung Tâm', 'Phòng trực bảo vệ cổng chính', '24VDC 10 Zone', '20/12/2026', ''],
+  ];
+
+  samples.forEach((rowVals) => {
+    const row = worksheet.addRow(rowVals);
+    row.height = 20;
+    for (let c = 1; c <= 7; c++) {
+      const cell = row.getCell(c);
+      cell.font = { name: 'Calibri', size: 10, color: { argb: 'FF1E293B' } };
+      cell.border = thinBorder;
+      cell.alignment = {
+        horizontal: c === 1 || c === 3 || c === 5 || c === 6 ? 'center' : 'left',
+        vertical: 'middle',
+      };
+      if (c === 1) {
+        cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FFE11D48' } };
+      }
+    }
+  });
+
+  const widths = [16, 34, 18, 32, 16, 26, 24];
+  worksheet.columns.forEach((col, idx) => {
+    col.width = widths[idx] || 18;
+  });
+
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  downloadBlob(blob, 'Mau_Danh_Muc_Thiet_Bi_PCCC_Long_Khai.xlsx');
+}
+
 export async function exportPCCCReportToExcel(opts: ExportPCCCReportOptions) {
   const workbook = new ExcelJS.Workbook();
   workbook.creator = 'Long Khải Portal';

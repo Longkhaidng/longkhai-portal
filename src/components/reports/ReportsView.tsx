@@ -1562,13 +1562,14 @@ export function ReportsView() {
                   <th className="p-2 border">Người kiểm tra</th>
                   <th className="p-2 border">Chi tiết các đầu mục kiểm tra</th>
                   <th className="p-2 border text-center">Đánh giá</th>
+                  <th className="p-2 border text-center w-20">Ký nhận</th>
                   <th className="p-2 border">Ghi chú / Đề xuất</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredPCCCDevices.length === 0 ? (
                   <tr>
-                    <td colSpan={12} className="p-8 text-center text-slate-400">
+                    <td colSpan={13} className="p-8 text-center text-slate-400">
                       Không tìm thấy thiết bị PCCC nào phù hợp với bộ lọc hiện tại.
                     </td>
                   </tr>
@@ -1621,6 +1622,7 @@ export function ReportsView() {
                             <span className="text-slate-400 text-[10px]">Chưa KT</span>
                           )}
                         </td>
+                        <td className="p-2 border text-center"></td>
                         <td className="p-2 border text-slate-500 italic max-w-xs truncate" title={d.lastInspection?.notes || insp?.notes || ''}>
                           {d.lastInspection?.notes || insp?.notes || '-'}
                         </td>
@@ -1669,7 +1671,31 @@ export function ReportsView() {
           )}
         </div>
 
-        
+        {/* Factory Signatures block for PCCC */}
+        {reportType === 'pccc' && (
+          <div className="pt-8 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center text-xs">
+            <div className="space-y-12">
+              <div className="font-bold uppercase text-slate-900 dark:text-white">NGƯỜI LẬP BÁO CÁO</div>
+              <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
+            </div>
+
+            <div className="space-y-12">
+              <div className="font-bold uppercase text-slate-900 dark:text-white">CÁN BỘ AN TOÀN HSE</div>
+              <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
+            </div>
+
+            <div className="space-y-12">
+              <div className="font-bold uppercase text-slate-900 dark:text-white">TRƯỞNG PHÒNG CƠ ĐIỆN</div>
+              <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
+            </div>
+
+            <div className="space-y-12">
+              <div className="font-bold uppercase text-slate-900 dark:text-white">BAN GIÁM ĐỐC DUYỆT</div>
+              <div className="text-[11px] text-slate-400 italic">(Ký, đóng dấu)</div>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
