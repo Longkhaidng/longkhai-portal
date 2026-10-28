@@ -29,7 +29,7 @@
   "managerId": "1867",
   "managerName": "Trương Anh Như Quỳnh",
   "managerEmail": "Quynh.truong@longkhai.com.vn",
-  "status": "pending_manager",
+  "status": "completed",
   "steps": [
     {
       "step": 1,
@@ -61,12 +61,14 @@
       "approverId": "1867",
       "approverName": "Trương Anh Như Quỳnh",
       "approverEmail": "Quynh.truong@longkhai.com.vn",
-      "status": "pending"
+      "status": "completed",
+      "updatedAt": "2026-10-28T04:05:47.365Z",
+      "comment": "Trưởng phòng HCNS duyệt cấp phát"
     }
   ],
   "currentStepIndex": 2,
   "createdAt": "2026-10-28T04:05:14.855Z",
-  "updatedAt": "2026-10-28T04:05:32.901Z",
+  "updatedAt": "2026-10-28T04:05:47.365Z",
   "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
   "emailConfig": {
     "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
@@ -74,5 +76,7 @@
     "portalBaseUrl": "https://longkhai-portal.vercel.app"
   },
   "receiverApprovedAt": "2026-10-28T04:05:32.901Z",
-  "receiverComment": ""
+  "receiverComment": "",
+  "managerApprovedAt": "2026-10-28T04:05:47.365Z",
+  "managerComment": ""
 }
