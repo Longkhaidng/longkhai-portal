@@ -1,0 +1,62 @@
+{
+  "id": "VPP26-0003",
+  "employeeId": "1002",
+  "employeeName": "Trần Thị Kim Loan",
+  "department": "Phòng HCNS",
+  "items": [
+    {
+      "itemId": "OT11",
+      "itemName": "Bao đựng rác (đại/màu)",
+      "unit": "kg",
+      "quantity": 2
+    }
+  ],
+  "receiverStaffId": "1139",
+  "receiverStaffName": "Võ Thị Tuyết",
+  "receiverStaffEmail": "tuyet.vo@longkhai.com.vn",
+  "managerId": "1867",
+  "managerName": "Trương Anh Như Quỳnh",
+  "managerEmail": "Quynh.truong@longkhai.com.vn",
+  "status": "pending_hr",
+  "steps": [
+    {
+      "step": 1,
+      "title": "Bạn gửi đề xuất",
+      "roleRequired": "employee",
+      "approverId": "1002",
+      "approverName": "Trần Thị Kim Loan",
+      "status": "completed",
+      "updatedAt": "2026-10-28T06:57:00.766Z",
+      "comment": "Đã gửi đề xuất văn phòng phẩm"
+    },
+    {
+      "step": 2,
+      "title": "Chuyên viên HCNS tiếp nhận",
+      "subTitle": "Võ Thị Tuyết (1139)",
+      "roleRequired": "hr",
+      "approverId": "1139",
+      "approverName": "Võ Thị Tuyết",
+      "approverEmail": "tuyet.vo@longkhai.com.vn",
+      "status": "pending"
+    },
+    {
+      "step": 3,
+      "title": "Trưởng phòng HCNS duyệt",
+      "subTitle": "Trương Anh Như Quỳnh (1867)",
+      "roleRequired": "manager",
+      "approverId": "1867",
+      "approverName": "Trương Anh Như Quỳnh",
+      "approverEmail": "Quynh.truong@longkhai.com.vn",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 1,
+  "createdAt": "2026-10-28T06:57:00.766Z",
+  "updatedAt": "2026-10-28T06:57:00.766Z",
+  "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
+  "emailConfig": {
+    "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
+    "senderName": "Cổng Thông Tin Long Khai",
+    "portalBaseUrl": "https://longkhai-portal.vercel.app"
+  }
+}
