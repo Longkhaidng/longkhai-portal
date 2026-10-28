@@ -12,7 +12,7 @@
   "managerId": "2265",
   "managerName": "Trần Lê Hữu Lực",
   "managerEmail": "it@longkhai.com.vn",
-  "status": "pending_manager",
+  "status": "completed",
   "steps": [
     {
       "step": 1,
@@ -44,12 +44,14 @@
       "approverId": "2265",
       "approverName": "Trần Lê Hữu Lực",
       "approverEmail": "it@longkhai.com.vn",
-      "status": "pending"
+      "status": "completed",
+      "updatedAt": "2026-10-28T04:08:25.116Z",
+      "comment": "Đã xử lý xong"
     }
   ],
   "currentStepIndex": 2,
   "createdAt": "2026-10-28T04:07:26.957Z",
-  "updatedAt": "2026-10-28T04:08:03.885Z",
+  "updatedAt": "2026-10-28T04:08:25.116Z",
   "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
   "emailConfig": {
     "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
@@ -57,5 +59,7 @@
     "portalBaseUrl": "https://longkhai-portal.vercel.app"
   },
   "receiverNotes": "",
-  "receiverProcessedAt": "2026-10-28T04:08:03.885Z"
+  "receiverProcessedAt": "2026-10-28T04:08:03.885Z",
+  "managerApprovedAt": "2026-10-28T04:08:25.116Z",
+  "managerComment": "Đã xử lý xong"
 }
