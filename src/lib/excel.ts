@@ -4,6 +4,7 @@ import { LeaveRequest, LEAVE_TYPE_LABELS } from '@/types/leave';
 import { GatePass } from '@/types/gatePass';
 import { AttendanceConfirm, ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { StationeryProposal, STATIONERY_STATUS_LABELS } from '@/types/proposal';
+import { PCCCDevice, PCCCInspection, PCCC_CATEGORIES } from '@/types/pccc';
 import { formatDate, formatDateTime } from '@/lib/utils';
 
 export interface ParsedEmployeeResult {
@@ -775,6 +776,199 @@ export async function exportStationeryReportToExcel(opts: ExportStationeryReport
 /**
  * Export full multi-sheet Excel backup containing Leave Requests, Gate Passes, and Attendance Confirms
  */
+
+export function formatPCCCChecklistSummary(insp?: PCCCInspection): string {
+  if (!insp || !insp.checklist) return 'Chưa kiểm tra';
+  const c = insp.checklist;
+  if (c.type === 'binh_bot') {
+    const p = c.data.pressureGauge === 'normal' ? 'Đủ áp' : c.data.pressureGauge === 'low' ? 'Tụt áp' : 'Quá áp';
+    return `Áp lực: ${p}; Loa vòi: ${c.data.nozzleHose === 'pass' ? 'Đạt' : 'Hỏng'}; Chốt chì: ${c.data.safetyPinSeal === 'pass' ? 'Đạt' : 'Hỏng'}`;
+  }
+  if (c.type === 'binh_co2') {
+    return `Cân: ${c.data.actualWeight}kg (Hao hụt: ${c.data.gasLossPercent}%); Loa CO2: ${c.data.co2Nozzle === 'pass' ? 'Đạt' : 'Hỏng'}; Niêm phong: ${c.data.safetyPinSeal === 'pass' ? 'Đạt' : 'Hỏng'}`;
+  }
+  if (c.type === 'nut_chuong') {
+    return `Nút ấn: ${c.data.emergencyButton === 'pass' ? 'Đạt' : 'K.Đạt'}; Chuông: ${c.data.bellSiren === 'pass' ? 'Đạt' : 'K.Đạt'}; Đèn: ${c.data.locationLight === 'pass' ? 'Đạt' : 'K.Đạt'}; Reset: ${c.data.resetSwitch === 'pass' ? 'Đạt' : 'K.Đạt'}`;
+  }
+  if (c.type === 'tu_voi_vach') {
+    return `Van góc: ${c.data.angleValve === 'pass' ? 'Đạt' : 'K.Đạt'}; Vòi rách/mục: ${c.data.hoseLeak === 'pass' ? 'Đạt' : 'Rò rỉ'}; Ngàm: ${c.data.hoseCoupling === 'pass' ? 'Đạt' : 'Hỏng'}; Lăng phun: ${c.data.nozzleAvailability === 'pass' ? 'Đạt' : 'Thiếu'}; Khớp lăng: ${c.data.nozzleCoupling === 'pass' ? 'Đạt' : 'K.Đạt'}`;
+  }
+  if (c.type === 'tram_bom') {
+    return `Tủ điện Auto: ${c.data.electricalControl === 'pass' ? 'Đạt' : 'Lỗi'}; Bơm 1: ${c.data.mainPump1 === 'pass' ? 'Đạt' : 'Lỗi'}; Bơm 2: ${c.data.mainPump2 === 'pass' ? 'Đạt' : 'Lỗi'}; Bơm bù: ${c.data.jockeyPump === 'pass' ? 'Đạt' : 'Lỗi'}; Áp lực 7-9bar: ${c.data.pressureGauge === 'pass' ? 'Đạt' : 'Tụt áp'}; Bể nước: ${c.data.waterLevel === 'pass' ? 'Đạt' : 'Cạn'}`;
+  }
+  if (c.type === 'tu_trung_tam') {
+    return `Nguồn AC: ${c.data.acPowerLight === 'pass' ? 'Đạt' : 'Lỗi'}; Zone: ${c.data.zoneDisplayLight === 'pass' ? 'Đạt' : 'Lỗi'}; Báo cháy: ${c.data.alarmLight === 'pass' ? 'Đạt' : 'Lỗi'}; Lỗi HT: ${c.data.faultLight === 'pass' ? 'B.Thường' : 'Báo Lỗi'}; Bình điện: ${c.data.batterySwitch === 'pass' ? 'Đạt' : 'Lỗi'}; Còi: ${c.data.alarmSwitch === 'pass' ? 'Đạt' : 'Lỗi'}; Test: ${c.data.testSwitch === 'pass' ? 'Đạt' : 'Lỗi'}; Ắc quy 24V: ${c.data.backupBattery === 'pass' ? 'Đạt' : 'Yếu'}`;
+  }
+  return '';
+}
+
+export interface ExportPCCCReportOptions {
+  devices: PCCCDevice[];
+  inspections: PCCCInspection[];
+  subtitle?: string;
+  docCode?: string;
+  fileName: string;
+}
+
+/**
+ * Export PCCC Inspection & Master Data Report to Excel
+ */
+export async function exportPCCCReportToExcel(opts: ExportPCCCReportOptions) {
+  const workbook = new ExcelJS.Workbook();
+  workbook.creator = 'Long Khải Portal';
+  workbook.created = new Date();
+
+  const worksheet = workbook.addWorksheet('Kiểm Tra PCCC', {
+    pageSetup: { orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0 },
+    views: [{ showGridLines: true }],
+  });
+
+  const now = new Date();
+  const exportDate = now.toLocaleDateString('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+  const totalCols = 12;
+
+  const solidBlackBorder: Partial<ExcelJS.Borders> = {
+    top: { style: 'thin', color: { argb: 'FF000000' } },
+    left: { style: 'thin', color: { argb: 'FF000000' } },
+    bottom: { style: 'thin', color: { argb: 'FF000000' } },
+    right: { style: 'thin', color: { argb: 'FF000000' } },
+  };
+
+  // Row 1: Company Name (Left) & Export Date (Right)
+  const row1 = worksheet.addRow([]);
+  row1.getCell(1).value = 'CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG';
+  row1.getCell(1).font = { name: 'Calibri', bold: true, size: 11, color: { argb: 'FF000000' } };
+  row1.getCell(totalCols).value = `Ngày xuất báo cáo: ${exportDate}`;
+  row1.getCell(totalCols).font = { name: 'Calibri', size: 9.5, color: { argb: 'FF475569' } };
+  row1.getCell(totalCols).alignment = { horizontal: 'right' };
+
+  // Row 2: Sub-info (Left) & Doc Code (Right)
+  const row2 = worksheet.addRow([]);
+  row2.getCell(1).value = 'Hệ thống Quản trị & Điều hành Sản xuất Nội bộ - Quản lý PCCC';
+  row2.getCell(1).font = { name: 'Calibri', italic: true, size: 9.5, color: { argb: 'FF64748B' } };
+  row2.getCell(totalCols).value = `Mã tài liệu: ${opts.docCode || 'BC-LK-PCCC/2026'}`;
+  row2.getCell(totalCols).font = { name: 'Calibri', size: 9.5, color: { argb: 'FF475569' } };
+  row2.getCell(totalCols).alignment = { horizontal: 'right' };
+
+  // Row 3: Empty separator
+  worksheet.addRow([]);
+
+  // Row 4: Report Main Title
+  const row4 = worksheet.addRow([]);
+  row4.getCell(1).value = 'BÁO CÁO TỔNG HỢP KIỂM TRA ĐỊNH KỲ THIẾT BỊ PCCC';
+  row4.getCell(1).font = { name: 'Calibri', bold: true, size: 15, color: { argb: 'FF000000' } };
+  row4.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' };
+  worksheet.mergeCells(4, 1, 4, totalCols);
+  row4.height = 24;
+
+  // Row 5: Report Period Subtitle
+  const row5 = worksheet.addRow([]);
+  row5.getCell(1).value = opts.subtitle || 'Dữ liệu Master Data và Nhật ký kiểm định thực tế mới nhất';
+  row5.getCell(1).font = { name: 'Calibri', italic: true, size: 10, color: { argb: 'FF64748B' } };
+  row5.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' };
+  worksheet.mergeCells(5, 1, 5, totalCols);
+
+  // Row 6: Empty separator
+  worksheet.addRow([]);
+
+  // Row 7: Table Headers
+  const headers = [
+    'STT',
+    'Mã thiết bị',
+    'Tên thiết bị',
+    'Chủng loại',
+    'Vị trí đặt',
+    'Chuẩn kỹ thuật',
+    'Hạn kiểm định',
+    'Thời gian kiểm tra',
+    'Người kiểm tra',
+    'Chi tiết các đầu mục kiểm tra',
+    'Đánh giá kết quả',
+    'Ghi chú / Đề xuất',
+  ];
+  const headerRow = worksheet.addRow(headers);
+  headerRow.height = 26;
+  for (let c = 1; c <= totalCols; c++) {
+    const cell = headerRow.getCell(c);
+    cell.font = { name: 'Calibri', bold: true, size: 10.5, color: { argb: 'FF000000' } };
+    cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+    cell.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFF1F5F9' },
+    };
+    cell.border = solidBlackBorder;
+  }
+
+  // Row 8+: Data rows
+  opts.devices.forEach((d, idx) => {
+    const insp = opts.inspections.find((i) => i.deviceId === d.id);
+    const catName = PCCC_CATEGORIES[d.category]?.name || d.category;
+    const inspDate = d.lastInspection?.date || insp?.inspectedAt || 'Chưa kiểm tra';
+    const inspName = d.lastInspection ? `${d.lastInspection.inspectorName} (${d.lastInspection.inspectorId})` : insp ? `${insp.inspectorName} (${insp.inspectorId})` : '-';
+    const details = formatPCCCChecklistSummary(insp);
+    const resultText = d.lastInspection?.status === 'pass' ? 'ĐẠT TIÊU CHUẨN' : d.lastInspection?.status === 'fail' ? 'CẦN XỬ LÝ / HỎNG' : 'Chưa kiểm tra';
+    const notesText = d.lastInspection?.notes || insp?.notes || '';
+
+    const rowData = [
+      idx + 1,
+      d.id,
+      d.name,
+      catName,
+      d.location,
+      d.specs,
+      d.inspectionExpiry,
+      inspDate,
+      inspName,
+      details,
+      resultText,
+      notesText,
+    ];
+
+    const row = worksheet.addRow(rowData);
+    row.height = 24;
+
+    for (let c = 1; c <= totalCols; c++) {
+      const cell = row.getCell(c);
+      cell.border = solidBlackBorder;
+      cell.font = { name: 'Calibri', size: 10, color: { argb: 'FF1E293B' } };
+
+      const isCenter = [1, 2, 4, 6, 7, 8, 11].includes(c);
+      cell.alignment = {
+        horizontal: isCenter ? 'center' : 'left',
+        vertical: 'middle',
+        wrapText: c === 10 || c === 5,
+      };
+
+      if (c === 2) {
+        cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FFE11D48' } };
+      } else if (c === 3) {
+        cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FF0F172A' } };
+      } else if (c === 11) {
+        if (resultText === 'ĐẠT TIÊU CHUẨN') {
+          cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FF059669' } };
+        } else if (resultText === 'CẦN XỬ LÝ / HỎNG') {
+          cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FFE11D48' } };
+        }
+      }
+    }
+  });
+
+  // Column widths
+  const colWidths = [6, 14, 26, 15, 25, 16, 14, 18, 22, 42, 18, 22];
+  worksheet.columns.forEach((col, idx) => {
+    col.width = colWidths[idx] || 16;
+  });
+
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  downloadBlob(blob, `${opts.fileName}.xlsx`);
+}
+
 export async function exportDocumentsBackupToExcel(
   leaveRequests: LeaveRequest[],
   gatePasses: GatePass[],

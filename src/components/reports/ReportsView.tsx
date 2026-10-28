@@ -3,8 +3,9 @@
 import React, { useState, useMemo } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
-import { exportReportToExcel, exportStationeryReportToExcel } from '@/lib/excel';
+import { exportReportToExcel, exportStationeryReportToExcel, exportPCCCReportToExcel, formatPCCCChecklistSummary } from '@/lib/excel';
 import {
+  Flame,
   BarChart3,
   Download,
   Printer,
@@ -25,6 +26,7 @@ import { formatDate, formatDateTime, sortNewestFirst } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { RepairProposal, REPAIR_STATUS_LABELS, REPAIR_STATUS_BADGES } from '@/types/repair';
+import { PCCCDevice, PCCCInspection, PCCC_CATEGORIES } from '@/types/pccc';
 import {
   StationeryProposal,
   GeneralProposal,
@@ -37,7 +39,7 @@ import { filterUserLeaves, filterUserAttendances, filterUserGatePasses, filterUs
 
 export function ReportsView() {
   const { currentUser } = useAuth();
-  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'repair' | 'stationery' | 'general' | 'departments'>('leave');
+  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'repair' | 'stationery' | 'general' | 'departments' | 'pccc'>('leave');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('all');
@@ -276,6 +278,27 @@ export function ReportsView() {
   }, [generals, departmentFilter, statusFilter, searchTerm, fromDate, toDate]);
 
   // 6. Filtered Departments
+  const pcccDevices = useMemo(() => storage.getPCCCDevices(), []);
+  const pcccInspections = useMemo(() => storage.getPCCCInspections(), []);
+
+  const filteredPCCCDevices = useMemo(() => {
+    return pcccDevices.filter((d) => {
+      if (statusFilter === 'pass' && d.lastInspection?.status !== 'pass') return false;
+      if (statusFilter === 'fail' && d.lastInspection?.status !== 'fail') return false;
+      if (statusFilter === 'none' && d.lastInspection) return false;
+
+      if (searchTerm.trim()) {
+        const q = searchTerm.toLowerCase();
+        return (
+          d.id.toLowerCase().includes(q) ||
+          d.name.toLowerCase().includes(q) ||
+          d.location.toLowerCase().includes(q) ||
+          d.specs.toLowerCase().includes(q)
+        );
+      }
+      return true;
+    });
+  }, [pcccDevices, statusFilter, searchTerm]);
   const filteredDepartments = useMemo(() => {
     return departments.filter((d) => {
       if (departmentFilter !== 'all' && d.name !== departmentFilter) return false;
@@ -308,7 +331,7 @@ export function ReportsView() {
       ? filteredStationeries.length
       : reportType === 'general'
       ? filteredGenerals.length
-      : filteredDepartments.length;
+      : reportType === 'pccc' ? filteredPCCCDevices.length : filteredDepartments.length;
 
   // Export to Excel handler
   const handleExportExcel = () => {
@@ -550,6 +573,19 @@ export function ReportsView() {
         p.content,
         GENERAL_STATUS_LABELS[p.status] || p.status,
       ]);
+    } else if (reportType === 'pccc') {
+      if (filteredPCCCDevices.length === 0) {
+        alert('Không có dữ liệu thiết bị PCCC phù hợp với bộ lọc hiện tại để xuất file Excel.');
+        return;
+      }
+      exportPCCCReportToExcel({
+        devices: filteredPCCCDevices,
+        inspections: pcccInspections,
+        subtitle,
+        docCode: 'BC-LK-PCCC/2026',
+        fileName: `LONGKHAI_Bao_Cao_PCCC_${nowStr}`,
+      });
+      return;
     } else if (reportType === 'departments') {
       title = 'CƠ CẤU PHÒNG BAN';
       fileName = `LONGKHAI_Bao_Cao_PHONG_BAN_${nowStr}`;
@@ -726,6 +762,21 @@ export function ReportsView() {
           <div className="font-bold text-xs text-slate-900 dark:text-white">Đề xuất khác</div>
           <div className="text-[11px] text-slate-500">
             {filteredGenerals.length} đề xuất {hasActiveFilters && `(${generals.length} gốc)`}
+          </div>
+        </button>
+
+        <button
+          onClick={() => setReportType('pccc')}
+          className={`p-4 rounded-2xl border text-left transition-all ${
+            reportType === 'pccc'
+              ? 'bg-rose-50 dark:bg-rose-950/40 border-red-500 shadow-sm ring-1 ring-red-500/30'
+              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
+          }`}
+        >
+          <Flame className="w-5 h-5 text-red-600 mb-2" />
+          <div className="font-bold text-xs text-slate-900 dark:text-white">Kiểm tra PCCC</div>
+          <div className="text-[11px] text-slate-500">
+            {filteredPCCCDevices.length} thiết bị {hasActiveFilters && `(${pcccDevices.length} gốc)`}
           </div>
         </button>
 
@@ -944,6 +995,8 @@ export function ReportsView() {
               ? 'ĐỀ XUẤT VĂN PHÒNG PHẨM'
               : reportType === 'general'
               ? 'ĐỀ XUẤT KHÁC'
+              : reportType === 'pccc'
+              ? 'KIỂM TRA THIẾT BỊ PCCC'
               : 'CƠ CẤU PHÒNG BAN'}
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -1483,6 +1536,93 @@ export function ReportsView() {
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${badge.bg} ${badge.text} ${badge.border}`}>
                             {badge.label}
                           </span>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          )}
+
+
+          {/* PCCC REPORT TABLE */}
+          {reportType === 'pccc' && (
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
+                  <th className="p-2 border text-center w-12">STT</th>
+                  <th className="p-2 border text-center">Mã thiết bị</th>
+                  <th className="p-2 border">Tên thiết bị</th>
+                  <th className="p-2 border">Chủng loại</th>
+                  <th className="p-2 border">Vị trí đặt</th>
+                  <th className="p-2 border text-center">Chuẩn KT</th>
+                  <th className="p-2 border text-center">Hạn KĐ</th>
+                  <th className="p-2 border text-center">Thời gian kiểm tra</th>
+                  <th className="p-2 border">Người kiểm tra</th>
+                  <th className="p-2 border">Chi tiết các đầu mục kiểm tra</th>
+                  <th className="p-2 border text-center">Đánh giá</th>
+                  <th className="p-2 border">Ghi chú / Đề xuất</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredPCCCDevices.length === 0 ? (
+                  <tr>
+                    <td colSpan={12} className="p-8 text-center text-slate-400">
+                      Không tìm thấy thiết bị PCCC nào phù hợp với bộ lọc hiện tại.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredPCCCDevices.map((d, idx) => {
+                    const catInfo = PCCC_CATEGORIES[d.category];
+                    const insp = pcccInspections.find((i) => i.deviceId === d.id);
+                    const details = formatPCCCChecklistSummary(insp);
+                    const hasLast = !!d.lastInspection;
+                    const isPass = d.lastInspection?.status === 'pass';
+
+                    return (
+                      <tr key={d.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                        <td className="p-2 border text-center font-bold text-slate-500">{idx + 1}</td>
+                        <td className="p-2 border font-mono font-bold text-red-600 text-center">{d.id}</td>
+                        <td className="p-2 border font-bold text-slate-900 dark:text-white">{d.name}</td>
+                        <td className="p-2 border">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 border">
+                            {catInfo?.name || d.category}
+                          </span>
+                        </td>
+                        <td className="p-2 border">{d.location}</td>
+                        <td className="p-2 border text-center font-mono">{d.specs}</td>
+                        <td className="p-2 border text-center whitespace-nowrap">{d.inspectionExpiry}</td>
+                        <td className="p-2 border text-center text-[11px] whitespace-nowrap text-slate-600 dark:text-slate-300">
+                          {d.lastInspection?.date || insp?.inspectedAt || '-'}
+                        </td>
+                        <td className="p-2 border font-medium">
+                          {d.lastInspection
+                            ? `${d.lastInspection.inspectorName} (${d.lastInspection.inspectorId})`
+                            : insp
+                            ? `${insp.inspectorName} (${insp.inspectorId})`
+                            : '-'}
+                        </td>
+                        <td className="p-2 border text-[11px] text-slate-700 dark:text-slate-300 max-w-xs whitespace-pre-line">
+                          {details}
+                        </td>
+                        <td className="p-2 border text-center whitespace-nowrap">
+                          {hasLast ? (
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                                isPass
+                                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                                  : 'bg-rose-100 text-rose-800 border-rose-300'
+                              }`}
+                            >
+                              {isPass ? 'ĐẠT' : 'KHÔNG ĐẠT'}
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 text-[10px]">Chưa KT</span>
+                          )}
+                        </td>
+                        <td className="p-2 border text-slate-500 italic max-w-xs truncate" title={d.lastInspection?.notes || insp?.notes || ''}>
+                          {d.lastInspection?.notes || insp?.notes || '-'}
                         </td>
                       </tr>
                     );

@@ -26,6 +26,7 @@ import {
   Database,
   LayoutGrid,
   ClipboardList,
+  Flame,
 } from 'lucide-react';
 
 const ICON_COMPONENTS: Record<string, React.ElementType> = {
@@ -124,6 +125,12 @@ export function Sidebar({
       icon: ClipboardList,
       badgeCount: pendingCounts.proposals ?? pendingCounts.repair,
       badgeColor: 'bg-amber-500 text-white',
+    },
+    {
+      id: 'pccc',
+      permission: 'pccc',
+      label: 'Kiểm tra PCCC',
+      icon: Flame,
     },
     {
       id: 'announcements',

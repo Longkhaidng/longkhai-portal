@@ -11,6 +11,7 @@ import { LeaveView } from '@/components/leave/LeaveView';
 import { AttendanceView } from '@/components/attendance/AttendanceView';
 import { GatePassView } from '@/components/gatepass/GatePassView';
 import { ProposalHubView } from '@/components/proposals/ProposalHubView';
+import { PCCCInspectionView } from '@/components/pccc/PCCCInspectionView';
 import { AnnouncementView } from '@/components/announcements/AnnouncementView';
 import { DynamicFormsView } from '@/components/forms/DynamicFormsView';
 import { ReportsView } from '@/components/reports/ReportsView';
@@ -40,6 +41,14 @@ function PortalAppContent() {
   const [currentTab, setCurrentTab] = useState<string>('dashboard');
   const [viewingWebSite, setViewingWebSite] = useState<WebIntegration | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('pccc')) {
+        setCurrentTab('pccc');
+      }
+    }
+  }, []);
 
   // Loading state
   if (isLoading) {
@@ -280,6 +289,8 @@ function PortalAppContent() {
         return <ProposalHubView initialCategory="stationery" />;
       case 'proposals_general':
         return <ProposalHubView initialCategory="general" />;
+      case 'pccc':
+        return <PCCCInspectionView />;
       case 'announcements':
         return <AnnouncementView />;
       case 'forms':

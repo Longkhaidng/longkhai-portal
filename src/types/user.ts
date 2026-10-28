@@ -17,6 +17,7 @@ export type CategoryPermission =
   | 'attendance'
   | 'gate_pass'
   | 'repair'
+  | 'pccc'
   | 'announcements'
   | 'forms'
   | 'reports'
@@ -39,6 +40,7 @@ export const CATEGORY_DEFINITIONS: CategoryInfo[] = [
   { id: 'attendance', name: 'Xác nhận công', description: 'Xác nhận công vào - ra do quên/mất thẻ', iconName: 'Clock' },
   { id: 'gate_pass', name: 'Ra vào cổng', description: 'Phiếu ra cổng, tài sản & quét mã QR bảo vệ', iconName: 'QrCode' },
   { id: 'repair', name: 'Đề xuất sửa chữa', description: 'Phiếu đề xuất sửa chữa cơ điện / bảo trì thiết bị', iconName: 'Wrench' },
+  { id: 'pccc', name: 'Kiểm tra PCCC', description: 'Dashboard 111 thiết bị, checklist kiểm định 6 chủng loại & quét mã QR', iconName: 'Flame' },
   { id: 'announcements', name: 'Thông báo', description: 'Thông báo công ty, nội quy, chính sách', iconName: 'Bell' },
   { id: 'forms', name: 'Biểu mẫu động', description: 'Tạo và sử dụng các biểu mẫu điện tử', iconName: 'FileSpreadsheet' },
   { id: 'reports', name: 'Báo cáo', description: 'Báo cáo tổng hợp và xuất Excel, PDF', iconName: 'BarChart3' },

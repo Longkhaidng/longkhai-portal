@@ -3,6 +3,8 @@ import { LeaveRequest } from '@/types/leave';
 import { AttendanceConfirm } from '@/types/attendance';
 import { GatePass } from '@/types/gatePass';
 import { RepairProposal } from '@/types/repair';
+import { PCCCDevice, PCCCInspection } from '@/types/pccc';
+import { INITIAL_PCCC_DEVICES, INITIAL_PCCC_INSPECTIONS } from './pccc-data';
 import { StationeryItem, StationeryProposal, GeneralProposal } from '@/types/proposal';
 import { INITIAL_STATIONERY_ITEMS } from './initial-data';
 import { Announcement } from '@/types/announcement';
@@ -32,6 +34,8 @@ const STORAGE_KEYS = {
   REPAIR_PROPOSALS: 'lk_portal_repair_proposals',
   STATIONERY_ITEMS: 'lk_portal_stationery_items',
   STATIONERY_PROPOSALS: 'lk_portal_stationery_proposals',
+  PCCC_DEVICES: 'lk_portal_pccc_devices',
+  PCCC_INSPECTIONS: 'lk_portal_pccc_inspections',
   GENERAL_PROPOSALS: 'lk_portal_general_proposals',
   ANNOUNCEMENTS: 'lk_portal_announcements',
   DYNAMIC_FORMS: 'lk_portal_dynamic_forms',
@@ -1305,6 +1309,88 @@ class StorageService {
       message: `Đã khôi phục thành công toàn bộ dữ liệu từ tệp sao lưu!`,
       counts: backup.summary,
     };
+  }
+
+
+  // --- PCCC MASTER DATA & INSPECTIONS ---
+  getPCCCDevices(): PCCCDevice[] {
+    if (!this.isClient()) return INITIAL_PCCC_DEVICES;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.PCCC_DEVICES);
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {}
+    this.savePCCCDevices(INITIAL_PCCC_DEVICES);
+    return INITIAL_PCCC_DEVICES;
+  }
+
+  savePCCCDevices(devices: PCCCDevice[]): void {
+    if (!this.isClient()) return;
+    localStorage.setItem(STORAGE_KEYS.PCCC_DEVICES, JSON.stringify(devices));
+    this.syncFileToGitHub('pccc/master_devices.json', JSON.stringify(devices, null, 2), 'Update PCCC Master Devices');
+  }
+
+  updatePCCCDevice(updated: PCCCDevice): void {
+    const devices = this.getPCCCDevices();
+    const idx = devices.findIndex((d) => d.id === updated.id);
+    if (idx >= 0) {
+      devices[idx] = updated;
+    } else {
+      devices.push(updated);
+    }
+    this.savePCCCDevices(devices);
+  }
+
+  getPCCCInspections(): PCCCInspection[] {
+    if (!this.isClient()) return INITIAL_PCCC_INSPECTIONS;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.PCCC_INSPECTIONS);
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return sortNewestFirst(parsed);
+        }
+      }
+    } catch {}
+    localStorage.setItem(STORAGE_KEYS.PCCC_INSPECTIONS, JSON.stringify(INITIAL_PCCC_INSPECTIONS));
+    return INITIAL_PCCC_INSPECTIONS;
+  }
+
+  savePCCCInspection(inspection: PCCCInspection, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const inspections = this.getPCCCInspections();
+    inspections.unshift(inspection);
+    localStorage.setItem(STORAGE_KEYS.PCCC_INSPECTIONS, JSON.stringify(inspections));
+
+    // Update device's lastInspection in master data
+    const devices = this.getPCCCDevices();
+    const deviceIndex = devices.findIndex((d) => d.id === inspection.deviceId);
+    if (deviceIndex >= 0) {
+      devices[deviceIndex].lastInspection = {
+        status: inspection.overallResult,
+        date: inspection.inspectedAt,
+        inspectorId: inspection.inspectorId,
+        inspectorName: inspection.inspectorName,
+        notes: inspection.notes,
+      };
+      this.savePCCCDevices(devices);
+    }
+
+    this.addAuditLog(
+      'create',
+      'pccc',
+      inspection.id,
+      byUser?.id || inspection.inspectorId,
+      byUser?.name || inspection.inspectorName,
+      `Kiểm tra thiết bị PCCC ${inspection.deviceId} (${inspection.deviceName}) - Kết quả: ${inspection.overallResult === 'pass' ? 'ĐẠT' : 'KHÔNG ĐẠT'}`
+    );
+
+    const year = new Date().getFullYear();
+    this.syncFileToGitHub(`pccc/inspections/${year}/${inspection.id}.json`, JSON.stringify(inspection, null, 2), `Save PCCC Inspection ${inspection.id}`);
   }
 
   async clearAllDocuments(
