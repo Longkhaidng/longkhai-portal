@@ -11,7 +11,7 @@
       "monthlyQuota": 5,
       "quantity": 6,
       "notes": "Đề xuất thêm để trả bp khác",
-      "approvedQuantity": 4
+      "approvedQuantity": 5
     }
   ],
   "receiverStaffId": "1139",
@@ -20,7 +20,7 @@
   "managerId": "1867",
   "managerName": "Trương Anh Như Quỳnh",
   "managerEmail": "Quynh.truong@longkhai.com.vn",
-  "status": "pending_manager",
+  "status": "completed",
   "steps": [
     {
       "step": 1,
@@ -52,12 +52,14 @@
       "approverId": "1867",
       "approverName": "Trương Anh Như Quỳnh",
       "approverEmail": "Quynh.truong@longkhai.com.vn",
-      "status": "pending"
+      "status": "completed",
+      "updatedAt": "2026-10-28T08:26:46.767Z",
+      "comment": "Trưởng phòng HCNS duyệt cấp phát"
     }
   ],
   "currentStepIndex": 2,
   "createdAt": "2026-10-28T08:25:19.591Z",
-  "updatedAt": "2026-10-28T08:26:04.175Z",
+  "updatedAt": "2026-10-28T08:26:46.767Z",
   "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
   "emailConfig": {
     "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
@@ -65,5 +67,7 @@
     "portalBaseUrl": "https://longkhai-portal.vercel.app"
   },
   "receiverApprovedAt": "2026-10-28T08:26:04.175Z",
-  "receiverComment": ""
+  "receiverComment": "",
+  "managerApprovedAt": "2026-10-28T08:26:46.767Z",
+  "managerComment": ""
 }
