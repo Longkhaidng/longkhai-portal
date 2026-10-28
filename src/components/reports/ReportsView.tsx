@@ -1548,22 +1548,22 @@ export function ReportsView() {
 
           {/* PCCC REPORT TABLE */}
           {reportType === 'pccc' && (
-            <table className="w-full text-left border-collapse text-xs">
+            <table className="w-full text-left border-collapse text-xs min-w-[1360px]">
               <thead>
                 <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
-                  <th className="p-2 border text-center w-12">STT</th>
-                  <th className="p-2 border text-center">Mã thiết bị</th>
-                  <th className="p-2 border">Tên thiết bị</th>
-                  <th className="p-2 border">Chủng loại</th>
-                  <th className="p-2 border">Vị trí đặt</th>
-                  <th className="p-2 border text-center">Chuẩn KT</th>
-                  <th className="p-2 border text-center">Hạn KĐ</th>
-                  <th className="p-2 border text-center">Thời gian kiểm tra</th>
-                  <th className="p-2 border">Người kiểm tra</th>
-                  <th className="p-2 border">Chi tiết các đầu mục kiểm tra</th>
-                  <th className="p-2 border text-center">Đánh giá</th>
-                  <th className="p-2 border text-center w-20">Ký nhận</th>
-                  <th className="p-2 border">Ghi chú / Đề xuất</th>
+                  <th className="p-2 border text-center w-12 whitespace-nowrap">STT</th>
+                  <th className="p-2 border text-center w-32 min-w-[120px] whitespace-nowrap">Mã thiết bị</th>
+                  <th className="p-2 border min-w-[200px] max-w-[260px]">Tên thiết bị</th>
+                  <th className="p-2 border text-center w-28 min-w-[100px] whitespace-nowrap">Chủng loại</th>
+                  <th className="p-2 border min-w-[150px] max-w-[200px]">Vị trí đặt</th>
+                  <th className="p-2 border text-center w-24 min-w-[85px] whitespace-nowrap">Chuẩn KT</th>
+                  <th className="p-2 border text-center w-24 min-w-[95px] whitespace-nowrap">Hạn KĐ</th>
+                  <th className="p-2 border text-center w-36 min-w-[135px] whitespace-nowrap">Thời gian kiểm tra</th>
+                  <th className="p-2 border w-44 min-w-[160px] whitespace-nowrap">Người kiểm tra</th>
+                  <th className="p-2 border min-w-[200px] max-w-[300px]">Chi tiết các đầu mục kiểm tra</th>
+                  <th className="p-2 border text-center w-24 min-w-[85px] whitespace-nowrap">Đánh giá</th>
+                  <th className="p-2 border text-center w-20 min-w-[75px] whitespace-nowrap">Ký nhận</th>
+                  <th className="p-2 border min-w-[130px]">Ghi chú / Đề xuất</th>
                 </tr>
               </thead>
               <tbody>
@@ -1583,34 +1583,34 @@ export function ReportsView() {
 
                     return (
                       <tr key={d.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                        <td className="p-2 border text-center font-bold text-slate-500">{idx + 1}</td>
-                        <td className="p-2 border font-mono font-bold text-red-600 text-center">{d.id}</td>
-                        <td className="p-2 border font-bold text-slate-900 dark:text-white">{d.name}</td>
-                        <td className="p-2 border">
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 border">
+                        <td className="p-2 border text-center font-bold text-slate-500 whitespace-nowrap">{idx + 1}</td>
+                        <td className="p-2 border font-mono font-bold text-red-600 text-center whitespace-nowrap">{d.id}</td>
+                        <td className="p-2 border font-semibold text-slate-900 dark:text-white leading-tight">{d.name}</td>
+                        <td className="p-2 border text-center whitespace-nowrap">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 border whitespace-nowrap inline-block">
                             {catInfo?.name || d.category}
                           </span>
                         </td>
-                        <td className="p-2 border">{d.location}</td>
-                        <td className="p-2 border text-center font-mono">{d.specs}</td>
-                        <td className="p-2 border text-center whitespace-nowrap">{d.inspectionExpiry}</td>
-                        <td className="p-2 border text-center text-[11px] whitespace-nowrap text-slate-600 dark:text-slate-300">
+                        <td className="p-2 border leading-tight">{d.location}</td>
+                        <td className="p-2 border text-center font-mono whitespace-nowrap">{d.specs}</td>
+                        <td className="p-2 border text-center whitespace-nowrap font-mono">{d.inspectionExpiry}</td>
+                        <td className="p-2 border text-center text-[11px] whitespace-nowrap font-mono text-slate-600 dark:text-slate-300">
                           {d.lastInspection?.date || insp?.inspectedAt || '-'}
                         </td>
-                        <td className="p-2 border font-medium">
+                        <td className="p-2 border font-medium whitespace-nowrap">
                           {d.lastInspection
                             ? `${d.lastInspection.inspectorName} (${d.lastInspection.inspectorId})`
                             : insp
                             ? `${insp.inspectorName} (${insp.inspectorId})`
                             : '-'}
                         </td>
-                        <td className="p-2 border text-[11px] text-slate-700 dark:text-slate-300 max-w-xs whitespace-pre-line">
+                        <td className="p-2 border text-[11px] text-slate-700 dark:text-slate-300 max-w-xs whitespace-pre-line leading-tight">
                           {details}
                         </td>
                         <td className="p-2 border text-center whitespace-nowrap">
                           {hasLast ? (
                             <span
-                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold border whitespace-nowrap inline-block ${
                                 isPass
                                   ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                                   : 'bg-rose-100 text-rose-800 border-rose-300'
@@ -1619,10 +1619,10 @@ export function ReportsView() {
                               {isPass ? 'ĐẠT' : 'KHÔNG ĐẠT'}
                             </span>
                           ) : (
-                            <span className="text-slate-400 text-[10px]">Chưa KT</span>
+                            <span className="text-slate-400 text-[10px] whitespace-nowrap">Chưa KT</span>
                           )}
                         </td>
-                        <td className="p-2 border text-center"></td>
+                        <td className="p-2 border text-center whitespace-nowrap"></td>
                         <td className="p-2 border text-slate-500 italic max-w-xs truncate" title={d.lastInspection?.notes || insp?.notes || ''}>
                           {d.lastInspection?.notes || insp?.notes || '-'}
                         </td>

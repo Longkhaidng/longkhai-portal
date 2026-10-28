@@ -14,7 +14,7 @@ import { PCCCQrScannerModal } from './PCCCQrScannerModal';
 import { PCCCQrCodeModal } from './PCCCQrCodeModal';
 import { PCCCDeviceModal } from './PCCCDeviceModal';
 import { PCCCImportExcelModal } from './PCCCImportExcelModal';
-import { exportPCCCReportToExcel, downloadPCCCDevicesTemplate, formatPCCCChecklistSummary } from '@/lib/excel';
+import { exportPCCCReportToExcel, downloadPCCCDevicesTemplate } from '@/lib/excel';
 import {
   Shield,
   CheckCircle2,
@@ -29,19 +29,14 @@ import {
   Search,
   RotateCcw,
   QrCode,
-  FileCheck2,
   Printer,
   Download,
   Upload,
   Plus,
-  Eye,
   Check,
   Edit2,
   Trash2,
   Layers,
-  FileSpreadsheet,
-  Calendar,
-  Filter,
 } from 'lucide-react';
 
 export function PCCCInspectionView() {
@@ -51,18 +46,13 @@ export function PCCCInspectionView() {
   const [devices, setDevices] = useState<PCCCDevice[]>([]);
   const [inspections, setInspections] = useState<PCCCInspection[]>([]);
 
-  // 3 Sub-tabs: 'dashboard' | 'devices' | 'history'
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'devices' | 'history'>('dashboard');
+  // 2 Sub-tabs: 'dashboard' | 'devices' (Bỏ mục Nhật Ký & Báo Cáo theo yêu cầu)
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'devices'>('dashboard');
 
   // Filters for Dashboard/Devices
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
-
-  // History filters
-  const [historyFromDate, setHistoryFromDate] = useState('');
-  const [historyToDate, setHistoryToDate] = useState('');
-  const [historyResultFilter, setHistoryResultFilter] = useState<'all' | 'pass' | 'fail'>('all');
 
   // Modals state
   const [isInspectionModalOpen, setIsInspectionModalOpen] = useState(false);
@@ -76,9 +66,6 @@ export function PCCCInspectionView() {
   const [deviceToEdit, setDeviceToEdit] = useState<PCCCDevice | null>(null);
 
   const [isImportExcelModalOpen, setIsImportExcelModalOpen] = useState(false);
-
-  // Selected inspection for detail modal
-  const [viewingInspection, setViewingInspection] = useState<PCCCInspection | null>(null);
 
   // Load data
   const loadData = () => {
@@ -114,7 +101,7 @@ export function PCCCInspectionView() {
   const failCount = devices.filter((d) => d.lastInspection?.status === 'fail').length;
   const passRate = totalCount > 0 ? Math.round((passCount / totalCount) * 100) : 100;
 
-  // Check expiring within 30 days
+  // Check expiring within 30 days or expired
   const expiringCount = useMemo(() => {
     const now = new Date();
     const in30Days = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
@@ -147,6 +134,16 @@ export function PCCCInspectionView() {
     return counts;
   }, [devices]);
 
+  // Smooth scroll to table helper
+  const scrollToTable = () => {
+    setTimeout(() => {
+      const el = document.getElementById('pccc-device-table');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 60);
+  };
+
   // Filtered devices
   const filteredDevices = useMemo(() => {
     return devices.filter((d) => {
@@ -154,6 +151,18 @@ export function PCCCInspectionView() {
       if (statusFilter === 'pass' && d.lastInspection?.status !== 'pass') return false;
       if (statusFilter === 'fail' && d.lastInspection?.status !== 'fail') return false;
       if (statusFilter === 'none' && d.lastInspection) return false;
+      if (statusFilter === 'expiring') {
+        if (!d.inspectionExpiry) return false;
+        const parts = d.inspectionExpiry.split('/');
+        if (parts.length === 3) {
+          const expDate = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+          const now = new Date();
+          const in30Days = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+          if (expDate > in30Days) return false;
+        } else {
+          return false;
+        }
+      }
 
       if (searchTerm.trim()) {
         const q = searchTerm.toLowerCase();
@@ -167,35 +176,6 @@ export function PCCCInspectionView() {
       return true;
     });
   }, [devices, categoryFilter, statusFilter, searchTerm]);
-
-  // Filtered inspections (History)
-  const filteredInspections = useMemo(() => {
-    return inspections.filter((insp) => {
-      if (categoryFilter !== 'all' && insp.category !== categoryFilter) return false;
-      if (historyResultFilter !== 'all' && insp.overallResult !== historyResultFilter) return false;
-
-      if (historyFromDate) {
-        const inspD = new Date(insp.inspectedAt).toISOString().slice(0, 10);
-        if (inspD < historyFromDate) return false;
-      }
-      if (historyToDate) {
-        const inspD = new Date(insp.inspectedAt).toISOString().slice(0, 10);
-        if (inspD > historyToDate) return false;
-      }
-
-      if (searchTerm.trim()) {
-        const q = searchTerm.toLowerCase();
-        return (
-          insp.deviceId.toLowerCase().includes(q) ||
-          insp.deviceName.toLowerCase().includes(q) ||
-          insp.location.toLowerCase().includes(q) ||
-          insp.inspectorName.toLowerCase().includes(q) ||
-          insp.inspectorId.toLowerCase().includes(q)
-        );
-      }
-      return true;
-    });
-  }, [inspections, categoryFilter, historyResultFilter, historyFromDate, historyToDate, searchTerm]);
 
   // Handle open inspection modal for a specific device
   const handleInspectDevice = (d: PCCCDevice) => {
@@ -238,30 +218,30 @@ export function PCCCInspectionView() {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-3.5 sm:space-y-4">
       {/* Top Header & Mobile Responsive Navigation */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 no-print">
-        <div className="flex items-center gap-2.5 sm:gap-3">
-          <div className="p-2 sm:p-2.5 rounded-2xl bg-red-600 text-white shadow-md shrink-0">
-            <Flame className="w-5 h-5 sm:w-6 sm:h-6" />
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-2.5 sm:gap-3 no-print">
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          <div className="p-1.5 sm:p-2 rounded-xl bg-red-600 text-white shadow-xs shrink-0">
+            <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div>
-            <h1 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white">
+            <h1 className="text-base sm:text-xl font-black text-slate-900 dark:text-white leading-tight">
               Kiểm Tra & Quản Lý Thiết Bị PCCC
             </h1>
-            <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
               Hệ thống giám sát định kỳ 111 thiết bị PCCC, checklist tiêu chuẩn & quét mã QR tại hiện trường
             </p>
           </div>
         </div>
 
-        {/* Action Buttons Toolbar */}
-        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+        {/* Action Buttons Toolbar - Thu nhỏ kích thước tinh gọn */}
+        <div className="flex items-center gap-1.5 flex-wrap">
           <button
             onClick={() => setIsQrScannerOpen(true)}
-            className="flex-1 sm:flex-initial px-3 sm:px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-colors cursor-pointer active:scale-95"
+            className="flex-1 sm:flex-initial px-2.5 sm:px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-[11px] rounded-lg shadow-xs flex items-center justify-center gap-1 transition-colors cursor-pointer active:scale-95"
           >
-            <QrCode className="w-4 h-4" />
+            <QrCode className="w-3.5 h-3.5" />
             <span>Quét QR</span>
           </button>
 
@@ -270,168 +250,205 @@ export function PCCCInspectionView() {
               setPreSelectedDevice(null);
               setIsInspectionModalOpen(true);
             }}
-            className="flex-1 sm:flex-initial px-3 sm:px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-colors cursor-pointer active:scale-95"
+            className="flex-1 sm:flex-initial px-2.5 sm:px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] rounded-lg shadow-xs flex items-center justify-center gap-1 transition-colors cursor-pointer active:scale-95"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5" />
             <span>Kiểm tra mới</span>
           </button>
 
           <button
             onClick={handleExportExcel}
-            className="px-3 py-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs rounded-xl border border-slate-300 dark:border-slate-700 shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="px-2.5 sm:px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-[11px] rounded-lg border border-slate-200 dark:border-slate-700 shadow-xs flex items-center gap-1 transition-colors cursor-pointer"
           >
-            <Download className="w-4 h-4 text-emerald-600" />
+            <Download className="w-3.5 h-3.5 text-emerald-600" />
             <span className="hidden sm:inline">Xuất Excel</span>
           </button>
 
           <button
             onClick={() => window.print()}
-            className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="px-2.5 sm:px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-[11px] rounded-lg shadow-xs flex items-center gap-1 transition-colors cursor-pointer"
           >
-            <Printer className="w-4 h-4" />
+            <Printer className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">In báo cáo</span>
           </button>
         </div>
       </div>
 
-      {/* 3 Sub-Navigation Tabs */}
-      <div className="flex items-center gap-1.5 sm:gap-2 border-b border-slate-200 dark:border-slate-800 pb-2 overflow-x-auto no-scrollbar no-print">
+      {/* 2 Sub-Navigation Tabs (Đã bỏ tab 'Nhật Ký & Báo Cáo' theo Hình 3) */}
+      <div className="flex items-center gap-1.5 border-b border-slate-200 dark:border-slate-800 pb-1.5 overflow-x-auto no-scrollbar no-print">
         <button
           onClick={() => setActiveTab('dashboard')}
-          className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap shrink-0 ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
             activeTab === 'dashboard'
-              ? 'bg-red-600 text-white shadow-sm'
+              ? 'bg-red-600 text-white shadow-xs'
               : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
           }`}
         >
-          <Flame className="w-4 h-4" />
+          <Flame className="w-3.5 h-3.5" />
           <span>Dashboard & Giám Sát</span>
         </button>
 
         <button
           onClick={() => setActiveTab('devices')}
-          className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap shrink-0 ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
             activeTab === 'devices'
-              ? 'bg-red-600 text-white shadow-sm'
+              ? 'bg-red-600 text-white shadow-xs'
               : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
           }`}
         >
-          <Layers className="w-4 h-4" />
+          <Layers className="w-3.5 h-3.5" />
           <span>Danh Sách Thiết Bị PCCC ({devices.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('history')}
-          className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap shrink-0 ${
-            activeTab === 'history'
-              ? 'bg-red-600 text-white shadow-sm'
-              : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
-          }`}
-        >
-          <FileCheck2 className="w-4 h-4" />
-          <span>Nhật Ký & Báo Cáo ({inspections.length})</span>
         </button>
       </div>
 
-      {/* SUB-TAB 1: DASHBOARD & GIÁM SÁT (Chuẩn Hình 1) */}
+      {/* SUB-TAB 1: DASHBOARD & GIÁM SÁT */}
       {activeTab === 'dashboard' && (
-        <div className="space-y-4 sm:space-y-6">
-          {/* TOP 4 METRICS CARDS (Responsive: 2-col on phone, 4-col on desktop) */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+        <div className="space-y-3 sm:space-y-4">
+          {/* TOP 4 METRICS CARDS - Có thể click lọc & chuyển thẳng đến bảng */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
             {/* Card 1: TỔNG THIẾT BỊ */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 border-2 border-red-500 shadow-sm relative overflow-hidden">
+            <button
+              type="button"
+              onClick={() => {
+                setStatusFilter('all');
+                setCategoryFilter('all');
+                setSearchTerm('');
+                scrollToTable();
+              }}
+              className={`p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border text-left transition-all cursor-pointer active:scale-95 ${
+                statusFilter === 'all' && categoryFilter === 'all'
+                  ? 'bg-rose-50/50 dark:bg-rose-950/30 border-red-500 shadow-xs ring-2 ring-red-400'
+                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
+              }`}
+            >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-700 dark:text-slate-300">
                   TỔNG THIẾT BỊ
                 </span>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                  <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                  <Shield className="w-3 h-3" />
                 </div>
               </div>
-              <div className="mt-2 sm:mt-3 flex items-baseline gap-1.5 sm:gap-2">
-                <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono">{totalCount}</span>
-                <span className="text-[10px] sm:text-xs text-slate-500 font-medium">thiết bị</span>
+              <div className="mt-1 sm:mt-1.5 flex items-baseline gap-1">
+                <span className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono">{totalCount}</span>
+                <span className="text-[9px] sm:text-[10px] text-slate-500 font-medium">thiết bị</span>
               </div>
-            </div>
+            </button>
 
             {/* Card 2: ĐẠT TIÊU CHUẨN */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs relative overflow-hidden">
+            <button
+              type="button"
+              onClick={() => {
+                setStatusFilter('pass');
+                scrollToTable();
+              }}
+              className={`p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border text-left transition-all cursor-pointer active:scale-95 ${
+                statusFilter === 'pass'
+                  ? 'bg-emerald-50/50 dark:bg-emerald-950/30 border-emerald-500 shadow-xs ring-2 ring-emerald-400'
+                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-emerald-200'
+              }`}
+            >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-emerald-600">
+                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-emerald-600">
                   ĐẠT TIÊU CHUẨN
                 </span>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-50 dark:bg-emerald-950 flex items-center justify-center text-emerald-600 border border-emerald-200 dark:border-emerald-800">
-                  <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-50 dark:bg-emerald-950 flex items-center justify-center text-emerald-600 border border-emerald-200 dark:border-emerald-800">
+                  <CheckCircle2 className="w-3 h-3" />
                 </div>
               </div>
-              <div className="mt-2 sm:mt-3 flex items-baseline gap-1.5 sm:gap-2">
-                <span className="text-2xl sm:text-3xl font-black text-emerald-600 font-mono">{passCount}</span>
-                <span className="text-[10px] sm:text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+              <div className="mt-1 sm:mt-1.5 flex items-baseline gap-1.5">
+                <span className="text-xl sm:text-2xl font-black text-emerald-600 font-mono">{passCount}</span>
+                <span className="text-[9px] sm:text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950 px-1.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
                   {passRate}%
                 </span>
               </div>
-            </div>
+            </button>
 
             {/* Card 3: CẦN XỬ LÝ / HỎNG */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs relative overflow-hidden">
+            <button
+              type="button"
+              onClick={() => {
+                setStatusFilter('fail');
+                scrollToTable();
+              }}
+              className={`p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border text-left transition-all cursor-pointer active:scale-95 ${
+                statusFilter === 'fail'
+                  ? 'bg-rose-50/50 dark:bg-rose-950/30 border-rose-500 shadow-xs ring-2 ring-rose-400'
+                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-rose-200'
+              }`}
+            >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-rose-600">
+                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-rose-600">
                   CẦN XỬ LÝ / HỎNG
                 </span>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-rose-50 dark:bg-rose-950 flex items-center justify-center text-rose-600 border border-rose-200 dark:border-rose-800">
-                  <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-rose-50 dark:bg-rose-950 flex items-center justify-center text-rose-600 border border-rose-200 dark:border-rose-800">
+                  <AlertTriangle className="w-3 h-3" />
                 </div>
               </div>
-              <div className="mt-2 sm:mt-3 flex items-baseline gap-1.5 sm:gap-2">
-                <span className="text-2xl sm:text-3xl font-black text-rose-600 font-mono">{failCount}</span>
-                <span className="text-[10px] sm:text-xs text-slate-500 font-medium">cần nạp/sửa</span>
+              <div className="mt-1 sm:mt-1.5 flex items-baseline gap-1">
+                <span className="text-xl sm:text-2xl font-black text-rose-600 font-mono">{failCount}</span>
+                <span className="text-[9px] sm:text-[10px] text-slate-500 font-medium">cần nạp/sửa</span>
               </div>
-            </div>
+            </button>
 
             {/* Card 4: HẾT HẠN / SẮP HẠN */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs relative overflow-hidden">
+            <button
+              type="button"
+              onClick={() => {
+                setStatusFilter('expiring');
+                scrollToTable();
+              }}
+              className={`p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border text-left transition-all cursor-pointer active:scale-95 ${
+                statusFilter === 'expiring'
+                  ? 'bg-amber-50/50 dark:bg-amber-950/30 border-amber-500 shadow-xs ring-2 ring-amber-400'
+                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-amber-200'
+              }`}
+            >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-amber-600">
+                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-amber-600">
                   HẾT HẠN / SẮP HẠN
                 </span>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 dark:bg-amber-950 flex items-center justify-center text-amber-600 border border-amber-200 dark:border-amber-800">
-                  <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-amber-50 dark:bg-amber-950 flex items-center justify-center text-amber-600 border border-amber-200 dark:border-amber-800">
+                  <Clock className="w-3 h-3" />
                 </div>
               </div>
-              <div className="mt-2 sm:mt-3 flex items-baseline gap-1.5 sm:gap-2">
-                <span className="text-2xl sm:text-3xl font-black text-amber-600 font-mono">{expiringCount}</span>
-                <span className="text-[10px] sm:text-xs text-slate-500 font-medium">trong 30 ngày</span>
+              <div className="mt-1 sm:mt-1.5 flex items-baseline gap-1">
+                <span className="text-xl sm:text-2xl font-black text-amber-600 font-mono">{expiringCount}</span>
+                <span className="text-[9px] sm:text-[10px] text-slate-500 font-medium">trong 30 ngày</span>
               </div>
-            </div>
+            </button>
           </div>
 
-          {/* PHÂN BỐ THIẾT BỊ THEO 6 CHỦNG LOẠI PCCC */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3 sm:space-y-4">
+          {/* PHÂN BỐ THIẾT BỊ THEO 6 CHỦNG LOẠI PCCC - Thu nhỏ kích thước tinh gọn */}
+          <div className="bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2.5 sm:space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+              <h3 className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
                 PHÂN BỐ THIẾT BỊ THEO 6 CHỦNG LOẠI PCCC
               </h3>
-              <span className="text-[10px] sm:text-[11px] font-bold text-rose-600 bg-rose-50 dark:bg-rose-950/60 px-2.5 py-0.5 sm:py-1 rounded-full border border-rose-200 dark:border-rose-900">
+              <span className="text-[9px] sm:text-[10px] font-bold text-rose-600 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-full border border-rose-200 dark:border-rose-900">
                 Bấm vào nhóm để xem danh sách
               </span>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-2.5">
               {/* 1. Bình Bột */}
               <button
                 type="button"
-                onClick={() => setCategoryFilter(categoryFilter === 'binh_bot' ? 'all' : 'binh_bot')}
-                className={`p-3 sm:p-4 rounded-2xl border text-center transition-all cursor-pointer active:scale-95 ${
+                onClick={() => {
+                  setCategoryFilter(categoryFilter === 'binh_bot' ? 'all' : 'binh_bot');
+                  scrollToTable();
+                }}
+                className={`p-2 sm:p-2.5 rounded-xl border text-center transition-all cursor-pointer active:scale-95 ${
                   categoryFilter === 'binh_bot'
-                    ? 'bg-rose-50 dark:bg-rose-950/40 border-red-500 shadow-md ring-2 ring-red-400'
+                    ? 'bg-rose-50 dark:bg-rose-950/40 border-red-500 shadow-xs ring-2 ring-red-400'
                     : 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-slate-100'
                 }`}
               >
-                <div className="w-8 h-8 sm:w-10 sm:h-10 mx-auto rounded-full bg-rose-100 dark:bg-rose-950 flex items-center justify-center text-rose-600 mb-1.5 sm:mb-2">
-                  <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 mx-auto rounded-full bg-rose-100 dark:bg-rose-950 flex items-center justify-center text-rose-600 mb-1">
+                  <Flame className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
-                <div className="text-[11px] sm:text-xs font-bold text-slate-700 dark:text-slate-300">Bình Bột</div>
-                <div className="text-lg sm:text-xl font-black text-slate-900 dark:text-white font-mono mt-0.5">
+                <div className="text-[10px] sm:text-[11px] font-bold text-slate-700 dark:text-slate-300">Bình Bột</div>
+                <div className="text-base sm:text-lg font-black text-slate-900 dark:text-white font-mono mt-0.5">
                   {countByCategory.binh_bot}
                 </div>
               </button>
@@ -439,18 +456,21 @@ export function PCCCInspectionView() {
               {/* 2. Bình CO2 */}
               <button
                 type="button"
-                onClick={() => setCategoryFilter(categoryFilter === 'binh_co2' ? 'all' : 'binh_co2')}
-                className={`p-3 sm:p-4 rounded-2xl border text-center transition-all cursor-pointer active:scale-95 ${
+                onClick={() => {
+                  setCategoryFilter(categoryFilter === 'binh_co2' ? 'all' : 'binh_co2');
+                  scrollToTable();
+                }}
+                className={`p-2 sm:p-2.5 rounded-xl border text-center transition-all cursor-pointer active:scale-95 ${
                   categoryFilter === 'binh_co2'
-                    ? 'bg-sky-50 dark:bg-sky-950/40 border-sky-500 shadow-md ring-2 ring-sky-400'
+                    ? 'bg-sky-50 dark:bg-sky-950/40 border-sky-500 shadow-xs ring-2 ring-sky-400'
                     : 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-slate-100'
                 }`}
               >
-                <div className="w-8 h-8 sm:w-10 sm:h-10 mx-auto rounded-full bg-sky-100 dark:bg-sky-950 flex items-center justify-center text-sky-600 mb-1.5 sm:mb-2">
-                  <Snowflake className="w-4 h-4 sm:w-5 sm:h-5" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 mx-auto rounded-full bg-sky-100 dark:bg-sky-950 flex items-center justify-center text-sky-600 mb-1">
+                  <Snowflake className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
-                <div className="text-[11px] sm:text-xs font-bold text-slate-700 dark:text-slate-300">Bình CO2</div>
-                <div className="text-lg sm:text-xl font-black text-slate-900 dark:text-white font-mono mt-0.5">
+                <div className="text-[10px] sm:text-[11px] font-bold text-slate-700 dark:text-slate-300">Bình CO2</div>
+                <div className="text-base sm:text-lg font-black text-slate-900 dark:text-white font-mono mt-0.5">
                   {countByCategory.binh_co2}
                 </div>
               </button>
@@ -458,18 +478,21 @@ export function PCCCInspectionView() {
               {/* 3. Báo Cháy */}
               <button
                 type="button"
-                onClick={() => setCategoryFilter(categoryFilter === 'nut_chuong' ? 'all' : 'nut_chuong')}
-                className={`p-3 sm:p-4 rounded-2xl border text-center transition-all cursor-pointer active:scale-95 ${
+                onClick={() => {
+                  setCategoryFilter(categoryFilter === 'nut_chuong' ? 'all' : 'nut_chuong');
+                  scrollToTable();
+                }}
+                className={`p-2 sm:p-2.5 rounded-xl border text-center transition-all cursor-pointer active:scale-95 ${
                   categoryFilter === 'nut_chuong'
-                    ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-500 shadow-md ring-2 ring-amber-400'
+                    ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-500 shadow-xs ring-2 ring-amber-400'
                     : 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-slate-100'
                 }`}
               >
-                <div className="w-8 h-8 sm:w-10 sm:h-10 mx-auto rounded-full bg-amber-100 dark:bg-amber-950 flex items-center justify-center text-amber-600 mb-1.5 sm:mb-2">
-                  <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 mx-auto rounded-full bg-amber-100 dark:bg-amber-950 flex items-center justify-center text-amber-600 mb-1">
+                  <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
-                <div className="text-[11px] sm:text-xs font-bold text-slate-700 dark:text-slate-300">Báo Cháy</div>
-                <div className="text-lg sm:text-xl font-black text-slate-900 dark:text-white font-mono mt-0.5">
+                <div className="text-[10px] sm:text-[11px] font-bold text-slate-700 dark:text-slate-300">Báo Cháy</div>
+                <div className="text-base sm:text-lg font-black text-slate-900 dark:text-white font-mono mt-0.5">
                   {countByCategory.nut_chuong}
                 </div>
               </button>
@@ -477,18 +500,21 @@ export function PCCCInspectionView() {
               {/* 4. Tủ Vách Tường */}
               <button
                 type="button"
-                onClick={() => setCategoryFilter(categoryFilter === 'tu_voi_vach' ? 'all' : 'tu_voi_vach')}
-                className={`p-3 sm:p-4 rounded-2xl border text-center transition-all cursor-pointer active:scale-95 ${
+                onClick={() => {
+                  setCategoryFilter(categoryFilter === 'tu_voi_vach' ? 'all' : 'tu_voi_vach');
+                  scrollToTable();
+                }}
+                className={`p-2 sm:p-2.5 rounded-xl border text-center transition-all cursor-pointer active:scale-95 ${
                   categoryFilter === 'tu_voi_vach'
-                    ? 'bg-red-50 dark:bg-red-950/40 border-red-500 shadow-md ring-2 ring-red-400'
+                    ? 'bg-red-50 dark:bg-red-950/40 border-red-500 shadow-xs ring-2 ring-red-400'
                     : 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-slate-100'
                 }`}
               >
-                <div className="w-8 h-8 sm:w-10 sm:h-10 mx-auto rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center text-red-600 mb-1.5 sm:mb-2">
-                  <Box className="w-4 h-4 sm:w-5 sm:h-5" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 mx-auto rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center text-red-600 mb-1">
+                  <Box className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
-                <div className="text-[11px] sm:text-xs font-bold text-slate-700 dark:text-slate-300">Tủ Vách Tường</div>
-                <div className="text-lg sm:text-xl font-black text-slate-900 dark:text-white font-mono mt-0.5">
+                <div className="text-[10px] sm:text-[11px] font-bold text-slate-700 dark:text-slate-300">Tủ Vách Tường</div>
+                <div className="text-base sm:text-lg font-black text-slate-900 dark:text-white font-mono mt-0.5">
                   {countByCategory.tu_voi_vach}
                 </div>
               </button>
@@ -496,18 +522,21 @@ export function PCCCInspectionView() {
               {/* 5. Trạm Bơm */}
               <button
                 type="button"
-                onClick={() => setCategoryFilter(categoryFilter === 'tram_bom' ? 'all' : 'tram_bom')}
-                className={`p-3 sm:p-4 rounded-2xl border text-center transition-all cursor-pointer active:scale-95 ${
+                onClick={() => {
+                  setCategoryFilter(categoryFilter === 'tram_bom' ? 'all' : 'tram_bom');
+                  scrollToTable();
+                }}
+                className={`p-2 sm:p-2.5 rounded-xl border text-center transition-all cursor-pointer active:scale-95 ${
                   categoryFilter === 'tram_bom'
-                    ? 'bg-slate-200 dark:bg-slate-700 border-slate-600 shadow-md ring-2 ring-slate-400'
+                    ? 'bg-slate-200 dark:bg-slate-700 border-slate-600 shadow-xs ring-2 ring-slate-400'
                     : 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-slate-100'
                 }`}
               >
-                <div className="w-8 h-8 sm:w-10 sm:h-10 mx-auto rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 mb-1.5 sm:mb-2">
-                  <Cog className="w-4 h-4 sm:w-5 sm:h-5" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 mx-auto rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 mb-1">
+                  <Cog className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
-                <div className="text-[11px] sm:text-xs font-bold text-slate-700 dark:text-slate-300">Trạm Bơm</div>
-                <div className="text-lg sm:text-xl font-black text-slate-900 dark:text-white font-mono mt-0.5">
+                <div className="text-[10px] sm:text-[11px] font-bold text-slate-700 dark:text-slate-300">Trạm Bơm</div>
+                <div className="text-base sm:text-lg font-black text-slate-900 dark:text-white font-mono mt-0.5">
                   {countByCategory.tram_bom}
                 </div>
               </button>
@@ -515,53 +544,59 @@ export function PCCCInspectionView() {
               {/* 6. Tủ Trung Tâm */}
               <button
                 type="button"
-                onClick={() => setCategoryFilter(categoryFilter === 'tu_trung_tam' ? 'all' : 'tu_trung_tam')}
-                className={`p-3 sm:p-4 rounded-2xl border text-center transition-all cursor-pointer active:scale-95 ${
+                onClick={() => {
+                  setCategoryFilter(categoryFilter === 'tu_trung_tam' ? 'all' : 'tu_trung_tam');
+                  scrollToTable();
+                }}
+                className={`p-2 sm:p-2.5 rounded-xl border text-center transition-all cursor-pointer active:scale-95 ${
                   categoryFilter === 'tu_trung_tam'
-                    ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-500 shadow-md ring-2 ring-blue-400'
+                    ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-500 shadow-xs ring-2 ring-blue-400'
                     : 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-slate-100'
                 }`}
               >
-                <div className="w-8 h-8 sm:w-10 sm:h-10 mx-auto rounded-full bg-blue-100 dark:bg-blue-950 flex items-center justify-center text-blue-600 mb-1.5 sm:mb-2">
-                  <Monitor className="w-4 h-4 sm:w-5 sm:h-5" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 mx-auto rounded-full bg-blue-100 dark:bg-blue-950 flex items-center justify-center text-blue-600 mb-1">
+                  <Monitor className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
-                <div className="text-[11px] sm:text-xs font-bold text-slate-700 dark:text-slate-300">Tủ Trung Tâm</div>
-                <div className="text-lg sm:text-xl font-black text-slate-900 dark:text-white font-mono mt-0.5">
+                <div className="text-[10px] sm:text-[11px] font-bold text-slate-700 dark:text-slate-300">Tủ Trung Tâm</div>
+                <div className="text-base sm:text-lg font-black text-slate-900 dark:text-white font-mono mt-0.5">
                   {countByCategory.tu_trung_tam}
                 </div>
               </button>
             </div>
           </div>
 
-          {/* DANH MỤC & TÌNH TRẠNG THIẾT BỊ THỰC TẾ (Bảng tra cứu & kiểm tra nhanh) */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
-            <div className="p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4">
+          {/* DANH MỤC & TÌNH TRẠNG THIẾT BỊ THỰC TẾ - Có ID cuộn & co dãn cột hoàn hảo */}
+          <div
+            id="pccc-device-table"
+            className="bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden scroll-mt-4"
+          >
+            <div className="p-3 sm:p-4 border-b border-slate-200 dark:border-slate-800 flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 sm:gap-3">
               <div>
                 <h2 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white tracking-wide uppercase">
                   DANH MỤC & TÌNH TRẠNG THIẾT BỊ THỰC TẾ
                 </h2>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                   Dữ liệu kết hợp giữa Master Data và Nhật ký kiểm định thực tế mới nhất
                 </p>
               </div>
 
               {/* Filters */}
-              <div className="flex items-center gap-2 flex-wrap">
-                <div className="relative flex-1 sm:flex-initial min-w-[160px]">
-                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <div className="relative flex-1 sm:flex-initial min-w-[150px]">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2" />
                   <input
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Tìm mã, tên, vị trí..."
-                    className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-red-500"
+                    className="w-full pl-7 pr-2.5 py-1 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-red-500"
                   />
                 </div>
 
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium"
+                  className="px-2 py-1 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-medium"
                 >
                   <option value="all">Tất cả chủng loại</option>
                   <option value="binh_bot">Bình Bột ({countByCategory.binh_bot})</option>
@@ -575,11 +610,12 @@ export function PCCCInspectionView() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium"
+                  className="px-2 py-1 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-medium"
                 >
                   <option value="all">Tất cả tình trạng</option>
                   <option value="pass">Đạt tiêu chuẩn ({passCount})</option>
                   <option value="fail">Cần xử lý / Hỏng ({failCount})</option>
+                  <option value="expiring">Hết hạn / Sắp hạn ({expiringCount})</option>
                 </select>
 
                 <button
@@ -590,29 +626,29 @@ export function PCCCInspectionView() {
                     loadData();
                   }}
                   title="Tải lại dữ liệu"
-                  className="p-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 transition-colors"
+                  className="p-1.5 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
 
-            {/* Table */}
+            {/* Table - Co dãn chuẩn xác không bao giờ bị cắt rớt dòng cụt chữ */}
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse min-w-[750px]">
+              <table className="w-full text-left text-xs border-collapse min-w-[1080px]">
                 <thead>
                   <tr className="bg-slate-50/70 dark:bg-slate-800/40 border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] sm:text-[11px]">
-                    <th className="p-3 pl-4 sm:pl-6">MÃ THIẾT BỊ</th>
-                    <th className="p-3">TÊN THIẾT BỊ</th>
-                    <th className="p-3">CHỦNG LOẠI</th>
-                    <th className="p-3">VỊ TRÍ ĐẶT</th>
-                    <th className="p-3">CHUẨN KỸ THUẬT</th>
-                    <th className="p-3">HẠN KIỂM ĐỊNH</th>
-                    <th className="p-3">TÌNH TRẠNG & LẦN KT THỰC TẾ</th>
-                    <th className="p-3 text-center pr-4 sm:pr-6">THAO TÁC</th>
+                    <th className="py-2.5 px-3 pl-4 sm:pl-5 w-32 min-w-[120px] whitespace-nowrap">MÃ THIẾT BỊ</th>
+                    <th className="py-2.5 px-3 min-w-[220px]">TÊN THIẾT BỊ</th>
+                    <th className="py-2.5 px-3 w-28 min-w-[110px] text-center whitespace-nowrap">CHỦNG LOẠI</th>
+                    <th className="py-2.5 px-3 min-w-[180px] max-w-[240px]">VỊ TRÍ ĐẶT</th>
+                    <th className="py-2.5 px-3 w-28 min-w-[105px] text-center whitespace-nowrap">CHUẨN KỸ THUẬT</th>
+                    <th className="py-2.5 px-3 w-28 min-w-[105px] text-center whitespace-nowrap">HẠN KIỂM ĐỊNH</th>
+                    <th className="py-2.5 px-3 w-56 min-w-[200px] whitespace-nowrap">TÌNH TRẠNG & LẦN KT THỰC TẾ</th>
+                    <th className="py-2.5 px-3 w-32 min-w-[120px] text-center pr-4 sm:pr-5 whitespace-nowrap">THAO TÁC</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium text-[11px] sm:text-xs">
                   {filteredDevices.length === 0 ? (
                     <tr>
                       <td colSpan={8} className="p-8 text-center text-slate-400">
@@ -630,49 +666,51 @@ export function PCCCInspectionView() {
                           key={d.id}
                           className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
                         >
-                          <td className="p-3 pl-4 sm:pl-6 font-mono font-black text-slate-900 dark:text-white">
+                          <td className="py-2 px-3 pl-4 sm:pl-5 font-mono font-bold text-red-600 dark:text-red-400 whitespace-nowrap">
                             {d.id}
                           </td>
-                          <td className="p-3 font-bold text-slate-800 dark:text-slate-100">{d.name}</td>
-                          <td className="p-3">
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 whitespace-nowrap">
+                          <td className="py-2 px-3 font-semibold text-slate-800 dark:text-slate-100 leading-tight">
+                            {d.name}
+                          </td>
+                          <td className="py-2 px-3 text-center whitespace-nowrap">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 whitespace-nowrap inline-block">
                               {catInfo?.name || d.category}
                             </span>
                           </td>
-                          <td className="p-3 text-slate-700 dark:text-slate-300 max-w-xs truncate" title={d.location}>
+                          <td className="py-2 px-3 text-slate-700 dark:text-slate-300 leading-tight" title={d.location}>
                             {d.location}
                           </td>
-                          <td className="p-3 text-slate-600 dark:text-slate-400 font-mono whitespace-nowrap">
+                          <td className="py-2 px-3 text-center text-slate-600 dark:text-slate-400 font-mono whitespace-nowrap">
                             {d.specs}
                           </td>
-                          <td className="p-3 text-slate-600 dark:text-slate-400 whitespace-nowrap">
+                          <td className="py-2 px-3 text-center text-slate-600 dark:text-slate-400 whitespace-nowrap font-mono">
                             {d.inspectionExpiry}
                           </td>
-                          <td className="p-3 whitespace-nowrap">
+                          <td className="py-2 px-3 whitespace-nowrap">
                             {hasLast ? (
                               isPass ? (
-                                <span className="px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold bg-emerald-100/90 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 flex items-center gap-1.5 w-fit">
+                                <span className="px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-emerald-100/90 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 inline-flex items-center gap-1">
                                   <Check className="w-3 h-3" />
                                   <span>ĐẠT ({d.lastInspection?.date})</span>
                                 </span>
                               ) : (
-                                <span className="px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold bg-rose-100/90 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800 flex items-center gap-1.5 w-fit">
+                                <span className="px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-rose-100/90 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800 inline-flex items-center gap-1">
                                   <AlertTriangle className="w-3 h-3" />
                                   <span>CẦN XỬ LÝ ({d.lastInspection?.date})</span>
                                 </span>
                               )
                             ) : (
-                              <span className="px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-medium bg-slate-100 text-slate-500">
+                              <span className="px-2.5 py-0.5 rounded-lg text-[10px] font-medium bg-slate-100 text-slate-500 inline-block">
                                 Chưa kiểm tra
                               </span>
                             )}
                           </td>
-                          <td className="p-3 pr-4 sm:pr-6 text-center whitespace-nowrap">
+                          <td className="py-2 px-3 pr-4 sm:pr-5 text-center whitespace-nowrap">
                             <div className="flex items-center justify-center gap-1.5">
                               <button
                                 type="button"
                                 onClick={() => handleInspectDevice(d)}
-                                className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-xs transition-colors cursor-pointer active:scale-95"
+                                className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white font-bold text-[11px] rounded-lg shadow-xs transition-colors cursor-pointer active:scale-95"
                               >
                                 Kiểm Tra
                               </button>
@@ -683,7 +721,7 @@ export function PCCCInspectionView() {
                                   setIsQrCodeModalOpen(true);
                                 }}
                                 title="Xem mã QR tem dán"
-                                className="p-1.5 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 transition-colors"
+                                className="p-1 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors"
                               >
                                 <QrCode className="w-3.5 h-3.5" />
                               </button>
@@ -702,23 +740,23 @@ export function PCCCInspectionView() {
 
       {/* SUB-TAB 2: DANH SÁCH THIẾT BỊ PCCC (QUẢN TRỊ MASTER DATA & BULK EXCEL) */}
       {activeTab === 'devices' && (
-        <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4 p-4 sm:p-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+        <div className="bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3.5 p-3.5 sm:p-5">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-2.5 pb-2.5 border-b border-slate-200 dark:border-slate-800">
             <div>
-              <h2 className="text-sm sm:text-base font-black text-slate-900 dark:text-white uppercase tracking-wider">
+              <h2 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
                 DANH MỤC THIẾT BỊ PCCC TOÀN NHÀ MÁY
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                 Quản lý thông tin 111 thiết bị PCCC, vị trí đặt, chuẩn định mức và tải file Excel mẫu
               </p>
             </div>
 
             {/* Admin Management Action Buttons */}
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-1.5 flex-wrap">
               <button
                 type="button"
                 onClick={() => downloadPCCCDevicesTemplate()}
-                className="px-3 py-1.5 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 text-blue-700 dark:text-blue-300 font-bold text-xs rounded-xl border border-blue-200 dark:border-blue-800 flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="px-2.5 sm:px-3 py-1.5 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 text-blue-700 dark:text-blue-300 font-bold text-[11px] rounded-lg border border-blue-200 dark:border-blue-800 flex items-center gap-1 transition-colors cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Tải file Excel mẫu</span>
@@ -728,7 +766,7 @@ export function PCCCInspectionView() {
                 <button
                   type="button"
                   onClick={() => setIsImportExcelModalOpen(true)}
-                  className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                  className="px-2.5 sm:px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] rounded-lg shadow-xs flex items-center gap-1 transition-colors cursor-pointer"
                 >
                   <Upload className="w-3.5 h-3.5" />
                   <span>Tải lên từ Excel mẫu</span>
@@ -742,7 +780,7 @@ export function PCCCInspectionView() {
                     setDeviceToEdit(null);
                     setIsDeviceModalOpen(true);
                   }}
-                  className="px-3.5 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                  className="px-2.5 sm:px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-[11px] rounded-lg shadow-xs flex items-center gap-1 transition-colors cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Thêm thiết bị mới</span>
@@ -755,7 +793,7 @@ export function PCCCInspectionView() {
                   setSelectedDeviceForQr(null);
                   setIsQrCodeModalOpen(true);
                 }}
-                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="px-2.5 sm:px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-[11px] rounded-lg shadow-xs flex items-center gap-1 transition-colors cursor-pointer"
               >
                 <Printer className="w-3.5 h-3.5" />
                 <span>In tất cả tem QR</span>
@@ -765,21 +803,21 @@ export function PCCCInspectionView() {
 
           {/* Search & Filter Toolbar */}
           <div className="flex items-center gap-2 flex-wrap text-xs">
-            <div className="relative flex-1 sm:flex-initial min-w-[200px]">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+            <div className="relative flex-1 sm:flex-initial min-w-[180px]">
+              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Tìm mã, tên, vị trí, chuẩn KT..."
-                className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-red-500"
+                className="w-full pl-7 pr-2.5 py-1 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-red-500"
               />
             </div>
 
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium"
+              className="px-2.5 py-1 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-medium"
             >
               <option value="all">Tất cả chủng loại ({devices.length})</option>
               <option value="binh_bot">Bình Bột ({countByCategory.binh_bot})</option>
@@ -790,49 +828,49 @@ export function PCCCInspectionView() {
               <option value="tu_trung_tam">Tủ Trung Tâm ({countByCategory.tu_trung_tam})</option>
             </select>
 
-            <span className="text-slate-500 font-medium ml-auto">
+            <span className="text-slate-500 text-[11px] font-medium ml-auto">
               Hiển thị <strong className="text-slate-900 dark:text-white">{filteredDevices.length}</strong> / {devices.length} thiết bị
             </span>
           </div>
 
-          {/* Master Devices Table */}
-          <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-2xl">
-            <table className="w-full text-left text-xs border-collapse min-w-[700px]">
-              <thead className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold uppercase text-[11px]">
+          {/* Master Devices Table - Co dãn tối ưu */}
+          <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
+            <table className="w-full text-left text-xs border-collapse min-w-[1080px]">
+              <thead className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold uppercase text-[10px] sm:text-[11px]">
                 <tr>
-                  <th className="p-3 pl-4">MÃ THIẾT BỊ</th>
-                  <th className="p-3">TÊN THIẾT BỊ</th>
-                  <th className="p-3">CHỦNG LOẠI</th>
-                  <th className="p-3">VỊ TRÍ ĐẶT</th>
-                  <th className="p-3 text-center">CHUẨN KỸ THUẬT</th>
-                  <th className="p-3 text-center">HẠN KIỂM ĐỊNH</th>
-                  <th className="p-3">GHI CHÚ</th>
-                  <th className="p-3 text-center pr-4">THAO TÁC</th>
+                  <th className="py-2.5 px-3 pl-4 w-32 min-w-[120px] whitespace-nowrap">MÃ THIẾT BỊ</th>
+                  <th className="py-2.5 px-3 min-w-[220px]">TÊN THIẾT BỊ</th>
+                  <th className="py-2.5 px-3 w-28 min-w-[110px] text-center whitespace-nowrap">CHỦNG LOẠI</th>
+                  <th className="py-2.5 px-3 min-w-[180px]">VỊ TRÍ ĐẶT</th>
+                  <th className="py-2.5 px-3 w-28 min-w-[105px] text-center whitespace-nowrap">CHUẨN KỸ THUẬT</th>
+                  <th className="py-2.5 px-3 w-28 min-w-[105px] text-center whitespace-nowrap">HẠN KIỂM ĐỊNH</th>
+                  <th className="py-2.5 px-3 min-w-[140px]">GHI CHÚ</th>
+                  <th className="py-2.5 px-3 w-32 min-w-[110px] text-center pr-4 whitespace-nowrap">THAO TÁC</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-slate-800 font-medium">
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-800 font-medium text-[11px] sm:text-xs">
                 {filteredDevices.map((d) => {
                   const catInfo = PCCC_CATEGORIES[d.category];
                   return (
                     <tr key={d.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                      <td className="p-3 pl-4 font-mono font-black text-red-600">{d.id}</td>
-                      <td className="p-3 font-bold text-slate-900 dark:text-white">{d.name}</td>
-                      <td className="p-3">
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 border">
+                      <td className="py-2 px-3 pl-4 font-mono font-bold text-red-600 whitespace-nowrap">{d.id}</td>
+                      <td className="py-2 px-3 font-semibold text-slate-900 dark:text-white leading-tight">{d.name}</td>
+                      <td className="py-2 px-3 text-center whitespace-nowrap">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 border whitespace-nowrap inline-block">
                           {catInfo?.name || d.category}
                         </span>
                       </td>
-                      <td className="p-3 text-slate-700 dark:text-slate-300 max-w-xs truncate" title={d.location}>
+                      <td className="py-2 px-3 text-slate-700 dark:text-slate-300 leading-tight" title={d.location}>
                         {d.location}
                       </td>
-                      <td className="p-3 text-center font-mono text-slate-600 dark:text-slate-400">{d.specs}</td>
-                      <td className="p-3 text-center text-slate-600 dark:text-slate-400 whitespace-nowrap">
+                      <td className="py-2 px-3 text-center font-mono text-slate-600 dark:text-slate-400 whitespace-nowrap">{d.specs}</td>
+                      <td className="py-2 px-3 text-center text-slate-600 dark:text-slate-400 whitespace-nowrap font-mono">
                         {d.inspectionExpiry}
                       </td>
-                      <td className="p-3 text-slate-500 italic max-w-xs truncate" title={d.notes || ''}>
+                      <td className="py-2 px-3 text-slate-500 italic max-w-xs truncate" title={d.notes || ''}>
                         {d.notes || '-'}
                       </td>
-                      <td className="p-3 pr-4 text-center whitespace-nowrap">
+                      <td className="py-2 px-3 pr-4 text-center whitespace-nowrap">
                         <div className="flex items-center justify-center gap-1.5">
                           {isAdmin && (
                             <button
@@ -842,7 +880,7 @@ export function PCCCInspectionView() {
                                 setIsDeviceModalOpen(true);
                               }}
                               title="Sửa thông tin"
-                              className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950 rounded-lg transition-colors cursor-pointer"
+                              className="p-1 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950 rounded-lg transition-colors cursor-pointer"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
@@ -855,7 +893,7 @@ export function PCCCInspectionView() {
                               setIsQrCodeModalOpen(true);
                             }}
                             title="Xem mã QR tem"
-                            className="p-1.5 text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                            className="p-1 text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
                           >
                             <QrCode className="w-3.5 h-3.5" />
                           </button>
@@ -865,7 +903,7 @@ export function PCCCInspectionView() {
                               type="button"
                               onClick={() => handleDeleteDevice(d)}
                               title="Xóa thiết bị"
-                              className="p-1.5 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950 rounded-lg transition-colors cursor-pointer"
+                              className="p-1 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950 rounded-lg transition-colors cursor-pointer"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -877,230 +915,6 @@ export function PCCCInspectionView() {
                 })}
               </tbody>
             </table>
-          </div>
-        </div>
-      )}
-
-      {/* SUB-TAB 3: NHẬT KÝ & BÁO CÁO TỔNG HỢP KIỂM TRA PCCC */}
-      {activeTab === 'history' && (
-        <div className="space-y-4">
-          {/* Filter Bar */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs no-print">
-            <div className="flex items-center gap-2 flex-wrap">
-              <div className="relative min-w-[180px]">
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Tìm mã TB, người KT, vị trí..."
-                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                />
-              </div>
-
-              <select
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
-                className="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium"
-              >
-                <option value="all">Tất cả chủng loại</option>
-                <option value="binh_bot">Bình Bột</option>
-                <option value="binh_co2">Bình CO2</option>
-                <option value="nut_chuong">Báo Cháy</option>
-                <option value="tu_voi_vach">Tủ Vách Tường</option>
-                <option value="tram_bom">Trạm Bơm</option>
-                <option value="tu_trung_tam">Tủ Trung Tâm</option>
-              </select>
-
-              <select
-                value={historyResultFilter}
-                onChange={(e) => setHistoryResultFilter(e.target.value as any)}
-                className="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium"
-              >
-                <option value="all">Tất cả kết quả</option>
-                <option value="pass">Chỉ đạt tiêu chuẩn</option>
-                <option value="fail">Chỉ không đạt / hỏng</option>
-              </select>
-
-              <div className="flex items-center gap-1.5">
-                <span className="text-slate-500">Từ:</span>
-                <input
-                  type="date"
-                  value={historyFromDate}
-                  onChange={(e) => setHistoryFromDate(e.target.value)}
-                  className="px-2 py-1 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                />
-                <span className="text-slate-500">Đến:</span>
-                <input
-                  type="date"
-                  value={historyToDate}
-                  onChange={(e) => setHistoryToDate(e.target.value)}
-                  className="px-2 py-1 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleExportExcel}
-                className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-xs flex items-center gap-1.5 cursor-pointer"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span>Xuất Excel (.xlsx)</span>
-              </button>
-              <button
-                onClick={() => window.print()}
-                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl shadow-xs flex items-center gap-1.5 cursor-pointer"
-              >
-                <Printer className="w-3.5 h-3.5" />
-                <span>In PDF</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Printable Formal Document Container */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xs space-y-6 print:p-0 print:border-none print:shadow-none">
-            {/* Factory Formal Letterhead */}
-            <div className="border-b-2 border-slate-800 pb-4 flex flex-col md:flex-row justify-between items-start md:items-center text-xs gap-3">
-              <div className="flex items-center gap-3">
-                <img src="/logo.png" alt="Logo" className="w-12 h-12 object-contain shrink-0" />
-                <div>
-                  <div className="font-black text-sm uppercase text-slate-900 dark:text-white tracking-wider">
-                    CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG
-                  </div>
-                  <div className="text-slate-500 text-[11px] mt-0.5">
-                    Hệ thống Quản trị & Điều hành Sản xuất Nội bộ - Ban Quản lý PCCC
-                  </div>
-                </div>
-              </div>
-              <div className="text-right text-[11px] text-slate-500">
-                <div>Ngày xuất báo cáo: {new Date().toLocaleDateString('vi-VN')}</div>
-                <div className="font-mono font-bold text-slate-700 dark:text-slate-300">
-                  Mã tài liệu: BC-LK-PCCC/2026
-                </div>
-              </div>
-            </div>
-
-            {/* Title */}
-            <div className="text-center space-y-1">
-              <h2 className="text-lg sm:text-xl font-black uppercase tracking-wider text-slate-900 dark:text-white">
-                BÁO CÁO TỔNG HỢP KIỂM TRA ĐỊNH KỲ THIẾT BỊ PCCC
-              </h2>
-              <p className="text-xs text-slate-500 italic">
-                {categoryFilter !== 'all' ? `Chủng loại: ${PCCC_CATEGORIES[categoryFilter as PCCCCategory]?.name} • ` : ''}
-                {historyFromDate && historyToDate
-                  ? `Từ ngày ${historyFromDate} đến ngày ${historyToDate}`
-                  : 'Tất cả nhật ký kiểm định thực tế mới nhất'}
-              </p>
-            </div>
-
-            {/* Comprehensive Report Table (13 Columns matching specification) */}
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse border border-slate-300 dark:border-slate-700">
-                <thead>
-                  <tr className="bg-slate-100 dark:bg-slate-800 font-bold border-b border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] sm:text-[11px]">
-                    <th className="p-2 border border-slate-300 text-center w-10">STT</th>
-                    <th className="p-2 border border-slate-300 text-center">Mã TB</th>
-                    <th className="p-2 border border-slate-300">Tên thiết bị</th>
-                    <th className="p-2 border border-slate-300 text-center">Chủng loại</th>
-                    <th className="p-2 border border-slate-300">Vị trí đặt</th>
-                    <th className="p-2 border border-slate-300 text-center">Chuẩn KT</th>
-                    <th className="p-2 border border-slate-300 text-center">Hạn KĐ</th>
-                    <th className="p-2 border border-slate-300 text-center">Thời gian KT</th>
-                    <th className="p-2 border border-slate-300">Người kiểm tra</th>
-                    <th className="p-2 border border-slate-300">Chi tiết các đầu mục kiểm tra</th>
-                    <th className="p-2 border border-slate-300 text-center">Đánh giá</th>
-                    <th className="p-2 border border-slate-300 text-center w-20">Ký nhận</th>
-                    <th className="p-2 border border-slate-300">Ghi chú / Đề xuất</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-slate-700 text-[11px]">
-                  {filteredDevices.map((d, idx) => {
-                    const insp = inspections.find((i) => i.deviceId === d.id);
-                    const catInfo = PCCC_CATEGORIES[d.category];
-                    const details = formatPCCCChecklistSummary(insp);
-                    const isPass = d.lastInspection?.status === 'pass';
-
-                    return (
-                      <tr key={d.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                        <td className="p-2 border border-slate-300 text-center font-bold text-slate-500">{idx + 1}</td>
-                        <td className="p-2 border border-slate-300 font-mono font-bold text-red-600 text-center whitespace-nowrap">
-                          {d.id}
-                        </td>
-                        <td className="p-2 border border-slate-300 font-bold text-slate-900 dark:text-white">
-                          {d.name}
-                        </td>
-                        <td className="p-2 border border-slate-300 text-center whitespace-nowrap">
-                          {catInfo?.name || d.category}
-                        </td>
-                        <td className="p-2 border border-slate-300 text-slate-700 dark:text-slate-300 max-w-xs">
-                          {d.location}
-                        </td>
-                        <td className="p-2 border border-slate-300 text-center font-mono whitespace-nowrap">{d.specs}</td>
-                        <td className="p-2 border border-slate-300 text-center whitespace-nowrap">{d.inspectionExpiry}</td>
-                        <td className="p-2 border border-slate-300 text-center whitespace-nowrap text-[10px] font-mono">
-                          {d.lastInspection?.date || insp?.inspectedAt || 'Chưa KT'}
-                        </td>
-                        <td className="p-2 border border-slate-300 whitespace-nowrap">
-                          {d.lastInspection
-                            ? `${d.lastInspection.inspectorName} (${d.lastInspection.inspectorId})`
-                            : insp
-                            ? `${insp.inspectorName} (${insp.inspectorId})`
-                            : '-'}
-                        </td>
-                        <td className="p-2 border border-slate-300 text-slate-700 dark:text-slate-300 max-w-xs text-[10px] leading-relaxed">
-                          {details}
-                        </td>
-                        <td className="p-2 border border-slate-300 text-center whitespace-nowrap">
-                          {d.lastInspection ? (
-                            <span
-                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
-                                isPass
-                                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                                  : 'bg-rose-100 text-rose-800 border-rose-300'
-                              }`}
-                            >
-                              {isPass ? 'ĐẠT' : 'KHÔNG ĐẠT'}
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 text-[10px]">Chưa KT</span>
-                          )}
-                        </td>
-                        <td className="p-2 border border-slate-300 text-center">
-                          {/* Ô ký xác nhận trống phục vụ in ấn */}
-                        </td>
-                        <td className="p-2 border border-slate-300 text-slate-500 italic max-w-xs">
-                          {d.lastInspection?.notes || insp?.notes || '-'}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Signatures Block for Print */}
-            <div className="pt-8 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center text-xs">
-              <div className="space-y-12">
-                <div className="font-bold uppercase text-slate-900 dark:text-white">NGƯỜI LẬP BÁO CÁO</div>
-                <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
-              </div>
-
-              <div className="space-y-12">
-                <div className="font-bold uppercase text-slate-900 dark:text-white">CÁN BỘ AN TOÀN HSE</div>
-                <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
-              </div>
-
-              <div className="space-y-12">
-                <div className="font-bold uppercase text-slate-900 dark:text-white">TRƯỞNG PHÒNG CƠ ĐIỆN</div>
-                <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
-              </div>
-
-              <div className="space-y-12">
-                <div className="font-bold uppercase text-slate-900 dark:text-white">BAN GIÁM ĐỐC DUYỆT</div>
-                <div className="text-[11px] text-slate-400 italic">(Ký, đóng dấu)</div>
-              </div>
-            </div>
           </div>
         </div>
       )}
