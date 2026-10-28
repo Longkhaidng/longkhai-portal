@@ -1969,12 +1969,14 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "pccc"
     ],
     "isActive": true,
     "password": "1927",
     "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "updatedAt": "2026-10-28T05:47:31.654Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "1975",
