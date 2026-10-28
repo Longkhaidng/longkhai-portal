@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '@/lib/auth-context';
+import { isSuperAdminOrBOD } from '@/lib/permissions';
 import { storage } from '@/lib/storage';
 import {
   PCCCCategory,
@@ -32,6 +33,7 @@ import {
   Printer,
   Download,
   Upload,
+  RefreshCw,
   Plus,
   Check,
   Edit2,
@@ -41,7 +43,12 @@ import {
 
 export function PCCCInspectionView() {
   const { currentUser } = useAuth();
-  const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'ehs';
+  const isAdmin =
+    isSuperAdminOrBOD(currentUser) ||
+    currentUser?.role === 'admin' ||
+    currentUser?.role === 'ehs' ||
+    currentUser?.role === 'manager' ||
+    (Boolean(currentUser?.department) && /hcns|nhân sự|cơ điện|bảo trì|an toàn|ehs|pccc/i.test(currentUser!.department));
 
   const [devices, setDevices] = useState<PCCCDevice[]>([]);
   const [inspections, setInspections] = useState<PCCCInspection[]>([]);
@@ -66,6 +73,7 @@ export function PCCCInspectionView() {
   const [deviceToEdit, setDeviceToEdit] = useState<PCCCDevice | null>(null);
 
   const [isImportExcelModalOpen, setIsImportExcelModalOpen] = useState(false);
+  const [importInitialMode, setImportInitialMode] = useState<'update_new' | 'replace_all'>('update_new');
 
   // Load data
   const loadData = () => {
@@ -747,7 +755,7 @@ export function PCCCInspectionView() {
                 DANH MỤC THIẾT BỊ PCCC TOÀN NHÀ MÁY
               </h2>
               <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                Quản lý thông tin 111 thiết bị PCCC, vị trí đặt, chuẩn định mức và tải file Excel mẫu
+                Quản lý thông tin {devices.length} thiết bị PCCC, vị trí đặt, chuẩn định mức và tải file Excel mẫu
               </p>
             </div>
 
@@ -762,16 +770,33 @@ export function PCCCInspectionView() {
                 <span>Tải file Excel mẫu</span>
               </button>
 
-              {isAdmin && (
+              {/* Group tải lên từ file Excel gồm 2 mục: Cập nhật mới & Thay thế toàn bộ */}
+              <div className="inline-flex items-center rounded-lg shadow-xs overflow-hidden border border-emerald-600/30">
                 <button
                   type="button"
-                  onClick={() => setIsImportExcelModalOpen(true)}
-                  className="px-2.5 sm:px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] rounded-lg shadow-xs flex items-center gap-1 transition-colors cursor-pointer"
+                  onClick={() => {
+                    setImportInitialMode('update_new');
+                    setIsImportExcelModalOpen(true);
+                  }}
+                  className="px-2.5 sm:px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] flex items-center gap-1.5 transition-colors cursor-pointer"
+                  title="Thêm vào danh sách những thiết bị chưa có trên hệ thống từ file Excel"
                 >
                   <Upload className="w-3.5 h-3.5" />
-                  <span>Tải lên từ Excel mẫu</span>
+                  <span>Cập nhật mới</span>
                 </button>
-              )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setImportInitialMode('replace_all');
+                    setIsImportExcelModalOpen(true);
+                  }}
+                  className="px-2.5 sm:px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] border-l border-white/20 flex items-center gap-1.5 transition-colors cursor-pointer"
+                  title="Xóa toàn bộ danh sách hiện có trên hệ thống và thay bằng danh sách mới từ file Excel"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Thay thế toàn bộ</span>
+                </button>
+              </div>
 
               {isAdmin && (
                 <button
@@ -954,9 +979,14 @@ export function PCCCInspectionView() {
       <PCCCImportExcelModal
         isOpen={isImportExcelModalOpen}
         onClose={() => setIsImportExcelModalOpen(false)}
-        onImportSuccess={(count) => {
+        initialMode={importInitialMode}
+        onImportSuccess={(count, mode, skippedCount) => {
           loadData();
-          alert(`Đã tải lên và cập nhật thành công ${count} thiết bị PCCC vào hệ thống!`);
+          if (mode === 'replace_all') {
+            alert(`Đã thay thế toàn bộ danh mục thành công với ${count} thiết bị PCCC từ file Excel!`);
+          } else {
+            alert(`Đã nạp thêm thành công ${count} thiết bị mới vào hệ thống!${skippedCount ? ` (Đã bỏ qua ${skippedCount} thiết bị trùng mã)` : ''}`);
+          }
         }}
       />
     </div>
