@@ -46,13 +46,23 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
   const isSecurity = isSecurityRole(currentUser);
   const canManageOthers = isApproverRole(currentUser) || isSecurity;
 
-  const rawLeaves = storage.getLeaveRequests();
-  const rawAttendances = storage.getAttendanceConfirms();
-  const rawGatePasses = storage.getGatePasses();
-  const formSubs = storage.getFormSubmissions();
-  const departments = storage.getDepartments();
-  const users = storage.getUsers();
-  const webIntegrations = storage.getWebIntegrations();
+  const [dataVersion, setDataVersion] = useState(0);
+
+  React.useEffect(() => {
+    const handleStorageChange = () => {
+      setDataVersion((v) => v + 1);
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  const rawLeaves = useMemo(() => storage.getLeaveRequests(), [dataVersion]);
+  const rawAttendances = useMemo(() => storage.getAttendanceConfirms(), [dataVersion]);
+  const rawGatePasses = useMemo(() => storage.getGatePasses(), [dataVersion]);
+  const formSubs = useMemo(() => storage.getFormSubmissions(), [dataVersion]);
+  const departments = useMemo(() => storage.getDepartments(), [dataVersion]);
+  const users = useMemo(() => storage.getUsers(), [dataVersion]);
+  const webIntegrations = useMemo(() => storage.getWebIntegrations(), [dataVersion]);
 
   // Announcements list (pinned first, then latest published)
   const announcements = useMemo(() => {
@@ -62,7 +72,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
       if (!a.isPinned && b.isPinned) return 1;
       return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
     });
-  }, []);
+  }, [dataVersion]);
 
   // Filter documents based on user permissions
   const leaves = useMemo(() => {

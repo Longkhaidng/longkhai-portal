@@ -85,6 +85,8 @@ export async function GET() {
     const stationeryProposals = scanJsonFiles<any>('stationery-proposal');
     const generalProposals = scanJsonFiles<any>('general-proposal');
     const stationeryItems = readJsonFile<any[]>('settings/stationery-items.json', []);
+    const pcccDevices = readJsonFile<any[]>('pccc/master_devices.json', []);
+    const pcccInspections = scanJsonFiles<any>('pccc/inspections');
 
     return NextResponse.json({
       success: true,
@@ -100,6 +102,8 @@ export async function GET() {
         stationeryProposals,
         generalProposals,
         stationeryItems,
+        pcccDevices,
+        pcccInspections,
         emailConfig,
         githubConfig,
       },
@@ -112,6 +116,8 @@ export async function GET() {
         stationeryProposals: stationeryProposals.length,
         generalProposals: generalProposals.length,
         stationeryItems: stationeryItems.length,
+        pcccDevices: pcccDevices.length,
+        pcccInspections: pcccInspections.length,
       },
     });
   } catch (err: any) {
@@ -123,7 +129,21 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { type, data, githubToken } = body as {
-      type: 'users' | 'leave_request' | 'gate_pass' | 'attendance' | 'repair_proposal' | 'stationery_proposal' | 'general_proposal' | 'stationery_items' | 'departments' | 'web_integrations' | 'github_config' | 'email_config';
+      type:
+        | 'users'
+        | 'leave_request'
+        | 'gate_pass'
+        | 'attendance'
+        | 'repair_proposal'
+        | 'stationery_proposal'
+        | 'general_proposal'
+        | 'stationery_items'
+        | 'departments'
+        | 'web_integrations'
+        | 'github_config'
+        | 'email_config'
+        | 'pccc_devices'
+        | 'pccc_inspections';
       data: any;
       githubToken?: string;
     };
@@ -174,6 +194,13 @@ export async function POST(req: NextRequest) {
     } else if (type === 'email_config') {
       relFilePath = 'settings/email-config.json';
       commitMessage = `Update email configuration`;
+    } else if (type === 'pccc_devices') {
+      relFilePath = 'pccc/master_devices.json';
+      commitMessage = `Update PCCC Master Devices (${Array.isArray(data) ? data.length : 1} items)`;
+    } else if (type === 'pccc_inspections') {
+      const year = data.inspectedAt ? new Date(data.inspectedAt).getFullYear() : new Date().getFullYear();
+      relFilePath = `pccc/inspections/${year}/${data.id}.json`;
+      commitMessage = `Save PCCC Inspection ${data.id}`;
     }
 
     const jsonString = JSON.stringify(data, null, 2);

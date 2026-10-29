@@ -41,6 +41,15 @@ function PortalAppContent() {
   const [currentTab, setCurrentTab] = useState<string>('dashboard');
   const [viewingWebSite, setViewingWebSite] = useState<WebIntegration | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [dataVersion, setDataVersion] = useState(0);
+
+  React.useEffect(() => {
+    const handleStorageChange = () => {
+      setDataVersion((v) => v + 1);
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
@@ -80,32 +89,32 @@ function PortalAppContent() {
   // Calculate pending counts for badges based on user role and permissions
   const isSecurity = isSecurityRole(currentUser);
   const canManageOthers = isApproverRole(currentUser);
-  const userLeaves = filterUserLeaves(storage.getLeaveRequests(), currentUser, canManageOthers ? 'approver' : 'my');
-  const userAtts = filterUserAttendances(
+  const userLeaves = React.useMemo(() => filterUserLeaves(storage.getLeaveRequests(), currentUser, canManageOthers ? 'approver' : 'my'), [currentUser, canManageOthers, dataVersion]);
+  const userAtts = React.useMemo(() => filterUserAttendances(
     storage.getAttendanceConfirms(),
     currentUser,
     canManageOthers || isSecurity ? 'approver' : 'my'
-  );
-  const userGps = filterUserGatePasses(
+  ), [currentUser, canManageOthers, isSecurity, dataVersion]);
+  const userGps = React.useMemo(() => filterUserGatePasses(
     storage.getGatePasses(),
     currentUser,
     canManageOthers || isSecurity ? 'approver' : 'my'
-  );
-  const userRepairs = filterUserRepairProposals(
+  ), [currentUser, canManageOthers, isSecurity, dataVersion]);
+  const userRepairs = React.useMemo(() => filterUserRepairProposals(
     storage.getRepairProposals(),
     currentUser,
     canManageOthers || isMaintenanceStaff(currentUser) ? 'approver' : 'my'
-  );
-  const userStationeries = filterUserStationeryProposals(
+  ), [currentUser, canManageOthers, dataVersion]);
+  const userStationeries = React.useMemo(() => filterUserStationeryProposals(
     storage.getStationeryProposals(),
     currentUser,
     canManageOthers ? 'approver' : 'my'
-  );
-  const userGenerals = filterUserGeneralProposals(
+  ), [currentUser, canManageOthers, dataVersion]);
+  const userGenerals = React.useMemo(() => filterUserGeneralProposals(
     storage.getGeneralProposals(),
     currentUser,
     canManageOthers ? 'approver' : 'my'
-  );
+  ), [currentUser, canManageOthers, dataVersion]);
 
   const pendingLeaves = userLeaves.filter((l) => l.status === 'pending').length;
   const pendingAtts = userAtts.filter((a) => a.status === 'pending').length;

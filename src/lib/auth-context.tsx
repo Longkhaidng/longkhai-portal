@@ -49,9 +49,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    // 1. Initial sync from server on mount
     storage.syncFromServer().finally(() => {
       loadSession();
     });
+
+    // 2. Periodic sync every 30s to keep cross-device data always fresh
+    const intervalId = setInterval(() => {
+      storage.syncFromServer();
+    }, 30000);
+
+    // 3. Immediately sync whenever user returns to the tab or unlocks their phone
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        storage.syncFromServer();
+      }
+    };
+    const handleFocus = () => {
+      storage.syncFromServer();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   const login = async (

@@ -1069,6 +1069,8 @@ class StorageService {
         stationeryProposals,
         generalProposals,
         stationeryItems,
+        pcccDevices,
+        pcccInspections,
         emailConfig,
         githubConfig,
       } = json.data;
@@ -1130,11 +1132,31 @@ class StorageService {
       if (Array.isArray(stationeryItems) && stationeryItems.length > 0) {
         localStorage.setItem(STORAGE_KEYS.STATIONERY_ITEMS, JSON.stringify(stationeryItems));
       }
+      if (Array.isArray(pcccDevices) && pcccDevices.length > 0) {
+        const clean = pcccDevices.map((d: any) => ({
+          ...d,
+          category: inferPCCCCategory(d.category, d.name, d.id, d.specs),
+          inspectionExpiry: formatPCCCDate(d.inspectionExpiry),
+        }));
+        localStorage.setItem(STORAGE_KEYS.PCCC_DEVICES, JSON.stringify(clean));
+      }
+      if (Array.isArray(pcccInspections)) {
+        const local = this.getPCCCInspections();
+        const map = new Map<string, PCCCInspection>();
+        local.forEach((insp) => map.set(insp.id, insp));
+        pcccInspections.forEach((insp) => map.set(insp.id, insp));
+        localStorage.setItem(STORAGE_KEYS.PCCC_INSPECTIONS, JSON.stringify(Array.from(map.values())));
+      }
       if (emailConfig && emailConfig.googleScriptUrl) {
         localStorage.setItem(STORAGE_KEYS.EMAIL_CONFIG, JSON.stringify(emailConfig));
       }
       if (githubConfig && githubConfig.token) {
         localStorage.setItem(STORAGE_KEYS.GITHUB_CONFIG, JSON.stringify(githubConfig));
+      }
+
+      // Notify any listening components in current window to re-render
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('storage'));
       }
 
       return true;
@@ -1374,6 +1396,15 @@ class StorageService {
     }));
     localStorage.setItem(STORAGE_KEYS.PCCC_DEVICES, JSON.stringify(cleanDevices));
     this.syncFileToGitHub('pccc/master_devices.json', JSON.stringify(cleanDevices, null, 2), 'Update PCCC Master Devices');
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'pccc_devices',
+        data: cleanDevices,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
   }
 
   updatePCCCDevice(updated: PCCCDevice): void {
@@ -1433,6 +1464,15 @@ class StorageService {
 
     const year = new Date().getFullYear();
     this.syncFileToGitHub(`pccc/inspections/${year}/${inspection.id}.json`, JSON.stringify(inspection, null, 2), `Save PCCC Inspection ${inspection.id}`);
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'pccc_inspections',
+        data: inspection,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
   }
 
   async clearAllDocuments(

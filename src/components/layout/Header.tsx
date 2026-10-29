@@ -16,6 +16,8 @@ import {
   Building2,
   HardDrive,
   DownloadCloud,
+  RefreshCw,
+  Check,
 } from 'lucide-react';
 import { storage } from '@/lib/storage';
 
@@ -28,6 +30,26 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
   const { currentUser, logout } = useAuth();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncToast, setSyncToast] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleManualSync = async () => {
+    if (isSyncing) return;
+    setIsSyncing(true);
+    try {
+      const ok = await storage.syncFromServer();
+      if (ok) {
+        setSyncToast({ type: 'success', text: 'Đã cập nhật dữ liệu mới nhất!' });
+      } else {
+        setSyncToast({ type: 'error', text: 'Không thể kết nối máy chủ' });
+      }
+    } catch {
+      setSyncToast({ type: 'error', text: 'Lỗi đồng bộ' });
+    } finally {
+      setIsSyncing(false);
+      setTimeout(() => setSyncToast(null), 3000);
+    }
+  };
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
@@ -77,6 +99,29 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
 
       {/* Right: Theme toggle, Quick Backup, User profile */}
       <div className="flex items-center gap-2 sm:gap-3">
+
+        {/* Sync Data Button for All Devices */}
+        <div className="relative">
+          <button
+            onClick={handleManualSync}
+            disabled={isSyncing}
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/80 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/80 transition-colors shadow-xs cursor-pointer disabled:opacity-50"
+            title="Đồng bộ dữ liệu mới nhất từ máy chủ cho thiết bị"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 ${isSyncing ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">{isSyncing ? 'Đang đồng bộ...' : 'Đồng bộ'}</span>
+          </button>
+          {syncToast && (
+            <div className={`absolute top-full right-0 mt-2 whitespace-nowrap px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-lg z-50 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1 ${
+              syncToast.type === 'success'
+                ? 'bg-emerald-600 text-white'
+                : 'bg-rose-600 text-white'
+            }`}>
+              {syncToast.type === 'success' && <Check className="w-3.5 h-3.5" />}
+              <span>{syncToast.text}</span>
+            </div>
+          )}
+        </div>
 
         {/* Quick Backup for Admin */}
         {currentUser?.role === 'admin' && (

@@ -88,6 +88,12 @@ export function PCCCInspectionView() {
   useEffect(() => {
     loadData();
 
+    // Listen to storage sync events
+    const handleStorageChange = () => {
+      loadData();
+    };
+    window.addEventListener('storage', handleStorageChange);
+
     // Check if URL has ?pccc=HT-xxx
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
@@ -103,6 +109,10 @@ export function PCCCInspectionView() {
         }
       }
     }
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   // Compute Metrics
