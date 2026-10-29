@@ -24,10 +24,10 @@
   "receiverStaffId": "1139",
   "receiverStaffName": "Võ Thị Tuyết",
   "receiverStaffEmail": "tuyet.vo@longkhai.com.vn",
-  "managerId": "1867",
-  "managerName": "Trương Anh Như Quỳnh",
+  "managerId": "2265",
+  "managerName": "Trần Lê Hữu Lực",
   "managerEmail": "Quynh.truong@longkhai.com.vn",
-  "status": "pending_manager",
+  "status": "completed",
   "steps": [
     {
       "step": 1,
@@ -56,15 +56,17 @@
       "title": "Trưởng phòng HCNS duyệt",
       "subTitle": "Trương Anh Như Quỳnh (1867)",
       "roleRequired": "manager",
-      "approverId": "1867",
-      "approverName": "Trương Anh Như Quỳnh",
+      "approverId": "2265",
+      "approverName": "Trần Lê Hữu Lực",
       "approverEmail": "Quynh.truong@longkhai.com.vn",
-      "status": "pending"
+      "status": "completed",
+      "updatedAt": "2026-10-29T08:37:09.796Z",
+      "comment": "Trưởng phòng HCNS duyệt cấp phát"
     }
   ],
   "currentStepIndex": 2,
   "createdAt": "2026-10-29T07:12:08.961Z",
-  "updatedAt": "2026-10-29T07:12:35.144Z",
+  "updatedAt": "2026-10-29T08:37:09.796Z",
   "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
   "emailConfig": {
     "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
@@ -72,5 +74,7 @@
     "portalBaseUrl": "https://longkhai-portal.vercel.app"
   },
   "receiverApprovedAt": "2026-10-29T07:12:35.144Z",
-  "receiverComment": ""
+  "receiverComment": "",
+  "managerApprovedAt": "2026-10-29T08:37:09.796Z",
+  "managerComment": ""
 }
