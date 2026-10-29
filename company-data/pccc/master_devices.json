@@ -1,467 +1,5 @@
 [
   {
-    "id": "HT-BOT-01",
-    "name": "Bình chữa cháy bột MFZ4 số 01",
-    "category": "binh_bot",
-    "location": "Xưởng may 1 - Cột A1",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:30:07",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-02",
-    "name": "Bình chữa cháy bột MFZ4 số 02",
-    "category": "binh_bot",
-    "location": "Xưởng may 1 - Cột A3",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:31:14",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-03",
-    "name": "Bình chữa cháy bột MFZ4 số 03",
-    "category": "binh_bot",
-    "location": "Xưởng may 1 - Cột B2",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:31:21",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-04",
-    "name": "Bình chữa cháy bột MFZ4 số 04",
-    "category": "binh_bot",
-    "location": "Xưởng may 1 - Cột B5",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:32:28",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-05",
-    "name": "Bình chữa cháy bột MFZ4 số 05",
-    "category": "binh_bot",
-    "location": "Xưởng may 1 - Cửa thoát hiểm 1",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:32:35",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-06",
-    "name": "Bình chữa cháy bột MFZ4 số 06",
-    "category": "binh_bot",
-    "location": "Xưởng may 1 - Cửa thoát hiểm 2",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:33:42",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-07",
-    "name": "Bình chữa cháy bột MFZ4 số 07",
-    "category": "binh_bot",
-    "location": "Xưởng may 2 - Cột C1",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:33:49",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-08",
-    "name": "Bình chữa cháy bột MFZ4 số 08",
-    "category": "binh_bot",
-    "location": "Xưởng may 2 - Cột C4",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:34:56",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-09",
-    "name": "Bình chữa cháy bột MFZ4 số 09",
-    "category": "binh_bot",
-    "location": "Xưởng may 2 - Cột D2",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:34:03",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-10",
-    "name": "Bình chữa cháy bột MFZ4 số 10",
-    "category": "binh_bot",
-    "location": "Xưởng may 2 - Cột D5",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:35:10",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-11",
-    "name": "Bình chữa cháy bột MFZ4 số 11",
-    "category": "binh_bot",
-    "location": "Xưởng may 2 - Cửa thoát hiểm",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:35:17",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-12",
-    "name": "Bình chữa cháy bột MFZ4 số 12",
-    "category": "binh_bot",
-    "location": "Xưởng cắt - Bàn trải vải số 1",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:36:24",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-13",
-    "name": "Bình chữa cháy bột MFZ4 số 13",
-    "category": "binh_bot",
-    "location": "Xưởng cắt - Bàn trải vải số 2",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:36:31",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-14",
-    "name": "Bình chữa cháy bột MFZ4 số 14",
-    "category": "binh_bot",
-    "location": "Xưởng cắt - Khu vực máy cắt rập",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:37:38",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-15",
-    "name": "Bình chữa cháy bột MFZ4 số 15",
-    "category": "binh_bot",
-    "location": "Xưởng cắt - Cửa ra vào chính",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:37:45",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-16",
-    "name": "Bình chữa cháy bột MFZ4 số 16",
-    "category": "binh_bot",
-    "location": "Kho nguyên liệu - Cột K1",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:38:52",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-17",
-    "name": "Bình chữa cháy bột MFZ4 số 17",
-    "category": "binh_bot",
-    "location": "Kho nguyên liệu - Cột K3",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:38:59",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-18",
-    "name": "Bình chữa cháy bột MFZ4 số 18",
-    "category": "binh_bot",
-    "location": "Kho nguyên liệu - Khu chứa chỉ may",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:39:06",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-19",
-    "name": "Bình chữa cháy bột MFZ4 số 19",
-    "category": "binh_bot",
-    "location": "Kho phụ liệu - Cửa nhập hàng",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:39:13",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-20",
-    "name": "Bình chữa cháy bột MFZ4 số 20",
-    "category": "binh_bot",
-    "location": "Kho phụ liệu - Khu vực kệ hàng A",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:40:20",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-21",
-    "name": "Bình chữa cháy bột MFZ4 số 21",
-    "category": "binh_bot",
-    "location": "Kho thành phẩm - Lối đi chính",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:40:27",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-22",
-    "name": "Bình chữa cháy bột MFZ4 số 22",
-    "category": "binh_bot",
-    "location": "Kho thành phẩm - Khu vực bốc xếp",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:41:34",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-23",
-    "name": "Bình chữa cháy bột MFZ4 số 23",
-    "category": "binh_bot",
-    "location": "Khu vực lò hơi - Cửa vào",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:41:41",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-24",
-    "name": "Bình chữa cháy bột MFZ4 số 24",
-    "category": "binh_bot",
-    "location": "Khu vực trạm biến áp",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:42:48",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-25",
-    "name": "Bình chữa cháy bột MFZ4 số 25",
-    "category": "binh_bot",
-    "location": "Phòng kỹ thuật cơ điện",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:42:55",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-26",
-    "name": "Bình chữa cháy bột MFZ4 số 26",
-    "category": "binh_bot",
-    "location": "Khu vực máy nén khí",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:43:02",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-27",
-    "name": "Bình chữa cháy bột MFZ4 số 27",
-    "category": "binh_bot",
-    "location": "Nhà ăn cán bộ CNV - Cửa trước",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:43:09",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-28",
-    "name": "Bình chữa cháy bột MFZ4 số 28",
-    "category": "binh_bot",
-    "location": "Nhà ăn cán bộ CNV - Cửa sau",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:44:16",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-29",
-    "name": "Bình chữa cháy bột MFZ4 số 29",
-    "category": "binh_bot",
-    "location": "Khu nhà xe công nhân",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:44:23",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-30",
-    "name": "Bình chữa cháy bột MFZ4 số 30",
-    "category": "binh_bot",
-    "location": "Văn phòng điều hành - Tầng 1",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:45:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-31",
-    "name": "Bình chữa cháy bột MFZ4 số 31",
-    "category": "binh_bot",
-    "location": "Văn phòng điều hành - Tầng 2",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:45:37",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-32",
-    "name": "Bình chữa cháy bột MFZ4 số 32",
-    "category": "binh_bot",
-    "location": "Cổng bảo vệ chính",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:46:44",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BOT-33",
-    "name": "Bình chữa cháy bột MFZ4 số 33",
-    "category": "binh_bot",
-    "location": "Khu xử lý nước thải",
-    "specs": "4.0 kg",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 08:46:51",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
     "id": "HT-CO2-01",
     "name": "Bình chữa cháy CO2 MT3 số 01",
     "category": "binh_co2",
@@ -470,7 +8,7 @@
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:09:46",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
@@ -484,7 +22,7 @@
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:11:05",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
@@ -498,7 +36,7 @@
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:11:20",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
@@ -512,7 +50,7 @@
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:11:33",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
@@ -526,7 +64,7 @@
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:11:46",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
@@ -540,7 +78,7 @@
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:11:56",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
@@ -549,12 +87,12 @@
     "id": "HT-CO2-07",
     "name": "Bình chữa cháy CO2 MT3 số 07",
     "category": "binh_co2",
-    "location": "PXHT - Bàn kiểm phẩm 1",
+    "location": "PXHT - Khu vực in Silicon",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:14:17",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
@@ -563,12 +101,12 @@
     "id": "HT-CO2-08",
     "name": "Bình chữa cháy CO2 MT3 số 08",
     "category": "binh_co2",
-    "location": "PXHT - Bàn kiểm phẩm 2",
+    "location": "PXHT - Khu vực in Silicon",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:14:28",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
@@ -577,12 +115,12 @@
     "id": "HT-CO2-09",
     "name": "Bình chữa cháy CO2 MT3 số 09",
     "category": "binh_co2",
-    "location": "PXHT - Khu vực ủi hoàn tất 1",
+    "location": "PXHT - Khu vực để mực in",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:15:39",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
@@ -591,12 +129,12 @@
     "id": "HT-CO2-10",
     "name": "Bình chữa cháy CO2 MT3 số 10",
     "category": "binh_co2",
-    "location": "PXHT - Khu vực ủi hoàn tất 2",
+    "location": "PXHT - Khu vực để mực in",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:15:50",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
@@ -605,12 +143,12 @@
     "id": "HT-CO2-11",
     "name": "Bình chữa cháy CO2 MT3 số 11",
     "category": "binh_co2",
-    "location": "PXHT - Khu vực ép keo",
+    "location": "PXHT - Kho sau dệt",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:15:01",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
@@ -619,12 +157,12 @@
     "id": "HT-CO2-12",
     "name": "Bình chữa cháy CO2 MT3 số 12",
     "category": "binh_co2",
-    "location": "Xưởng may 1 - Tủ điện tổng số 1",
+    "location": "PXHT - Kho sau dệt",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:16:12",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
@@ -633,12 +171,12 @@
     "id": "HT-CO2-13",
     "name": "Bình chữa cháy CO2 MT3 số 13",
     "category": "binh_co2",
-    "location": "Xưởng may 1 - Tủ điện tổng số 2",
+    "location": "PXHT - Trước văn phòng xưởng",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:16:23",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
@@ -647,908 +185,1370 @@
     "id": "HT-CO2-14",
     "name": "Bình chữa cháy CO2 MT3 số 14",
     "category": "binh_co2",
-    "location": "Xưởng may 1 - Phòng máy tính điều khiển chuyền",
+    "location": "PXHT - Khu vực khíu",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:16:34",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-15",
+    "id": "HT-MFZ4-01",
+    "name": "Bình chữa cháy bột ABC 4KG số 01",
+    "category": "binh_bot",
+    "location": "PXHT - Gần kho phụ liệu",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-MFZ4-02",
+    "name": "Bình chữa cháy bột ABC 4KG số 02",
+    "category": "binh_bot",
+    "location": "PXHT - Gần kho phụ liệu",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-MFZ4-03",
+    "name": "Bình chữa cháy bột ABC 4KG số 03",
+    "category": "binh_bot",
+    "location": "PXHT - Khu vực đóng kiện",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-MFZ4-04",
+    "name": "Bình chữa cháy bột ABC 4KG số 04",
+    "category": "binh_bot",
+    "location": "PXHT - Khu vực dò kim loại",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-MFZ4-05",
+    "name": "Bình chữa cháy bột ABC 4KG số 05",
+    "category": "binh_bot",
+    "location": "PXHT - Khu vực bao gói",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-MFZ4-06",
+    "name": "Bình chữa cháy bột ABC 4KG số 06",
+    "category": "binh_bot",
+    "location": "PXHT - Khu vực bao gói",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-MFZ4-07",
+    "name": "Bình chữa cháy bột ABC 4KG số 07",
+    "category": "binh_bot",
+    "location": "PXHT - Trước văn phòng xưởng",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-MFZ4-08",
+    "name": "Bình chữa cháy bột ABC 4KG số 08",
+    "category": "binh_bot",
+    "location": "PXHT - Khu vực khíu",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-MFZ8-01",
+    "name": "Bình chữa cháy bột ABC 8KG số 01",
+    "category": "binh_bot",
+    "location": "PXHT - Kho bán thành phẩm",
+    "specs": "8.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-MFZ8-02",
+    "name": "Bình chữa cháy bột ABC 8KG số 02",
+    "category": "binh_bot",
+    "location": "PXHT - Khu vực mạng",
+    "specs": "8.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-TU-01",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 01",
+    "category": "tu_voi_vach",
+    "location": "PXHT - Gần kho phụ liệu",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-TU-02",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 02",
+    "category": "tu_voi_vach",
+    "location": "PXHT - Khu vực bao gói",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-TU-03",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 03",
+    "category": "tu_voi_vach",
+    "location": "PXHT - Khu vực in Silicon",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-TU-04",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 04",
+    "category": "tu_voi_vach",
+    "location": "PXHT - Kho sau dệt",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-TU-05",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 05",
+    "category": "tu_voi_vach",
+    "location": "PXHT - Trước văn phòng xưởng",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-CH-01",
+    "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 01",
+    "category": "nut_chuong",
+    "location": "PXHT - Gần kho phụ liệu",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "HT-CH-02",
+    "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 02",
+    "category": "nut_chuong",
+    "location": "PXHT - Kho sau dệt",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "PT-CO2-15",
     "name": "Bình chữa cháy CO2 MT3 số 15",
     "category": "binh_co2",
-    "location": "Xưởng may 1 - Khu vực máy may mẫu",
+    "location": "Khu phụ trợ - Gần cửa thoát hiểm",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:17:45",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-16",
+    "id": "PT-CO2-16",
     "name": "Bình chữa cháy CO2 MT3 số 16",
     "category": "binh_co2",
-    "location": "Xưởng may 2 - Tủ điện tổng số 1",
+    "location": "Khu phụ trợ - Kho phế liệu",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:17:56",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-17",
+    "id": "PT-CO2-17",
     "name": "Bình chữa cháy CO2 MT3 số 17",
     "category": "binh_co2",
-    "location": "Xưởng may 2 - Tủ điện tổng số 2",
+    "location": "Khu phụ trợ - Máy nén khí",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:17:07",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-18",
+    "id": "PT-MFZ4-09",
+    "name": "Bình chữa cháy bột ABC 4KG số 09",
+    "category": "binh_bot",
+    "location": "Khu phụ trợ - Gần cửa thoát hiểm",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "PT-MFZ4-10",
+    "name": "Bình chữa cháy bột ABC 4KG số 10",
+    "category": "binh_bot",
+    "location": "Khu phụ trợ - Kho rác thải nguy hại",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "PT-MFZ8-03",
+    "name": "Bình chữa cháy bột ABC 8KG số 03",
+    "category": "binh_bot",
+    "location": "Khu phụ trợ - Kho phế liệu",
+    "specs": "8.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "PT-MFZL35-01",
+    "name": "Bình chữa cháy bột ABC 35KG số 01",
+    "category": "binh_bot",
+    "location": "Khu phụ trợ - Lò hơi",
+    "specs": "35.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "PT-MFZ4-11",
+    "name": "Bình chữa cháy bột ABC 4KG số 11",
+    "category": "binh_bot",
+    "location": "Khu phụ trợ - Máy nén khí",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "D-CO2-18",
     "name": "Bình chữa cháy CO2 MT3 số 18",
     "category": "binh_co2",
-    "location": "Xưởng may 2 - Bàn bảo trì máy may",
+    "location": "PXD - Cạnh cửa thoát hiểm gần kho NL",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:18:18",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-19",
+    "id": "D-CO2-19",
     "name": "Bình chữa cháy CO2 MT3 số 19",
     "category": "binh_co2",
-    "location": "Xưởng may 2 - Khu vực đóng gói lẻ",
+    "location": "PXD - Cạnh cửa thoát hiểm gần kho NL",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:18:29",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-20",
+    "id": "D-CO2-20",
     "name": "Bình chữa cháy CO2 MT3 số 20",
     "category": "binh_co2",
-    "location": "Xưởng cắt - Tủ điện máy cắt tự động",
+    "location": "PXD - Cạnh cửa thoát hiểm gần VP xưởng",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:18:40",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-21",
+    "id": "D-CO2-21",
     "name": "Bình chữa cháy CO2 MT3 số 21",
     "category": "binh_co2",
-    "location": "Xưởng cắt - Phòng thiết kế CAD",
+    "location": "PXD - Cạnh cửa thoát hiểm gần VP xưởng",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:19:51",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-22",
+    "id": "D-CO2-22",
     "name": "Bình chữa cháy CO2 MT3 số 22",
     "category": "binh_co2",
-    "location": "Kho nguyên liệu - Phòng mẫu vải",
+    "location": "PXD - Cạnh tủ điện",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:19:02",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-23",
+    "id": "D-CO2-23",
     "name": "Bình chữa cháy CO2 MT3 số 23",
     "category": "binh_co2",
-    "location": "Kho thành phẩm - Phòng làm việc thủ kho",
+    "location": "PXD - Cạnh tủ điện",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:19:13",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-24",
+    "id": "D-CO2-24",
     "name": "Bình chữa cháy CO2 MT3 số 24",
     "category": "binh_co2",
-    "location": "Khu vực cơ điện - Bàn làm việc thợ điện",
+    "location": "PXD - Giữa kệ để sợi",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:20:24",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-25",
+    "id": "D-CO2-25",
     "name": "Bình chữa cháy CO2 MT3 số 25",
     "category": "binh_co2",
-    "location": "Khu vực máy phát điện dự phòng",
+    "location": "PXD - Giữa kệ để sợi",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:20:35",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-26",
+    "id": "D-CH-03",
+    "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 03",
+    "category": "nut_chuong",
+    "location": "PXD - Cạnh cửa thoát hiểm gần kho NL",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "D-CH-04",
+    "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 04",
+    "category": "nut_chuong",
+    "location": "PXD - Cạnh cửa thoát hiểm gần VP xưởng",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "D-TU-06",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 06",
+    "category": "tu_voi_vach",
+    "location": "PXD - Cạnh cửa thoát hiểm gần kho NL",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "D-TU-07",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 07",
+    "category": "tu_voi_vach",
+    "location": "PXD - Cạnh cửa thoát hiểm gần VP xưởng",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "D-TU-08",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 08",
+    "category": "tu_voi_vach",
+    "location": "PXD - Giữa kệ để sợi",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "NX-CO2-26",
     "name": "Bình chữa cháy CO2 MT3 số 26",
     "category": "binh_co2",
-    "location": "Phòng máy chủ IT Server",
+    "location": "Nhà xe NV - Trước máy phát điện",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:20:46",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-27",
+    "id": "NX-CO2-27",
     "name": "Bình chữa cháy CO2 MT3 số 27",
     "category": "binh_co2",
-    "location": "Phòng giám sát an ninh camera",
+    "location": "Nhà xe NV - Trước cửa thoát hiểm phụ kho nguyên liệu",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:21:57",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-28",
+    "id": "NX-MFZ8-04",
+    "name": "Bình chữa cháy bột ABC 8KG số 04",
+    "category": "binh_bot",
+    "location": "Nhà xe NV - Trước máy phát điện",
+    "specs": "8.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "NX-MFZ4-12",
+    "name": "Bình chữa cháy bột ABC 4KG số 12",
+    "category": "binh_bot",
+    "location": "Nhà xe NV - Trước cửa thoát hiểm phụ kho nguyên liệu",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "BV-MFZ8-05",
+    "name": "Bình chữa cháy bột ABC 8KG số 05",
+    "category": "binh_bot",
+    "location": "Bảo vệ - Trong phòng bảo vệ cổng chính",
+    "specs": "8.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "NX-CO2-28",
     "name": "Bình chữa cháy CO2 MT3 số 28",
     "category": "binh_co2",
-    "location": "Văn phòng Ban Giám Đốc",
+    "location": "Nhà xe ô tô - Cạnh cửa cuốn",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:21:08",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-29",
+    "id": "TD-CO2-29",
     "name": "Bình chữa cháy CO2 MT3 số 29",
     "category": "binh_co2",
-    "location": "Phòng Kế toán & Tài chính",
+    "location": "Trạm điện - Cạnh cửa",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:21:19",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-30",
+    "id": "TD-MFZ4-13",
+    "name": "Bình chữa cháy bột ABC 4KG số 13",
+    "category": "binh_bot",
+    "location": "Trạm điện - Cạnh cửa",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-CO2-30",
     "name": "Bình chữa cháy CO2 MT3 số 30",
     "category": "binh_co2",
-    "location": "Phòng Hành chính Nhân sự",
+    "location": "KHO - Cạnh thang máy tầng 1",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:22:30",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-31",
+    "id": "KHO-MFZ4-14",
+    "name": "Bình chữa cháy bột ABC 4KG số 14",
+    "category": "binh_bot",
+    "location": "KHO - Cạnh thang máy tầng 1",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-CO2-31",
     "name": "Bình chữa cháy CO2 MT3 số 31",
     "category": "binh_co2",
-    "location": "Phòng Kế hoạch & Quản lý đơn hàng",
+    "location": "KHO - Sát tường phân xưởng dệt",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:22:41",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-32",
+    "id": "KHO-MFZ4-15",
+    "name": "Bình chữa cháy bột ABC 4KG số 15",
+    "category": "binh_bot",
+    "location": "KHO - Sát tường phân xưởng dệt",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-CO2-32",
     "name": "Bình chữa cháy CO2 MT3 số 32",
     "category": "binh_co2",
-    "location": "Phòng Thiết kế mẫu & Rập",
+    "location": "KHO - Sát tường nhà xe nhân viên",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:22:52",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-33",
+    "id": "KHO-MFZ4-16",
+    "name": "Bình chữa cháy bột ABC 4KG số 16",
+    "category": "binh_bot",
+    "location": "KHO - Sát tường nhà xe nhân viên",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-MFZ4-17",
+    "name": "Bình chữa cháy bột ABC 4KG số 17",
+    "category": "binh_bot",
+    "location": "KHO - Cạnh thang máy tầng 2",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-MFZ4-18",
+    "name": "Bình chữa cháy bột ABC 4KG số 18",
+    "category": "binh_bot",
+    "location": "KHO - Cạnh thang máy tầng 2",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-MFZ4-19",
+    "name": "Bình chữa cháy bột ABC 4KG số 19",
+    "category": "binh_bot",
+    "location": "KHO - Gần cửa ra vào tầng lửng",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-MFZ4-20",
+    "name": "Bình chữa cháy bột ABC 4KG số 20",
+    "category": "binh_bot",
+    "location": "KHO - Gần cửa ra vào tầng lửng",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-CO2-33",
     "name": "Bình chữa cháy CO2 MT3 số 33",
     "category": "binh_co2",
-    "location": "Phòng QA/QC kiểm định",
+    "location": "KHO - Gần quạt hút tầng 2",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:23:03",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-34",
+    "id": "KHO-CO2-34",
     "name": "Bình chữa cháy CO2 MT3 số 34",
     "category": "binh_co2",
-    "location": "Khu vực trạm nạp bình điện xe nâng",
+    "location": "KHO - Sát vách tường đối diện cổng chính tầng 2",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:23:14",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-35",
+    "id": "KHO-CO2-35",
     "name": "Bình chữa cháy CO2 MT3 số 35",
     "category": "binh_co2",
-    "location": "Nhà xe cán bộ quản lý",
+    "location": "KHO - Sát vách tường đối diện cổng chính tầng 2",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:23:25",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-36",
+    "id": "KHO-CO2-36",
     "name": "Bình chữa cháy CO2 MT3 số 36",
     "category": "binh_co2",
-    "location": "Hành lang tầng 1 văn phòng",
+    "location": "KHO - Sát vách kính tầng lửng gần cửa ra vào",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:24:36",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-37",
+    "id": "KHO-CO2-37",
     "name": "Bình chữa cháy CO2 MT3 số 37",
     "category": "binh_co2",
-    "location": "Hành lang tầng 2 văn phòng",
+    "location": "KHO - Cạnh ô thông tầng giữa tầng lửng và PX dệt",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:24:47",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-38",
+    "id": "KHO-CO2-38",
     "name": "Bình chữa cháy CO2 MT3 số 38",
     "category": "binh_co2",
-    "location": "Cổng phụ bảo vệ số 2",
+    "location": "KHO - Gần tủ điện tầng lửng",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:24:58",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-39",
+    "id": "KHO-MFZ4-21",
+    "name": "Bình chữa cháy bột ABC 4KG số 21",
+    "category": "binh_bot",
+    "location": "KHO - Sát vách kính tầng lửng gần cửa ra vào",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-MFZ4-22",
+    "name": "Bình chữa cháy bột ABC 4KG số 22",
+    "category": "binh_bot",
+    "location": "KHO - Sát vách kính giữa tầng lửng",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-MFZ4-23",
+    "name": "Bình chữa cháy bột ABC 4KG số 23",
+    "category": "binh_bot",
+    "location": "KHO - Sát vách kính giữa tầng lửng",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-MFZ8-06",
+    "name": "Bình chữa cháy bột ABC 8KG số 06",
+    "category": "binh_bot",
+    "location": "KHO - Cạnh ô thông tầng giữa tầng lửng và PX dệt",
+    "specs": "8.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-MFZ8-07",
+    "name": "Bình chữa cháy bột ABC 8KG số 07",
+    "category": "binh_bot",
+    "location": "KHO - Gần tủ điện tầng lửng",
+    "specs": "8.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-MFZ8-08",
+    "name": "Bình chữa cháy bột ABC 8KG số 08",
+    "category": "binh_bot",
+    "location": "KHO - Kho vật tư",
+    "specs": "8.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-TU-09",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 09",
+    "category": "tu_voi_vach",
+    "location": "KHO - Cạnh thang máy tầng 1",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-TU-10",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 10",
+    "category": "tu_voi_vach",
+    "location": "KHO - Cạnh thang máy tầng 2",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-TU-11",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 11",
+    "category": "tu_voi_vach",
+    "location": "KHO - Sát vách kính tầng lửng gần cửa ra vào",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-TU-12",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 12",
+    "category": "tu_voi_vach",
+    "location": "KHO - Sát vách kính tầng lửng giữa tầng",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-TU-13",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 13",
+    "category": "tu_voi_vach",
+    "location": "KHO - Cạnh ô thông tầng giữa tầng lửng và PX dệt",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-CH-05",
+    "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 05",
+    "category": "nut_chuong",
+    "location": "KHO - Cạnh thang máy tầng 1",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-CH-06",
+    "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 06",
+    "category": "nut_chuong",
+    "location": "KHO - Cạnh thang máy tầng 2",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-CH-07",
+    "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 07",
+    "category": "nut_chuong",
+    "location": "KHO - Cạnh cửa ra vào tầng lửng",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "KHO-CH-08",
+    "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 08",
+    "category": "nut_chuong",
+    "location": "KHO - Gần ô thông tầng giữa tầng lửng và PX dệt",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "VP-CO2-39",
     "name": "Bình chữa cháy CO2 MT3 số 39",
     "category": "binh_co2",
-    "location": "Khu vực máy giặt mẫu",
+    "location": "VP - Cạnh hồ cá gần phòng họp",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:25:09",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-40",
+    "id": "VP-CO2-40",
     "name": "Bình chữa cháy CO2 MT3 số 40",
     "category": "binh_co2",
-    "location": "Khu vực sấy mẫu",
+    "location": "VP - Phòng server",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:25:20",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-41",
+    "id": "VP-CO2-41",
     "name": "Bình chữa cháy CO2 MT3 số 41",
     "category": "binh_co2",
-    "location": "Kho hóa chất & dung môi tẩy điểm",
+    "location": "VP - Cạnh hồ cá gần nhà vệ sinh",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:25:31",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-42",
+    "id": "VP-CO2-42",
     "name": "Bình chữa cháy CO2 MT3 số 42",
     "category": "binh_co2",
-    "location": "Khu vực xử lý rác công nghiệp",
+    "location": "VP - Cạnh hồ cá gần nhà vệ sinh",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:26:42",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-43",
+    "id": "VP-CO2-43",
     "name": "Bình chữa cháy CO2 MT3 số 43",
     "category": "binh_co2",
-    "location": "Trạm bơm nước sinh hoạt",
+    "location": "VP - Canteen gần cửa sổ",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:26:53",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-44",
+    "id": "VP-CO2-44",
     "name": "Bình chữa cháy CO2 MT3 số 44",
     "category": "binh_co2",
-    "location": "Khu vực cân xe tải xuất nhập khẩu",
+    "location": "VP - Khu bếp",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:26:04",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-CO2-45",
+    "id": "VP-CO2-45",
     "name": "Bình chữa cháy CO2 MT3 số 45",
     "category": "binh_co2",
-    "location": "Phòng tiếp khách khách hàng",
+    "location": "VP - Cạnh cửa khu phòng khách tầng 2",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 09:27:15",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-BC-01",
-    "name": "Tổ hợp chuông đèn nút nhấn số 01",
+    "id": "VP-MFZ4-24",
+    "name": "Bình chữa cháy bột ABC 4KG số 24",
+    "category": "binh_bot",
+    "location": "VP - Hành lang khu phòng khách tầng 3",
+    "specs": "4.0 kg",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "VP-TU-14",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 14",
+    "category": "tu_voi_vach",
+    "location": "VP - Cạnh hồ cá gần phòng họp",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "VP-TU-15",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 15",
+    "category": "tu_voi_vach",
+    "location": "VP - Cạnh hồ cá gần nhà vệ sinh",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "VP-TU-16",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 16",
+    "category": "tu_voi_vach",
+    "location": "VP - Canteen gần cửa sổ",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "VP-TU-17",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 17",
+    "category": "tu_voi_vach",
+    "location": "VP - Cạnh cửa khu phòng khách tầng 2",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "VP-TU-18",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 18",
+    "category": "tu_voi_vach",
+    "location": "VP - Hành lang khu phòng khách tầng 3",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "VP-TU-19",
+    "name": "Tủ chữa cháy vách tường & ngoài trời số 19",
+    "category": "tu_voi_vach",
+    "location": "VP - Gần nhà xe ô tô",
+    "specs": "",
+    "inspectionExpiry": "20/12/2026",
+    "lastInspection": {
+      "status": "pass",
+      "date": "2026-10-29 09:17:20",
+      "inspectorId": "2265",
+      "inspectorName": "Trần Lê Hữu Lực"
+    }
+  },
+  {
+    "id": "VP-CH-09",
+    "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 09",
     "category": "nut_chuong",
-    "location": "Xưởng may 1 - Cửa thoát hiểm phía Đông",
-    "specs": "24VDC Hệ quy ước",
+    "location": "VP - Cạnh hồ cá gần phòng họp",
+    "specs": "",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 10:12:15",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-BC-02",
-    "name": "Tổ hợp chuông đèn nút nhấn số 02",
+    "id": "VP-CH-10",
+    "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 10",
     "category": "nut_chuong",
-    "location": "Xưởng may 1 - Cửa thoát hiểm phía Tây",
-    "specs": "24VDC Hệ quy ước",
+    "location": "VP Cạnh cửa ra vào nhà vệ sinh",
+    "specs": "",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 10:14:15",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-BC-03",
-    "name": "Tổ hợp chuông đèn nút nhấn số 03",
+    "id": "VP-CH-11",
+    "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 11",
     "category": "nut_chuong",
-    "location": "Xưởng may 2 - Cửa thoát hiểm phía Đông",
-    "specs": "24VDC Hệ quy ước",
+    "location": "VP - Canteen gần cửa ra vào",
+    "specs": "",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 10:16:15",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-BC-04",
-    "name": "Tổ hợp chuông đèn nút nhấn số 04",
+    "id": "VP-CH-12",
+    "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 12",
     "category": "nut_chuong",
-    "location": "Xưởng may 2 - Cửa thoát hiểm phía Tây",
-    "specs": "24VDC Hệ quy ước",
+    "location": "VP - Hành lang khu phòng khách tầng 3",
+    "specs": "",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 10:18:15",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-BC-05",
-    "name": "Tổ hợp chuông đèn nút nhấn số 05",
-    "category": "nut_chuong",
-    "location": "Xưởng cắt - Cửa chính ra vào",
-    "specs": "24VDC Hệ quy ước",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 10:20:15",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BC-06",
-    "name": "Tổ hợp chuông đèn nút nhấn số 06",
-    "category": "nut_chuong",
-    "location": "Xưởng cắt - Cửa thoát hiểm phía sau",
-    "specs": "24VDC Hệ quy ước",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 10:22:15",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BC-07",
-    "name": "Tổ hợp chuông đèn nút nhấn số 07",
-    "category": "nut_chuong",
-    "location": "Kho nguyên liệu - Cửa xuất hàng",
-    "specs": "24VDC Hệ quy ước",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 10:24:15",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BC-08",
-    "name": "Tổ hợp chuông đèn nút nhấn số 08",
-    "category": "nut_chuong",
-    "location": "Kho thành phẩm - Cửa xuất hàng container",
-    "specs": "24VDC Hệ quy ước",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 10:26:15",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BC-09",
-    "name": "Tổ hợp chuông đèn nút nhấn số 09",
-    "category": "nut_chuong",
-    "location": "Khu vực lò hơi & trạm điện",
-    "specs": "24VDC Hệ quy ước",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 10:28:15",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BC-10",
-    "name": "Tổ hợp chuông đèn nút nhấn số 10",
-    "category": "nut_chuong",
-    "location": "Khu nhà ăn công nhân - Cửa chính",
-    "specs": "24VDC Hệ quy ước",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 10:30:15",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BC-11",
-    "name": "Tổ hợp chuông đèn nút nhấn số 11",
-    "category": "nut_chuong",
-    "location": "Văn phòng điều hành - Sảnh tầng 1",
-    "specs": "24VDC Hệ quy ước",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 10:32:15",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-BC-12",
-    "name": "Tổ hợp chuông đèn nút nhấn số 12",
-    "category": "nut_chuong",
-    "location": "Văn phòng điều hành - Hành lang tầng 2",
-    "specs": "24VDC Hệ quy ước",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 10:34:15",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-01",
-    "name": "Tủ vòi chữa cháy vách tường số 01",
-    "category": "tu_voi_vach",
-    "location": "Vách tường xưởng may 1 - Cột A2",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:12:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-02",
-    "name": "Tủ vòi chữa cháy vách tường số 02",
-    "category": "tu_voi_vach",
-    "location": "Vách tường xưởng may 1 - Cột A6",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:14:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-03",
-    "name": "Tủ vòi chữa cháy vách tường số 03",
-    "category": "tu_voi_vach",
-    "location": "Vách tường xưởng may 1 - Cột B4",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:16:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-04",
-    "name": "Tủ vòi chữa cháy vách tường số 04",
-    "category": "tu_voi_vach",
-    "location": "Vách tường xưởng may 2 - Cột C3",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:18:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-05",
-    "name": "Tủ vòi chữa cháy vách tường số 05",
-    "category": "tu_voi_vach",
-    "location": "Vách tường xưởng may 2 - Cột C7",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:20:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-06",
-    "name": "Tủ vòi chữa cháy vách tường số 06",
-    "category": "tu_voi_vach",
-    "location": "Vách tường xưởng may 2 - Cột D4",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:22:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-07",
-    "name": "Tủ vòi chữa cháy vách tường số 07",
-    "category": "tu_voi_vach",
-    "location": "Vách tường xưởng cắt - Cửa số 1",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:24:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-08",
-    "name": "Tủ vòi chữa cháy vách tường số 08",
-    "category": "tu_voi_vach",
-    "location": "Vách tường xưởng cắt - Cuối xưởng",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:26:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-09",
-    "name": "Tủ vòi chữa cháy vách tường số 09",
-    "category": "tu_voi_vach",
-    "location": "Vách tường kho nguyên liệu - Cửa số 1",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:28:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-10",
-    "name": "Tủ vòi chữa cháy vách tường số 10",
-    "category": "tu_voi_vach",
-    "location": "Vách tường kho nguyên liệu - Vách hông",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:30:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-11",
-    "name": "Tủ vòi chữa cháy vách tường số 11",
-    "category": "tu_voi_vach",
-    "location": "Vách tường kho thành phẩm - Cổng số 1",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:32:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-12",
-    "name": "Tủ vòi chữa cháy vách tường số 12",
-    "category": "tu_voi_vach",
-    "location": "Vách tường kho thành phẩm - Cổng số 2",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:34:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-13",
-    "name": "Tủ vòi chữa cháy vách tường số 13",
-    "category": "tu_voi_vach",
-    "location": "Khu vực lò hơi công nghiệp",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:36:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-14",
-    "name": "Tủ vòi chữa cháy vách tường số 14",
-    "category": "tu_voi_vach",
-    "location": "Hành lang nhà ăn cán bộ CNV",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:38:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-15",
-    "name": "Tủ vòi chữa cháy vách tường số 15",
-    "category": "tu_voi_vach",
-    "location": "Sảnh tầng 1 khối văn phòng",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:40:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-16",
-    "name": "Tủ vòi chữa cháy vách tường số 16",
-    "category": "tu_voi_vach",
-    "location": "Hành lang tầng 2 khối văn phòng",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:42:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-17",
-    "name": "Tủ vòi chữa cháy vách tường số 17",
-    "category": "tu_voi_vach",
-    "location": "Trụ chữa cháy ngoài trời - Cổng chính",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:44:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-18",
-    "name": "Tủ vòi chữa cháy vách tường số 18",
-    "category": "tu_voi_vach",
-    "location": "Trụ chữa cháy ngoài trời - Sau xưởng 2",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:46:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TV-19",
-    "name": "Tủ vòi chữa cháy vách tường số 19",
-    "category": "tu_voi_vach",
-    "location": "Trụ chữa cháy ngoài trời - Khu bồn chứa nhiên liệu",
-    "specs": "D50 - 20m",
-    "inspectionExpiry": "20/12/2026",
-    "lastInspection": {
-      "status": "pass",
-      "date": "2026-09-30 14:48:30",
-      "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
-    }
-  },
-  {
-    "id": "HT-TB-01",
-    "name": "Trạm bơm PCCC trung tâm nhà máy",
+    "id": "BV-TUTT",
+    "name": "Tủ báo cháy trung tâm",
     "category": "tu_trung_tam",
-    "location": "Khu bể ngầm PCCC phía sau xưởng may 2",
-    "specs": "3 máy bơm (2 điện + 1 bù áp) 7 - 9 bar",
+    "location": "BV - Phòng bảo vệ cổng chính",
+    "specs": "",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 16:00:00",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
   },
   {
-    "id": "HT-TT-01",
-    "name": "Tủ điều khiển báo cháy trung tâm YunYang",
-    "category": "tu_trung_tam",
-    "location": "Phòng trực bảo vệ cổng chính",
-    "specs": "24VDC 10 Zone",
+    "id": "TRAMBOM",
+    "name": "Trạm bơm chữa cháy",
+    "category": "tram_bom",
+    "location": "TRẠM BƠM CHỮA CHÁY",
+    "specs": "",
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-09-30 16:30:00",
+      "date": "2026-10-29 09:17:20",
       "inspectorId": "2265",
       "inspectorName": "Trần Lê Hữu Lực"
     }
