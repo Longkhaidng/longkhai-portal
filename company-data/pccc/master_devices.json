@@ -2,10 +2,10 @@
   {
     "id": "HT-CO2-01",
     "name": "Bình chữa cháy CO2 MT3 số 01",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXHT - Khu vực đóng kiện",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -19,7 +19,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực dò kim loại",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -33,7 +33,7 @@
     "category": "binh_bot",
     "location": "PXHT - Kho bán thành phẩm",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -47,7 +47,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực lộn",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -61,7 +61,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực lộn",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -75,7 +75,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực mạng",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -89,7 +89,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực in Silicon",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -103,7 +103,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực in Silicon",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -117,7 +117,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực để mực in",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -131,7 +131,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực để mực in",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -145,7 +145,7 @@
     "category": "binh_bot",
     "location": "PXHT - Kho sau dệt",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -159,7 +159,7 @@
     "category": "binh_bot",
     "location": "PXHT - Kho sau dệt",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -173,7 +173,7 @@
     "category": "binh_bot",
     "location": "PXHT - Trước văn phòng xưởng",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -187,7 +187,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực khíu",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -201,7 +201,7 @@
     "category": "binh_bot",
     "location": "PXHT - Gần kho phụ liệu",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -215,7 +215,7 @@
     "category": "binh_bot",
     "location": "PXHT - Gần kho phụ liệu",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -229,7 +229,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực đóng kiện",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -243,7 +243,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực dò kim loại",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -257,7 +257,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực bao gói",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -271,7 +271,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực bao gói",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -285,7 +285,7 @@
     "category": "binh_bot",
     "location": "PXHT - Trước văn phòng xưởng",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -299,7 +299,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực khíu",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -313,7 +313,7 @@
     "category": "binh_bot",
     "location": "PXHT - Kho bán thành phẩm",
     "specs": "8.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -327,7 +327,7 @@
     "category": "binh_bot",
     "location": "PXHT - Khu vực mạng",
     "specs": "8.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -439,7 +439,7 @@
     "category": "binh_bot",
     "location": "Khu phụ trợ - Gần cửa thoát hiểm",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -453,7 +453,7 @@
     "category": "binh_bot",
     "location": "Khu phụ trợ - Kho phế liệu",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -467,7 +467,7 @@
     "category": "binh_bot",
     "location": "Khu phụ trợ - Máy nén khí",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -481,7 +481,7 @@
     "category": "binh_bot",
     "location": "Khu phụ trợ - Gần cửa thoát hiểm",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -495,7 +495,7 @@
     "category": "binh_bot",
     "location": "Khu phụ trợ - Kho rác thải nguy hại",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -509,7 +509,7 @@
     "category": "binh_bot",
     "location": "Khu phụ trợ - Kho phế liệu",
     "specs": "8.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -523,7 +523,7 @@
     "category": "binh_bot",
     "location": "Khu phụ trợ - Lò hơi",
     "specs": "35.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -537,7 +537,7 @@
     "category": "binh_bot",
     "location": "Khu phụ trợ - Máy nén khí",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -551,7 +551,7 @@
     "category": "binh_bot",
     "location": "PXD - Cạnh cửa thoát hiểm gần kho NL",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -565,7 +565,7 @@
     "category": "binh_bot",
     "location": "PXD - Cạnh cửa thoát hiểm gần kho NL",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -579,7 +579,7 @@
     "category": "binh_bot",
     "location": "PXD - Cạnh cửa thoát hiểm gần VP xưởng",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -593,7 +593,7 @@
     "category": "binh_bot",
     "location": "PXD - Cạnh cửa thoát hiểm gần VP xưởng",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -607,7 +607,7 @@
     "category": "binh_bot",
     "location": "PXD - Cạnh tủ điện",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -621,7 +621,7 @@
     "category": "binh_bot",
     "location": "PXD - Cạnh tủ điện",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -635,7 +635,7 @@
     "category": "binh_bot",
     "location": "PXD - Giữa kệ để sợi",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -649,7 +649,7 @@
     "category": "binh_bot",
     "location": "PXD - Giữa kệ để sợi",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -733,7 +733,7 @@
     "category": "binh_bot",
     "location": "Nhà xe NV - Trước máy phát điện",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -747,7 +747,7 @@
     "category": "binh_bot",
     "location": "Nhà xe NV - Trước cửa thoát hiểm phụ kho nguyên liệu",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -761,7 +761,7 @@
     "category": "binh_bot",
     "location": "Nhà xe NV - Trước máy phát điện",
     "specs": "8.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -775,7 +775,7 @@
     "category": "binh_bot",
     "location": "Nhà xe NV - Trước cửa thoát hiểm phụ kho nguyên liệu",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -789,7 +789,7 @@
     "category": "binh_bot",
     "location": "Bảo vệ - Trong phòng bảo vệ cổng chính",
     "specs": "8.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -803,7 +803,7 @@
     "category": "binh_bot",
     "location": "Nhà xe ô tô - Cạnh cửa cuốn",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -817,7 +817,7 @@
     "category": "binh_bot",
     "location": "Trạm điện - Cạnh cửa",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -831,7 +831,7 @@
     "category": "binh_bot",
     "location": "Trạm điện - Cạnh cửa",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -845,7 +845,7 @@
     "category": "binh_bot",
     "location": "KHO - Cạnh thang máy tầng 1",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -859,7 +859,7 @@
     "category": "binh_bot",
     "location": "KHO - Cạnh thang máy tầng 1",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -873,7 +873,7 @@
     "category": "binh_bot",
     "location": "KHO - Sát tường phân xưởng dệt",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -887,7 +887,7 @@
     "category": "binh_bot",
     "location": "KHO - Sát tường phân xưởng dệt",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -901,7 +901,7 @@
     "category": "binh_bot",
     "location": "KHO - Sát tường nhà xe nhân viên",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -915,7 +915,7 @@
     "category": "binh_bot",
     "location": "KHO - Sát tường nhà xe nhân viên",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -929,7 +929,7 @@
     "category": "binh_bot",
     "location": "KHO - Cạnh thang máy tầng 2",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -943,7 +943,7 @@
     "category": "binh_bot",
     "location": "KHO - Cạnh thang máy tầng 2",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -957,7 +957,7 @@
     "category": "binh_bot",
     "location": "KHO - Gần cửa ra vào tầng lửng",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -971,7 +971,7 @@
     "category": "binh_bot",
     "location": "KHO - Gần cửa ra vào tầng lửng",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -985,7 +985,7 @@
     "category": "binh_bot",
     "location": "KHO - Gần quạt hút tầng 2",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -999,7 +999,7 @@
     "category": "tu_voi_vach",
     "location": "KHO - Sát vách tường đối diện cổng chính tầng 2",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1013,7 +1013,7 @@
     "category": "tu_voi_vach",
     "location": "KHO - Sát vách tường đối diện cổng chính tầng 2",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1027,7 +1027,7 @@
     "category": "tu_voi_vach",
     "location": "KHO - Sát vách kính tầng lửng gần cửa ra vào",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1041,7 +1041,7 @@
     "category": "binh_bot",
     "location": "KHO - Cạnh ô thông tầng giữa tầng lửng và PX dệt",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1055,7 +1055,7 @@
     "category": "binh_bot",
     "location": "KHO - Gần tủ điện tầng lửng",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1069,7 +1069,7 @@
     "category": "tu_voi_vach",
     "location": "KHO - Sát vách kính tầng lửng gần cửa ra vào",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1083,7 +1083,7 @@
     "category": "tu_voi_vach",
     "location": "KHO - Sát vách kính giữa tầng lửng",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1097,7 +1097,7 @@
     "category": "tu_voi_vach",
     "location": "KHO - Sát vách kính giữa tầng lửng",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1111,7 +1111,7 @@
     "category": "binh_bot",
     "location": "KHO - Cạnh ô thông tầng giữa tầng lửng và PX dệt",
     "specs": "8.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1125,7 +1125,7 @@
     "category": "binh_bot",
     "location": "KHO - Gần tủ điện tầng lửng",
     "specs": "8.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1139,7 +1139,7 @@
     "category": "binh_bot",
     "location": "KHO - Kho vật tư",
     "specs": "8.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1279,7 +1279,7 @@
     "category": "binh_bot",
     "location": "VP - Cạnh hồ cá gần phòng họp",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1293,7 +1293,7 @@
     "category": "binh_bot",
     "location": "VP - Phòng server",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1307,7 +1307,7 @@
     "category": "binh_bot",
     "location": "VP - Cạnh hồ cá gần nhà vệ sinh",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1321,7 +1321,7 @@
     "category": "binh_bot",
     "location": "VP - Cạnh hồ cá gần nhà vệ sinh",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1335,7 +1335,7 @@
     "category": "binh_bot",
     "location": "VP - Canteen gần cửa sổ",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1349,7 +1349,7 @@
     "category": "binh_bot",
     "location": "VP - Khu bếp",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1363,7 +1363,7 @@
     "category": "binh_bot",
     "location": "VP - Cạnh cửa khu phòng khách tầng 2",
     "specs": "10 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
@@ -1377,7 +1377,7 @@
     "category": "binh_bot",
     "location": "VP - Hành lang khu phòng khách tầng 3",
     "specs": "4.0 kg",
-    "inspectionExpiry": "Sun Dec 20 2026 07:00:00 GMT+0700 (Indochina Time)",
+    "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
       "date": "2026-10-28 09:02:10",
