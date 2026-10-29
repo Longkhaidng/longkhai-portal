@@ -22,7 +22,19 @@ export function generateMailtoUrl(payload: SendEmailPayload, baseUrl: string): s
   const approveUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=approve`;
   const rejectUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=reject`;
 
-  const detailsText = payload.details.items.map((i) => `• ${i.label}: ${i.value}`).join('\n');
+  const detailsText = payload.details.items.map((i) => {
+    if (typeof i.value === 'string' && i.value.includes('<table')) {
+      const stripped = i.value
+        .replace(/<thead[\s\S]*?<\/thead>/gi, '')
+        .replace(/<tr[\s\S]*?>/gi, '\n  - ')
+        .replace(/<td[\s\S]*?>/gi, ' ')
+        .replace(/<\/?[^>]+(>|$)/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      return `• ${i.label}:\n${stripped}`;
+    }
+    return `• ${i.label}: ${i.value}`;
+  }).join('\n');
 
   const body = `Kính gửi ${payload.managerName || 'Trưởng bộ phận'},
 
@@ -116,7 +128,7 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
 
       return `
       <tr style="background-color: ${idx % 2 === 0 ? '#ffffff' : '#f8fafc'};">
-        <td style="padding: 11px 16px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569; width: 36%; font-size: 13px;">
+        <td style="padding: 11px 16px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569; width: 36%; font-size: 13px; vertical-align: top;">
           ${item.label}
         </td>
         <td style="padding: 11px 16px; border-bottom: 1px solid #e2e8f0; color: ${item.isPrimary ? '#0284c7' : '#1e293b'}; font-weight: ${item.isPrimary ? '700' : '500'}; font-size: 13px;">
@@ -311,7 +323,19 @@ Nhân viên ${payload.employeeName} (Mã NV: ${payload.employeeId}) thuộc ${pa
 CHI TIẾT YÊU CẦU:
 - Họ và tên nhân viên: ${payload.employeeName} (${payload.employeeId})
 - Phòng ban / Xưởng: ${payload.department}
-${filteredItems.map((i) => `- ${i.label}: ${i.value || '-'}`).join('\n')}
+${filteredItems.map((i) => {
+  if (typeof i.value === 'string' && i.value.includes('<table')) {
+    const stripped = i.value
+      .replace(/<thead[\s\S]*?<\/thead>/gi, '')
+      .replace(/<tr[\s\S]*?>/gi, '\n  - ')
+      .replace(/<td[\s\S]*?>/gi, ' ')
+      .replace(/<\/?[^>]+(>|$)/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    return `- ${i.label}:\n${stripped}`;
+  }
+  return `- ${i.label}: ${i.value || '-'}`;
+}).join('\n')}
 
 BẤM ĐƯỜNG LINK ĐỂ DUYỆT HOẶC TỪ CHỐI TRỰC TIẾP:
 ✓ PHÊ DUYỆT ĐƠN: ${approveUrl}
@@ -774,13 +798,36 @@ export async function dispatchStationeryApprovalEmail(
   const toEmail = targetStep === 'hr' ? 'tuyet.vo@longkhai.com.vn' : 'Quynh.truong@longkhai.com.vn';
   const managerName = targetStep === 'hr' ? 'Chị Võ Thị Tuyết (HCNS)' : 'Chị Trương Anh Như Quỳnh (Trưởng phòng HCNS)';
 
-  const itemsListFormatted = proposal.items
-    .map((item, idx) => {
-      const approvedStr = item.approvedQuantity !== undefined ? ` (Duyệt: ${item.approvedQuantity} ${item.unit})` : '';
-      const quotaStr = item.monthlyQuota ? ` [Định mức: ${item.monthlyQuota} ${item.unit}]` : '';
-      return `${idx + 1}. [${item.itemId}] ${item.itemName} - SL: ${item.quantity} ${item.unit}${approvedStr}${quotaStr}${item.notes ? ` (${item.notes})` : ''}`;
-    })
-    .join('<br/>');
+  // Lấy số lượng nhân viên hiện tại tại nhà máy (từ danh sách nhân sự thực tế)
+  const allUsers = storage.getUsers();
+  const currentTotalEmployees = allUsers && allUsers.length > 1 ? allUsers.length : 265;
+
+  // Bảng 2 cột: "Tên mặt hàng" và "Số lượng" đề xuất
+  const itemsTableHtml = `
+    <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; border-collapse: collapse; font-size: 13px; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; margin-top: 2px;">
+      <thead>
+        <tr style="background-color: #f1f5f9; border-bottom: 2px solid #cbd5e1;">
+          <th style="padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: 700; color: #1e293b; text-align: left;">Tên mặt hàng</th>
+          <th style="padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: 700; color: #1e293b; text-align: center; width: 35%;">Số lượng</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${proposal.items
+          .map(
+            (item, idx) => `
+          <tr style="background-color: ${idx % 2 === 0 ? '#ffffff' : '#f8fafc'};">
+            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; color: #1e293b; font-weight: 500;">
+              ${item.itemId ? `<span style="color: #64748b; font-weight: 700; font-family: monospace;">[${item.itemId}]</span> ` : ''}${item.itemName}
+            </td>
+            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: center; font-weight: 700; color: #0284c7;">
+              ${item.quantity} ${item.unit || ''}
+            </td>
+          </tr>`
+          )
+          .join('')}
+      </tbody>
+    </table>
+  `.trim();
 
   const payload: SendEmailPayload = {
     toEmail,
@@ -793,10 +840,9 @@ export async function dispatchStationeryApprovalEmail(
     details: {
       title: 'Chi tiết đề xuất văn phòng phẩm',
       items: [
-        { label: 'Tổ / Bộ phận', value: proposal.department },
-        { label: 'Người nhận xử lý', value: targetStep === 'hr' ? 'Võ Thị Tuyết (Chuyên viên HCNS - 1139)' : 'Trương Anh Như Quỳnh (Trưởng phòng HCNS)' },
-        { label: 'Danh mục mặt hàng đề xuất', value: itemsListFormatted },
+        { label: 'Danh mục mặt hàng đề xuất', value: itemsTableHtml },
         { label: 'Ghi chú đề xuất', value: proposal.notes || 'Không có ghi chú' },
+        { label: 'Số lượng nhân viên hiện tại', value: `${currentTotalEmployees} người` },
         { label: 'Thời gian gửi', value: formatDateTime(proposal.createdAt) },
       ],
     },
