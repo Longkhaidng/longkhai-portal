@@ -147,9 +147,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (currentUser.permissions?.includes('repair')) return true;
       if (currentUser.permissions?.includes('leave') || currentUser.permissions?.includes('attendance')) return true;
     }
-    // PCCC inspection is accessible to all staff, HSE, electrical/mechanical maintenance, and guards
+    // PCCC inspection is strictly restricted to authorized staff who have 'pccc' permission
     if (category === 'pccc') {
-      return true;
+      return currentUser.permissions?.includes('pccc') ?? false;
     }
     return currentUser.permissions?.includes(category) ?? false;
   };

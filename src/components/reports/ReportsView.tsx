@@ -45,6 +45,13 @@ export function ReportsView() {
   const [departmentFilter, setDepartmentFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [pcccCategoryFilter, setPcccCategoryFilter] = useState('all');
+
+  const handleSelectReportType = (type: typeof reportType) => {
+    setReportType(type);
+    setStatusFilter('all');
+    setPcccCategoryFilter('all');
+  };
 
   const departments = storage.getDepartments();
   const users = storage.getUsers();
@@ -283,10 +290,42 @@ export function ReportsView() {
 
   const filteredPCCCDevices = useMemo(() => {
     return pcccDevices.filter((d) => {
+      // Status filter tailored for PCCC
       if (statusFilter === 'pass' && d.lastInspection?.status !== 'pass') return false;
       if (statusFilter === 'fail' && d.lastInspection?.status !== 'fail') return false;
       if (statusFilter === 'none' && d.lastInspection) return false;
+      if (statusFilter === 'expiring') {
+        const parts = (d.inspectionExpiry || '').split('/');
+        if (parts.length === 3) {
+          const expDate = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+          const in30 = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+          if (isNaN(expDate.getTime()) || expDate > in30) return false;
+        } else {
+          return false;
+        }
+      }
 
+      // Category filter for PCCC
+      if (pcccCategoryFilter !== 'all' && d.category !== pcccCategoryFilter) return false;
+
+      // Area / Location filter
+      if (departmentFilter !== 'all') {
+        const locUpper = (d.location || '').toUpperCase();
+        const idUpper = (d.id || '').toUpperCase();
+        const depUpper = departmentFilter.toUpperCase();
+        if (!locUpper.includes(depUpper) && !idUpper.startsWith(depUpper)) {
+          return false;
+        }
+      }
+
+      // Date Range Filter (by last inspection date)
+      if (fromDate || toDate) {
+        const inspDate = d.lastInspection?.date ? d.lastInspection.date.slice(0, 10) : '';
+        if (fromDate && (!inspDate || inspDate < fromDate)) return false;
+        if (toDate && (!inspDate || inspDate > toDate)) return false;
+      }
+
+      // Search term
       if (searchTerm.trim()) {
         const q = searchTerm.toLowerCase();
         return (
@@ -298,7 +337,7 @@ export function ReportsView() {
       }
       return true;
     });
-  }, [pcccDevices, statusFilter, searchTerm]);
+  }, [pcccDevices, statusFilter, pcccCategoryFilter, departmentFilter, fromDate, toDate, searchTerm]);
   const filteredDepartments = useMemo(() => {
     return departments.filter((d) => {
       if (departmentFilter !== 'all' && d.name !== departmentFilter) return false;
@@ -661,7 +700,7 @@ export function ReportsView() {
       {/* Select Report Type Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
         <button
-          onClick={() => setReportType('leave')}
+          onClick={() => handleSelectReportType('leave')}
           className={`p-4 rounded-2xl border text-left transition-all ${
             reportType === 'leave'
               ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-500 shadow-sm ring-1 ring-blue-500/30'
@@ -676,7 +715,7 @@ export function ReportsView() {
         </button>
 
         <button
-          onClick={() => setReportType('attendance')}
+          onClick={() => handleSelectReportType('attendance')}
           className={`p-4 rounded-2xl border text-left transition-all ${
             reportType === 'attendance'
               ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-500 shadow-sm ring-1 ring-amber-500/30'
@@ -691,7 +730,7 @@ export function ReportsView() {
         </button>
 
         <button
-          onClick={() => setReportType('gate_pass')}
+          onClick={() => handleSelectReportType('gate_pass')}
           className={`p-4 rounded-2xl border text-left transition-all ${
             reportType === 'gate_pass'
               ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 shadow-sm ring-1 ring-emerald-500/30'
@@ -706,7 +745,7 @@ export function ReportsView() {
         </button>
 
         <button
-          onClick={() => setReportType('repair')}
+          onClick={() => handleSelectReportType('repair')}
           className={`p-4 rounded-2xl border text-left transition-all ${
             reportType === 'repair'
               ? 'bg-orange-50 dark:bg-orange-950/40 border-orange-500 shadow-sm ring-1 ring-orange-500/30'
@@ -721,7 +760,7 @@ export function ReportsView() {
         </button>
 
         <button
-          onClick={() => setReportType('meal_cut')}
+          onClick={() => handleSelectReportType('meal_cut')}
           className={`p-4 rounded-2xl border text-left transition-all ${
             reportType === 'meal_cut'
               ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-500 shadow-sm ring-1 ring-rose-500/30'
@@ -736,7 +775,7 @@ export function ReportsView() {
         </button>
 
         <button
-          onClick={() => setReportType('stationery')}
+          onClick={() => handleSelectReportType('stationery')}
           className={`p-4 rounded-2xl border text-left transition-all ${
             reportType === 'stationery'
               ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-500 shadow-sm ring-1 ring-blue-500/30'
@@ -751,7 +790,7 @@ export function ReportsView() {
         </button>
 
         <button
-          onClick={() => setReportType('general')}
+          onClick={() => handleSelectReportType('general')}
           className={`p-4 rounded-2xl border text-left transition-all ${
             reportType === 'general'
               ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-500 shadow-sm ring-1 ring-purple-500/30'
@@ -766,7 +805,7 @@ export function ReportsView() {
         </button>
 
         <button
-          onClick={() => setReportType('pccc')}
+          onClick={() => handleSelectReportType('pccc')}
           className={`p-4 rounded-2xl border text-left transition-all ${
             reportType === 'pccc'
               ? 'bg-rose-50 dark:bg-rose-950/40 border-red-500 shadow-sm ring-1 ring-red-500/30'
@@ -781,7 +820,7 @@ export function ReportsView() {
         </button>
 
         <button
-          onClick={() => setReportType('departments')}
+          onClick={() => handleSelectReportType('departments')}
           className={`p-4 rounded-2xl border text-left transition-all ${
             reportType === 'departments'
               ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-500 shadow-sm ring-1 ring-purple-500/30'
@@ -806,7 +845,17 @@ export function ReportsView() {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Tìm kiếm theo mã, họ tên, lý do..."
+              placeholder={
+                reportType === 'pccc'
+                  ? 'Tìm theo mã, tên thiết bị, vị trí...'
+                  : reportType === 'departments'
+                  ? 'Tìm phòng ban, mã số, quản lý...'
+                  : reportType === 'stationery'
+                  ? 'Tìm mã, người gửi, tên VPP...'
+                  : reportType === 'repair'
+                  ? 'Tìm mã, người gửi, vị trí, sự cố...'
+                  : 'Tìm kiếm theo mã, họ tên, lý do...'
+              }
               className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {searchTerm && (
@@ -820,52 +869,133 @@ export function ReportsView() {
           </div>
 
           {/* Department Filter */}
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-1 whitespace-nowrap">
-              <Filter className="w-3.5 h-3.5 text-blue-600" />
-              Phòng ban:
-            </span>
-            <select
-              value={departmentFilter}
-              onChange={(e) => setDepartmentFilter(e.target.value)}
-              className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">Tất cả phòng ban</option>
-              {departments.map((d) => (
-                <option key={d.id} value={d.name}>
-                  {d.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Status Filter (for requests) */}
           {reportType !== 'departments' && (
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-slate-600 dark:text-slate-400 whitespace-nowrap">
+              <span className="font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-1 whitespace-nowrap text-xs">
+                <Filter className="w-3.5 h-3.5 text-blue-600" />
+                {reportType === 'pccc' ? 'Khu vực / Xưởng:' : 'Phòng ban:'}
+              </span>
+              <select
+                value={departmentFilter}
+                onChange={(e) => setDepartmentFilter(e.target.value)}
+                className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+              >
+                {reportType === 'pccc' ? (
+                  <>
+                    <option value="all">Tất cả khu vực</option>
+                    <option value="PXHT">PX Hoàn Thiện (PXHT)</option>
+                    <option value="KHO">Khu Vực Kho (KHO)</option>
+                    <option value="VP">Văn Phòng Điều Hành (VP)</option>
+                    <option value="D">Phân Xưởng Dệt (D)</option>
+                    <option value="BV">Bảo Vệ Cổng Chính (BV)</option>
+                    <option value="NX">Nhà Xe / Khu Phụ Trợ</option>
+                    <option value="TRAMBOM">Trạm Bơm Chữa Cháy</option>
+                  </>
+                ) : (
+                  <>
+                    <option value="all">Tất cả phòng ban</option>
+                    {departments.map((d) => (
+                      <option key={d.id} value={d.name}>
+                        {d.name}
+                      </option>
+                    ))}
+                  </>
+                )}
+              </select>
+            </div>
+          )}
+
+          {/* Chủng loại Filter (Dành riêng cho Kiểm tra PCCC) */}
+          {reportType === 'pccc' && (
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-slate-600 dark:text-slate-400 whitespace-nowrap text-xs">
+                Chủng loại:
+              </span>
+              <select
+                value={pcccCategoryFilter}
+                onChange={(e) => setPcccCategoryFilter(e.target.value)}
+                className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 font-medium"
+              >
+                <option value="all">Tất cả chủng loại ({pcccDevices.length})</option>
+                <option value="binh_co2">Bình CO2 (45)</option>
+                <option value="binh_bot">Bình Bột (33)</option>
+                <option value="tu_voi_vach">Tủ Vách Tường (19)</option>
+                <option value="nut_chuong">Báo Cháy (12)</option>
+                <option value="tu_trung_tam">Tủ Trung Tâm (1)</option>
+                <option value="tram_bom">Trạm Bơm (1)</option>
+              </select>
+            </div>
+          )}
+
+          {/* Status Filter (Áp dụng chính xác cho từng hạng mục) */}
+          {reportType !== 'departments' && (
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-slate-600 dark:text-slate-400 whitespace-nowrap text-xs">
                 Trạng thái:
               </span>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
               >
-                <option value="all">Tất cả trạng thái</option>
-                <option value="approved">Đã duyệt / Hoàn tất</option>
-                <option value="pending">Chờ duyệt</option>
-                <option value="rejected">Từ chối</option>
-                {reportType === 'gate_pass' && (
+                {reportType === 'pccc' ? (
                   <>
-                    <option value="departed">Đang ra ngoài</option>
-                    <option value="completed">Đã về lại</option>
+                    <option value="all">Tất cả tình trạng kiểm tra</option>
+                    <option value="pass">Đạt tiêu chuẩn kiểm định</option>
+                    <option value="fail">Cần xử lý / Hỏng</option>
+                    <option value="expiring">Hết hạn / Sắp hết hạn (30 ngày)</option>
+                    <option value="none">Chưa kiểm tra</option>
                   </>
-                )}
-                {reportType === 'repair' && (
+                ) : reportType === 'gate_pass' ? (
                   <>
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="pending">Chờ duyệt</option>
+                    <option value="approved">Đã duyệt (chưa ra)</option>
+                    <option value="departed">Đang ra ngoài</option>
+                    <option value="completed">Đã về lại / Hoàn tất</option>
+                    <option value="rejected">Bị từ chối</option>
+                  </>
+                ) : reportType === 'repair' ? (
+                  <>
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="pending_dept">Bước 1: Chờ Quản lý duyệt</option>
                     <option value="pending_manager">Bước 2: Chờ Trưởng BP duyệt</option>
                     <option value="maintenance_pending">Bước 3: Chờ Cơ điện sửa chữa</option>
-                    <option value="pending_confirmation">Bước 4: Chờ bạn xác nhận hoàn tất</option>
+                    <option value="pending_confirmation">Bước 4: Chờ nghiệm thu</option>
                     <option value="completed">Đã hoàn tất</option>
+                    <option value="rejected">Bị từ chối</option>
+                  </>
+                ) : reportType === 'stationery' ? (
+                  <>
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="pending_dept">Chờ Trưởng BP duyệt</option>
+                    <option value="pending_hr">Chờ TP HCNS phê duyệt</option>
+                    <option value="approved">Đã phê duyệt hoàn tất</option>
+                    <option value="rejected">Bị từ chối</option>
+                    <option value="cancelled">Đã hủy</option>
+                  </>
+                ) : reportType === 'general' ? (
+                  <>
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="pending_dept">Chờ Trưởng BP duyệt</option>
+                    <option value="pending_receiver">Chờ BP tiếp nhận duyệt</option>
+                    <option value="pending_hr">Chờ TP HCNS duyệt</option>
+                    <option value="approved">Đã phê duyệt hoàn tất</option>
+                    <option value="rejected">Bị từ chối</option>
+                  </>
+                ) : reportType === 'meal_cut' ? (
+                  <>
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="approved">Đã xác nhận cắt cơm</option>
+                    <option value="pending">Chờ xác nhận</option>
+                  </>
+                ) : (
+                  <>
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="approved">Đã duyệt / Hoàn tất</option>
+                    <option value="pending">Chờ duyệt</option>
+                    <option value="rejected">Bị từ chối</option>
+                    <option value="cancelled">Đã hủy</option>
                   </>
                 )}
               </select>
@@ -1575,92 +1705,98 @@ export function ReportsView() {
           )}
 
 
-          {/* PCCC REPORT TABLE */}
+          {/* PCCC REPORT TABLE - Thu nhỏ cột hiển thị trọn vẹn trong trang */}
           {reportType === 'pccc' && (
-            <table className="w-full text-left border-collapse text-xs min-w-[1360px]">
-              <thead>
-                <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
-                  <th className="p-2 border text-center w-12 whitespace-nowrap">STT</th>
-                  <th className="p-2 border text-center w-32 min-w-[120px] whitespace-nowrap">Mã thiết bị</th>
-                  <th className="p-2 border min-w-[200px] max-w-[260px]">Tên thiết bị</th>
-                  <th className="p-2 border text-center w-28 min-w-[100px] whitespace-nowrap">Chủng loại</th>
-                  <th className="p-2 border min-w-[150px] max-w-[200px]">Vị trí đặt</th>
-                  <th className="p-2 border text-center w-24 min-w-[85px] whitespace-nowrap">Chuẩn KT</th>
-                  <th className="p-2 border text-center w-24 min-w-[95px] whitespace-nowrap">Hạn KĐ</th>
-                  <th className="p-2 border text-center w-36 min-w-[135px] whitespace-nowrap">Thời gian kiểm tra</th>
-                  <th className="p-2 border w-44 min-w-[160px] whitespace-nowrap">Người kiểm tra</th>
-                  <th className="p-2 border min-w-[200px] max-w-[300px]">Chi tiết các đầu mục kiểm tra</th>
-                  <th className="p-2 border text-center w-24 min-w-[85px] whitespace-nowrap">Đánh giá</th>
-                  <th className="p-2 border text-center w-20 min-w-[75px] whitespace-nowrap">Ký nhận</th>
-                  <th className="p-2 border min-w-[130px]">Ghi chú / Đề xuất</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredPCCCDevices.length === 0 ? (
-                  <tr>
-                    <td colSpan={13} className="p-8 text-center text-slate-400">
-                      Không tìm thấy thiết bị PCCC nào phù hợp với bộ lọc hiện tại.
-                    </td>
+            <div className="overflow-x-auto w-full">
+              <table className="w-full text-left border-collapse text-[10.5px] leading-tight">
+                <thead>
+                  <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold uppercase text-[9.5px] text-slate-700 dark:text-slate-300">
+                    <th className="px-1.5 py-1.5 border text-center w-8 whitespace-nowrap">STT</th>
+                    <th className="px-1.5 py-1.5 border text-center w-22 whitespace-nowrap">Mã TB</th>
+                    <th className="px-2 py-1.5 border min-w-[125px]">Tên thiết bị</th>
+                    <th className="px-1.5 py-1.5 border text-center w-20 whitespace-nowrap">Chủng loại</th>
+                    <th className="px-2 py-1.5 border min-w-[125px]">Vị trí đặt</th>
+                    <th className="px-1.5 py-1.5 border text-center w-14 whitespace-nowrap">Chuẩn KT</th>
+                    <th className="px-1.5 py-1.5 border text-center w-20 whitespace-nowrap">Hạn KĐ</th>
+                    <th className="px-1.5 py-1.5 border text-center w-24 whitespace-nowrap">Thời gian KT</th>
+                    <th className="px-1.5 py-1.5 border text-center w-28 whitespace-nowrap">Người kiểm tra</th>
+                    <th className="px-2 py-1.5 border min-w-[140px]">Chi tiết kiểm tra</th>
+                    <th className="px-1.5 py-1.5 border text-center w-16 whitespace-nowrap">Đánh giá</th>
+                    <th className="px-1.5 py-1.5 border text-center w-14 whitespace-nowrap">Ký nhận</th>
+                    <th className="px-1.5 py-1.5 border min-w-[70px]">Ghi chú</th>
                   </tr>
-                ) : (
-                  filteredPCCCDevices.map((d, idx) => {
-                    const catInfo = PCCC_CATEGORIES[d.category];
-                    const insp = pcccInspections.find((i) => i.deviceId === d.id);
-                    const details = formatPCCCChecklistSummary(insp);
-                    const hasLast = !!d.lastInspection;
-                    const isPass = d.lastInspection?.status === 'pass';
+                </thead>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                  {filteredPCCCDevices.length === 0 ? (
+                    <tr>
+                      <td colSpan={13} className="p-8 text-center text-slate-400">
+                        Không tìm thấy thiết bị PCCC nào phù hợp với bộ lọc hiện tại.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredPCCCDevices.map((d, idx) => {
+                      const catInfo = PCCC_CATEGORIES[d.category];
+                      const insp = pcccInspections.find((i) => i.deviceId === d.id);
+                      const details = formatPCCCChecklistSummary(insp);
+                      const hasLast = !!d.lastInspection;
+                      const isPass = d.lastInspection?.status === 'pass';
 
-                    return (
-                      <tr key={d.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                        <td className="p-2 border text-center font-bold text-slate-500 whitespace-nowrap">{idx + 1}</td>
-                        <td className="p-2 border font-mono font-bold text-red-600 text-center whitespace-nowrap">{d.id}</td>
-                        <td className="p-2 border font-semibold text-slate-900 dark:text-white leading-tight">{d.name}</td>
-                        <td className="p-2 border text-center whitespace-nowrap">
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 border whitespace-nowrap inline-block">
-                            {catInfo?.name || d.category}
-                          </span>
-                        </td>
-                        <td className="p-2 border leading-tight">{d.location}</td>
-                        <td className="p-2 border text-center font-mono whitespace-nowrap">{d.specs}</td>
-                        <td className="p-2 border text-center whitespace-nowrap font-mono">{formatPCCCDate(d.inspectionExpiry)}</td>
-                        <td className="p-2 border text-center text-[11px] whitespace-nowrap font-mono text-slate-600 dark:text-slate-300">
-                          {d.lastInspection?.date || insp?.inspectedAt || '-'}
-                        </td>
-                        <td className="p-2 border font-medium whitespace-nowrap">
-                          {d.lastInspection
-                            ? `${d.lastInspection.inspectorName} (${d.lastInspection.inspectorId})`
-                            : insp
-                            ? `${insp.inspectorName} (${insp.inspectorId})`
-                            : '-'}
-                        </td>
-                        <td className="p-2 border text-[11px] text-slate-700 dark:text-slate-300 max-w-xs whitespace-pre-line leading-tight">
-                          {details}
-                        </td>
-                        <td className="p-2 border text-center whitespace-nowrap">
-                          {hasLast ? (
-                            <span
-                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold border whitespace-nowrap inline-block ${
-                                isPass
-                                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                                  : 'bg-rose-100 text-rose-800 border-rose-300'
-                              }`}
-                            >
-                              {isPass ? 'ĐẠT' : 'KHÔNG ĐẠT'}
+                      return (
+                        <tr key={d.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                          <td className="px-1.5 py-1 border text-center font-bold text-slate-500 whitespace-nowrap">{idx + 1}</td>
+                          <td className="px-1.5 py-1 border font-mono font-bold text-red-600 text-center whitespace-nowrap">{d.id}</td>
+                          <td className="px-2 py-1 border font-semibold text-slate-900 dark:text-white leading-tight">{d.name}</td>
+                          <td className="px-1.5 py-1 border text-center whitespace-nowrap">
+                            <span className="px-1.5 py-0.5 rounded-full text-[9.5px] font-bold bg-slate-100 dark:bg-slate-800 border whitespace-nowrap inline-block">
+                              {catInfo?.name || d.category}
                             </span>
-                          ) : (
-                            <span className="text-slate-400 text-[10px] whitespace-nowrap">Chưa KT</span>
-                          )}
-                        </td>
-                        <td className="p-2 border text-center whitespace-nowrap"></td>
-                        <td className="p-2 border text-slate-500 italic max-w-xs truncate" title={d.lastInspection?.notes || insp?.notes || ''}>
-                          {d.lastInspection?.notes || insp?.notes || '-'}
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
+                          </td>
+                          <td className="px-2 py-1 border leading-tight text-slate-700 dark:text-slate-300">{d.location}</td>
+                          <td className="px-1.5 py-1 border text-center font-mono whitespace-nowrap text-[10px]">{d.specs}</td>
+                          <td className="px-1.5 py-1 border text-center whitespace-nowrap font-mono text-[10px]">{formatPCCCDate(d.inspectionExpiry)}</td>
+                          <td className="px-1.5 py-1 border text-center text-[10px] whitespace-nowrap font-mono text-slate-600 dark:text-slate-300">
+                            {d.lastInspection?.date || insp?.inspectedAt || '-'}
+                          </td>
+                          <td className="px-1.5 py-1 border text-center whitespace-nowrap text-[10px]">
+                            {d.lastInspection
+                              ? `${d.lastInspection.inspectorName} (${d.lastInspection.inspectorId})`
+                              : insp
+                              ? `${insp.inspectorName} (${insp.inspectorId})`
+                              : '-'}
+                          </td>
+                          <td className="px-2 py-1 border text-[10px] text-slate-700 dark:text-slate-300 max-w-[200px] leading-tight">
+                            {details}
+                          </td>
+                          <td className="px-1.5 py-1 border text-center whitespace-nowrap">
+                            {hasLast ? (
+                              <span
+                                className={`px-1.5 py-0.5 rounded-full text-[9px] font-bold border whitespace-nowrap inline-block ${
+                                  isPass
+                                    ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                                    : 'bg-rose-100 text-rose-800 border-rose-300'
+                                }`}
+                              >
+                                {isPass ? 'ĐẠT' : 'KHÔNG ĐẠT'}
+                              </span>
+                            ) : (
+                              <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-slate-100 text-slate-600 border border-slate-300 whitespace-nowrap inline-block">
+                                CHƯA KT
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-1.5 py-1 border text-center whitespace-nowrap text-[10px] font-medium text-slate-600">
+                            {hasLast ? 'Đã ký' : '-'}
+                          </td>
+                          <td className="px-1.5 py-1 border text-[10px] text-slate-500 italic max-w-[100px] truncate" title={d.notes || d.lastInspection?.notes || ''}>
+                            {d.notes || d.lastInspection?.notes || '-'}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
           )}
 
           {/* DEPARTMENTS REPORT TABLE */}

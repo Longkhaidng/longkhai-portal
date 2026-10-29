@@ -290,6 +290,7 @@ function PortalAppContent() {
       case 'proposals_general':
         return <ProposalHubView initialCategory="general" />;
       case 'pccc':
+        if (!hasPermission('pccc')) return <DashboardView onNavigateTab={(tab: string) => setCurrentTab(tab)} />;
         return <PCCCInspectionView />;
       case 'announcements':
         return <AnnouncementView />;
