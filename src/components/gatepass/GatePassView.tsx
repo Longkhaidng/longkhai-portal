@@ -66,6 +66,27 @@ export function GatePassView() {
   const [isRejecting, setIsRejecting] = useState(false);
   const [passRejectionReason, setPassRejectionReason] = useState('');
 
+  // Auto-select document from URL params (e.g. from email link)
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlType = urlParams.get('type');
+      const urlId = urlParams.get('id');
+      const action = urlParams.get('action');
+      if (urlType === 'gate_pass' && urlId) {
+        setScopeFilter('all');
+        const found = passes.find((p) => p.id.toLowerCase() === urlId.toLowerCase());
+        if (found) {
+          setSelectedPass(found);
+          if (action === 'reject') {
+            setIsRejecting(true);
+          }
+          window.history.replaceState({}, '', window.location.pathname);
+        }
+      }
+    }
+  }, [passes]);
+
   // Listen for storage changes to keep gate passes synchronized
   React.useEffect(() => {
     const handleStorageChange = () => {

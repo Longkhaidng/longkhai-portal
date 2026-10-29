@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
-import { Lock, User, AlertCircle, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { Lock, User, AlertCircle, ArrowRight, Eye, EyeOff, FileText } from 'lucide-react';
 
 export function LoginForm() {
   const { login } = useAuth();
@@ -11,6 +11,37 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [approvalDocInfo, setApprovalDocInfo] = useState<{
+    id: string;
+    type: string;
+    typeName: string;
+    action: string;
+  } | null>(null);
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const sp = new URLSearchParams(window.location.search);
+      const id = sp.get('id');
+      const type = sp.get('type');
+      const action = sp.get('action') || 'approve';
+      if (id && type) {
+        const typeNameMap: Record<string, string> = {
+          leave: 'Đơn xin nghỉ phép',
+          attendance: 'Phiếu xác nhận công',
+          gate_pass: 'Phiếu ra vào cổng',
+          repair: 'Đề xuất sửa chữa',
+          stationery: 'Đề xuất văn phòng phẩm',
+          general: 'Đề xuất khác',
+        };
+        setApprovalDocInfo({
+          id,
+          type,
+          typeName: typeNameMap[type] || 'Phiếu yêu cầu',
+          action,
+        });
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,6 +93,18 @@ export function LoginForm() {
               Sử dụng <span className="font-semibold text-blue-600 dark:text-blue-400">Mã số nhân viên</span> do công ty cấp để đăng nhập.
             </p>
           </div>
+
+          {approvalDocInfo && (
+            <div className="mb-5 p-3.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-200 text-xs leading-relaxed animate-in fade-in duration-200">
+              <div className="font-bold flex items-center gap-1.5 mb-1 text-blue-700 dark:text-blue-300">
+                <FileText className="w-4 h-4 shrink-0" />
+                <span>Yêu cầu phê duyệt {approvalDocInfo.typeName}</span>
+              </div>
+              <p className="text-slate-600 dark:text-slate-300">
+                Bạn đang mở phiếu mã <b className="font-mono text-blue-800 dark:text-blue-100">{approvalDocInfo.id}</b>. Vui lòng đăng nhập bằng tài khoản Quản lý để xem chi tiết và thực hiện {approvalDocInfo.action === 'reject' ? 'từ chối' : 'phê duyệt'} trên website.
+              </p>
+            </div>
+          )}
 
           {error && (
             <div className="mb-5 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/60 flex items-start gap-3 text-rose-700 dark:text-rose-300 text-xs leading-relaxed animate-in fade-in duration-200">

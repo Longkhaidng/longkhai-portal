@@ -19,8 +19,8 @@ export function generateMailtoUrl(payload: SendEmailPayload, baseUrl: string): s
       : 'PHIẾU ĐỀ XUẤT SỬA CHỮA';
   const subject = `[Long Khải Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
 
-  const approveUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=approve`;
-  const rejectUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=reject`;
+  const approveUrl = `${baseUrl}/?type=${payload.type}&id=${payload.docId}&action=approve`;
+  const rejectUrl = `${baseUrl}/?type=${payload.type}&id=${payload.docId}&action=reject`;
 
   const detailsText = payload.details.items.map((i) => {
     if (typeof i.value === 'string' && i.value.includes('<table')) {
@@ -44,12 +44,13 @@ CHI TIẾT YÊU CẦU:
 ${detailsText}
 
 --------------------------------------------------
-👉 BẤM VÀO ĐÂY ĐỂ PHÊ DUYỆT ĐƠN:
+👉 BẤM VÀO ĐÂY ĐỂ ĐĂNG NHẬP VÀ PHÊ DUYỆT ĐƠN TẠI WEBSITE:
 ${approveUrl}
 
-👉 BẤM VÀO ĐÂY ĐỂ TỪ CHỐI ĐƠN:
+👉 BẤM VÀO ĐÂY ĐỂ ĐĂNG NHẬP VÀ TỪ CHỐI ĐƠN TẠI WEBSITE:
 ${rejectUrl}
 --------------------------------------------------
+* Quý Trưởng bộ phận vui lòng đăng nhập vào Cổng Thông Tin Long Khải để thực hiện phê duyệt / từ chối đơn.
 
 Trân trọng,
 Cổng Thông Tin Long Khải Portal
@@ -79,8 +80,8 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
       : 'PHIẾU ĐỀ XUẤT SỬA CHỮA';
   const subject = `[Long Khải Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
 
-  const approveUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=approve`;
-  const rejectUrl = `${baseUrl}/approve?type=${payload.type}&id=${payload.docId}&action=reject`;
+  const approveUrl = `${baseUrl}/?type=${payload.type}&id=${payload.docId}&action=approve`;
+  const rejectUrl = `${baseUrl}/?type=${payload.type}&id=${payload.docId}&action=reject`;
 
   // Deduplicate items to avoid repeating employeeName and department
   const filteredItems = (payload.details?.items || []).filter((item) => {
@@ -123,7 +124,7 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
     .map((item, idx) => {
       const isProposedSolution = item.label === 'Đề xuất hướng khắc phục';
       const displayVal = isProposedSolution
-        ? `<span style="display: inline-block; background-color: #fef3c7; border: 1px solid #fde68a; color: #b45309; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">👇 Trưởng bộ phận nhập vào ô bên dưới khi duyệt</span>`
+        ? `<span style="display: inline-block; background-color: #fef3c7; border: 1px solid #fde68a; color: #b45309; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">Chờ Trưởng bộ phận nhập khi duyệt trên website</span>`
         : (item.value || '-');
 
       return `
@@ -199,65 +200,11 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
               </table>
 
               <!-- Action Buttons Card -->
-              ${payload.type === 'repair' ? `
-              <!-- DÀNH RIÊNG CHO ĐỀ XUẤT SỬA CHỮA: Form nhập đề xuất hướng khắc phục trực tiếp từ email -->
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fffbeb; border: 2px solid #f59e0b; border-radius: 14px; margin-bottom: 20px;">
-                <tr>
-                  <td style="padding: 22px 18px;">
-                    <div style="font-size: 14px; font-weight: 800; color: #92400e; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">
-                      📝 DÀNH CHO TRƯỞNG BỘ PHẬN PHÊ DUYỆT:
-                    </div>
-                    <div style="font-size: 12.5px; color: #78350f; margin-bottom: 14px; line-height: 1.5;">
-                      Quý Trưởng bộ phận nhập <b>Đề xuất hướng khắc phục</b> (chỉ đạo cho Cơ điện) trực tiếp vào ô bên dưới rồi bấm <b>PHÊ DUYỆT & GỬI CƠ ĐIỆN</b>:
-                    </div>
-
-                    <!-- HTML Form cho ứng dụng email hỗ trợ form gõ trực tiếp -->
-                    <form action="${approveUrl}" method="GET" target="_blank" style="margin: 0; padding: 0;">
-                      <input type="hidden" name="type" value="repair" />
-                      <input type="hidden" name="id" value="${payload.docId}" />
-                      <input type="hidden" name="action" value="approve" />
-                      <textarea name="proposedSolution" rows="3" placeholder="Nhập ý kiến đề xuất hướng khắc phục, chỉ đạo kiểm tra hoặc thay thế linh kiện cho Bộ phận Cơ điện..." style="width: 100%; box-sizing: border-box; border: 1.5px solid #d97706; border-radius: 8px; padding: 10px; font-size: 13px; font-family: inherit; resize: vertical; margin-bottom: 14px; background-color: #ffffff; color: #1e293b;"></textarea>
-                      
-                      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                        <tr>
-                          <td align="center">
-                            <button type="submit" style="background-color: #d97706; color: #ffffff; padding: 13px 30px; border-radius: 8px; font-size: 13px; font-weight: 800; border: none; cursor: pointer; display: inline-block; letter-spacing: 0.5px;">
-                              ✓ PHÊ DUYỆT & GỬI BỘ PHẬN CƠ ĐIỆN
-                            </button>
-                          </td>
-                        </tr>
-                      </table>
-                    </form>
-
-                    <!-- Nút mở link trực tiếp cho Outlook hoặc ứng dụng email chặn gõ trong mail -->
-                    <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed #cbd5e1; text-align: center;">
-                      <div style="font-size: 11.5px; color: #64748b; margin-bottom: 10px; font-style: italic;">
-                        * Nếu ứng dụng email của bạn (như Outlook) không cho phép gõ trực tiếp trong ô trên, vui lòng bấm nút dưới đây để mở trang duyệt và nhập nội dung:
-                      </div>
-                      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 440px; margin: 0 auto;">
-                        <tr>
-                          <td align="center" style="padding: 4px;">
-                            <a href="${approveUrl}" target="_blank" style="display: block; background-color: #059669; color: #ffffff; text-decoration: none; padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 800; text-align: center;">
-                              👉 MỞ TRANG NHẬP HƯỚNG KHẮC PHỤC & DUYỆT
-                            </a>
-                          </td>
-                          <td align="center" style="padding: 4px; width: 120px;">
-                            <a href="${rejectUrl}" target="_blank" style="display: block; background-color: #e11d48; color: #ffffff; text-decoration: none; padding: 12px 16px; border-radius: 8px; font-size: 13px; font-weight: 800; text-align: center;">
-                              ✕ TỪ CHỐI
-                            </a>
-                          </td>
-                        </tr>
-                      </table>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-              ` : `
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; margin-bottom: 20px;">
                 <tr>
                   <td style="padding: 22px 18px; text-align: center;">
                     <div style="font-size: 13px; font-weight: 800; color: #1e293b; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 16px;">
-                      BẤM NÚT ĐỂ DUYỆT HOẶC TỪ CHỐI TRỰC TIẾP:
+                      BẤM NÚT ĐỂ DUYỆT HOẶC TỪ CHỐI TẠI WEBSITE:
                     </div>
                     
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 440px; margin: 0 auto;">
@@ -278,12 +225,11 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
                     </table>
 
                     <div style="font-size: 11px; color: #64748b; margin-top: 14px; font-style: italic;">
-                      * Khi bấm phê duyệt hoặc từ chối, hệ thống sẽ tự động ghi nhận kết quả và cập nhật ngay cho người lao động.
+                      * Quý Trưởng bộ phận vui lòng đăng nhập vào Cổng Thông Tin Long Khải để xem chi tiết và thực hiện phê duyệt / từ chối đơn tại website.
                     </div>
                   </td>
                 </tr>
               </table>
-              `}
 
 
               <div style="text-align: center; font-size: 12px; color: #94a3b8;">
@@ -337,11 +283,11 @@ ${filteredItems.map((i) => {
   return `- ${i.label}: ${i.value || '-'}`;
 }).join('\n')}
 
-BẤM ĐƯỜNG LINK ĐỂ DUYỆT HOẶC TỪ CHỐI TRỰC TIẾP:
+BẤM ĐƯỜNG LINK ĐỂ DUYỆT HOẶC TỪ CHỐI ĐƠN TẠI WEBSITE:
 ✓ PHÊ DUYỆT ĐƠN: ${approveUrl}
 ✕ TỪ CHỐI ĐƠN: ${rejectUrl}
 
-* Khi bấm phê duyệt hoặc từ chối, hệ thống sẽ tự động ghi nhận kết quả và cập nhật ngay cho người lao động.
+* Quý Trưởng bộ phận vui lòng đăng nhập vào Cổng Thông Tin Long Khải để thực hiện phê duyệt / từ chối đơn tại website.
 Hoặc đăng nhập vào Cổng Thông Tin: ${baseUrl}
 Email này được gửi tự động từ Hệ thống Cổng Thông Tin Long Khải Portal. Vui lòng không trả lời trực tiếp email này.`;
 

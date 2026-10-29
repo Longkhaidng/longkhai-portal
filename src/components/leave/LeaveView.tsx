@@ -87,6 +87,27 @@ export function LeaveView() {
   const [isApproving, setIsApproving] = useState(false);
   const [isRejectingModal, setIsRejectingModal] = useState(false);
 
+  // Auto-select document from URL params (e.g. from email link)
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlType = urlParams.get('type');
+      const urlId = urlParams.get('id');
+      const action = urlParams.get('action');
+      if (urlType === 'leave' && urlId) {
+        setScopeFilter('all');
+        const found = leaves.find((l) => l.id.toLowerCase() === urlId.toLowerCase());
+        if (found) {
+          setSelectedLeave(found);
+          if (action === 'reject') {
+            setIsRejectingModal(true);
+          }
+          window.history.replaceState({}, '', window.location.pathname);
+        }
+      }
+    }
+  }, [leaves]);
+
   // Form states for new Leave Request
   const [leaveType, setLeaveType] = useState<LeaveType>('phep_nam');
   const [fromDate, setFromDate] = useState('');

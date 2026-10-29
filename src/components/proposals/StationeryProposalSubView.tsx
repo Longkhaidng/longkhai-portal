@@ -148,6 +148,26 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
+  // Auto-select proposal from URL params (e.g. from email link)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlType = urlParams.get('type');
+      const urlId = urlParams.get('id');
+      const action = urlParams.get('action');
+      if (urlType === 'stationery' && urlId) {
+        const found = proposals.find((p) => p.id.toLowerCase() === urlId.toLowerCase());
+        if (found) {
+          setSelectedProposal(found);
+          if (action === 'reject') {
+            setIsRejecting(true);
+          }
+          window.history.replaceState({}, '', window.location.pathname);
+        }
+      }
+    }
+  }, [proposals]);
+
   // Update selected proposal if proposals list updates
   useEffect(() => {
     if (selectedProposal) {

@@ -46,9 +46,19 @@ function PortalAppContent() {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('pccc')) {
         setCurrentTab('pccc');
+      } else {
+        const targetType = urlParams.get('type');
+        if (targetType) {
+          if (targetType === 'leave') setCurrentTab('leave');
+          else if (targetType === 'attendance') setCurrentTab('attendance');
+          else if (targetType === 'gate_pass') setCurrentTab('gate_pass');
+          else if (targetType === 'repair') setCurrentTab('proposals_repair');
+          else if (targetType === 'stationery') setCurrentTab('proposals_stationery');
+          else if (targetType === 'general') setCurrentTab('proposals_general');
+        }
       }
     }
-  }, []);
+  }, [currentUser]);
 
   // Loading state
   if (isLoading) {

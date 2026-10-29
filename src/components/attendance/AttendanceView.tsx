@@ -121,6 +121,27 @@ export function AttendanceView() {
   const [isRejecting, setIsRejecting] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
 
+  // Auto-select document from URL params (e.g. from email link)
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlType = urlParams.get('type');
+      const urlId = urlParams.get('id');
+      const action = urlParams.get('action');
+      if (urlType === 'attendance' && urlId) {
+        setScopeFilter('all');
+        const found = attendances.find((a) => a.id.toLowerCase() === urlId.toLowerCase());
+        if (found) {
+          setSelectedItem(found);
+          if (action === 'reject') {
+            setIsRejecting(true);
+          }
+          window.history.replaceState({}, '', window.location.pathname);
+        }
+      }
+    }
+  }, [attendances]);
+
   // Approval selection options: Tổ trưởng duyệt & Trưởng bộ phận duyệt
   const [needTeamLeader, setNeedTeamLeader] = useState<boolean>(true);
   const [needManager, setNeedManager] = useState<boolean>(true);
