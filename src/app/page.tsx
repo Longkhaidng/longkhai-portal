@@ -89,32 +89,32 @@ function PortalAppContent() {
   // Calculate pending counts for badges based on user role and permissions
   const isSecurity = isSecurityRole(currentUser);
   const canManageOthers = isApproverRole(currentUser);
-  const userLeaves = React.useMemo(() => filterUserLeaves(storage.getLeaveRequests(), currentUser, canManageOthers ? 'approver' : 'my'), [currentUser, canManageOthers, dataVersion]);
-  const userAtts = React.useMemo(() => filterUserAttendances(
+  const userLeaves = filterUserLeaves(storage.getLeaveRequests(), currentUser, canManageOthers ? 'approver' : 'my');
+  const userAtts = filterUserAttendances(
     storage.getAttendanceConfirms(),
     currentUser,
     canManageOthers || isSecurity ? 'approver' : 'my'
-  ), [currentUser, canManageOthers, isSecurity, dataVersion]);
-  const userGps = React.useMemo(() => filterUserGatePasses(
+  );
+  const userGps = filterUserGatePasses(
     storage.getGatePasses(),
     currentUser,
     canManageOthers || isSecurity ? 'approver' : 'my'
-  ), [currentUser, canManageOthers, isSecurity, dataVersion]);
-  const userRepairs = React.useMemo(() => filterUserRepairProposals(
+  );
+  const userRepairs = filterUserRepairProposals(
     storage.getRepairProposals(),
     currentUser,
     canManageOthers || isMaintenanceStaff(currentUser) ? 'approver' : 'my'
-  ), [currentUser, canManageOthers, dataVersion]);
-  const userStationeries = React.useMemo(() => filterUserStationeryProposals(
+  );
+  const userStationeries = filterUserStationeryProposals(
     storage.getStationeryProposals(),
     currentUser,
     canManageOthers ? 'approver' : 'my'
-  ), [currentUser, canManageOthers, dataVersion]);
-  const userGenerals = React.useMemo(() => filterUserGeneralProposals(
+  );
+  const userGenerals = filterUserGeneralProposals(
     storage.getGeneralProposals(),
     currentUser,
     canManageOthers ? 'approver' : 'my'
-  ), [currentUser, canManageOthers, dataVersion]);
+  );
 
   const pendingLeaves = userLeaves.filter((l) => l.status === 'pending').length;
   const pendingAtts = userAtts.filter((a) => a.status === 'pending').length;
