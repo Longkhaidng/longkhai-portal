@@ -1,0 +1,23 @@
+{
+  "id": "INSP-20261029-370",
+  "deviceId": "HT-TU-02",
+  "deviceName": "Tủ chữa cháy vách tường & ngoài trời số 02",
+  "category": "tu_voi_vach",
+  "location": "PXHT - Khu vực bao gói",
+  "inspectorId": "2265",
+  "inspectorName": "Trần Lê Hữu Lực",
+  "inspectedAt": "2026-10-29 16:19:36",
+  "overallResult": "pass",
+  "notes": "",
+  "checklist": {
+    "type": "tu_voi_vach",
+    "data": {
+      "angleValve": "pass",
+      "hoseLeak": "pass",
+      "hoseCoupling": "pass",
+      "nozzleAvailability": "pass",
+      "nozzleCoupling": "pass"
+    }
+  },
+  "createdAt": "2026-10-29T09:19:36.812Z"
+}
