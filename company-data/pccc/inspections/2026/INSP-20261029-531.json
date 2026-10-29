@@ -1,0 +1,24 @@
+{
+  "id": "INSP-20261029-531",
+  "deviceId": "TRAMBOM",
+  "deviceName": "Trạm bơm chữa cháy",
+  "category": "tram_bom",
+  "location": "TRẠM BƠM CHỮA CHÁY",
+  "inspectorId": "2265",
+  "inspectorName": "Trần Lê Hữu Lực",
+  "inspectedAt": "2026-10-29 16:20:18",
+  "overallResult": "pass",
+  "notes": "",
+  "checklist": {
+    "type": "tram_bom",
+    "data": {
+      "electricalControl": "pass",
+      "mainPump1": "pass",
+      "mainPump2": "pass",
+      "jockeyPump": "pass",
+      "pressureGauge": "pass",
+      "waterLevel": "pass"
+    }
+  },
+  "createdAt": "2026-10-29T09:20:18.140Z"
+}
