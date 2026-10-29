@@ -9,14 +9,16 @@
       "itemName": "Băng keo 2 mặt 4F8",
       "unit": "cuộn",
       "monthlyQuota": 5,
-      "quantity": 2
+      "quantity": 2,
+      "approvedQuantity": 2
     },
     {
       "itemId": "PIN2",
       "itemName": "Pin đũa panasonic",
       "unit": "cặp",
       "monthlyQuota": 5,
-      "quantity": 7
+      "quantity": 7,
+      "approvedQuantity": 7
     }
   ],
   "receiverStaffId": "1139",
@@ -25,7 +27,7 @@
   "managerId": "1867",
   "managerName": "Trương Anh Như Quỳnh",
   "managerEmail": "Quynh.truong@longkhai.com.vn",
-  "status": "pending_hr",
+  "status": "pending_manager",
   "steps": [
     {
       "step": 1,
@@ -45,7 +47,9 @@
       "approverId": "1139",
       "approverName": "Võ Thị Tuyết",
       "approverEmail": "tuyet.vo@longkhai.com.vn",
-      "status": "pending"
+      "status": "approved",
+      "updatedAt": "2026-10-29T07:12:35.144Z",
+      "comment": "Chuyên viên HCNS đồng ý đề xuất và chuyển duyệt"
     },
     {
       "step": 3,
@@ -58,13 +62,15 @@
       "status": "pending"
     }
   ],
-  "currentStepIndex": 1,
+  "currentStepIndex": 2,
   "createdAt": "2026-10-29T07:12:08.961Z",
-  "updatedAt": "2026-10-29T07:12:08.961Z",
+  "updatedAt": "2026-10-29T07:12:35.144Z",
   "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
   "emailConfig": {
     "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
     "senderName": "Cổng Thông Tin Long Khai",
     "portalBaseUrl": "https://longkhai-portal.vercel.app"
-  }
+  },
+  "receiverApprovedAt": "2026-10-29T07:12:35.144Z",
+  "receiverComment": ""
 }
