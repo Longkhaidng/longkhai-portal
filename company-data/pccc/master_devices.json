@@ -16,7 +16,7 @@
   {
     "id": "HT-CO2-02",
     "name": "Bình chữa cháy CO2 MT3 số 02",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXHT - Khu vực dò kim loại",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -30,7 +30,7 @@
   {
     "id": "HT-CO2-03",
     "name": "Bình chữa cháy CO2 MT3 số 03",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXHT - Kho bán thành phẩm",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -44,7 +44,7 @@
   {
     "id": "HT-CO2-04",
     "name": "Bình chữa cháy CO2 MT3 số 04",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXHT - Khu vực lộn",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -58,7 +58,7 @@
   {
     "id": "HT-CO2-05",
     "name": "Bình chữa cháy CO2 MT3 số 05",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXHT - Khu vực lộn",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -72,7 +72,7 @@
   {
     "id": "HT-CO2-06",
     "name": "Bình chữa cháy CO2 MT3 số 06",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXHT - Khu vực mạng",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -86,7 +86,7 @@
   {
     "id": "HT-CO2-07",
     "name": "Bình chữa cháy CO2 MT3 số 07",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXHT - Khu vực in Silicon",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -100,7 +100,7 @@
   {
     "id": "HT-CO2-08",
     "name": "Bình chữa cháy CO2 MT3 số 08",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXHT - Khu vực in Silicon",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -114,7 +114,7 @@
   {
     "id": "HT-CO2-09",
     "name": "Bình chữa cháy CO2 MT3 số 09",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXHT - Khu vực để mực in",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -128,7 +128,7 @@
   {
     "id": "HT-CO2-10",
     "name": "Bình chữa cháy CO2 MT3 số 10",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXHT - Khu vực để mực in",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -142,7 +142,7 @@
   {
     "id": "HT-CO2-11",
     "name": "Bình chữa cháy CO2 MT3 số 11",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXHT - Kho sau dệt",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -156,7 +156,7 @@
   {
     "id": "HT-CO2-12",
     "name": "Bình chữa cháy CO2 MT3 số 12",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXHT - Kho sau dệt",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -170,7 +170,7 @@
   {
     "id": "HT-CO2-13",
     "name": "Bình chữa cháy CO2 MT3 số 13",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXHT - Trước văn phòng xưởng",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -184,7 +184,7 @@
   {
     "id": "HT-CO2-14",
     "name": "Bình chữa cháy CO2 MT3 số 14",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXHT - Khu vực khíu",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -338,7 +338,7 @@
   {
     "id": "HT-TU-01",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 01",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "PXHT - Gần kho phụ liệu",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -352,7 +352,7 @@
   {
     "id": "HT-TU-02",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 02",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "PXHT - Khu vực bao gói",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -366,7 +366,7 @@
   {
     "id": "HT-TU-03",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 03",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "PXHT - Khu vực in Silicon",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -380,7 +380,7 @@
   {
     "id": "HT-TU-04",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 04",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "PXHT - Kho sau dệt",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -394,7 +394,7 @@
   {
     "id": "HT-TU-05",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 05",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "PXHT - Trước văn phòng xưởng",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -408,7 +408,7 @@
   {
     "id": "HT-CH-01",
     "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 01",
-    "category": "binh_bot",
+    "category": "nut_chuong",
     "location": "PXHT - Gần kho phụ liệu",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -422,7 +422,7 @@
   {
     "id": "HT-CH-02",
     "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 02",
-    "category": "binh_bot",
+    "category": "nut_chuong",
     "location": "PXHT - Kho sau dệt",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -436,7 +436,7 @@
   {
     "id": "PT-CO2-15",
     "name": "Bình chữa cháy CO2 MT3 số 15",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "Khu phụ trợ - Gần cửa thoát hiểm",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -450,7 +450,7 @@
   {
     "id": "PT-CO2-16",
     "name": "Bình chữa cháy CO2 MT3 số 16",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "Khu phụ trợ - Kho phế liệu",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -464,7 +464,7 @@
   {
     "id": "PT-CO2-17",
     "name": "Bình chữa cháy CO2 MT3 số 17",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "Khu phụ trợ - Máy nén khí",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -548,7 +548,7 @@
   {
     "id": "D-CO2-18",
     "name": "Bình chữa cháy CO2 MT3 số 18",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXD - Cạnh cửa thoát hiểm gần kho NL",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -562,7 +562,7 @@
   {
     "id": "D-CO2-19",
     "name": "Bình chữa cháy CO2 MT3 số 19",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXD - Cạnh cửa thoát hiểm gần kho NL",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -576,7 +576,7 @@
   {
     "id": "D-CO2-20",
     "name": "Bình chữa cháy CO2 MT3 số 20",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXD - Cạnh cửa thoát hiểm gần VP xưởng",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -590,7 +590,7 @@
   {
     "id": "D-CO2-21",
     "name": "Bình chữa cháy CO2 MT3 số 21",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXD - Cạnh cửa thoát hiểm gần VP xưởng",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -604,7 +604,7 @@
   {
     "id": "D-CO2-22",
     "name": "Bình chữa cháy CO2 MT3 số 22",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXD - Cạnh tủ điện",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -618,7 +618,7 @@
   {
     "id": "D-CO2-23",
     "name": "Bình chữa cháy CO2 MT3 số 23",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXD - Cạnh tủ điện",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -632,7 +632,7 @@
   {
     "id": "D-CO2-24",
     "name": "Bình chữa cháy CO2 MT3 số 24",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXD - Giữa kệ để sợi",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -646,7 +646,7 @@
   {
     "id": "D-CO2-25",
     "name": "Bình chữa cháy CO2 MT3 số 25",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "PXD - Giữa kệ để sợi",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -660,7 +660,7 @@
   {
     "id": "D-CH-03",
     "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 03",
-    "category": "binh_bot",
+    "category": "nut_chuong",
     "location": "PXD - Cạnh cửa thoát hiểm gần kho NL",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -674,7 +674,7 @@
   {
     "id": "D-CH-04",
     "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 04",
-    "category": "binh_bot",
+    "category": "nut_chuong",
     "location": "PXD - Cạnh cửa thoát hiểm gần VP xưởng",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -688,7 +688,7 @@
   {
     "id": "D-TU-06",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 06",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "PXD - Cạnh cửa thoát hiểm gần kho NL",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -702,7 +702,7 @@
   {
     "id": "D-TU-07",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 07",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "PXD - Cạnh cửa thoát hiểm gần VP xưởng",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -716,7 +716,7 @@
   {
     "id": "D-TU-08",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 08",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "PXD - Giữa kệ để sợi",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -730,7 +730,7 @@
   {
     "id": "NX-CO2-26",
     "name": "Bình chữa cháy CO2 MT3 số 26",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "Nhà xe NV - Trước máy phát điện",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -744,7 +744,7 @@
   {
     "id": "NX-CO2-27",
     "name": "Bình chữa cháy CO2 MT3 số 27",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "Nhà xe NV - Trước cửa thoát hiểm phụ kho nguyên liệu",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -800,7 +800,7 @@
   {
     "id": "NX-CO2-28",
     "name": "Bình chữa cháy CO2 MT3 số 28",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "Nhà xe ô tô - Cạnh cửa cuốn",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -814,7 +814,7 @@
   {
     "id": "TD-CO2-29",
     "name": "Bình chữa cháy CO2 MT3 số 29",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "Trạm điện - Cạnh cửa",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -842,7 +842,7 @@
   {
     "id": "KHO-CO2-30",
     "name": "Bình chữa cháy CO2 MT3 số 30",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "KHO - Cạnh thang máy tầng 1",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -870,7 +870,7 @@
   {
     "id": "KHO-CO2-31",
     "name": "Bình chữa cháy CO2 MT3 số 31",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "KHO - Sát tường phân xưởng dệt",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -898,7 +898,7 @@
   {
     "id": "KHO-CO2-32",
     "name": "Bình chữa cháy CO2 MT3 số 32",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "KHO - Sát tường nhà xe nhân viên",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -982,7 +982,7 @@
   {
     "id": "KHO-CO2-33",
     "name": "Bình chữa cháy CO2 MT3 số 33",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "KHO - Gần quạt hút tầng 2",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -996,7 +996,7 @@
   {
     "id": "KHO-CO2-34",
     "name": "Bình chữa cháy CO2 MT3 số 34",
-    "category": "tu_voi_vach",
+    "category": "binh_co2",
     "location": "KHO - Sát vách tường đối diện cổng chính tầng 2",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1010,7 +1010,7 @@
   {
     "id": "KHO-CO2-35",
     "name": "Bình chữa cháy CO2 MT3 số 35",
-    "category": "tu_voi_vach",
+    "category": "binh_co2",
     "location": "KHO - Sát vách tường đối diện cổng chính tầng 2",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1024,7 +1024,7 @@
   {
     "id": "KHO-CO2-36",
     "name": "Bình chữa cháy CO2 MT3 số 36",
-    "category": "tu_voi_vach",
+    "category": "binh_co2",
     "location": "KHO - Sát vách kính tầng lửng gần cửa ra vào",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1038,7 +1038,7 @@
   {
     "id": "KHO-CO2-37",
     "name": "Bình chữa cháy CO2 MT3 số 37",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "KHO - Cạnh ô thông tầng giữa tầng lửng và PX dệt",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1052,7 +1052,7 @@
   {
     "id": "KHO-CO2-38",
     "name": "Bình chữa cháy CO2 MT3 số 38",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "KHO - Gần tủ điện tầng lửng",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1066,7 +1066,7 @@
   {
     "id": "KHO-MFZ4-21",
     "name": "Bình chữa cháy bột ABC 4KG số 21",
-    "category": "tu_voi_vach",
+    "category": "binh_bot",
     "location": "KHO - Sát vách kính tầng lửng gần cửa ra vào",
     "specs": "4.0 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1080,7 +1080,7 @@
   {
     "id": "KHO-MFZ4-22",
     "name": "Bình chữa cháy bột ABC 4KG số 22",
-    "category": "tu_voi_vach",
+    "category": "binh_bot",
     "location": "KHO - Sát vách kính giữa tầng lửng",
     "specs": "4.0 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1094,7 +1094,7 @@
   {
     "id": "KHO-MFZ4-23",
     "name": "Bình chữa cháy bột ABC 4KG số 23",
-    "category": "tu_voi_vach",
+    "category": "binh_bot",
     "location": "KHO - Sát vách kính giữa tầng lửng",
     "specs": "4.0 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1150,7 +1150,7 @@
   {
     "id": "KHO-TU-09",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 09",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "KHO - Cạnh thang máy tầng 1",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1164,7 +1164,7 @@
   {
     "id": "KHO-TU-10",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 10",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "KHO - Cạnh thang máy tầng 2",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1206,7 +1206,7 @@
   {
     "id": "KHO-TU-13",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 13",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "KHO - Cạnh ô thông tầng giữa tầng lửng và PX dệt",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1220,7 +1220,7 @@
   {
     "id": "KHO-CH-05",
     "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 05",
-    "category": "binh_bot",
+    "category": "nut_chuong",
     "location": "KHO - Cạnh thang máy tầng 1",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1234,7 +1234,7 @@
   {
     "id": "KHO-CH-06",
     "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 06",
-    "category": "binh_bot",
+    "category": "nut_chuong",
     "location": "KHO - Cạnh thang máy tầng 2",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1248,7 +1248,7 @@
   {
     "id": "KHO-CH-07",
     "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 07",
-    "category": "binh_bot",
+    "category": "nut_chuong",
     "location": "KHO - Cạnh cửa ra vào tầng lửng",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1262,7 +1262,7 @@
   {
     "id": "KHO-CH-08",
     "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 08",
-    "category": "binh_bot",
+    "category": "nut_chuong",
     "location": "KHO - Gần ô thông tầng giữa tầng lửng và PX dệt",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1276,7 +1276,7 @@
   {
     "id": "VP-CO2-39",
     "name": "Bình chữa cháy CO2 MT3 số 39",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "VP - Cạnh hồ cá gần phòng họp",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1290,7 +1290,7 @@
   {
     "id": "VP-CO2-40",
     "name": "Bình chữa cháy CO2 MT3 số 40",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "VP - Phòng server",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1304,7 +1304,7 @@
   {
     "id": "VP-CO2-41",
     "name": "Bình chữa cháy CO2 MT3 số 41",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "VP - Cạnh hồ cá gần nhà vệ sinh",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1318,7 +1318,7 @@
   {
     "id": "VP-CO2-42",
     "name": "Bình chữa cháy CO2 MT3 số 42",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "VP - Cạnh hồ cá gần nhà vệ sinh",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1332,7 +1332,7 @@
   {
     "id": "VP-CO2-43",
     "name": "Bình chữa cháy CO2 MT3 số 43",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "VP - Canteen gần cửa sổ",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1346,7 +1346,7 @@
   {
     "id": "VP-CO2-44",
     "name": "Bình chữa cháy CO2 MT3 số 44",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "VP - Khu bếp",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1360,7 +1360,7 @@
   {
     "id": "VP-CO2-45",
     "name": "Bình chữa cháy CO2 MT3 số 45",
-    "category": "binh_bot",
+    "category": "binh_co2",
     "location": "VP - Cạnh cửa khu phòng khách tầng 2",
     "specs": "10 kg",
     "inspectionExpiry": "20/12/2026",
@@ -1388,7 +1388,7 @@
   {
     "id": "VP-TU-14",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 14",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "VP - Cạnh hồ cá gần phòng họp",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1402,7 +1402,7 @@
   {
     "id": "VP-TU-15",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 15",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "VP - Cạnh hồ cá gần nhà vệ sinh",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1416,7 +1416,7 @@
   {
     "id": "VP-TU-16",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 16",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "VP - Canteen gần cửa sổ",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1430,7 +1430,7 @@
   {
     "id": "VP-TU-17",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 17",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "VP - Cạnh cửa khu phòng khách tầng 2",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1444,7 +1444,7 @@
   {
     "id": "VP-TU-18",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 18",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "VP - Hành lang khu phòng khách tầng 3",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1458,7 +1458,7 @@
   {
     "id": "VP-TU-19",
     "name": "Tủ chữa cháy vách tường & ngoài trời số 19",
-    "category": "binh_bot",
+    "category": "tu_voi_vach",
     "location": "VP - Gần nhà xe ô tô",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1472,7 +1472,7 @@
   {
     "id": "VP-CH-09",
     "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 09",
-    "category": "binh_bot",
+    "category": "nut_chuong",
     "location": "VP - Cạnh hồ cá gần phòng họp",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1486,7 +1486,7 @@
   {
     "id": "VP-CH-10",
     "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 10",
-    "category": "binh_bot",
+    "category": "nut_chuong",
     "location": "VP Cạnh cửa ra vào nhà vệ sinh",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1500,7 +1500,7 @@
   {
     "id": "VP-CH-11",
     "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 11",
-    "category": "binh_bot",
+    "category": "nut_chuong",
     "location": "VP - Canteen gần cửa ra vào",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1514,7 +1514,7 @@
   {
     "id": "VP-CH-12",
     "name": "Tổ hợp chuông đèn, nút nhấn báo cháy số 12",
-    "category": "binh_bot",
+    "category": "nut_chuong",
     "location": "VP - Hành lang khu phòng khách tầng 3",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",
@@ -1528,7 +1528,7 @@
   {
     "id": "BV-TUTT",
     "name": "Tủ báo cháy trung tâm",
-    "category": "binh_bot",
+    "category": "tu_trung_tam",
     "location": "BV - Phòng bảo vệ cổng chính",
     "specs": "-",
     "inspectionExpiry": "20/12/2026",

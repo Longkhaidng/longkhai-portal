@@ -225,3 +225,67 @@ export function formatPCCCDate(val: any): string {
   }
   return str;
 }
+
+
+/**
+ * Suy luận và chuẩn hóa chủng loại thiết bị PCCC một cách chính xác dựa trên
+ * thông tin Chủng loại, Tên thiết bị, Mã thiết bị hoặc Quy cách kỹ thuật.
+ * Khắc phục triệt để lỗi tất cả thiết bị bị gán về 'binh_bot' khi tải Excel.
+ */
+export function inferPCCCCategory(
+  catStr?: string,
+  nameStr?: string,
+  idStr?: string,
+  specsStr?: string
+): PCCCCategory {
+  const norm = (s?: string) =>
+    (s || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/đ/g, 'd')
+      .replace(/[^a-z0-9]/g, '');
+
+  const c = norm(catStr);
+  const n = norm(nameStr);
+  const i = norm(idStr);
+  const sp = norm(specsStr);
+  const combined = `${c} ${n} ${i} ${sp}`;
+
+  // 1. Nhận diện theo Mã thiết bị (ID) - Độ chính xác cao nhất
+  if (i.includes('tutt') || i.includes('trungtam')) return 'tu_trung_tam';
+  if (i.includes('trambom') || (i.includes('bom') && !i.includes('bot'))) return 'tram_bom';
+  if (i.includes('co2') || i.includes('mt3') || i.includes('mt5')) return 'binh_co2';
+  if (i.includes('mfz') || i.includes('bot')) return 'binh_bot';
+  if (i.includes('tu') || i.includes('vach') || i.includes('voi')) return 'tu_voi_vach';
+  if (i.includes('chuong') || i.includes('nut') || i.includes('ch') || i.includes('bc')) return 'nut_chuong';
+
+  // 2. Nhận diện theo Tên thiết bị (Name)
+  if (n.includes('trungtam') || n.includes('tutt')) return 'tu_trung_tam';
+  if (n.includes('trambom') || n.includes('maybom') || n.includes('bomchuachay')) return 'tram_bom';
+  if (n.includes('co2') || n.includes('mt3') || n.includes('mt5') || n.includes('khico2')) return 'binh_co2';
+  if (n.includes('vach') || n.includes('cuonvoi') || n.includes('langphun') || n.includes('tuvoi') || n.includes('tuchuachay')) return 'tu_voi_vach';
+  if (n.includes('chuong') || n.includes('nutnhan') || n.includes('tohopchuong') || n.includes('denbaochay') || n.includes('baochay')) return 'nut_chuong';
+  if (n.includes('mfz') || n.includes('bot') || n.includes('abc')) return 'binh_bot';
+
+  // 3. Nếu cột Chủng loại (catStr) có giá trị hợp lệ
+  if (c) {
+    if (c === 'binhco2' || c.includes('co2') || c.includes('khico2')) return 'binh_co2';
+    if (c === 'binhbot' || c.includes('bot') || c.includes('mfz')) return 'binh_bot';
+    if (c === 'tuvoivach' || c.includes('vach') || c.includes('tuvoi') || c.includes('tuvachtuong')) return 'tu_voi_vach';
+    if (c === 'nutchuong' || c.includes('chuong') || c.includes('nut') || c.includes('baochay')) return 'nut_chuong';
+    if (c === 'trambom' || c.includes('trambom') || (c.includes('bom') && !c.includes('bot'))) return 'tram_bom';
+    if (c === 'tutrungtam' || c.includes('trungtam') || c.includes('tutt')) return 'tu_trung_tam';
+  }
+
+  // 4. Nhận diện theo chuỗi kết hợp
+  if (combined.includes('trungtam') || combined.includes('tutt')) return 'tu_trung_tam';
+  if (combined.includes('trambom') || combined.includes('maybom')) return 'tram_bom';
+  if (combined.includes('co2') || combined.includes('mt3') || combined.includes('mt5')) return 'binh_co2';
+  if (combined.includes('vach') || combined.includes('cuonvoi') || combined.includes('langphun') || combined.includes('tuvoi')) return 'tu_voi_vach';
+  if (combined.includes('chuong') || combined.includes('nutnhan') || combined.includes('tohop')) return 'nut_chuong';
+  if (combined.includes('mfz') || combined.includes('bot') || combined.includes('abc')) return 'binh_bot';
+  if (combined.includes('tu')) return 'tu_voi_vach';
+
+  return 'binh_bot';
+}

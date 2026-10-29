@@ -3,7 +3,7 @@ import { LeaveRequest } from '@/types/leave';
 import { AttendanceConfirm } from '@/types/attendance';
 import { GatePass } from '@/types/gatePass';
 import { RepairProposal } from '@/types/repair';
-import { PCCCDevice, PCCCInspection, formatPCCCDate } from '@/types/pccc';
+import { PCCCDevice, PCCCInspection, formatPCCCDate, inferPCCCCategory } from '@/types/pccc';
 import { INITIAL_PCCC_DEVICES, INITIAL_PCCC_INSPECTIONS } from './pccc-data';
 import { StationeryItem, StationeryProposal, GeneralProposal } from '@/types/proposal';
 import { INITIAL_STATIONERY_ITEMS } from './initial-data';
@@ -1355,6 +1355,7 @@ class StorageService {
         if (Array.isArray(parsed) && parsed.length > 0) {
           return parsed.map((d: PCCCDevice) => ({
             ...d,
+            category: inferPCCCCategory(d.category, d.name, d.id, d.specs),
             inspectionExpiry: formatPCCCDate(d.inspectionExpiry),
           }));
         }
@@ -1368,6 +1369,7 @@ class StorageService {
     if (!this.isClient()) return;
     const cleanDevices = devices.map((d) => ({
       ...d,
+      category: inferPCCCCategory(d.category, d.name, d.id, d.specs),
       inspectionExpiry: formatPCCCDate(d.inspectionExpiry),
     }));
     localStorage.setItem(STORAGE_KEYS.PCCC_DEVICES, JSON.stringify(cleanDevices));

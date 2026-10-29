@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { PCCCDevice, PCCCCategory, formatPCCCDate } from '@/types/pccc';
+import { PCCCDevice, PCCCCategory, formatPCCCDate, inferPCCCCategory, PCCC_CATEGORIES } from '@/types/pccc';
 import { storage } from '@/lib/storage';
 import { useAuth } from '@/lib/auth-context';
 import { downloadPCCCDevicesTemplate } from '@/lib/excel';
@@ -23,19 +23,8 @@ interface PCCCImportExcelModalProps {
   onImportSuccess: (count: number, mode: 'update_new' | 'replace_all', skippedCount?: number) => void;
 }
 
-function normalizePCCCCategory(catStr: string): PCCCCategory {
-  const norm = catStr
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .trim();
-  if (norm.includes('bot') || norm.includes('mfz')) return 'binh_bot';
-  if (norm.includes('co2') || norm.includes('mt3') || norm.includes('mt5')) return 'binh_co2';
-  if (norm.includes('bao chay') || norm.includes('chuong') || norm.includes('nut')) return 'nut_chuong';
-  if (norm.includes('vach') || norm.includes('voi') || norm.includes('tu chua chay')) return 'tu_voi_vach';
-  if (norm.includes('bom')) return 'tram_bom';
-  if (norm.includes('trung tam')) return 'tu_trung_tam';
-  return 'binh_bot';
+function normalizePCCCCategory(catStr: string, nameStr?: string, idStr?: string, specsStr?: string): PCCCCategory {
+  return inferPCCCCategory(catStr, nameStr, idStr, specsStr);
 }
 
 export function PCCCImportExcelModal({
@@ -96,34 +85,48 @@ export function PCCCImportExcelModal({
       let headerRowNumber = 1;
       let idCol = 1;
       let nameCol = 2;
-      let catCol = 3;
-      let locCol = 4;
-      let specsCol = 5;
-      let expiryCol = 6;
-      let notesCol = 7;
+      let catCol = -1;
+      let locCol = -1;
+      let specsCol = -1;
+      let expiryCol = -1;
+      let notesCol = -1;
 
       worksheet.eachRow((row, rowNumber) => {
         if (rowNumber > 12) return;
         row.eachCell((cell, colNumber) => {
           const val = String(cell.value || '').toLowerCase().trim();
-          if (val.includes('mã thiết bị') || (val.includes('mã') && !val.includes('nhóm'))) {
+          if (val.includes('mã thiết bị') || (val.includes('mã') && !val.includes('nhóm') && !val.includes('nv'))) {
             headerRowNumber = rowNumber;
             idCol = colNumber;
-          } else if (val.includes('tên thiết bị') || val.includes('tên')) {
+          } else if (val.includes('tên thiết bị') || val.includes('tên tb') || (val.includes('tên') && !val.includes('nhân viên') && !val.includes('người'))) {
             nameCol = colNumber;
-          } else if (val.includes('chủng loại') || val.includes('loại')) {
+          } else if (val.includes('chủng loại') || val.includes('loại thiết bị') || val.includes('phân loại') || val === 'loại') {
             catCol = colNumber;
           } else if (val.includes('vị trí')) {
             locCol = colNumber;
-          } else if (val.includes('chuẩn') || val.includes('kỹ thuật')) {
+          } else if (val.includes('chuẩn') || val.includes('kỹ thuật') || val.includes('quy cách') || val.includes('thông số')) {
             specsCol = colNumber;
-          } else if (val.includes('hạn kiểm định') || val.includes('hạn')) {
+          } else if (val.includes('hạn kiểm định') || val.includes('hạn kđ') || val.includes('kiểm định') || val.includes('hạn')) {
             expiryCol = colNumber;
           } else if (val.includes('ghi chú')) {
             notesCol = colNumber;
           }
         });
       });
+
+      // Fallback sensible column offsets if headers were not explicitly matched:
+      if (locCol === -1) {
+        locCol = catCol > 0 ? 4 : 3;
+      }
+      if (specsCol === -1) {
+        specsCol = locCol + 1;
+      }
+      if (expiryCol === -1) {
+        expiryCol = specsCol + 1;
+      }
+      if (notesCol === -1) {
+        notesCol = expiryCol + 1;
+      }
 
       const extracted: PCCCDevice[] = [];
       const errors: string[] = [];
@@ -141,12 +144,12 @@ export function PCCCImportExcelModal({
 
         const rawId = getVal(idCol).toUpperCase();
         const rawName = getVal(nameCol);
-        const rawCat = getVal(catCol);
-        const rawLoc = getVal(locCol);
-        const rawSpecs = getVal(specsCol) || '-';
-        const cellExpiry = row.getCell(expiryCol).value;
+        const rawCat = catCol > 0 ? getVal(catCol) : '';
+        const rawLoc = locCol > 0 ? getVal(locCol) : '';
+        const rawSpecs = specsCol > 0 ? getVal(specsCol) : '-';
+        const cellExpiry = expiryCol > 0 ? row.getCell(expiryCol).value : undefined;
         const rawExpiry = formatPCCCDate(cellExpiry);
-        const rawNotes = getVal(notesCol) || '';
+        const rawNotes = notesCol > 0 ? getVal(notesCol) : '';
 
         // Ignore empty lines
         if (!rawId && !rawName) return;
@@ -164,7 +167,7 @@ export function PCCCImportExcelModal({
           return;
         }
 
-        const category = normalizePCCCCategory(rawCat);
+        const category = inferPCCCCategory(rawCat, rawName, rawId, rawSpecs);
 
         extracted.push({
           id: rawId,
@@ -440,7 +443,7 @@ export function PCCCImportExcelModal({
                       <tr key={d.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                         <td className="p-2 border font-mono font-bold text-red-600">{d.id}</td>
                         <td className="p-2 border font-medium">{d.name}</td>
-                        <td className="p-2 border">{d.category}</td>
+                        <td className="p-2 border font-medium text-slate-700 dark:text-slate-300">{PCCC_CATEGORIES[d.category]?.name || d.category}</td>
                         <td className="p-2 border max-w-xs truncate">{d.location}</td>
                         <td className="p-2 border font-mono">{d.specs}</td>
                       </tr>
