@@ -19,7 +19,6 @@ import {
   Users,
   Bell,
   Pin,
-  Wrench,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
@@ -135,34 +134,6 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
               Phòng ban: <b className="text-white">{currentUser?.department}</b> &bull; Chức vụ:{' '}
               <b className="text-white">{currentUser?.position}</b>
             </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => onNavigateTab('leave')}
-              className="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-xl shadow-md transition-all flex items-center gap-1.5"
-            >
-              <span>+ Tạo đơn nghỉ phép</span>
-            </button>
-            <button
-              onClick={() => onNavigateTab('attendance')}
-              className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl border border-slate-700 transition-all flex items-center gap-1.5"
-            >
-              <span>+ Xác nhận công</span>
-            </button>
-            <button
-              onClick={() => onNavigateTab('gate_pass')}
-              className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
-            >
-              <span>+ Phiếu ra cổng</span>
-            </button>
-            <button
-              onClick={() => onNavigateTab('repair')}
-              className="px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
-            >
-              <Wrench className="w-3.5 h-3.5" />
-              <span>+ Đề xuất sửa chữa</span>
-            </button>
           </div>
         </div>
       </div>
