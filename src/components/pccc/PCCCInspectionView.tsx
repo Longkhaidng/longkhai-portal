@@ -41,6 +41,9 @@ import {
   Trash2,
   Layers,
   Building2,
+  ArrowRight,
+  History,
+  MapPin,
 } from 'lucide-react';
 
 export function PCCCInspectionView() {
@@ -62,6 +65,7 @@ export function PCCCInspectionView() {
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [dashboardRightTab, setDashboardRightTab] = useState<'inspections' | 'areas'>('inspections');
 
   // Modals state
   const [isInspectionModalOpen, setIsInspectionModalOpen] = useState(false);
@@ -153,6 +157,72 @@ export function PCCCInspectionView() {
     });
     return counts;
   }, [devices]);
+
+  // Dynamic Donut chart categories data
+  const categoriesList = useMemo(() => {
+    const configs = [
+      { key: 'binh_co2', name: 'Bình CO2 (MT3)', count: countByCategory.binh_co2 || 0, color: '#0284c7', dot: 'bg-sky-500', text: 'text-sky-600' },
+      { key: 'binh_bot', name: 'Bình Bột (MFZ)', count: countByCategory.binh_bot || 0, color: '#e11d48', dot: 'bg-rose-500', text: 'text-rose-600' },
+      { key: 'tu_voi_vach', name: 'Tủ Vòi Vách Tường', count: countByCategory.tu_voi_vach || 0, color: '#ef4444', dot: 'bg-red-500', text: 'text-red-500' },
+      { key: 'nut_chuong', name: 'Báo Cháy (Nút & Chuông)', count: countByCategory.nut_chuong || 0, color: '#f59e0b', dot: 'bg-amber-500', text: 'text-amber-600' },
+      { key: 'tram_bom', name: 'Trạm Bơm', count: countByCategory.tram_bom || 0, color: '#475569', dot: 'bg-slate-600', text: 'text-slate-600 dark:text-slate-300' },
+      { key: 'tu_trung_tam', name: 'Tủ Trung Tâm', count: countByCategory.tu_trung_tam || 0, color: '#1d4ed8', dot: 'bg-blue-700', text: 'text-blue-700 dark:text-blue-400' },
+    ];
+
+    const circumference = 339.292; // 2 * PI * 54
+    let currentOffset = 0;
+
+    return configs.map((cat) => {
+      const percent = totalCount > 0 ? cat.count / totalCount : 0;
+      const strokeDash = percent * circumference;
+      const offset = currentOffset;
+      currentOffset += strokeDash;
+      return {
+        ...cat,
+        percent: (percent * 100).toFixed(1),
+        strokeDasharray: `${strokeDash.toFixed(1)} ${circumference}`,
+        strokeDashoffset: (-offset).toFixed(1),
+      };
+    });
+  }, [countByCategory, totalCount]);
+
+  // 5 latest inspection records
+  const recentInspections = useMemo(() => {
+    return inspections.slice(0, 5);
+  }, [inspections]);
+
+  // Area distribution breakdown
+  const areaBreakdown = useMemo(() => {
+    const areas: Record<string, number> = {
+      'PX. Hoàn Thiện (PXHT)': 0,
+      'Kho Hàng & Nguyên Liệu': 0,
+      'Văn Phòng Điều Hành': 0,
+      'Nhà Xe & Phụ Trợ': 0,
+      'Phân Xưởng Dệt': 0,
+      'Trạm Bơm & Cổng BV': 0,
+    };
+    devices.forEach((d) => {
+      const loc = (d.location || '').toUpperCase();
+      if (loc.includes('PXHT') || loc.includes('HOÀN THIỆN') || loc.includes('ĐÓNG KIỆN') || loc.includes('ỦI') || loc.includes('KIỂM PHẨM')) {
+        areas['PX. Hoàn Thiện (PXHT)']++;
+      } else if (loc.includes('KHO') || loc.includes('NGUYÊN LIỆU') || loc.includes('PHỤ LIỆU') || loc.includes('THÀNH PHẨM')) {
+        areas['Kho Hàng & Nguyên Liệu']++;
+      } else if (loc.includes('VĂN PHÒNG') || loc.includes('VP') || loc.includes('ĐIỀU HÀNH') || loc.includes('GIÁM ĐỐC') || loc.includes('KẾ TOÁN') || loc.includes('HCNS') || loc.includes('IT')) {
+        areas['Văn Phòng Điều Hành']++;
+      } else if (loc.includes('NHÀ XE') || loc.includes('XE NÂNG') || loc.includes('LÒ HƠI') || loc.includes('NƯỚC THẢI')) {
+        areas['Nhà Xe & Phụ Trợ']++;
+      } else if (loc.includes('DỆT') || loc.includes('MAY') || loc.includes('CẮT') || loc.includes('RẬP')) {
+        areas['Phân Xưởng Dệt']++;
+      } else {
+        areas['Trạm Bơm & Cổng BV']++;
+      }
+    });
+    return Object.entries(areas).map(([name, count]) => ({
+      name,
+      count,
+      percent: totalCount > 0 ? Math.round((count / totalCount) * 100) : 0,
+    }));
+  }, [devices, totalCount]);
 
   // Smooth scroll to table helper
   const scrollToTable = () => {
@@ -321,595 +391,394 @@ export function PCCCInspectionView() {
         </button>
       </div>
 
-      {/* SUB-TAB 1: DASHBOARD & GIÁM SÁT */}
+      {/* SUB-TAB 1: DASHBOARD & GIÁM SÁT (TINH GỌN & HIỆN ĐẠI) */}
       {activeTab === 'dashboard' && (
-        <div className="space-y-3 sm:space-y-4">
-          {/* TOP 4 METRICS CARDS - Có thể click lọc & chuyển thẳng đến bảng */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-            {/* Card 1: TỔNG THIẾT BỊ */}
+        <div className="space-y-4">
+          {/* 4 Thẻ KPI Căn Bản Nhất */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {/* 1. Tổng thiết bị */}
             <button
               type="button"
               onClick={() => {
                 setStatusFilter('all');
                 setCategoryFilter('all');
                 setSearchTerm('');
-                scrollToTable();
+                setActiveTab('devices');
               }}
-              className={`p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border text-left transition-all cursor-pointer active:scale-95 ${
-                statusFilter === 'all' && categoryFilter === 'all'
-                  ? 'bg-rose-50/50 dark:bg-rose-950/30 border-red-500 shadow-xs ring-2 ring-red-400'
-                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-              }`}
+              className="p-3.5 sm:p-4 rounded-2xl border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition-all text-left cursor-pointer group"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                  TỔNG THIẾT BỊ
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  Tổng thiết bị
                 </span>
-                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                  <Shield className="w-3 h-3" />
+                <div className="w-7 h-7 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 group-hover:scale-110 transition-transform">
+                  <Shield className="w-3.5 h-3.5" />
                 </div>
               </div>
-              <div className="mt-1 sm:mt-1.5 flex items-baseline gap-1">
-                <span className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono">{totalCount}</span>
-                <span className="text-[9px] sm:text-[10px] text-slate-500 font-medium">thiết bị</span>
+              <div className="mt-2 flex items-baseline gap-1.5">
+                <span className="text-2xl sm:text-3xl font-black font-mono text-slate-900 dark:text-white leading-none">
+                  {totalCount}
+                </span>
+                <span className="text-xs text-slate-500 font-medium">thiết bị</span>
+              </div>
+              <div className="mt-2 flex items-center gap-1 text-[11px] text-slate-400">
+                <span>100% gắn mã QR tra cứu</span>
               </div>
             </button>
 
-            {/* Card 2: ĐẠT TIÊU CHUẨN */}
+            {/* 2. Đạt tiêu chuẩn */}
             <button
               type="button"
               onClick={() => {
                 setStatusFilter('pass');
-                scrollToTable();
+                setCategoryFilter('all');
+                setActiveTab('devices');
               }}
-              className={`p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border text-left transition-all cursor-pointer active:scale-95 ${
-                statusFilter === 'pass'
-                  ? 'bg-emerald-50/50 dark:bg-emerald-950/30 border-emerald-500 shadow-xs ring-2 ring-emerald-400'
-                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-emerald-200'
-              }`}
+              className="p-3.5 sm:p-4 rounded-2xl border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xs hover:border-emerald-300 dark:hover:border-emerald-800 transition-all text-left cursor-pointer group"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-emerald-600">
-                  ĐẠT TIÊU CHUẨN
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                  Đạt tiêu chuẩn
                 </span>
-                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-50 dark:bg-emerald-950 flex items-center justify-center text-emerald-600 border border-emerald-200 dark:border-emerald-800">
-                  <CheckCircle2 className="w-3 h-3" />
+                <div className="w-7 h-7 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
                 </div>
               </div>
-              <div className="mt-1 sm:mt-1.5 flex items-baseline gap-1.5">
-                <span className="text-xl sm:text-2xl font-black text-emerald-600 font-mono">{passCount}</span>
-                <span className="text-[9px] sm:text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950 px-1.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-2xl sm:text-3xl font-black font-mono text-emerald-600 dark:text-emerald-400 leading-none">
+                  {passCount}
+                </span>
+                <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100/70 dark:bg-emerald-950 px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-800">
                   {passRate}%
                 </span>
               </div>
+              <div className="mt-2 flex items-center gap-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+                <span>Sẵn sàng vận hành</span>
+              </div>
             </button>
 
-            {/* Card 3: CẦN XỬ LÝ / HỎNG */}
+            {/* 3. Cần xử lý / Hỏng */}
             <button
               type="button"
               onClick={() => {
                 setStatusFilter('fail');
-                scrollToTable();
+                setCategoryFilter('all');
+                setActiveTab('devices');
               }}
-              className={`p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border text-left transition-all cursor-pointer active:scale-95 ${
-                statusFilter === 'fail'
-                  ? 'bg-rose-50/50 dark:bg-rose-950/30 border-rose-500 shadow-xs ring-2 ring-rose-400'
-                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-rose-200'
-              }`}
+              className="p-3.5 sm:p-4 rounded-2xl border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xs hover:border-rose-300 dark:hover:border-rose-800 transition-all text-left cursor-pointer group"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-rose-600">
-                  CẦN XỬ LÝ / HỎNG
+                <span className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-wider ${failCount > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500'}`}>
+                  Cần xử lý / Hỏng
                 </span>
-                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-rose-50 dark:bg-rose-950 flex items-center justify-center text-rose-600 border border-rose-200 dark:border-rose-800">
-                  <AlertTriangle className="w-3 h-3" />
+                <div className={`w-7 h-7 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform ${failCount > 0 ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-600' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}>
+                  <AlertTriangle className="w-3.5 h-3.5" />
                 </div>
               </div>
-              <div className="mt-1 sm:mt-1.5 flex items-baseline gap-1">
-                <span className="text-xl sm:text-2xl font-black text-rose-600 font-mono">{failCount}</span>
-                <span className="text-[9px] sm:text-[10px] text-slate-500 font-medium">cần nạp/sửa</span>
+              <div className="mt-2 flex items-baseline gap-1.5">
+                <span className={`text-2xl sm:text-3xl font-black font-mono leading-none ${failCount > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-800 dark:text-slate-200'}`}>
+                  {failCount}
+                </span>
+                <span className="text-xs text-slate-500 font-medium">thiết bị</span>
+              </div>
+              <div className="mt-2 flex items-center gap-1 text-[11px] text-slate-400">
+                <span>{failCount > 0 ? 'Cần bảo dưỡng / sửa chữa' : 'Không có sự cố'}</span>
               </div>
             </button>
 
-            {/* Card 4: HẾT HẠN / SẮP HẠN */}
+            {/* 4. Hết hạn / Sắp hạn */}
             <button
               type="button"
               onClick={() => {
                 setStatusFilter('expiring');
-                scrollToTable();
+                setCategoryFilter('all');
+                setActiveTab('devices');
               }}
-              className={`p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border text-left transition-all cursor-pointer active:scale-95 ${
-                statusFilter === 'expiring'
-                  ? 'bg-amber-50/50 dark:bg-amber-950/30 border-amber-500 shadow-xs ring-2 ring-amber-400'
-                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-amber-200'
-              }`}
+              className="p-3.5 sm:p-4 rounded-2xl border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xs hover:border-amber-300 dark:hover:border-amber-800 transition-all text-left cursor-pointer group"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-amber-600">
-                  HẾT HẠN / SẮP HẠN
+                <span className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-wider ${expiringCount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500'}`}>
+                  Hết hạn / Sắp hạn
                 </span>
-                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-amber-50 dark:bg-amber-950 flex items-center justify-center text-amber-600 border border-amber-200 dark:border-amber-800">
-                  <Clock className="w-3 h-3" />
+                <div className={`w-7 h-7 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform ${expiringCount > 0 ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-600' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}>
+                  <Clock className="w-3.5 h-3.5" />
                 </div>
               </div>
-              <div className="mt-1 sm:mt-1.5 flex items-baseline gap-1">
-                <span className="text-xl sm:text-2xl font-black text-amber-600 font-mono">{expiringCount}</span>
-                <span className="text-[9px] sm:text-[10px] text-slate-500 font-medium">trong 30 ngày</span>
+              <div className="mt-2 flex items-baseline gap-1.5">
+                <span className={`text-2xl sm:text-3xl font-black font-mono leading-none ${expiringCount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-slate-800 dark:text-slate-200'}`}>
+                  {expiringCount}
+                </span>
+                <span className="text-xs text-slate-500 font-medium">trong 30 ngày</span>
+              </div>
+              <div className="mt-2 flex items-center gap-1 text-[11px] text-slate-400">
+                <span>{expiringCount > 0 ? 'Đến kỳ kiểm định' : 'Hạn kiểm định an toàn'}</span>
               </div>
             </button>
           </div>
 
-          {/* BIỂU ĐỒ MÔ TẢ THIẾT BỊ PCCC TOÀN NHÀ MÁY (Thay thế mục khung đỏ) */}
-          <div className="space-y-3.5 sm:space-y-4">
-            {/* GRID 2 CỘT: CƠ CẤU 6 CHỦNG LOẠI & PHÂN BỔ KHU VỰC SẢN XUẤT */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4">
-              {/* CỘT TRÁI (7 Cột): BIỂU ĐỒ DONUT & CƠ CẤU 6 CHỦNG LOẠI */}
-              <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
+          {/* 2 Khối Thông Tin Căn Bản Nhất: Cơ cấu 6 Chủng Loại & Hoạt Động Giám Sát */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            {/* Khối Trái (7 phần): Cơ cấu 6 chủng loại thiết bị PCCC */}
+            <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-xl bg-red-50 dark:bg-red-950/50 flex items-center justify-center text-red-600">
+                      <Flame className="w-4 h-4" />
+                    </div>
                     <div>
-                      <h3 className="text-xs sm:text-sm font-black uppercase text-slate-900 dark:text-white tracking-wide flex items-center gap-1.5">
-                        <Flame className="w-4 h-4 text-red-600" />
-                        <span>Biểu Đồ Cơ Cấu 6 Chủng Loại Thiết Bị PCCC</span>
+                      <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wide">
+                        Cơ Cấu 6 Chủng Loại Thiết Bị PCCC
                       </h3>
-                      <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5">
-                        Tổng cộng {totalCount} thiết bị đạt tiêu chuẩn sẵn sàng vận hành 100%
+                      <p className="text-[11px] text-slate-500">
+                        {totalCount} thiết bị được phân loại theo tiêu chuẩn an toàn PCCC
                       </p>
                     </div>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-600 border border-emerald-200 dark:border-emerald-800">
-                      Đạt chuẩn 100%
-                    </span>
                   </div>
-
-                  {/* DONUT CHART + LEGEND */}
-                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
-                    {/* SVG DONUT CHART */}
-                    <div className="sm:col-span-5 flex flex-col items-center justify-center relative py-2">
-                      <div className="relative w-40 h-40 sm:w-44 sm:h-44">
-                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 160 160">
-                          {/* Circle Background */}
-                          <circle
-                            cx="80"
-                            cy="80"
-                            r="62"
-                            fill="transparent"
-                            stroke="currentColor"
-                            strokeWidth="18"
-                            className="text-slate-100 dark:text-slate-800"
-                          />
-                          {/* 1. Bình CO2 (45/111 = 40.5% -> 157.8) */}
-                          <circle
-                            cx="80"
-                            cy="80"
-                            r="62"
-                            fill="transparent"
-                            stroke="#0284c7"
-                            strokeWidth="18"
-                            strokeDasharray="157.8 389.5"
-                            strokeDashoffset="0"
-                            className="transition-all duration-500 hover:opacity-85"
-                          />
-                          {/* 2. Bình Bột (33/111 = 29.7% -> 115.7) */}
-                          <circle
-                            cx="80"
-                            cy="80"
-                            r="62"
-                            fill="transparent"
-                            stroke="#e11d48"
-                            strokeWidth="18"
-                            strokeDasharray="115.7 389.5"
-                            strokeDashoffset="-157.8"
-                            className="transition-all duration-500 hover:opacity-85"
-                          />
-                          {/* 3. Tủ Vòi Vách (19/111 = 17.1% -> 66.6) */}
-                          <circle
-                            cx="80"
-                            cy="80"
-                            r="62"
-                            fill="transparent"
-                            stroke="#ef4444"
-                            strokeWidth="18"
-                            strokeDasharray="66.6 389.5"
-                            strokeDashoffset="-273.5"
-                            className="transition-all duration-500 hover:opacity-85"
-                          />
-                          {/* 4. Báo Cháy (12/111 = 10.8% -> 42.1) */}
-                          <circle
-                            cx="80"
-                            cy="80"
-                            r="62"
-                            fill="transparent"
-                            stroke="#f59e0b"
-                            strokeWidth="18"
-                            strokeDasharray="42.1 389.5"
-                            strokeDashoffset="-340.1"
-                            className="transition-all duration-500 hover:opacity-85"
-                          />
-                          {/* 5. Trạm Bơm (1/111 = 0.9% -> 3.6) */}
-                          <circle
-                            cx="80"
-                            cy="80"
-                            r="62"
-                            fill="transparent"
-                            stroke="#475569"
-                            strokeWidth="18"
-                            strokeDasharray="3.6 389.5"
-                            strokeDashoffset="-382.2"
-                            className="transition-all duration-500 hover:opacity-85"
-                          />
-                          {/* 6. Tủ Trung Tâm (1/111 = 0.9% -> 3.6) */}
-                          <circle
-                            cx="80"
-                            cy="80"
-                            r="62"
-                            fill="transparent"
-                            stroke="#1d4ed8"
-                            strokeWidth="18"
-                            strokeDasharray="3.6 389.5"
-                            strokeDashoffset="-385.8"
-                            className="transition-all duration-500 hover:opacity-85"
-                          />
-                        </svg>
-
-                        {/* Center Statistics */}
-                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                          <span className="text-2xl sm:text-3xl font-black font-mono text-slate-900 dark:text-white leading-none">
-                            {totalCount}
-                          </span>
-                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight mt-1">
-                            Thiết bị
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* INTERACTIVE LEGEND LIST */}
-                    <div className="sm:col-span-7 space-y-2">
-                      {/* 1. Bình CO2 */}
-                      <div
-                        onClick={() => {
-                          setCategoryFilter('binh_co2');
-                          setActiveTab('devices');
-                        }}
-                        className="p-2 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 hover:border-sky-300 dark:hover:border-sky-700 cursor-pointer transition-all flex items-center justify-between"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="w-3 h-3 rounded-full bg-sky-600 shrink-0"></span>
-                          <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Bình CO2 (MT3)</span>
-                        </div>
-                        <div className="flex items-center gap-2 font-mono">
-                          <span className="text-xs font-black text-sky-600">{countByCategory.binh_co2} TB</span>
-                          <span className="text-[10px] text-slate-400 bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800">
-                            40.5%
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* 2. Bình Bột */}
-                      <div
-                        onClick={() => {
-                          setCategoryFilter('binh_bot');
-                          setActiveTab('devices');
-                        }}
-                        className="p-2 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 hover:border-rose-300 dark:hover:border-rose-700 cursor-pointer transition-all flex items-center justify-between"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="w-3 h-3 rounded-full bg-rose-600 shrink-0"></span>
-                          <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Bình Bột (MFZ)</span>
-                        </div>
-                        <div className="flex items-center gap-2 font-mono">
-                          <span className="text-xs font-black text-rose-600">{countByCategory.binh_bot} TB</span>
-                          <span className="text-[10px] text-slate-400 bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800">
-                            29.7%
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* 3. Tủ Vòi Vách */}
-                      <div
-                        onClick={() => {
-                          setCategoryFilter('tu_voi_vach');
-                          setActiveTab('devices');
-                        }}
-                        className="p-2 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 hover:border-red-300 dark:hover:border-red-700 cursor-pointer transition-all flex items-center justify-between"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="w-3 h-3 rounded-full bg-red-500 shrink-0"></span>
-                          <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Tủ Vòi Vách Tường</span>
-                        </div>
-                        <div className="flex items-center gap-2 font-mono">
-                          <span className="text-xs font-black text-red-600">{countByCategory.tu_voi_vach} TB</span>
-                          <span className="text-[10px] text-slate-400 bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800">
-                            17.1%
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* 4. Báo Cháy */}
-                      <div
-                        onClick={() => {
-                          setCategoryFilter('nut_chuong');
-                          setActiveTab('devices');
-                        }}
-                        className="p-2 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 hover:border-amber-300 dark:hover:border-amber-700 cursor-pointer transition-all flex items-center justify-between"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="w-3 h-3 rounded-full bg-amber-500 shrink-0"></span>
-                          <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Báo Cháy (Nút & Chuông)</span>
-                        </div>
-                        <div className="flex items-center gap-2 font-mono">
-                          <span className="text-xs font-black text-amber-600">{countByCategory.nut_chuong} TB</span>
-                          <span className="text-[10px] text-slate-400 bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800">
-                            10.8%
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* 5. Trạm Bơm & Tủ Trung Tâm */}
-                      <div className="grid grid-cols-2 gap-2">
-                        <div
-                          onClick={() => {
-                            setCategoryFilter('tram_bom');
-                            setActiveTab('devices');
-                          }}
-                          className="p-2 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 hover:border-slate-400 cursor-pointer transition-all flex items-center justify-between"
-                        >
-                          <div className="flex items-center gap-1.5 truncate">
-                            <span className="w-2.5 h-2.5 rounded-full bg-slate-600 shrink-0"></span>
-                            <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200 truncate">Trạm Bơm</span>
-                          </div>
-                          <span className="text-[11px] font-black font-mono text-slate-700 dark:text-slate-300 shrink-0">
-                            {countByCategory.tram_bom} TB
-                          </span>
-                        </div>
-
-                        <div
-                          onClick={() => {
-                            setCategoryFilter('tu_trung_tam');
-                            setActiveTab('devices');
-                          }}
-                          className="p-2 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 hover:border-blue-400 cursor-pointer transition-all flex items-center justify-between"
-                        >
-                          <div className="flex items-center gap-1.5 truncate">
-                            <span className="w-2.5 h-2.5 rounded-full bg-blue-700 shrink-0"></span>
-                            <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200 truncate">Tủ TT</span>
-                          </div>
-                          <span className="text-[11px] font-black font-mono text-blue-700 dark:text-blue-400 shrink-0">
-                            {countByCategory.tu_trung_tam} TB
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-600 border border-emerald-200 dark:border-emerald-800 hidden sm:inline-block">
+                    {passRate}% Đạt chuẩn
+                  </span>
                 </div>
 
-                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
-                  <span className="text-slate-500 italic">Bấm vào bất kỳ chủng loại nào để xem danh mục thiết bị</span>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('devices')}
-                    className="font-bold text-red-600 hover:text-red-700 cursor-pointer"
-                  >
-                    Xem chi tiết 111 thiết bị &rarr;
-                  </button>
+                {/* Donut Chart + Category List */}
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center py-1">
+                  {/* SVG Donut Chart */}
+                  <div className="sm:col-span-5 flex flex-col items-center justify-center relative">
+                    <div className="relative w-36 h-36 sm:w-40 sm:h-40">
+                      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 140 140">
+                        {/* Circle Background */}
+                        <circle
+                          cx="70"
+                          cy="70"
+                          r="54"
+                          fill="transparent"
+                          stroke="currentColor"
+                          strokeWidth="16"
+                          className="text-slate-100 dark:text-slate-800"
+                        />
+                        {/* Dynamic Category Slices */}
+                        {categoriesList.map((cat) => {
+                          if (cat.count === 0) return null;
+                          return (
+                            <circle
+                              key={cat.key}
+                              cx="70"
+                              cy="70"
+                              r="54"
+                              fill="transparent"
+                              stroke={cat.color}
+                              strokeWidth="16"
+                              strokeDasharray={cat.strokeDasharray}
+                              strokeDashoffset={cat.strokeDashoffset}
+                              className="transition-all duration-500 hover:opacity-85"
+                            />
+                          );
+                        })}
+                      </svg>
+
+                      {/* Center Number */}
+                      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+                        <span className="text-2xl font-black font-mono text-slate-900 dark:text-white leading-none">
+                          {totalCount}
+                        </span>
+                        <span className="text-[9.5px] font-bold text-slate-400 uppercase tracking-wider mt-1">
+                          Thiết bị
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 6 Category Items List */}
+                  <div className="sm:col-span-7 grid grid-cols-1 gap-2">
+                    {categoriesList.map((cat) => (
+                      <button
+                        key={cat.key}
+                        type="button"
+                        onClick={() => {
+                          setCategoryFilter(cat.key);
+                          setActiveTab('devices');
+                        }}
+                        className="px-3 py-2 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 hover:bg-white dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all flex items-center justify-between text-left cursor-pointer group"
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${cat.dot}`}></span>
+                          <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate group-hover:text-blue-600 transition-colors">
+                            {cat.name}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 font-mono shrink-0">
+                          <span className="text-xs font-bold text-slate-900 dark:text-white">{cat.count} TB</span>
+                          <span className="text-[10px] text-slate-500 bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800">
+                            {cat.percent}%
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* CỘT PHẢI (5 Cột): BIỂU ĐỒ PHÂN BỔ THEO 6 KHU VỰC / PHÂN XƯỞNG */}
-              <div className="lg:col-span-5 bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
-                    <div>
-                      <h3 className="text-xs sm:text-sm font-black uppercase text-slate-900 dark:text-white tracking-wide flex items-center gap-1.5">
-                        <Building2 className="w-4 h-4 text-blue-600" />
-                        <span>Phân Bổ Thiết Bị Theo 6 Khu Vực Nhà Máy</span>
-                      </h3>
-                      <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5">
-                        Mật độ bố trí thiết bị phòng cháy tại các xưởng sản xuất
-                      </p>
-                    </div>
-                    <span className="text-[10px] font-mono font-bold text-slate-500">
-                      6 Khu vực
-                    </span>
-                  </div>
-
-                  {/* AREA BARS BREAKDOWN */}
-                  <div className="space-y-2.5">
-                    {/* Area 1: PX. Hoàn Thiện */}
-                    <div className="space-y-1">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-slate-800 dark:text-slate-200">1. PX. Hoàn Thiện (PXHT)</span>
-                        <span className="font-mono font-bold text-slate-900 dark:text-white">31 TB (27.9%)</span>
-                      </div>
-                      <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
-                        <div className="bg-sky-600 h-full" style={{ width: '45%' }} title="14 Bình CO2"></div>
-                        <div className="bg-rose-600 h-full" style={{ width: '32%' }} title="10 Bình Bột"></div>
-                        <div className="bg-red-500 h-full" style={{ width: '16%' }} title="5 Tủ Vòi"></div>
-                        <div className="bg-amber-500 h-full" style={{ width: '7%' }} title="2 Báo Cháy"></div>
-                      </div>
-                    </div>
-
-                    {/* Area 2: Kho Hàng */}
-                    <div className="space-y-1">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-slate-800 dark:text-slate-200">2. Kho Hàng & Nguyên Liệu (KHO)</span>
-                        <span className="font-mono font-bold text-slate-900 dark:text-white">31 TB (27.9%)</span>
-                      </div>
-                      <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
-                        <div className="bg-rose-600 h-full" style={{ width: '42%' }} title="13 Bình Bột"></div>
-                        <div className="bg-sky-600 h-full" style={{ width: '29%' }} title="9 Bình CO2"></div>
-                        <div className="bg-red-500 h-full" style={{ width: '16%' }} title="5 Tủ Vòi"></div>
-                        <div className="bg-amber-500 h-full" style={{ width: '13%' }} title="4 Báo Cháy"></div>
-                      </div>
-                    </div>
-
-                    {/* Area 3: Văn Phòng Điều Hành */}
-                    <div className="space-y-1">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-slate-800 dark:text-slate-200">3. Văn Phòng Điều Hành (VP)</span>
-                        <span className="font-mono font-bold text-slate-900 dark:text-white">18 TB (16.2%)</span>
-                      </div>
-                      <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
-                        <div className="bg-sky-600 h-full" style={{ width: '39%' }} title="7 Bình CO2"></div>
-                        <div className="bg-red-500 h-full" style={{ width: '33%' }} title="6 Tủ Vòi"></div>
-                        <div className="bg-amber-500 h-full" style={{ width: '22%' }} title="4 Báo Cháy"></div>
-                        <div className="bg-rose-600 h-full" style={{ width: '6%' }} title="1 Bình Bột"></div>
-                      </div>
-                    </div>
-
-                    {/* Area 4: Nhà Xe & Khu Phụ Trợ */}
-                    <div className="space-y-1">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-slate-800 dark:text-slate-200">4. Nhà Xe & Khu Phụ Trợ (NX, PT)</span>
-                        <span className="font-mono font-bold text-slate-900 dark:text-white">15 TB (13.5%)</span>
-                      </div>
-                      <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
-                        <div className="bg-rose-600 h-full" style={{ width: '53%' }} title="8 Bình Bột (kể cả xe đẩy 35kg)"></div>
-                        <div className="bg-sky-600 h-full" style={{ width: '47%' }} title="7 Bình CO2"></div>
-                      </div>
-                    </div>
-
-                    {/* Area 5: Phân Xưởng Dệt */}
-                    <div className="space-y-1">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-slate-800 dark:text-slate-200">5. Phân Xưởng Dệt (D)</span>
-                        <span className="font-mono font-bold text-slate-900 dark:text-white">13 TB (11.7%)</span>
-                      </div>
-                      <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
-                        <div className="bg-sky-600 h-full" style={{ width: '62%' }} title="8 Bình CO2"></div>
-                        <div className="bg-red-500 h-full" style={{ width: '23%' }} title="3 Tủ Vòi"></div>
-                        <div className="bg-amber-500 h-full" style={{ width: '15%' }} title="2 Báo Cháy"></div>
-                      </div>
-                    </div>
-
-                    {/* Area 6: Trạm Bơm & Bảo Vệ */}
-                    <div className="space-y-1">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-slate-800 dark:text-slate-200">6. Trạm Bơm & Cổng Bảo Vệ (BV, TB)</span>
-                        <span className="font-mono font-bold text-slate-900 dark:text-white">3 TB (2.8%)</span>
-                      </div>
-                      <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
-                        <div className="bg-blue-700 h-full" style={{ width: '33.3%' }} title="1 Tủ Trung Tâm"></div>
-                        <div className="bg-slate-600 h-full" style={{ width: '33.3%' }} title="1 Trạm Bơm"></div>
-                        <div className="bg-rose-600 h-full" style={{ width: '33.4%' }} title="1 Bình Bột 8kg"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-500">
-                  <span>Màu sắc biểu thị tỷ trọng các chủng loại đặt tại khu vực</span>
-                  <span className="font-bold text-emerald-600">Độ phủ 100%</span>
-                </div>
+              <div className="pt-3 mt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
+                <span className="text-slate-400">Bấm vào chủng loại để lọc danh mục</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCategoryFilter('all');
+                    setStatusFilter('all');
+                    setActiveTab('devices');
+                  }}
+                  className="font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Xem tất cả danh mục</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
               </div>
             </div>
 
-            {/* PANEL DƯỚI: THÔNG SỐ KỸ THUẬT & ĐỘ SẴN SÀNG VẬN HÀNH */}
-            <div className="bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
-                <div>
-                  <h3 className="text-xs sm:text-sm font-black uppercase text-slate-900 dark:text-white tracking-wide flex items-center gap-1.5">
-                    <Shield className="w-4 h-4 text-emerald-600" />
-                    <span>Chi Tiết Quy Cách Kỹ Thuật & Tình Trạng An Toàn Thiết Bị</span>
-                  </h3>
-                  <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5">
-                    Hạn kiểm định định kỳ toàn bộ 111 thiết bị: 20/12/2026 • 100% tem mã QR sẵn sàng tra cứu
-                  </p>
+            {/* Khối Phải (5 phần): Nhật Ký Kiểm Tra Gần Đây & Phân Bố Khu Vực */}
+            <div className="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
+              <div>
+                {/* Header with Sub-Tabs */}
+                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/50 flex items-center justify-center text-blue-600">
+                      {dashboardRightTab === 'inspections' ? (
+                        <History className="w-4 h-4" />
+                      ) : (
+                        <Building2 className="w-4 h-4" />
+                      )}
+                    </div>
+                    <div>
+                      <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wide">
+                        {dashboardRightTab === 'inspections' ? 'Nhật Ký Kiểm Tra Gần Đây' : 'Phân Bố Theo Khu Vực'}
+                      </h3>
+                      <p className="text-[11px] text-slate-500">
+                        {dashboardRightTab === 'inspections'
+                          ? `${recentInspections.length} lượt kiểm tra ghi nhận mới nhất`
+                          : 'Mật độ bố trí thiết bị toàn nhà máy'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Toggle Sub-Tabs */}
+                  <div className="inline-flex p-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-[10px] font-bold">
+                    <button
+                      type="button"
+                      onClick={() => setDashboardRightTab('inspections')}
+                      className={`px-2 py-1 rounded-md transition-all ${
+                        dashboardRightTab === 'inspections'
+                          ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs'
+                          : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                      }`}
+                    >
+                      Kiểm tra
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDashboardRightTab('areas')}
+                      className={`px-2 py-1 rounded-md transition-all ${
+                        dashboardRightTab === 'areas'
+                          ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs'
+                          : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                      }`}
+                    >
+                      Khu vực
+                    </button>
+                  </div>
                 </div>
+
+                {/* Content: Recent Inspections */}
+                {dashboardRightTab === 'inspections' && (
+                  <div className="space-y-2">
+                    {recentInspections.length === 0 ? (
+                      <div className="p-8 text-center text-slate-400">
+                        <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-slate-300" />
+                        <p className="text-xs">Chưa có lượt kiểm tra nào được ghi nhận.</p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPreSelectedDevice(null);
+                            setIsInspectionModalOpen(true);
+                          }}
+                          className="mt-2 text-xs font-bold text-red-600 hover:underline cursor-pointer"
+                        >
+                          + Bắt đầu kiểm tra thiết bị ngay
+                        </button>
+                      </div>
+                    ) : (
+                      recentInspections.map((insp) => {
+                        const isPass = insp.overallResult === 'pass';
+                        return (
+                          <div
+                            key={insp.id}
+                            className="p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-800 transition-all flex items-center justify-between"
+                          >
+                            <div className="min-w-0 pr-2">
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-mono font-bold text-xs text-red-600">
+                                  {insp.deviceId}
+                                </span>
+                                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[170px]">
+                                  {insp.deviceName}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 text-[10px] text-slate-500 mt-0.5 truncate">
+                                <span>{insp.inspectorName}</span>
+                                <span>•</span>
+                                <span className="font-mono">{insp.inspectedAt ? insp.inspectedAt.slice(0, 16) : '-'}</span>
+                              </div>
+                            </div>
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 border ${
+                                isPass
+                                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800'
+                                  : 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950 dark:text-rose-400 dark:border-rose-800'
+                              }`}
+                            >
+                              {isPass ? 'ĐẠT' : 'CẦN XỬ LÝ'}
+                            </span>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                )}
+
+                {/* Content: Area Breakdown */}
+                {dashboardRightTab === 'areas' && (
+                  <div className="space-y-2.5 py-1">
+                    {areaBreakdown.map((area, idx) => (
+                      <div key={idx} className="space-y-1">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-medium text-slate-700 dark:text-slate-300 truncate max-w-[200px]">
+                            {area.name}
+                          </span>
+                          <span className="font-mono font-bold text-slate-800 dark:text-slate-200 text-[11px]">
+                            {area.count} TB ({area.percent}%)
+                          </span>
+                        </div>
+                        <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                          <div
+                            className="bg-blue-600 h-full rounded-full transition-all duration-500"
+                            style={{ width: `${Math.max(area.percent, 3)}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-3 mt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+                <span>Dữ liệu thực tế giám sát PCCC</span>
                 <button
                   type="button"
                   onClick={() => setActiveTab('devices')}
-                  className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
+                  className="font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 cursor-pointer"
                 >
-                  <Layers className="w-3.5 h-3.5" />
-                  <span>Mở Bảng Danh Mục Thiết Bị (111)</span>
+                  <span>Mở bảng danh mục</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-                {/* Khối 1: Quy cách bình chữa cháy */}
-                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-slate-200">
-                    <div className="w-6 h-6 rounded-lg bg-sky-100 dark:bg-sky-950 text-sky-600 flex items-center justify-center">
-                      <Flame className="w-3.5 h-3.5" />
-                    </div>
-                    <span>Nhóm Bình Chữa Cháy (78 Bình)</span>
-                  </div>
-                  <ul className="text-[11px] text-slate-600 dark:text-slate-400 space-y-1.5 pl-1 font-medium">
-                    <li className="flex justify-between items-center">
-                      <span>• Bình khí CO2 MT3 (10 kg):</span>
-                      <strong className="font-mono text-slate-900 dark:text-white">45 bình</strong>
-                    </li>
-                    <li className="flex justify-between items-center">
-                      <span>• Bình bột chữa cháy ABC (4 kg):</span>
-                      <strong className="font-mono text-slate-900 dark:text-white">25 bình</strong>
-                    </li>
-                    <li className="flex justify-between items-center">
-                      <span>• Bình bột chữa cháy ABC (8 kg):</span>
-                      <strong className="font-mono text-slate-900 dark:text-white">7 bình</strong>
-                    </li>
-                    <li className="flex justify-between items-center">
-                      <span>• Bình bột xe đẩy lớn (35 kg):</span>
-                      <strong className="font-mono text-slate-900 dark:text-white">1 bình</strong>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Khối 2: Tủ vòi vách tường */}
-                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-slate-200">
-                    <div className="w-6 h-6 rounded-lg bg-red-100 dark:bg-red-950 text-red-600 flex items-center justify-center">
-                      <Box className="w-3.5 h-3.5" />
-                    </div>
-                    <span>Hệ Thống Vách Tường (19 Tủ)</span>
-                  </div>
-                  <ul className="text-[11px] text-slate-600 dark:text-slate-400 space-y-1.5 pl-1 font-medium">
-                    <li className="flex justify-between items-center">
-                      <span>• Tủ ngoài trời & vách xưởng:</span>
-                      <strong className="font-mono text-slate-900 dark:text-white">19 tủ</strong>
-                    </li>
-                    <li className="flex justify-between items-center">
-                      <span>• Cuộn vòi chữa cháy D50 (20m):</span>
-                      <strong className="font-mono text-slate-900 dark:text-white">Đủ 19 bộ</strong>
-                    </li>
-                    <li className="flex justify-between items-center">
-                      <span>• Lăng phun kim loại & van góc:</span>
-                      <strong className="font-mono text-emerald-600">Hoạt động tốt</strong>
-                    </li>
-                    <li className="flex justify-between items-center">
-                      <span>• Áp lực duy trì đường ống:</span>
-                      <strong className="font-mono text-slate-900 dark:text-white">7 - 9 bar</strong>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Khối 3: Báo cháy & trạm bơm */}
-                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-slate-200">
-                    <div className="w-6 h-6 rounded-lg bg-amber-100 dark:bg-amber-950 text-amber-600 flex items-center justify-center">
-                      <Bell className="w-3.5 h-3.5" />
-                    </div>
-                    <span>Báo Cháy & Bơm PCCC (14 Hệ Thống)</span>
-                  </div>
-                  <ul className="text-[11px] text-slate-600 dark:text-slate-400 space-y-1.5 pl-1 font-medium">
-                    <li className="flex justify-between items-center">
-                      <span>• Tổ hợp chuông đèn nút nhấn:</span>
-                      <strong className="font-mono text-slate-900 dark:text-white">12 cụm</strong>
-                    </li>
-                    <li className="flex justify-between items-center">
-                      <span>• Tủ trung tâm báo cháy YunYang:</span>
-                      <strong className="font-mono text-blue-600">1 hệ thống</strong>
-                    </li>
-                    <li className="flex justify-between items-center">
-                      <span>• Trạm bơm chính + bù áp PCCC:</span>
-                      <strong className="font-mono text-slate-900 dark:text-white">1 trạm bơm</strong>
-                    </li>
-                    <li className="flex justify-between items-center">
-                      <span>• Nguồn điện dự phòng & ắc quy:</span>
-                      <strong className="font-mono text-emerald-600">Sẵn sàng 24/7</strong>
-                    </li>
-                  </ul>
-                </div>
               </div>
             </div>
           </div>
