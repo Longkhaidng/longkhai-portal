@@ -1,0 +1,23 @@
+{
+  "id": "INSP-20261030-703",
+  "deviceId": "HT-CH-01",
+  "deviceName": "Tổ hợp chuông đèn, nút nhấn báo cháy số 01",
+  "category": "nut_chuong",
+  "location": "PXHT - Gần kho phụ liệu",
+  "inspectorId": "1927",
+  "inspectorName": "Phan Hải Đăng",
+  "inspectedAt": "2026-10-30 10:14:28",
+  "overallResult": "pass",
+  "notes": "",
+  "checklist": {
+    "type": "nut_chuong",
+    "data": {
+      "subType": "Tổ hợp Chuông/Đèn/Nút",
+      "emergencyButton": "pass",
+      "bellSiren": "pass",
+      "locationLight": "pass",
+      "resetSwitch": "pass"
+    }
+  },
+  "createdAt": "2026-10-30T03:14:28.173Z"
+}
