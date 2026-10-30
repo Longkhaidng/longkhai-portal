@@ -5,7 +5,7 @@
     "department": "Ban Giám Đốc",
     "position": "Giám đốc sản xuất",
     "role": "manager",
-    "email": "tu.pham@vitex.com.vn",
+    "email": "it@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "announcements",
@@ -14,7 +14,7 @@
     "isActive": true,
     "password": "BOD",
     "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "updatedAt": "2026-10-30T01:30:01.538Z"
   },
   {
     "id": "2864",
