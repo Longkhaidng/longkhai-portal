@@ -1775,11 +1775,10 @@ export function ReportsView() {
                     <th className="px-2 py-1.5 border min-w-[125px]">Tên thiết bị</th>
                     <th className="px-1.5 py-1.5 border text-center w-20 whitespace-nowrap">Chủng loại</th>
                     <th className="px-2 py-1.5 border min-w-[125px]">Vị trí đặt</th>
-                    <th className="px-1.5 py-1.5 border text-center w-14 whitespace-nowrap">Chuẩn KT</th>
                     <th className="px-1.5 py-1.5 border text-center w-20 whitespace-nowrap">Hạn KĐ</th>
                     <th className="px-1.5 py-1.5 border text-center w-24 whitespace-nowrap">Thời gian KT</th>
                     <th className="px-1.5 py-1.5 border text-center w-28 whitespace-nowrap">Người kiểm tra</th>
-                    <th className="px-2 py-1.5 border min-w-[140px]">Chi tiết kiểm tra</th>
+                    <th className="px-2 py-1.5 border min-w-[160px]">Chi tiết kiểm tra</th>
                     <th className="px-1.5 py-1.5 border text-center w-16 whitespace-nowrap">Đánh giá</th>
                     <th className="px-1.5 py-1.5 border min-w-[70px]">Ghi chú</th>
                   </tr>
@@ -1787,7 +1786,7 @@ export function ReportsView() {
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
                   {filteredPCCCDevices.length === 0 ? (
                     <tr>
-                      <td colSpan={12} className="p-8 text-center text-slate-400">
+                      <td colSpan={11} className="p-8 text-center text-slate-400">
                         Không tìm thấy thiết bị PCCC nào phù hợp với bộ lọc hiện tại.
                       </td>
                     </tr>
@@ -1817,7 +1816,6 @@ export function ReportsView() {
                             </span>
                           </td>
                           <td className="px-2 py-1 border leading-tight text-slate-700 dark:text-slate-300">{d.location}</td>
-                          <td className="px-1.5 py-1 border text-center font-mono whitespace-nowrap text-[10px]">{d.specs}</td>
                           <td className="px-1.5 py-1 border text-center whitespace-nowrap font-mono text-[10px]">{formatPCCCDate(d.inspectionExpiry)}</td>
                           <td className="px-1.5 py-1 border text-center text-[10px] whitespace-nowrap font-mono text-slate-600 dark:text-slate-300">
                             {inspDate}
@@ -1825,8 +1823,22 @@ export function ReportsView() {
                           <td className="px-1.5 py-1 border text-center whitespace-nowrap text-[10px]">
                             {inspectorName}
                           </td>
-                          <td className="px-2 py-1 border text-[10px] text-slate-700 dark:text-slate-300 max-w-[200px] leading-tight">
-                            {details}
+                          <td className="px-2 py-1.5 border text-[10px] text-slate-700 dark:text-slate-300 min-w-[160px] leading-normal">
+                            {details === 'Chưa kiểm tra' ? (
+                              <span className="text-slate-400 italic">Chưa kiểm tra</span>
+                            ) : (
+                              <div className="space-y-1">
+                                {details.split(';').map((line, lIdx) => {
+                                  const trimmed = line.trim();
+                                  if (!trimmed) return null;
+                                  return (
+                                    <div key={lIdx} className="leading-tight whitespace-nowrap">
+                                      {trimmed}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </td>
                           <td className="px-1.5 py-1 border text-center whitespace-nowrap">
                             {isInspected ? (

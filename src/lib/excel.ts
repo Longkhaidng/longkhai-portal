@@ -934,7 +934,7 @@ export async function exportPCCCReportToExcel(opts: ExportPCCCReportOptions) {
     month: '2-digit',
     year: 'numeric',
   });
-  const totalCols = 12;
+  const totalCols = 11;
 
   const solidBlackBorder: Partial<ExcelJS.Borders> = {
     top: { style: 'thin', color: { argb: 'FF000000' } },
@@ -987,7 +987,6 @@ export async function exportPCCCReportToExcel(opts: ExportPCCCReportOptions) {
     'Tên thiết bị',
     'Chủng loại',
     'Vị trí đặt',
-    'Chuẩn kỹ thuật',
     'Hạn kiểm định',
     'Thời gian kiểm tra',
     'Người kiểm tra',
@@ -1021,6 +1020,10 @@ export async function exportPCCCReportToExcel(opts: ExportPCCCReportOptions) {
       ? `${d.lastInspection.inspectorName} (${d.lastInspection.inspectorId})`
       : '-';
     const details = formatPCCCChecklistSummary(insp);
+    const detailsLines = details === 'Chưa kiểm tra'
+      ? 'Chưa kiểm tra'
+      : details.split(';').map((s) => s.trim()).filter(Boolean).join('\r\n');
+
     const resultText = insp
       ? insp.overallResult === 'pass'
         ? 'ĐẠT TIÊU CHUẨN'
@@ -1036,35 +1039,35 @@ export async function exportPCCCReportToExcel(opts: ExportPCCCReportOptions) {
       d.name,
       catName,
       d.location,
-      d.specs,
       formatPCCCDate(d.inspectionExpiry),
       inspDate,
       inspName,
-      details,
+      detailsLines,
       resultText,
       notesText,
     ];
 
     const row = worksheet.addRow(rowData);
-    row.height = 24;
+    const lineCount = detailsLines.split('\n').length || 1;
+    row.height = Math.max(26, lineCount * 17);
 
     for (let c = 1; c <= totalCols; c++) {
       const cell = row.getCell(c);
       cell.border = solidBlackBorder;
       cell.font = { name: 'Calibri', size: 10, color: { argb: 'FF1E293B' } };
 
-      const isCenter = [1, 2, 4, 6, 7, 8, 11].includes(c);
+      const isCenter = [1, 2, 4, 6, 7, 8, 10].includes(c);
       cell.alignment = {
         horizontal: isCenter ? 'center' : 'left',
         vertical: 'middle',
-        wrapText: c === 10 || c === 5,
+        wrapText: c === 9 || c === 5,
       };
 
       if (c === 2) {
         cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FFE11D48' } };
       } else if (c === 3) {
         cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FF0F172A' } };
-      } else if (c === 11) {
+      } else if (c === 10) {
         if (resultText === 'ĐẠT TIÊU CHUẨN') {
           cell.font = { name: 'Calibri', bold: true, size: 10, color: { argb: 'FF059669' } };
         } else if (resultText === 'CẦN XỬ LÝ / HỎNG') {
@@ -1074,8 +1077,8 @@ export async function exportPCCCReportToExcel(opts: ExportPCCCReportOptions) {
     }
   });
 
-  // Column widths
-  const colWidths = [6, 14, 26, 15, 25, 16, 14, 18, 22, 42, 18, 22];
+  // Column widths (11 columns)
+  const colWidths = [6, 14, 26, 15, 25, 14, 18, 22, 45, 18, 22];
   worksheet.columns.forEach((col, idx) => {
     col.width = colWidths[idx] || 16;
   });
