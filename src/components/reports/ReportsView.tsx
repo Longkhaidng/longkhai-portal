@@ -59,6 +59,9 @@ export function ReportsView() {
     setReportType(type);
     setStatusFilter(type === 'pccc' ? 'inspected' : 'all');
     setPcccCategoryFilter('all');
+    setPeriodicCategoryFilter('all');
+    setDepartmentFilter('all');
+    setSearchTerm('');
   };
 
   const departments = storage.getDepartments();
@@ -117,6 +120,7 @@ export function ReportsView() {
     setSearchTerm('');
     setStatusFilter(reportType === 'pccc' ? 'inspected' : 'all');
     setPcccCategoryFilter('all');
+    setPeriodicCategoryFilter('all');
   };
 
   const hasActiveFilters =
@@ -124,6 +128,7 @@ export function ReportsView() {
     fromDate !== '' ||
     toDate !== '' ||
     searchTerm.trim() !== '' ||
+    periodicCategoryFilter !== 'all' ||
     (reportType === 'pccc'
       ? statusFilter !== 'inspected' || pcccCategoryFilter !== 'all'
       : statusFilter !== 'all');
@@ -897,6 +902,33 @@ export function ReportsView() {
         fileName: `LONGKHAI_Bao_Cao_PCCC_${nowStr}`,
       });
       return;
+    } else if (reportType === 'periodic_inspection') {
+      title = 'KIỂM TRA ĐỊNH KỲ (AN TOÀN & MÔI TRƯỜNG)';
+      fileName = `LONGKHAI_Bao_Cao_KIEM_TRA_DINH_KY_${nowStr}`;
+      headers = [
+        'STT',
+        'Mã phiếu',
+        'Hạng mục',
+        'Địa điểm / Vị trí',
+        'Thời gian KT',
+        'Người kiểm tra',
+        'Bộ phận',
+        'Chi tiết kiểm tra',
+        'Đánh giá',
+        'Ghi chú / Đề xuất',
+      ];
+      rows = filteredPeriodicInspections.map((item, idx) => [
+        idx + 1,
+        item.id,
+        item.categoryName,
+        item.location,
+        item.thoiGian || '',
+        item.inspector,
+        item.department,
+        item.detailLines.join('\n'),
+        item.status,
+        item.notes,
+      ]);
     } else if (reportType === 'departments') {
       title = 'CƠ CẤU PHÒNG BAN';
       fileName = `LONGKHAI_Bao_Cao_PHONG_BAN_${nowStr}`;
@@ -969,164 +1001,54 @@ export function ReportsView() {
         </div>
       </div>
 
-      {/* Select Report Type Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-        <button
-          onClick={() => handleSelectReportType('leave')}
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            reportType === 'leave'
-              ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-500 shadow-sm ring-1 ring-blue-500/30'
-              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-          }`}
-        >
-          <CalendarDays className="w-5 h-5 text-blue-600 mb-2" />
-          <div className="font-bold text-xs text-slate-900 dark:text-white">Nghỉ phép</div>
-          <div className="text-[11px] text-slate-500">
-            {filteredLeaves.length} đơn {hasActiveFilters && `(${leaves.length} gốc)`}
-          </div>
-        </button>
-
-        <button
-          onClick={() => handleSelectReportType('attendance')}
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            reportType === 'attendance'
-              ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-500 shadow-sm ring-1 ring-amber-500/30'
-              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-          }`}
-        >
-          <Clock className="w-5 h-5 text-amber-600 mb-2" />
-          <div className="font-bold text-xs text-slate-900 dark:text-white">Xác nhận công</div>
-          <div className="text-[11px] text-slate-500">
-            {filteredAttendances.length} phiếu {hasActiveFilters && `(${attendances.length} gốc)`}
-          </div>
-        </button>
-
-        <button
-          onClick={() => handleSelectReportType('gate_pass')}
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            reportType === 'gate_pass'
-              ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 shadow-sm ring-1 ring-emerald-500/30'
-              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-          }`}
-        >
-          <QrCode className="w-5 h-5 text-emerald-600 mb-2" />
-          <div className="font-bold text-xs text-slate-900 dark:text-white">Ra vào cổng</div>
-          <div className="text-[11px] text-slate-500">
-            {filteredGatePasses.length} lượt {hasActiveFilters && `(${gatePasses.length} gốc)`}
-          </div>
-        </button>
-
-        <button
-          onClick={() => handleSelectReportType('repair')}
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            reportType === 'repair'
-              ? 'bg-orange-50 dark:bg-orange-950/40 border-orange-500 shadow-sm ring-1 ring-orange-500/30'
-              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-          }`}
-        >
-          <Wrench className="w-5 h-5 text-orange-600 mb-2" />
-          <div className="font-bold text-xs text-slate-900 dark:text-white">Đề xuất sửa chữa</div>
-          <div className="text-[11px] text-slate-500">
-            {filteredRepairs.length} đề xuất {hasActiveFilters && `(${repairs.length} gốc)`}
-          </div>
-        </button>
-
-        <button
-          onClick={() => handleSelectReportType('meal_cut')}
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            reportType === 'meal_cut'
-              ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-500 shadow-sm ring-1 ring-rose-500/30'
-              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-          }`}
-        >
-          <Utensils className="w-5 h-5 text-rose-600 mb-2" />
-          <div className="font-bold text-xs text-slate-900 dark:text-white">Cắt cơm</div>
-          <div className="text-[11px] text-slate-500">
-            {filteredMealCutLeaves.length} lượt {hasActiveFilters && `(${mealCutLeaves.length} gốc)`}
-          </div>
-        </button>
-
-        <button
-          onClick={() => handleSelectReportType('stationery')}
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            reportType === 'stationery'
-              ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-500 shadow-sm ring-1 ring-blue-500/30'
-              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-          }`}
-        >
-          <Package className="w-5 h-5 text-blue-600 mb-2" />
-          <div className="font-bold text-xs text-slate-900 dark:text-white">Văn phòng phẩm</div>
-          <div className="text-[11px] text-slate-500">
-            {filteredStationeries.length} phiếu {hasActiveFilters && `(${stationeries.length} gốc)`}
-          </div>
-        </button>
-
-        <button
-          onClick={() => handleSelectReportType('general')}
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            reportType === 'general'
-              ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-500 shadow-sm ring-1 ring-purple-500/30'
-              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-          }`}
-        >
-          <FileQuestion className="w-5 h-5 text-purple-600 mb-2" />
-          <div className="font-bold text-xs text-slate-900 dark:text-white">Đề xuất khác</div>
-          <div className="text-[11px] text-slate-500">
-            {filteredGenerals.length} đề xuất {hasActiveFilters && `(${generals.length} gốc)`}
-          </div>
-        </button>
-
-        <button
-          onClick={() => handleSelectReportType('pccc')}
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            reportType === 'pccc'
-              ? 'bg-rose-50 dark:bg-rose-950/40 border-red-500 shadow-sm ring-1 ring-red-500/30'
-              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-          }`}
-        >
-          <Flame className="w-5 h-5 text-red-600 mb-2" />
-          <div className="font-bold text-xs text-slate-900 dark:text-white">Kiểm tra PCCC</div>
-          <div className="text-[11px] text-slate-500">
-            {filteredPCCCDevices.length} thiết bị {hasActiveFilters && `(${pcccDevices.length} gốc)`}
-          </div>
-        </button>
-
-        <button
-          onClick={() => handleSelectReportType('periodic_inspection')}
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            reportType === 'periodic_inspection'
-              ? 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-500 shadow-sm ring-1 ring-indigo-500/30'
-              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-          }`}
-        >
-          <ClipboardCheck className="w-5 h-5 text-indigo-600 mb-2" />
-          <div className="font-bold text-sm text-slate-800 dark:text-slate-100">Kiểm tra định kỳ</div>
-          <div className="text-xs text-slate-500 mt-1">
-            Tủ SCC, Máy rửa mắt, Nước mưa, Đất &amp; Nước ngầm
-          </div>
-        </button>
-
-        <button
-          onClick={() => handleSelectReportType('departments')}
-          className={`p-4 rounded-2xl border text-left transition-all ${
-            reportType === 'departments'
-              ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-500 shadow-sm ring-1 ring-purple-500/30'
-              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-          }`}
-        >
-          <Building2 className="w-5 h-5 text-purple-600 mb-2" />
-          <div className="font-bold text-xs text-slate-900 dark:text-white">Cơ cấu phòng ban</div>
-          <div className="text-[11px] text-slate-500">
-            {filteredDepartments.length} phòng ban
-          </div>
-        </button>
+      {/* Report Type Navigation Tabs */}
+      <div className="bg-slate-100 dark:bg-slate-800/80 p-1.5 rounded-2xl flex flex-wrap gap-1.5 border border-slate-200 dark:border-slate-700/60 shadow-xs">
+        {[
+          { key: 'leave', label: 'Nghỉ phép', icon: CalendarDays, count: filteredLeaves.length },
+          { key: 'attendance', label: 'Xác nhận công', icon: Clock, count: filteredAttendances.length },
+          { key: 'gate_pass', label: 'Ra vào cổng', icon: QrCode, count: filteredGatePasses.length },
+          { key: 'repair', label: 'Đề xuất sửa chữa', icon: Wrench, count: filteredRepairs.length },
+          { key: 'meal_cut', label: 'Cắt cơm', icon: Utensils, count: filteredMealCutLeaves.length },
+          { key: 'stationery', label: 'Văn phòng phẩm', icon: Package, count: filteredStationeries.length },
+          { key: 'general', label: 'Đề xuất khác', icon: FileQuestion, count: filteredGenerals.length },
+          { key: 'pccc', label: 'Kiểm tra PCCC', icon: Flame, count: filteredPCCCDevices.length },
+          { key: 'periodic_inspection', label: 'Kiểm tra định kỳ', icon: ClipboardCheck, count: filteredPeriodicInspections.length },
+          { key: 'departments', label: 'Cơ cấu phòng ban', icon: Building2, count: filteredDepartments.length },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const isActive = reportType === tab.key;
+          return (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => handleSelectReportType(tab.key as any)}
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+                isActive
+                  ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs ring-1 ring-slate-900/10 dark:ring-white/10'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-800/60'
+              }`}
+            >
+              <Icon className={`w-4 h-4 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400'}`} />
+              <span>{tab.label}</span>
+              <span
+                className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                  isActive
+                    ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400'
+                    : 'bg-slate-200/70 dark:bg-slate-700/60 text-slate-500 dark:text-slate-400'
+                }`}
+              >
+                {tab.count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Filter Toolbar */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
-        <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
+        <div className="flex flex-wrap items-center gap-3 text-xs">
           {/* Search Input */}
-          <div className="relative flex-1 min-w-[200px] max-w-sm">
+          <div className="relative flex-1 min-w-[220px] max-w-sm">
             <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
             <input
               type="text"
@@ -1135,6 +1057,8 @@ export function ReportsView() {
               placeholder={
                 reportType === 'pccc'
                   ? 'Tìm theo mã, tên thiết bị, vị trí...'
+                  : reportType === 'periodic_inspection'
+                  ? 'Tìm mã, vị trí, người KT, bộ phận...'
                   : reportType === 'departments'
                   ? 'Tìm phòng ban, mã số, quản lý...'
                   : reportType === 'stationery'
@@ -1143,37 +1067,73 @@ export function ReportsView() {
                   ? 'Tìm mã, người gửi, vị trí, sự cố...'
                   : 'Tìm kiếm theo mã, họ tên, lý do...'
               }
-              className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-9 pr-7 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm('')}
-                className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 text-xs font-bold"
+                className="absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 text-sm font-bold"
               >
                 &times;
               </button>
             )}
           </div>
 
-          {/* Department Filter */}
+          {/* Sub-category filter for Periodic Inspection */}
+          {reportType === 'periodic_inspection' && (
+            <div className="flex items-center gap-1.5">
+              <span className="font-semibold text-slate-600 dark:text-slate-400 whitespace-nowrap text-xs">
+                Hạng mục:
+              </span>
+              <select
+                value={periodicCategoryFilter}
+                onChange={(e) => setPeriodicCategoryFilter(e.target.value as any)}
+                className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
+              >
+                <option value="all">Tất cả hạng mục ({periodicInspections.length})</option>
+                <option value="first_aid">Tủ sơ cấp cứu</option>
+                <option value="eyewash">Máy rửa mắt</option>
+                <option value="stormwater">Hệ thống nước mưa</option>
+                <option value="groundwater_soil">Nước ngầm &amp; Đất</option>
+              </select>
+            </div>
+          )}
+
+          {/* Sub-category filter for PCCC */}
+          {reportType === 'pccc' && (
+            <div className="flex items-center gap-1.5">
+              <span className="font-semibold text-slate-600 dark:text-slate-400 whitespace-nowrap text-xs">
+                Chủng loại:
+              </span>
+              <select
+                value={pcccCategoryFilter}
+                onChange={(e) => setPcccCategoryFilter(e.target.value)}
+                className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 font-medium"
+              >
+                <option value="all">Tất cả chủng loại ({pcccDevices.length})</option>
+                <option value="binh_co2">Bình CO2 (45)</option>
+                <option value="binh_bot">Bình Bột (33)</option>
+                <option value="tu_voi_vach">Tủ Vách Tường (19)</option>
+                <option value="nut_chuong">Báo Cháy (12)</option>
+                <option value="tu_trung_tam">Tủ Trung Tâm (1)</option>
+                <option value="tram_bom">Trạm Bơm (1)</option>
+              </select>
+            </div>
+          )}
+
+          {/* Department / Area Filter */}
           {reportType !== 'departments' && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <span className="font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-1 whitespace-nowrap text-xs">
                 <Filter className="w-3.5 h-3.5 text-blue-600" />
-                {reportType === 'pccc' ? 'Khu vực / Xưởng:' : 'Phòng ban:'}
+                {reportType === 'pccc' ? 'Khu vực:' : 'Phòng ban:'}
               </span>
               <select
                 value={departmentFilter}
                 onChange={(e) => setDepartmentFilter(e.target.value)}
                 className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
               >
-                {reportType === 'periodic_inspection' ? (
-                  <>
-                    <option value="all">Tất cả kết quả kiểm tra</option>
-                    <option value="pass">Đạt / Đầy đủ tiêu chuẩn</option>
-                    <option value="fail">Không đạt / Cần xử lý / Thiếu</option>
-                  </>
-                ) : reportType === 'pccc' ? (
+                {reportType === 'pccc' ? (
                   <>
                     <option value="all">Tất cả khu vực</option>
                     <option value="PXHT">PX Hoàn Thiện (PXHT)</option>
@@ -1198,33 +1158,9 @@ export function ReportsView() {
             </div>
           )}
 
-          {/* Chủng loại Filter (Dành riêng cho Kiểm tra PCCC) */}
-          
-
-      {reportType === 'pccc' && (
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-slate-600 dark:text-slate-400 whitespace-nowrap text-xs">
-                Chủng loại:
-              </span>
-              <select
-                value={pcccCategoryFilter}
-                onChange={(e) => setPcccCategoryFilter(e.target.value)}
-                className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 font-medium"
-              >
-                <option value="all">Tất cả chủng loại ({pcccDevices.length})</option>
-                <option value="binh_co2">Bình CO2 (45)</option>
-                <option value="binh_bot">Bình Bột (33)</option>
-                <option value="tu_voi_vach">Tủ Vách Tường (19)</option>
-                <option value="nut_chuong">Báo Cháy (12)</option>
-                <option value="tu_trung_tam">Tủ Trung Tâm (1)</option>
-                <option value="tram_bom">Trạm Bơm (1)</option>
-              </select>
-            </div>
-          )}
-
-          {/* Status Filter (Áp dụng chính xác cho từng hạng mục) */}
+          {/* Status Filter */}
           {reportType !== 'departments' && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <span className="font-semibold text-slate-600 dark:text-slate-400 whitespace-nowrap text-xs">
                 Trạng thái:
               </span>
@@ -1233,44 +1169,48 @@ export function ReportsView() {
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
               >
-                {reportType === 'pccc' ? (
+                {reportType === 'periodic_inspection' ? (
                   <>
-                    <option value="inspected">Thiết bị đã kiểm tra (Mặc định)</option>
-                    <option value="all">Tất cả thiết bị (kể cả chưa kiểm tra)</option>
-                    <option value="pass">Đạt tiêu chuẩn kiểm định</option>
+                    <option value="all">Tất cả kết quả</option>
+                    <option value="pass">Đạt / Đầy đủ tiêu chuẩn</option>
+                    <option value="fail">Cần xử lý / Thiếu / Không đạt</option>
+                  </>
+                ) : reportType === 'pccc' ? (
+                  <>
+                    <option value="inspected">Đã kiểm tra (Đạt/Hỏng)</option>
+                    <option value="all">Tất cả thiết bị (kể cả chưa KT)</option>
+                    <option value="pass">Đạt tiêu chuẩn</option>
                     <option value="fail">Cần xử lý / Hỏng</option>
-                    <option value="expiring">Hết hạn / Sắp hết hạn (30 ngày)</option>
+                    <option value="expiring">Sắp hết hạn (30 ngày)</option>
                     <option value="none">Chưa kiểm tra</option>
+                  </>
+                ) : reportType === 'leave' ? (
+                  <>
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="pending">Chờ duyệt</option>
+                    <option value="approved">Đã duyệt</option>
+                    <option value="rejected">Bị từ chối</option>
+                    <option value="cancelled">Đã hủy</option>
+                  </>
+                ) : reportType === 'attendance' ? (
+                  <>
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="pending_dept">Chờ Trưởng BP duyệt</option>
+                    <option value="pending_hr">Chờ TP HCNS duyệt</option>
+                    <option value="approved">Đã duyệt</option>
+                    <option value="rejected">Bị từ chối</option>
                   </>
                 ) : reportType === 'gate_pass' ? (
                   <>
                     <option value="all">Tất cả trạng thái</option>
                     <option value="pending">Chờ duyệt</option>
-                    <option value="approved">Đã duyệt (chưa ra)</option>
-                    <option value="departed">Đang ra ngoài</option>
-                    <option value="completed">Đã về lại / Hoàn tất</option>
-                    <option value="rejected">Bị từ chối</option>
-                  </>
-                ) : reportType === 'repair' ? (
-                  <>
-                    <option value="all">Tất cả trạng thái</option>
-                    <option value="pending_dept">Bước 1: Chờ Quản lý duyệt</option>
-                    <option value="pending_manager">Bước 2: Chờ Trưởng BP duyệt</option>
-                    <option value="maintenance_pending">Bước 3: Chờ Cơ điện sửa chữa</option>
-                    <option value="pending_confirmation">Bước 4: Chờ nghiệm thu</option>
-                    <option value="completed">Đã hoàn tất</option>
-                    <option value="rejected">Bị từ chối</option>
-                  </>
-                ) : reportType === 'stationery' ? (
-                  <>
-                    <option value="all">Tất cả trạng thái</option>
-                    <option value="pending_dept">Chờ Trưởng BP duyệt</option>
-                    <option value="pending_hr">Chờ TP HCNS phê duyệt</option>
-                    <option value="approved">Đã phê duyệt hoàn tất</option>
+                    <option value="approved">Đã duyệt</option>
+                    <option value="out">Đang ra ngoài</option>
+                    <option value="completed">Đã về cổng</option>
                     <option value="rejected">Bị từ chối</option>
                     <option value="cancelled">Đã hủy</option>
                   </>
-                ) : reportType === 'general' ? (
+                ) : reportType === 'repair' ? (
                   <>
                     <option value="all">Tất cả trạng thái</option>
                     <option value="pending_dept">Chờ Trưởng BP duyệt</option>
@@ -1297,29 +1237,31 @@ export function ReportsView() {
               </select>
             </div>
           )}
+        </div>
 
-          {/* Date Range Picker */}
+        {/* Row 2: Date Filters & Summary Status */}
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs pt-2.5 border-t border-slate-100 dark:border-slate-800">
           <div className="flex flex-wrap items-center gap-2">
-            <Calendar className="w-3.5 h-3.5 text-slate-400" />
+            <span className="flex items-center gap-1 text-slate-500 font-medium">
+              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+              <span>Thời gian:</span>
+            </span>
             <input
               type="date"
               value={fromDate}
               onChange={(e) => setFromDate(e.target.value)}
-              className="py-2 px-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Từ ngày"
-              title="Lọc từ ngày"
+              className="py-1.5 px-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              title="Từ ngày"
             />
             <span className="text-slate-400">&rarr;</span>
             <input
               type="date"
               value={toDate}
               onChange={(e) => setToDate(e.target.value)}
-              className="py-2 px-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Đến ngày"
-              title="Lọc đến ngày"
+              className="py-1.5 px-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              title="Đến ngày"
             />
 
-            {/* Quick date shortcuts */}
             <button
               type="button"
               onClick={handleSetToday}
@@ -1347,34 +1289,24 @@ export function ReportsView() {
               </button>
             )}
           </div>
-        </div>
 
-        {/* Filter Summary Pill */}
-        <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100 dark:border-slate-800">
-          <div>
-            Đang lọc: <strong className="text-slate-700 dark:text-slate-300">{currentCount}</strong> kết quả phù hợp
+          {/* Results count pill */}
+          <div className="text-[11px] text-slate-500 flex items-center gap-2">
+            <span>
+              Đang hiển thị: <strong className="text-slate-900 dark:text-white font-bold">{currentCount}</strong> kết quả
+            </span>
             {departmentFilter !== 'all' && (
-              <span className="ml-2 px-2 py-0.5 bg-blue-50 dark:bg-blue-950 text-blue-600 rounded-md">
-                Phòng: {departmentFilter}
+              <span className="px-2 py-0.5 bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-md font-medium">
+                {reportType === 'pccc' ? 'KV' : 'Phòng'}: {departmentFilter}
               </span>
             )}
             {((reportType === 'pccc' && statusFilter !== 'inspected') || (reportType !== 'pccc' && statusFilter !== 'all')) && (
-              <span className="ml-2 px-2 py-0.5 bg-amber-50 dark:bg-amber-950 text-amber-600 rounded-md">
-                Trạng thái: {
+              <span className="px-2 py-0.5 bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-400 rounded-md font-medium">
+                TT: {
                   reportType === 'pccc'
-                    ? (statusFilter === 'all' ? 'Tất cả thiết bị' : statusFilter === 'pass' ? 'Đạt tiêu chuẩn' : statusFilter === 'fail' ? 'Cần xử lý/Hỏng' : statusFilter === 'expiring' ? 'Sắp hết hạn' : 'Chưa kiểm tra')
-                    : statusFilter
+                    ? (statusFilter === 'all' ? 'Tất cả' : statusFilter === 'pass' ? 'Đạt chuẩn' : statusFilter === 'fail' ? 'Cần xử lý' : statusFilter === 'expiring' ? 'Sắp hết hạn' : 'Chưa KT')
+                    : statusFilter === 'pass' ? 'Đạt' : statusFilter === 'fail' ? 'Không đạt/Thiếu' : statusFilter
                 }
-              </span>
-            )}
-            {(fromDate || toDate) && (
-              <span className="ml-2 px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950 text-emerald-600 rounded-md">
-                {fromDate ? `Từ ${formatDate(fromDate)}` : ''} {toDate ? `đến ${formatDate(toDate)}` : ''}
-              </span>
-            )}
-            {searchTerm.trim() && (
-              <span className="ml-2 px-2 py-0.5 bg-purple-50 dark:bg-purple-950 text-purple-600 rounded-md">
-                Từ khóa: &quot;{searchTerm.trim()}&quot;
               </span>
             )}
           </div>
@@ -1429,6 +1361,8 @@ export function ReportsView() {
               ? 'ĐỀ XUẤT KHÁC'
               : reportType === 'pccc'
               ? 'KIỂM TRA THIẾT BỊ PCCC'
+              : reportType === 'periodic_inspection'
+              ? 'KIỂM TRA ĐỊNH KỲ (AN TOÀN & MÔI TRƯỜNG)'
               : 'CƠ CẤU PHÒNG BAN'}
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -2104,6 +2038,76 @@ export function ReportsView() {
                         </tr>
                       );
                     })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* PERIODIC INSPECTION REPORT TABLE */}
+          {reportType === 'periodic_inspection' && (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold text-center">
+                    <th className="p-2 border w-10">STT</th>
+                    <th className="p-2 border whitespace-nowrap">Mã phiếu</th>
+                    <th className="p-2 border whitespace-nowrap">Hạng mục</th>
+                    <th className="p-2 border whitespace-nowrap">Địa điểm / Vị trí</th>
+                    <th className="p-2 border whitespace-nowrap">Thời gian KT</th>
+                    <th className="p-2 border whitespace-nowrap">Người kiểm tra</th>
+                    <th className="p-2 border whitespace-nowrap">Bộ phận</th>
+                    <th className="p-2 border min-w-[240px] text-left">Chi tiết kiểm tra</th>
+                    <th className="p-2 border w-24">Đánh giá</th>
+                    <th className="p-2 border min-w-[140px] text-left">Ghi chú / Đề xuất</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredPeriodicInspections.length === 0 ? (
+                    <tr>
+                      <td colSpan={10} className="p-8 text-center text-slate-400">
+                        Không tìm thấy dữ liệu kiểm tra định kỳ phù hợp với bộ lọc hiện tại.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredPeriodicInspections.map((item, idx) => (
+                      <tr key={item.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40 text-[11px] align-top">
+                        <td className="p-2 border text-center font-semibold">{idx + 1}</td>
+                        <td className="p-2 border font-mono font-bold text-blue-600 whitespace-nowrap text-center">
+                          {item.id}
+                        </td>
+                        <td className="p-2 border whitespace-nowrap text-center">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${item.categoryBadgeCls}`}>
+                            {item.categoryName}
+                          </span>
+                        </td>
+                        <td className="p-2 border">{item.location}</td>
+                        <td className="p-2 border whitespace-nowrap text-center text-slate-600 font-mono text-[10px]">
+                          {item.thoiGian || '-'}
+                        </td>
+                        <td className="p-2 border font-medium text-slate-800 dark:text-slate-200">
+                          {item.inspector}
+                        </td>
+                        <td className="p-2 border text-center text-slate-600">{item.department}</td>
+                        <td className="p-2 border text-slate-700 dark:text-slate-300">
+                          <div className="space-y-1">
+                            {item.detailLines.map((line, lIdx) => (
+                              <div key={lIdx} className="text-[10px] whitespace-nowrap leading-tight">
+                                • {line}
+                              </div>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="p-2 border text-center">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${item.statusCls}`}>
+                            {item.status}
+                          </span>
+                        </td>
+                        <td className="p-2 border text-slate-600 italic text-[10px]">
+                          {item.notes}
+                        </td>
+                      </tr>
+                    ))
                   )}
                 </tbody>
               </table>
