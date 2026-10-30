@@ -8,12 +8,9 @@ import { GROUNDWATER_SOIL_CRITERIA } from '@/lib/periodic-inspection-data';
 import * as XLSX from 'xlsx';
 import {
   Plus,
-  History,
   FileSpreadsheet,
   CheckCircle2,
   AlertTriangle,
-  Search,
-  Eye,
   X,
   Calendar,
   User as UserIcon,
@@ -25,8 +22,7 @@ interface GroundwaterSoilModuleProps {
 
 export function GroundwaterSoilModule({ onSuccessToast }: GroundwaterSoilModuleProps) {
   const { currentUser } = useAuth();
-  const [viewMode, setViewMode] = useState<'form' | 'history'>('form');
-  const [inspections, setInspections] = useState<GroundwaterSoilInspection[]>([]);
+    const [inspections, setInspections] = useState<GroundwaterSoilInspection[]>([]);
 
   // Form State
   const [answers, setAnswers] = useState<Record<number, GroundwaterSoilAnswer>>({});
@@ -38,10 +34,7 @@ export function GroundwaterSoilModule({ onSuccessToast }: GroundwaterSoilModuleP
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitMessage, setSubmitMessage] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
 
-  // History State
-  const [historySearch, setHistorySearch] = useState<string>('');
-  const [selectedInspectionForDetail, setSelectedInspectionForDetail] = useState<GroundwaterSoilInspection | null>(null);
-
+      
   const loadData = () => {
     const list = storage.getGroundwaterSoilInspections();
     setInspections(list);
@@ -193,19 +186,7 @@ export function GroundwaterSoilModule({ onSuccessToast }: GroundwaterSoilModuleP
     XLSX.writeFile(workbook, `BaoCao_NuocNgamDat_${new Date().toISOString().slice(0, 10)}.xlsx`);
   };
 
-  // Filter history
-  const filteredInspections = inspections.filter((item) => {
-    if (historySearch.trim()) {
-      const s = historySearch.toLowerCase();
-      const matchUser = item.nguoiKT.toLowerCase().includes(s);
-      const matchDept = item.boPhan.toLowerCase().includes(s);
-      const matchEval = (item.tongHop?.ketQuaSoBo || '').toLowerCase().includes(s);
-      const matchNote = (item.tongHop?.khuyenNghi || '').toLowerCase().includes(s);
-      return matchUser || matchDept || matchEval || matchNote;
-    }
-    return true;
-  });
-
+  
   return (
     <div className="space-y-4">
       {/* Module Header & Sub-Navigation */}
@@ -221,31 +202,6 @@ export function GroundwaterSoilModule({ onSuccessToast }: GroundwaterSoilModuleP
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="inline-flex rounded-xl bg-slate-100 p-1 border border-slate-200/60">
-            <button
-              onClick={() => setViewMode('form')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                viewMode === 'form'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Biểu mẫu kiểm tra</span>
-            </button>
-            <button
-              onClick={() => setViewMode('history')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                viewMode === 'history'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <History className="w-3.5 h-3.5" />
-              <span>Quá trình kiểm tra ({inspections.length})</span>
-            </button>
-          </div>
-
           <button
             onClick={handleExportExcel}
             className="flex items-center gap-1 px-3 py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition-colors cursor-pointer"
@@ -258,8 +214,7 @@ export function GroundwaterSoilModule({ onSuccessToast }: GroundwaterSoilModuleP
       </div>
 
       {/* ================= FORM VIEW ================= */}
-      {viewMode === 'form' && (
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 space-y-5">
+              <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 space-y-5">
           {/* Form Meta Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50/70 p-4 rounded-xl border border-slate-200/60">
             <div>
@@ -497,241 +452,6 @@ export function GroundwaterSoilModule({ onSuccessToast }: GroundwaterSoilModuleP
             </button>
           </div>
         </form>
-      )}
-
-      {/* ================= HISTORY VIEW ================= */}
-      {viewMode === 'history' && (
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="relative flex-1 min-w-[240px]">
-              <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-              <input
-                type="text"
-                value={historySearch}
-                onChange={(e) => setHistorySearch(e.target.value)}
-                placeholder="Tìm theo người thực hiện, bộ phận, kết quả sơ bộ..."
-                className="w-full text-xs pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div className="text-xs text-slate-500 font-medium">
-              Hiển thị <b>{filteredInspections.length}</b> / {inspections.length} bản ghi
-            </div>
-          </div>
-
-          <div className="overflow-x-auto border border-slate-200 rounded-xl">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="bg-slate-100 text-slate-700 font-bold text-[11px] uppercase border-b border-slate-200">
-                  <th className="py-2.5 px-3 w-12 text-center">STT</th>
-                  <th className="py-2.5 px-3">Thời gian khảo sát</th>
-                  <th className="py-2.5 px-3">Người thực hiện</th>
-                  <th className="py-2.5 px-3">Bộ phận</th>
-                  {GROUNDWATER_SOIL_CRITERIA.map((c) => (
-                    <th
-                      key={c.id}
-                      className="py-2.5 px-2 text-center font-bold text-[10px] max-w-[80px] truncate"
-                      title={c.text}
-                    >
-                      Mục {c.id}
-                    </th>
-                  ))}
-                  <th className="py-2.5 px-3 text-center">Kết quả sơ bộ</th>
-                  <th className="py-2.5 px-3 text-center">Lấy mẫu</th>
-                  <th className="py-2.5 px-3">Khuyến nghị</th>
-                  <th className="py-2.5 px-3 text-center w-20">Chi tiết</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {filteredInspections.length === 0 ? (
-                  <tr>
-                    <td colSpan={7 + GROUNDWATER_SOIL_CRITERIA.length} className="py-8 text-center text-slate-400">
-                      Không tìm thấy dữ liệu khảo sát nào phù hợp
-                    </td>
-                  </tr>
-                ) : (
-                  filteredInspections.map((item, idx) => (
-                    <tr key={item.id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="py-2.5 px-3 text-center text-slate-400 font-medium">{idx + 1}</td>
-                      <td className="py-2.5 px-3 font-semibold text-slate-800">{item.thoiGian}</td>
-                      <td className="py-2.5 px-3 font-medium text-slate-700">{item.nguoiKT}</td>
-                      <td className="py-2.5 px-3 text-slate-600">{item.boPhan}</td>
-                      {GROUNDWATER_SOIL_CRITERIA.map((c) => {
-                        const a = item.answers ? item.answers[c.id] : undefined;
-                        const val = a ? (typeof a === 'string' ? a : a.ketQua) : '';
-
-                        return (
-                          <td key={c.id} className="py-2.5 px-2 text-center">
-                            {val === 'Đạt' ? (
-                              <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                                Đạt
-                              </span>
-                            ) : val === 'Không đạt' ? (
-                              <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800 border border-red-200">
-                                K.Đạt
-                              </span>
-                            ) : (
-                              <span className="text-slate-300">---</span>
-                            )}
-                          </td>
-                        );
-                      })}
-                      <td className="py-2.5 px-3 text-center">
-                        <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${
-                            item.tongHop?.ketQuaSoBo === 'Đạt'
-                              ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
-                              : 'bg-red-100 text-red-800 border-red-200'
-                          }`}
-                        >
-                          {item.tongHop?.ketQuaSoBo || 'Đạt'}
-                        </span>
-                      </td>
-                      <td className="py-2.5 px-3 text-center">
-                        {item.tongHop?.canLayMau === 'Có' ? (
-                          <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
-                            Có
-                          </span>
-                        ) : (
-                          <span className="text-slate-400">Không</span>
-                        )}
-                      </td>
-                      <td className="py-2.5 px-3 text-slate-500 italic max-w-xs truncate">
-                        {item.tongHop?.khuyenNghi || '---'}
-                      </td>
-                      <td className="py-2.5 px-3 text-center">
-                        <button
-                          onClick={() => setSelectedInspectionForDetail(item)}
-                          className="p-1 rounded-lg hover:bg-slate-100 text-blue-600 cursor-pointer"
-                          title="Xem chi tiết khảo sát"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* Detail Modal */}
-      {selectedInspectionForDetail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col border border-slate-200 overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-              <div>
-                <h3 className="font-bold text-sm text-slate-800">
-                  Chi Tiết Khảo Sát Nước Ngầm Và Đất ({selectedInspectionForDetail.id})
-                </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Thời gian: {selectedInspectionForDetail.thoiGian} &bull; Người KT: {selectedInspectionForDetail.nguoiKT}
-                </p>
-              </div>
-              <button
-                onClick={() => setSelectedInspectionForDetail(null)}
-                className="p-1 text-slate-400 hover:text-slate-700 rounded-lg cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="p-5 overflow-y-auto space-y-4 flex-1 text-xs">
-              <div className="overflow-x-auto border border-slate-200 rounded-xl">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-slate-100 font-bold text-slate-700 border-b border-slate-200">
-                      <th className="py-2 px-3 w-10 text-center">STT</th>
-                      <th className="py-2 px-3">Nội dung khảo sát</th>
-                      <th className="py-2 px-3 w-24 text-center">Đánh giá</th>
-                      <th className="py-2 px-3">Lý do không đạt</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {GROUNDWATER_SOIL_CRITERIA.map((c) => {
-                      const a = selectedInspectionForDetail.answers
-                        ? selectedInspectionForDetail.answers[c.id]
-                        : undefined;
-                      const val = a ? (typeof a === 'string' ? a : a.ketQua) : '';
-                      const lyDo = a && typeof a !== 'string' ? a.lyDo : '';
-
-                      return (
-                        <tr key={c.id} className="hover:bg-slate-50">
-                          <td className="py-2 px-3 text-center text-slate-400 font-bold">{c.id}</td>
-                          <td className="py-2 px-3 font-medium text-slate-800">{c.text}</td>
-                          <td className="py-2 px-3 text-center">
-                            {val === 'Đạt' ? (
-                              <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                                Đạt
-                              </span>
-                            ) : val === 'Không đạt' ? (
-                              <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800 border border-red-200">
-                                K.Đạt
-                              </span>
-                            ) : (
-                              <span className="text-slate-300">---</span>
-                            )}
-                          </td>
-                          <td className="py-2 px-3 text-slate-600">{lyDo || '---'}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Summary details */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                <div>
-                  <span className="font-bold text-slate-700">Kết quả sơ bộ: </span>
-                  <span
-                    className={`font-bold ${
-                      selectedInspectionForDetail.tongHop?.ketQuaSoBo === 'Đạt'
-                        ? 'text-emerald-700'
-                        : 'text-red-700'
-                    }`}
-                  >
-                    {selectedInspectionForDetail.tongHop?.ketQuaSoBo || 'Đạt'}
-                  </span>
-                </div>
-                <div>
-                  <span className="font-bold text-slate-700">Cần lấy mẫu phân tích: </span>
-                  <span className="font-semibold text-slate-800">
-                    {selectedInspectionForDetail.tongHop?.canLayMau || 'Không'}
-                  </span>
-                </div>
-                {selectedInspectionForDetail.tongHop?.khuVucNghiNgo && (
-                  <div className="md:col-span-2">
-                    <span className="font-bold text-slate-700">Khu vực nghi ngờ ô nhiễm: </span>
-                    <span className="text-slate-800">
-                      {selectedInspectionForDetail.tongHop.khuVucNghiNgo}
-                    </span>
-                  </div>
-                )}
-                {selectedInspectionForDetail.tongHop?.khuyenNghi && (
-                  <div className="md:col-span-2">
-                    <span className="font-bold text-slate-700">Khuyến nghị & Đề xuất: </span>
-                    <span className="text-slate-800">
-                      {selectedInspectionForDetail.tongHop.khuyenNghi}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="px-5 py-3 border-t border-slate-200 bg-slate-50 flex justify-end">
-              <button
-                onClick={() => setSelectedInspectionForDetail(null)}
-                className="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded-xl cursor-pointer"
-              >
-                Đóng
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

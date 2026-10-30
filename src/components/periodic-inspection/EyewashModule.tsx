@@ -8,12 +8,9 @@ import { EYEWASH_LOCATIONS, EYEWASH_CRITERIA } from '@/lib/periodic-inspection-d
 import * as XLSX from 'xlsx';
 import {
   Plus,
-  History,
   FileSpreadsheet,
   CheckCircle2,
   AlertTriangle,
-  Search,
-  Eye,
   X,
   MapPin,
   Calendar,
@@ -27,8 +24,7 @@ interface EyewashModuleProps {
 
 export function EyewashModule({ onSuccessToast }: EyewashModuleProps) {
   const { currentUser } = useAuth();
-  const [viewMode, setViewMode] = useState<'form' | 'history'>('form');
-  const [inspections, setInspections] = useState<EyewashInspection[]>([]);
+    const [inspections, setInspections] = useState<EyewashInspection[]>([]);
 
   // Form State
   const [selectedLocation, setSelectedLocation] = useState<string>(EYEWASH_LOCATIONS[0] || 'Kho Hóa chất');
@@ -37,11 +33,7 @@ export function EyewashModule({ onSuccessToast }: EyewashModuleProps) {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitMessage, setSubmitMessage] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
 
-  // History State
-  const [historySearch, setHistorySearch] = useState<string>('');
-  const [historyLocationFilter, setHistoryLocationFilter] = useState<string>('all');
-  const [selectedInspectionForDetail, setSelectedInspectionForDetail] = useState<EyewashInspection | null>(null);
-
+        
   const loadData = () => {
     const list = storage.getEyewashInspections();
     setInspections(list);
@@ -171,20 +163,7 @@ export function EyewashModule({ onSuccessToast }: EyewashModuleProps) {
     XLSX.writeFile(workbook, `BaoCao_MayRuaMat_${new Date().toISOString().slice(0, 10)}.xlsx`);
   };
 
-  // Filter history
-  const filteredInspections = inspections.filter((item) => {
-    if (historyLocationFilter !== 'all' && item.diaDiem !== historyLocationFilter) return false;
-    if (historySearch.trim()) {
-      const s = historySearch.toLowerCase();
-      const matchLoc = item.diaDiem.toLowerCase().includes(s);
-      const matchUser = item.nguoiKT.toLowerCase().includes(s);
-      const matchEval = (item.danhGiaTongQuat || '').toLowerCase().includes(s);
-      const matchNote = (item.deXuat || '').toLowerCase().includes(s);
-      return matchLoc || matchUser || matchEval || matchNote;
-    }
-    return true;
-  });
-
+  
   return (
     <div className="space-y-4">
       {/* Module Header & Sub-Navigation */}
@@ -200,31 +179,6 @@ export function EyewashModule({ onSuccessToast }: EyewashModuleProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="inline-flex rounded-xl bg-slate-100 p-1 border border-slate-200/60">
-            <button
-              onClick={() => setViewMode('form')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                viewMode === 'form'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Biểu mẫu kiểm tra</span>
-            </button>
-            <button
-              onClick={() => setViewMode('history')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                viewMode === 'history'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <History className="w-3.5 h-3.5" />
-              <span>Quá trình kiểm tra ({inspections.length})</span>
-            </button>
-          </div>
-
           <button
             onClick={handleExportExcel}
             className="flex items-center gap-1 px-3 py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition-colors cursor-pointer"
@@ -237,8 +191,7 @@ export function EyewashModule({ onSuccessToast }: EyewashModuleProps) {
       </div>
 
       {/* ================= FORM VIEW ================= */}
-      {viewMode === 'form' && (
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 space-y-5">
+              <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 space-y-5">
           {/* Form Meta Fields */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50/70 p-4 rounded-xl border border-slate-200/60">
             <div>
@@ -395,120 +348,6 @@ export function EyewashModule({ onSuccessToast }: EyewashModuleProps) {
             </button>
           </div>
         </form>
-      )}
-
-      {/* ================= HISTORY VIEW ================= */}
-      {viewMode === 'history' && (
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[260px]">
-              <div className="relative flex-1 min-w-[180px]">
-                <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-                <input
-                  type="text"
-                  value={historySearch}
-                  onChange={(e) => setHistorySearch(e.target.value)}
-                  placeholder="Tìm theo người kiểm tra, địa điểm, đề xuất..."
-                  className="w-full text-xs pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <select
-                value={historyLocationFilter}
-                onChange={(e) => setHistoryLocationFilter(e.target.value)}
-                className="text-xs font-semibold px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-blue-500 cursor-pointer"
-              >
-                <option value="all">Tất cả địa điểm</option>
-                {EYEWASH_LOCATIONS.map((loc) => (
-                  <option key={loc} value={loc}>
-                    {loc}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="text-xs text-slate-500 font-medium">
-              Hiển thị <b>{filteredInspections.length}</b> / {inspections.length} bản ghi
-            </div>
-          </div>
-
-          <div className="overflow-x-auto border border-slate-200 rounded-xl">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="bg-slate-100 text-slate-700 font-bold text-[11px] uppercase border-b border-slate-200">
-                  <th className="py-2.5 px-3 w-12 text-center">STT</th>
-                  <th className="py-2.5 px-3">Thời gian KT</th>
-                  <th className="py-2.5 px-3">Địa điểm</th>
-                  <th className="py-2.5 px-3">Người kiểm tra</th>
-                  <th className="py-2.5 px-3">Bộ phận</th>
-                  {EYEWASH_CRITERIA.map((c) => (
-                    <th key={c} className="py-2.5 px-2 text-center font-bold text-[10px] max-w-[100px] truncate">
-                      {c}
-                    </th>
-                  ))}
-                  <th className="py-2.5 px-3 text-center">Tổng quát</th>
-                  <th className="py-2.5 px-3">Đề xuất</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {filteredInspections.length === 0 ? (
-                  <tr>
-                    <td colSpan={6 + EYEWASH_CRITERIA.length} className="py-8 text-center text-slate-400">
-                      Không tìm thấy dữ liệu kiểm tra nào phù hợp
-                    </td>
-                  </tr>
-                ) : (
-                  filteredInspections.map((item, idx) => (
-                    <tr key={item.id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="py-2.5 px-3 text-center text-slate-400 font-medium">{idx + 1}</td>
-                      <td className="py-2.5 px-3 font-semibold text-slate-800">{item.thoiGian}</td>
-                      <td className="py-2.5 px-3">
-                        <span className="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">
-                          {item.diaDiem}
-                        </span>
-                      </td>
-                      <td className="py-2.5 px-3 font-medium text-slate-700">{item.nguoiKT}</td>
-                      <td className="py-2.5 px-3 text-slate-600">{item.boPhan}</td>
-                      {EYEWASH_CRITERIA.map((c) => {
-                        const val = item.items ? item.items[c] : '---';
-                        return (
-                          <td key={c} className="py-2.5 px-2 text-center">
-                            {val === 'Đạt' ? (
-                              <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                                Đạt
-                              </span>
-                            ) : val === 'Không đạt' ? (
-                              <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800 border border-red-200">
-                                K.Đạt
-                              </span>
-                            ) : (
-                              <span className="text-slate-300">---</span>
-                            )}
-                          </td>
-                        );
-                      })}
-                      <td className="py-2.5 px-3 text-center">
-                        <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${
-                            item.danhGiaTongQuat === 'Đạt'
-                              ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
-                              : 'bg-red-100 text-red-800 border-red-200'
-                          }`}
-                        >
-                          {item.danhGiaTongQuat}
-                        </span>
-                      </td>
-                      <td className="py-2.5 px-3 text-slate-500 italic max-w-xs truncate">
-                        {item.deXuat || '---'}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

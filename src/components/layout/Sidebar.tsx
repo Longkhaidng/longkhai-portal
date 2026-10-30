@@ -81,9 +81,7 @@ export function Sidebar({
   onSelectIntegratedWeb,
 }: SidebarProps) {
   const { currentUser, hasPermission } = useAuth();
-  const [expandedMenuIds, setExpandedMenuIds] = React.useState<Record<string, boolean>>({
-    periodic_inspection: true,
-  });
+  const [expandedMenuIds, setExpandedMenuIds] = React.useState<Record<string, boolean>>({});
 
   const toggleExpand = (id: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
@@ -157,12 +155,6 @@ export function Sidebar({
       permission: 'periodic_inspection',
       label: 'Kiểm tra định kỳ',
       icon: ClipboardCheck,
-      subItems: [
-        { id: 'periodic_first_aid', label: 'Tủ sơ cấp cứu' },
-        { id: 'periodic_eyewash', label: 'Máy rửa mắt' },
-        { id: 'periodic_stormwater', label: 'Hệ thống nước mưa' },
-        { id: 'periodic_groundwater_soil', label: 'Nước ngầm và đất' },
-      ],
     },
     {
       id: 'announcements',
