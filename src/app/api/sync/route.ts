@@ -87,6 +87,10 @@ export async function GET() {
     const stationeryItems = readJsonFile<any[]>('settings/stationery-items.json', []);
     const pcccDevices = readJsonFile<any[]>('pccc/master_devices.json', []);
     const pcccInspections = scanJsonFiles<any>('pccc/inspections');
+    const periodicFirstAid = scanJsonFiles<any>('periodic-inspections/first-aid');
+    const periodicEyewash = scanJsonFiles<any>('periodic-inspections/eyewash');
+    const periodicStormwater = scanJsonFiles<any>('periodic-inspections/stormwater');
+    const periodicGroundwaterSoil = scanJsonFiles<any>('periodic-inspections/groundwater-soil');
 
     return NextResponse.json({
       success: true,
@@ -104,6 +108,10 @@ export async function GET() {
         stationeryItems,
         pcccDevices,
         pcccInspections,
+        periodicFirstAid,
+        periodicEyewash,
+        periodicStormwater,
+        periodicGroundwaterSoil,
         emailConfig,
         githubConfig,
       },
@@ -143,7 +151,11 @@ export async function POST(req: NextRequest) {
         | 'github_config'
         | 'email_config'
         | 'pccc_devices'
-        | 'pccc_inspections';
+        | 'pccc_inspections'
+        | 'periodic_first_aid'
+        | 'periodic_eyewash'
+        | 'periodic_stormwater'
+        | 'periodic_groundwater_soil';
       data: any;
       githubToken?: string;
     };
@@ -197,6 +209,22 @@ export async function POST(req: NextRequest) {
     } else if (type === 'pccc_devices') {
       relFilePath = 'pccc/master_devices.json';
       commitMessage = `Update PCCC Master Devices (${Array.isArray(data) ? data.length : 1} items)`;
+    } else if (type === 'periodic_first_aid') {
+      const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
+      relFilePath = `periodic-inspections/first-aid/${year}/${data.id}.json`;
+      commitMessage = `Update First Aid Inspection ${data.id}`;
+    } else if (type === 'periodic_eyewash') {
+      const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
+      relFilePath = `periodic-inspections/eyewash/${year}/${data.id}.json`;
+      commitMessage = `Update Eyewash Inspection ${data.id}`;
+    } else if (type === 'periodic_stormwater') {
+      const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
+      relFilePath = `periodic-inspections/stormwater/${year}/${data.id}.json`;
+      commitMessage = `Update Stormwater Inspection ${data.id}`;
+    } else if (type === 'periodic_groundwater_soil') {
+      const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
+      relFilePath = `periodic-inspections/groundwater-soil/${year}/${data.id}.json`;
+      commitMessage = `Update Groundwater & Soil Inspection ${data.id}`;
     } else if (type === 'pccc_inspections') {
       const year = data.inspectedAt ? new Date(data.inspectedAt).getFullYear() : new Date().getFullYear();
       relFilePath = `pccc/inspections/${year}/${data.id}.json`;

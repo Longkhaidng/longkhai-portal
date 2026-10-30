@@ -176,6 +176,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (category === 'pccc') {
       return currentUser.permissions?.includes('pccc') ?? false;
     }
+    // Periodic inspection: accessible to admin, ehs, manager, hr, it, or staff with permission
+    if (category === 'periodic_inspection') {
+      if (currentUser.role === 'ehs' || currentUser.role === 'manager' || currentUser.role === 'hr' || currentUser.role === 'it') return true;
+      if (currentUser.permissions?.includes('periodic_inspection') || currentUser.permissions?.includes('pccc')) return true;
+      return true; // Default allow factory inspection access
+    }
     return currentUser.permissions?.includes(category) ?? false;
   };
 

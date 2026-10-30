@@ -27,6 +27,8 @@ import {
   LayoutGrid,
   ClipboardList,
   Flame,
+  ClipboardCheck,
+  ChevronDown,
 } from 'lucide-react';
 
 const ICON_COMPONENTS: Record<string, React.ElementType> = {
@@ -40,6 +42,11 @@ const ICON_COMPONENTS: Record<string, React.ElementType> = {
   ExternalLink,
 };
 
+interface SubMenuItem {
+  id: string;
+  label: string;
+}
+
 interface MenuItem {
   id: string;
   permission?: CategoryPermission;
@@ -47,6 +54,7 @@ interface MenuItem {
   icon: React.ElementType;
   badgeCount?: number;
   badgeColor?: string;
+  subItems?: SubMenuItem[];
 }
 
 interface SidebarProps {
@@ -73,6 +81,18 @@ export function Sidebar({
   onSelectIntegratedWeb,
 }: SidebarProps) {
   const { currentUser, hasPermission } = useAuth();
+  const [expandedMenuIds, setExpandedMenuIds] = React.useState<Record<string, boolean>>({
+    periodic_inspection: true,
+  });
+
+  const toggleExpand = (id: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setExpandedMenuIds((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
   const allWebIntegrations = storage.getWebIntegrations().filter((w) => w.isActive);
 
   // Filter integrated websites based on employee individual permissions
@@ -131,6 +151,18 @@ export function Sidebar({
       permission: 'pccc',
       label: 'Kiểm tra PCCC',
       icon: Flame,
+    },
+    {
+      id: 'periodic_inspection',
+      permission: 'periodic_inspection',
+      label: 'Kiểm tra định kỳ',
+      icon: ClipboardCheck,
+      subItems: [
+        { id: 'periodic_first_aid', label: 'Tủ sơ cấp cứu' },
+        { id: 'periodic_eyewash', label: 'Máy rửa mắt' },
+        { id: 'periodic_stormwater', label: 'Hệ thống nước mưa' },
+        { id: 'periodic_groundwater_soil', label: 'Nước ngầm và đất' },
+      ],
     },
     {
       id: 'announcements',
@@ -246,45 +278,87 @@ export function Sidebar({
 
           {accessibleMenuItems.map((item) => {
             const Icon = item.icon;
+            const hasSub = item.subItems && item.subItems.length > 0;
+            const isSubActive = hasSub && item.subItems?.some((sub) => currentTab === sub.id);
             const isActive =
               currentTab === item.id ||
+              isSubActive ||
               (item.id === 'proposals' &&
                 (currentTab === 'repair' || currentTab.startsWith('proposals_')));
+            const isExpanded = expandedMenuIds[item.id] ?? false;
 
             return (
-              <button
-                key={item.id}
-                onClick={() => {
-                  onSelectTab(item.id);
-                  onClose();
-                }}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-blue-600 text-white font-semibold shadow-md shadow-blue-600/30'
-                    : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-slate-400'}`} />
-                  <span className="truncate">{item.label}</span>
-                </div>
+              <div key={item.id} className="space-y-0.5">
+                <button
+                  onClick={() => {
+                    if (hasSub) {
+                      toggleExpand(item.id);
+                    }
+                    onSelectTab(item.id);
+                    if (!hasSub) onClose();
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
+                    isActive && (!hasSub || currentTab === item.id)
+                      ? 'bg-blue-600 text-white font-semibold shadow-md shadow-blue-600/30'
+                      : isActive && hasSub
+                      ? 'bg-slate-800 text-white font-semibold'
+                      : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                    <span className="truncate">{item.label}</span>
+                  </div>
 
-                {item.badgeCount && item.badgeCount > 0 ? (
-                  <span
-                    className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
-                      item.badgeColor || 'bg-blue-500 text-white'
-                    }`}
-                  >
-                    {item.badgeCount}
-                  </span>
-                ) : isActive ? (
-                  <ChevronRight className="w-3.5 h-3.5 opacity-70" />
-                ) : null}
-              </button>
+                  {item.badgeCount && item.badgeCount > 0 ? (
+                    <span
+                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                        item.badgeColor || 'bg-blue-500 text-white'
+                      }`}
+                    >
+                      {item.badgeCount}
+                    </span>
+                  ) : hasSub ? (
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                        isExpanded ? 'rotate-180 text-white' : 'text-slate-500'
+                      }`}
+                    />
+                  ) : isActive ? (
+                    <ChevronRight className="w-3.5 h-3.5 opacity-70" />
+                  ) : null}
+                </button>
+
+                {/* Sub Menu Items */}
+                {hasSub && isExpanded && (
+                  <div className="pl-6 pr-1 py-1 space-y-0.5 border-l-2 border-slate-700/60 ml-4">
+                    {item.subItems!.map((sub) => {
+                      const isThisSubActive = currentTab === sub.id;
+                      return (
+                        <button
+                          key={sub.id}
+                          onClick={() => {
+                            onSelectTab(sub.id);
+                            onClose();
+                          }}
+                          className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[11px] transition-all cursor-pointer ${
+                            isThisSubActive
+                              ? 'bg-blue-600 text-white font-bold shadow-xs'
+                              : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                          }`}
+                        >
+                          <span className="truncate">{sub.label}</span>
+                          {isThisSubActive && <div className="w-1.5 h-1.5 rounded-full bg-white shrink-0 ml-1.5" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             );
           })}
 
-          {/* DYNAMIC INTEGRATED WEBSITES SECTION IN SIDEBAR */}
+                    {/* DYNAMIC INTEGRATED WEBSITES SECTION IN SIDEBAR */}
           {accessibleWebIntegrations.length > 0 && (
             <div className="pt-3 mt-3 border-t border-slate-800">
               <div className="px-3 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center justify-between">

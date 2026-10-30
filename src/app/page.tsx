@@ -12,6 +12,7 @@ import { AttendanceView } from '@/components/attendance/AttendanceView';
 import { GatePassView } from '@/components/gatepass/GatePassView';
 import { ProposalHubView } from '@/components/proposals/ProposalHubView';
 import { PCCCInspectionView } from '@/components/pccc/PCCCInspectionView';
+import { PeriodicInspectionView } from '@/components/periodic-inspection/PeriodicInspectionView';
 import { AnnouncementView } from '@/components/announcements/AnnouncementView';
 import { DynamicFormsView } from '@/components/forms/DynamicFormsView';
 import { ReportsView } from '@/components/reports/ReportsView';
@@ -311,6 +312,12 @@ function PortalAppContent() {
       case 'pccc':
         if (!hasPermission('pccc')) return <DashboardView onNavigateTab={(tab: string) => setCurrentTab(tab)} />;
         return <PCCCInspectionView />;
+      case 'periodic_inspection':
+      case 'periodic_first_aid':
+      case 'periodic_eyewash':
+      case 'periodic_stormwater':
+      case 'periodic_groundwater_soil':
+        return <PeriodicInspectionView initialSubTab={currentTab} />;
       case 'announcements':
         return <AnnouncementView />;
       case 'forms':

@@ -6,6 +6,7 @@ import { storage } from '@/lib/storage';
 import { exportReportToExcel, exportStationeryReportToExcel, exportPCCCReportToExcel, formatPCCCChecklistSummary } from '@/lib/excel';
 import {
   Flame,
+  ClipboardCheck,
   BarChart3,
   Download,
   Printer,
@@ -27,6 +28,7 @@ import { LEAVE_TYPE_LABELS } from '@/types/leave';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { RepairProposal, REPAIR_STATUS_LABELS, REPAIR_STATUS_BADGES } from '@/types/repair';
 import { PCCCDevice, PCCCInspection, PCCC_CATEGORIES, formatPCCCDate } from '@/types/pccc';
+import { PeriodicInspectionView } from '@/components/periodic-inspection/PeriodicInspectionView';
 import {
   StationeryProposal,
   GeneralProposal,
@@ -39,7 +41,7 @@ import { filterUserLeaves, filterUserAttendances, filterUserGatePasses, filterUs
 
 export function ReportsView() {
   const { currentUser } = useAuth();
-  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'repair' | 'stationery' | 'general' | 'departments' | 'pccc'>('leave');
+  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'repair' | 'stationery' | 'general' | 'departments' | 'pccc' | 'periodic_inspection'>('leave');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('all');
@@ -874,6 +876,21 @@ export function ReportsView() {
         </button>
 
         <button
+          onClick={() => handleSelectReportType('periodic_inspection')}
+          className={`p-4 rounded-2xl border text-left transition-all ${
+            reportType === 'periodic_inspection'
+              ? 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-500 shadow-sm ring-1 ring-indigo-500/30'
+              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300'
+          }`}
+        >
+          <ClipboardCheck className="w-5 h-5 text-indigo-600 mb-2" />
+          <div className="font-bold text-sm text-slate-800 dark:text-slate-100">Kiểm tra định kỳ</div>
+          <div className="text-xs text-slate-500 mt-1">
+            Tủ SCC, Máy rửa mắt, Nước mưa, Đất &amp; Nước ngầm
+          </div>
+        </button>
+
+        <button
           onClick={() => handleSelectReportType('departments')}
           className={`p-4 rounded-2xl border text-left transition-all ${
             reportType === 'departments'
@@ -960,7 +977,13 @@ export function ReportsView() {
           )}
 
           {/* Chủng loại Filter (Dành riêng cho Kiểm tra PCCC) */}
-          {reportType === 'pccc' && (
+          {reportType === 'periodic_inspection' && (
+        <div className="mt-4">
+          <PeriodicInspectionView />
+        </div>
+      )}
+
+      {reportType === 'pccc' && (
             <div className="flex items-center gap-2">
               <span className="font-semibold text-slate-600 dark:text-slate-400 whitespace-nowrap text-xs">
                 Chủng loại:

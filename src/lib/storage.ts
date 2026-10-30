@@ -5,6 +5,18 @@ import { GatePass } from '@/types/gatePass';
 import { RepairProposal } from '@/types/repair';
 import { PCCCDevice, PCCCInspection, formatPCCCDate, inferPCCCCategory } from '@/types/pccc';
 import { INITIAL_PCCC_DEVICES, INITIAL_PCCC_INSPECTIONS } from './pccc-data';
+import {
+  FirstAidInspection,
+  EyewashInspection,
+  StormwaterInspection,
+  GroundwaterSoilInspection,
+} from '@/types/periodic-inspection';
+import {
+  INITIAL_FIRST_AID_INSPECTIONS,
+  INITIAL_EYEWASH_INSPECTIONS,
+  INITIAL_STORMWATER_INSPECTIONS,
+  INITIAL_GROUNDWATER_SOIL_INSPECTIONS,
+} from './periodic-inspection-data';
 import { StationeryItem, StationeryProposal, GeneralProposal } from '@/types/proposal';
 import { INITIAL_STATIONERY_ITEMS } from './initial-data';
 import { Announcement } from '@/types/announcement';
@@ -36,6 +48,10 @@ const STORAGE_KEYS = {
   STATIONERY_PROPOSALS: 'lk_portal_stationery_proposals',
   PCCC_DEVICES: 'lk_portal_pccc_devices',
   PCCC_INSPECTIONS: 'lk_portal_pccc_inspections',
+  PERIODIC_FIRST_AID: 'lk_portal_periodic_first_aid',
+  PERIODIC_EYEWASH: 'lk_portal_periodic_eyewash',
+  PERIODIC_STORMWATER: 'lk_portal_periodic_stormwater',
+  PERIODIC_GROUNDWATER_SOIL: 'lk_portal_periodic_groundwater_soil',
   GENERAL_PROPOSALS: 'lk_portal_general_proposals',
   ANNOUNCEMENTS: 'lk_portal_announcements',
   DYNAMIC_FORMS: 'lk_portal_dynamic_forms',
@@ -1071,6 +1087,10 @@ class StorageService {
         stationeryItems,
         pcccDevices,
         pcccInspections,
+        periodicFirstAid,
+        periodicEyewash,
+        periodicStormwater,
+        periodicGroundwaterSoil,
         emailConfig,
         githubConfig,
       } = json.data;
@@ -1146,6 +1166,34 @@ class StorageService {
         local.forEach((insp) => map.set(insp.id, insp));
         pcccInspections.forEach((insp) => map.set(insp.id, insp));
         localStorage.setItem(STORAGE_KEYS.PCCC_INSPECTIONS, JSON.stringify(Array.from(map.values())));
+      }
+      if (Array.isArray(periodicFirstAid)) {
+        const local = this.getFirstAidInspections();
+        const map = new Map<string, FirstAidInspection>();
+        local.forEach((it) => map.set(it.id, it));
+        periodicFirstAid.forEach((it: FirstAidInspection) => map.set(it.id, it));
+        localStorage.setItem(STORAGE_KEYS.PERIODIC_FIRST_AID, JSON.stringify(Array.from(map.values())));
+      }
+      if (Array.isArray(periodicEyewash)) {
+        const local = this.getEyewashInspections();
+        const map = new Map<string, EyewashInspection>();
+        local.forEach((it) => map.set(it.id, it));
+        periodicEyewash.forEach((it: EyewashInspection) => map.set(it.id, it));
+        localStorage.setItem(STORAGE_KEYS.PERIODIC_EYEWASH, JSON.stringify(Array.from(map.values())));
+      }
+      if (Array.isArray(periodicStormwater)) {
+        const local = this.getStormwaterInspections();
+        const map = new Map<string, StormwaterInspection>();
+        local.forEach((it) => map.set(it.id, it));
+        periodicStormwater.forEach((it: StormwaterInspection) => map.set(it.id, it));
+        localStorage.setItem(STORAGE_KEYS.PERIODIC_STORMWATER, JSON.stringify(Array.from(map.values())));
+      }
+      if (Array.isArray(periodicGroundwaterSoil)) {
+        const local = this.getGroundwaterSoilInspections();
+        const map = new Map<string, GroundwaterSoilInspection>();
+        local.forEach((it) => map.set(it.id, it));
+        periodicGroundwaterSoil.forEach((it: GroundwaterSoilInspection) => map.set(it.id, it));
+        localStorage.setItem(STORAGE_KEYS.PERIODIC_GROUNDWATER_SOIL, JSON.stringify(Array.from(map.values())));
       }
       if (emailConfig && emailConfig.googleScriptUrl) {
         localStorage.setItem(STORAGE_KEYS.EMAIL_CONFIG, JSON.stringify(emailConfig));
@@ -1521,6 +1569,202 @@ class StorageService {
       message: `Đã xóa sạch sẽ toàn bộ dữ liệu ${clearedLabels.join(', ')} trên trình duyệt và máy chủ thành công!`,
       deletedCounts: serverRes?.deletedCounts,
     };
+  }
+
+  // --- PERIODIC INSPECTIONS: FIRST AID ---
+  getFirstAidInspections(): FirstAidInspection[] {
+    if (!this.isClient()) return INITIAL_FIRST_AID_INSPECTIONS;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.PERIODIC_FIRST_AID);
+      if (data) return JSON.parse(data);
+    } catch {}
+    this.saveFirstAidInspections(INITIAL_FIRST_AID_INSPECTIONS);
+    return INITIAL_FIRST_AID_INSPECTIONS;
+  }
+
+  saveFirstAidInspections(list: FirstAidInspection[]): void {
+    if (!this.isClient()) return;
+    localStorage.setItem(STORAGE_KEYS.PERIODIC_FIRST_AID, JSON.stringify(list));
+  }
+
+  saveFirstAidInspection(inspection: FirstAidInspection, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getFirstAidInspections();
+    list.unshift(inspection);
+    localStorage.setItem(STORAGE_KEYS.PERIODIC_FIRST_AID, JSON.stringify(list));
+
+    this.addAuditLog(
+      'create',
+      'periodic_inspection',
+      inspection.id,
+      byUser?.id || inspection.maNV,
+      byUser?.name || inspection.hoTen,
+      `Kiểm tra định kỳ Tủ sơ cấp cứu tại ${inspection.diaDiem} - Trạng thái: ${inspection.summaryStatus || 'Đã kiểm tra'}`
+    );
+
+    const year = new Date().getFullYear();
+    this.syncFileToGitHub(
+      `periodic-inspections/first-aid/${year}/${inspection.id}.json`,
+      JSON.stringify(inspection, null, 2),
+      `Save First Aid Inspection ${inspection.id}`
+    );
+
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'periodic_first_aid',
+        data: inspection,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
+  }
+
+  // --- PERIODIC INSPECTIONS: EYEWASH ---
+  getEyewashInspections(): EyewashInspection[] {
+    if (!this.isClient()) return INITIAL_EYEWASH_INSPECTIONS;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.PERIODIC_EYEWASH);
+      if (data) return JSON.parse(data);
+    } catch {}
+    this.saveEyewashInspections(INITIAL_EYEWASH_INSPECTIONS);
+    return INITIAL_EYEWASH_INSPECTIONS;
+  }
+
+  saveEyewashInspections(list: EyewashInspection[]): void {
+    if (!this.isClient()) return;
+    localStorage.setItem(STORAGE_KEYS.PERIODIC_EYEWASH, JSON.stringify(list));
+  }
+
+  saveEyewashInspection(inspection: EyewashInspection, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getEyewashInspections();
+    list.unshift(inspection);
+    localStorage.setItem(STORAGE_KEYS.PERIODIC_EYEWASH, JSON.stringify(list));
+
+    this.addAuditLog(
+      'create',
+      'periodic_inspection',
+      inspection.id,
+      byUser?.id || inspection.maNV,
+      byUser?.name || inspection.hoTen,
+      `Kiểm tra máy rửa mắt tại ${inspection.diaDiem} - Đánh giá: ${inspection.danhGiaTongQuat}`
+    );
+
+    const year = new Date().getFullYear();
+    this.syncFileToGitHub(
+      `periodic-inspections/eyewash/${year}/${inspection.id}.json`,
+      JSON.stringify(inspection, null, 2),
+      `Save Eyewash Inspection ${inspection.id}`
+    );
+
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'periodic_eyewash',
+        data: inspection,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
+  }
+
+  // --- PERIODIC INSPECTIONS: STORMWATER ---
+  getStormwaterInspections(): StormwaterInspection[] {
+    if (!this.isClient()) return INITIAL_STORMWATER_INSPECTIONS;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.PERIODIC_STORMWATER);
+      if (data) return JSON.parse(data);
+    } catch {}
+    this.saveStormwaterInspections(INITIAL_STORMWATER_INSPECTIONS);
+    return INITIAL_STORMWATER_INSPECTIONS;
+  }
+
+  saveStormwaterInspections(list: StormwaterInspection[]): void {
+    if (!this.isClient()) return;
+    localStorage.setItem(STORAGE_KEYS.PERIODIC_STORMWATER, JSON.stringify(list));
+  }
+
+  saveStormwaterInspection(inspection: StormwaterInspection, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getStormwaterInspections();
+    list.unshift(inspection);
+    localStorage.setItem(STORAGE_KEYS.PERIODIC_STORMWATER, JSON.stringify(list));
+
+    this.addAuditLog(
+      'create',
+      'periodic_inspection',
+      inspection.id,
+      byUser?.id || inspection.maNV,
+      byUser?.name || inspection.hoTen,
+      `Kiểm tra hệ thống nước mưa - Kết quả: ${inspection.danhGiaTongQuat}`
+    );
+
+    const year = new Date().getFullYear();
+    this.syncFileToGitHub(
+      `periodic-inspections/stormwater/${year}/${inspection.id}.json`,
+      JSON.stringify(inspection, null, 2),
+      `Save Stormwater Inspection ${inspection.id}`
+    );
+
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'periodic_stormwater',
+        data: inspection,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
+  }
+
+  // --- PERIODIC INSPECTIONS: GROUNDWATER & SOIL ---
+  getGroundwaterSoilInspections(): GroundwaterSoilInspection[] {
+    if (!this.isClient()) return INITIAL_GROUNDWATER_SOIL_INSPECTIONS;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.PERIODIC_GROUNDWATER_SOIL);
+      if (data) return JSON.parse(data);
+    } catch {}
+    this.saveGroundwaterSoilInspections(INITIAL_GROUNDWATER_SOIL_INSPECTIONS);
+    return INITIAL_GROUNDWATER_SOIL_INSPECTIONS;
+  }
+
+  saveGroundwaterSoilInspections(list: GroundwaterSoilInspection[]): void {
+    if (!this.isClient()) return;
+    localStorage.setItem(STORAGE_KEYS.PERIODIC_GROUNDWATER_SOIL, JSON.stringify(list));
+  }
+
+  saveGroundwaterSoilInspection(inspection: GroundwaterSoilInspection, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getGroundwaterSoilInspections();
+    list.unshift(inspection);
+    localStorage.setItem(STORAGE_KEYS.PERIODIC_GROUNDWATER_SOIL, JSON.stringify(list));
+
+    this.addAuditLog(
+      'create',
+      'periodic_inspection',
+      inspection.id,
+      byUser?.id || inspection.maNV,
+      byUser?.name || inspection.hoTen,
+      `Khảo sát nước ngầm và đất - Kết quả sơ bộ: ${inspection.tongHop.ketQuaSoBo}`
+    );
+
+    const year = new Date().getFullYear();
+    this.syncFileToGitHub(
+      `periodic-inspections/groundwater-soil/${year}/${inspection.id}.json`,
+      JSON.stringify(inspection, null, 2),
+      `Save Groundwater & Soil Inspection ${inspection.id}`
+    );
+
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'periodic_groundwater_soil',
+        data: inspection,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
   }
 }
 
