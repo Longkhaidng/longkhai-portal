@@ -5,7 +5,7 @@
   "department": "Bộ Phận CNTT",
   "location": "Phòng bảo vệ",
   "issueDescription": "Bóng đèn bị cháy. đề xuất cơ điện ktra",
-  "status": "pending_confirmation",
+  "status": "completed",
   "steps": [
     {
       "step": 1,
@@ -46,12 +46,14 @@
       "roleRequired": "creator",
       "approverId": "2265",
       "approverName": "Trần Lê Hữu Lực",
-      "status": "pending"
+      "status": "completed",
+      "updatedAt": "2026-10-30T01:49:00.867Z",
+      "comment": "Xác nhận đã xong"
     }
   ],
   "currentStepIndex": 3,
   "createdAt": "2026-10-30T01:30:54.927Z",
-  "updatedAt": "2026-10-30T01:48:28.291Z",
+  "updatedAt": "2026-10-30T01:49:00.867Z",
   "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
   "emailConfig": {
     "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
@@ -66,5 +68,7 @@
   "maintenanceStaffId": "2409",
   "maintenanceStaffName": "Trịnh Anh Tài",
   "maintenanceCompletedAt": "2026-10-30T01:48:28.291Z",
-  "maintenanceNotes": "Đã thay thế xong."
+  "maintenanceNotes": "Đã thay thế xong.",
+  "creatorConfirmedAt": "2026-10-30T01:49:00.867Z",
+  "creatorFeedback": "Xác nhận đã xong"
 }
