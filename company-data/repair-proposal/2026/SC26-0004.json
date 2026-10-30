@@ -5,7 +5,7 @@
   "department": "Bộ Phận CNTT",
   "location": "Phòng bảo vệ",
   "issueDescription": "Bóng đèn bị cháy. đề xuất cơ điện ktra",
-  "status": "pending_manager",
+  "status": "maintenance_pending",
   "steps": [
     {
       "step": 1,
@@ -22,10 +22,12 @@
       "title": "Trưởng bộ phận duyệt",
       "subTitle": "qua email",
       "roleRequired": "manager",
-      "approverId": "1867",
-      "approverName": "Trương Anh Như Quỳnh",
+      "approverId": "2265",
+      "approverName": "Trần Lê Hữu Lực",
       "approverEmail": "Quynh.truong@longkhai.com.vn",
-      "status": "pending"
+      "status": "approved",
+      "updatedAt": "2026-10-30T01:33:33.308Z",
+      "comment": "Đồng ý phê duyệt đề xuất sửa chữa"
     },
     {
       "step": 3,
@@ -43,13 +45,18 @@
       "status": "pending"
     }
   ],
-  "currentStepIndex": 1,
+  "currentStepIndex": 2,
   "createdAt": "2026-10-30T01:30:54.927Z",
-  "updatedAt": "2026-10-30T01:30:54.927Z",
+  "updatedAt": "2026-10-30T01:33:33.308Z",
   "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
   "emailConfig": {
     "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
     "senderName": "Cổng Thông Tin Long Khai",
     "portalBaseUrl": "https://longkhai-portal.vercel.app"
-  }
+  },
+  "managerId": "2265",
+  "managerName": "Trần Lê Hữu Lực",
+  "managerApprovedAt": "2026-10-30T01:33:33.308Z",
+  "managerComment": "",
+  "proposedSolution": "Chuyển cơ điện kiểm tra sửa chữa"
 }
