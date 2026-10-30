@@ -1,0 +1,24 @@
+{
+  "id": "INSP-20261030-295",
+  "deviceId": "HT-CO2-01",
+  "deviceName": "Bình chữa cháy CO2 MT3 số 01",
+  "category": "binh_co2",
+  "location": "PXHT - Khu vực đóng kiện",
+  "inspectorId": "1927",
+  "inspectorName": "Phan Hải Đăng",
+  "inspectedAt": "2026-10-30 10:14:16",
+  "overallResult": "pass",
+  "notes": "",
+  "checklist": {
+    "type": "binh_co2",
+    "data": {
+      "standardGrossWeight": 10,
+      "actualWeight": 10,
+      "gasLossPercent": 0,
+      "isLossAcceptable": true,
+      "co2Nozzle": "pass",
+      "safetyPinSeal": "pass"
+    }
+  },
+  "createdAt": "2026-10-30T03:14:16.982Z"
+}
