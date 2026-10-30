@@ -1011,13 +1011,24 @@ export async function exportPCCCReportToExcel(opts: ExportPCCCReportOptions) {
 
   // Row 8+: Data rows
   opts.devices.forEach((d, idx) => {
-    const insp = opts.inspections.find((i) => i.deviceId === d.id);
+    const insp = opts.inspections.find((i) => i.deviceId.toLowerCase() === d.id.toLowerCase());
+    const isInspected = Boolean(insp && insp.checklist && formatPCCCChecklistSummary(insp) !== 'Chưa kiểm tra');
     const catName = PCCC_CATEGORIES[d.category]?.name || d.category;
-    const inspDate = d.lastInspection?.date || insp?.inspectedAt || 'Chưa kiểm tra';
-    const inspName = d.lastInspection ? `${d.lastInspection.inspectorName} (${d.lastInspection.inspectorId})` : insp ? `${insp.inspectorName} (${insp.inspectorId})` : '-';
+    const inspDate = insp?.inspectedAt || insp?.createdAt || (isInspected ? d.lastInspection?.date : '') || 'Chưa kiểm tra';
+    const inspName = insp
+      ? `${insp.inspectorName} (${insp.inspectorId})`
+      : isInspected && d.lastInspection
+      ? `${d.lastInspection.inspectorName} (${d.lastInspection.inspectorId})`
+      : '-';
     const details = formatPCCCChecklistSummary(insp);
-    const resultText = d.lastInspection?.status === 'pass' ? 'ĐẠT TIÊU CHUẨN' : d.lastInspection?.status === 'fail' ? 'CẦN XỬ LÝ / HỎNG' : 'Chưa kiểm tra';
-    const notesText = d.lastInspection?.notes || insp?.notes || '';
+    const resultText = insp
+      ? insp.overallResult === 'pass'
+        ? 'ĐẠT TIÊU CHUẨN'
+        : 'CẦN XỬ LÝ / HỎNG'
+      : isInspected && d.lastInspection?.status === 'pass'
+      ? 'ĐẠT TIÊU CHUẨN'
+      : 'Chưa kiểm tra';
+    const notesText = insp?.notes || d.lastInspection?.notes || d.notes || '';
 
     const rowData = [
       idx + 1,

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
 import { exportReportToExcel, exportStationeryReportToExcel, exportPCCCReportToExcel, formatPCCCChecklistSummary } from '@/lib/excel';
@@ -49,7 +49,7 @@ export function ReportsView() {
 
   const handleSelectReportType = (type: typeof reportType) => {
     setReportType(type);
-    setStatusFilter('all');
+    setStatusFilter(type === 'pccc' ? 'inspected' : 'all');
     setPcccCategoryFilter('all');
   };
 
@@ -107,7 +107,8 @@ export function ReportsView() {
     setFromDate('');
     setToDate('');
     setSearchTerm('');
-    setStatusFilter('all');
+    setStatusFilter(reportType === 'pccc' ? 'inspected' : 'all');
+    setPcccCategoryFilter('all');
   };
 
   const hasActiveFilters =
@@ -115,7 +116,9 @@ export function ReportsView() {
     fromDate !== '' ||
     toDate !== '' ||
     searchTerm.trim() !== '' ||
-    statusFilter !== 'all';
+    (reportType === 'pccc'
+      ? statusFilter !== 'inspected' || pcccCategoryFilter !== 'all'
+      : statusFilter !== 'all');
 
   // 1. Filtered Leaves
   const filteredLeaves = useMemo(() => {
@@ -284,17 +287,46 @@ export function ReportsView() {
     }));
   }, [generals, departmentFilter, statusFilter, searchTerm, fromDate, toDate]);
 
-  // 6. Filtered Departments
-  const pcccDevices = useMemo(() => storage.getPCCCDevices(), []);
-  const pcccInspections = useMemo(() => storage.getPCCCInspections(), []);
+  // 6. Filtered PCCC Devices & Inspections
+  const [pcccVersion, setPcccVersion] = useState(0);
+
+  useEffect(() => {
+    const handleSync = () => setPcccVersion((v) => v + 1);
+    window.addEventListener('storage', handleSync);
+    window.addEventListener('pccc_inspections_updated', handleSync);
+    return () => {
+      window.removeEventListener('storage', handleSync);
+      window.removeEventListener('pccc_inspections_updated', handleSync);
+    };
+  }, []);
+
+  const pcccDevices = useMemo(() => storage.getPCCCDevices(), [pcccVersion]);
+  const pcccInspections = useMemo(() => storage.getPCCCInspections(), [pcccVersion]);
 
   const filteredPCCCDevices = useMemo(() => {
-    return pcccDevices.filter((d) => {
+    const list = pcccDevices.filter((d) => {
+      const insp = pcccInspections.find(
+        (i) => i.deviceId.toLowerCase() === d.id.toLowerCase()
+      );
+      const isInspected = Boolean(
+        insp && insp.checklist && formatPCCCChecklistSummary(insp) !== 'Chưa kiểm tra'
+      );
+
       // Status filter tailored for PCCC
-      if (statusFilter === 'pass' && d.lastInspection?.status !== 'pass') return false;
-      if (statusFilter === 'fail' && d.lastInspection?.status !== 'fail') return false;
-      if (statusFilter === 'none' && d.lastInspection) return false;
-      if (statusFilter === 'expiring') {
+      // Mặc định hoặc chọn 'inspected': Chỉ hiển thị những thiết bị đã được kiểm tra
+      if (statusFilter === 'inspected' || (!statusFilter && reportType === 'pccc')) {
+        if (!isInspected) return false;
+      } else if (statusFilter === 'pass') {
+        if (!isInspected) return false;
+        const isPass = insp ? insp.overallResult === 'pass' : d.lastInspection?.status === 'pass';
+        if (!isPass) return false;
+      } else if (statusFilter === 'fail') {
+        if (!isInspected) return false;
+        const isFail = insp ? insp.overallResult === 'fail' : d.lastInspection?.status === 'fail';
+        if (!isFail) return false;
+      } else if (statusFilter === 'none') {
+        if (isInspected) return false;
+      } else if (statusFilter === 'expiring') {
         const parts = (d.inspectionExpiry || '').split('/');
         if (parts.length === 3) {
           const expDate = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
@@ -304,6 +336,7 @@ export function ReportsView() {
           return false;
         }
       }
+      // statusFilter === 'all': Hiển thị tất cả thiết bị (kể cả chưa kiểm tra)
 
       // Category filter for PCCC
       if (pcccCategoryFilter !== 'all' && d.category !== pcccCategoryFilter) return false;
@@ -318,9 +351,10 @@ export function ReportsView() {
         }
       }
 
-      // Date Range Filter (by last inspection date)
+      // Date Range Filter (by inspection date)
       if (fromDate || toDate) {
-        const inspDate = d.lastInspection?.date ? d.lastInspection.date.slice(0, 10) : '';
+        const inspDateRaw = insp?.inspectedAt || (isInspected ? d.lastInspection?.date : '');
+        const inspDate = inspDateRaw ? inspDateRaw.slice(0, 10) : '';
         if (fromDate && (!inspDate || inspDate < fromDate)) return false;
         if (toDate && (!inspDate || inspDate > toDate)) return false;
       }
@@ -337,7 +371,27 @@ export function ReportsView() {
       }
       return true;
     });
-  }, [pcccDevices, statusFilter, pcccCategoryFilter, departmentFilter, fromDate, toDate, searchTerm]);
+
+    // Sắp xếp: Thiết bị nào kiểm tra sau cùng (mới nhất) sẽ được hiển thị đầu tiên
+    const getInspectionTime = (device: PCCCDevice): number => {
+      const insp = pcccInspections.find(
+        (i) => i.deviceId.toLowerCase() === device.id.toLowerCase()
+      );
+      const raw = insp?.inspectedAt || insp?.createdAt || (insp ? device.lastInspection?.date : '');
+      if (!raw) return 0;
+      const parsed = new Date(raw.replace(' ', 'T')).getTime();
+      return isNaN(parsed) ? new Date(raw).getTime() || 0 : parsed;
+    };
+
+    return list.sort((a, b) => {
+      const timeA = getInspectionTime(a);
+      const timeB = getInspectionTime(b);
+      if (timeB !== timeA) {
+        return timeB - timeA; // Giảm dần: Kiểm tra gần nhất / sau cùng lên đầu
+      }
+      return a.id.localeCompare(b.id);
+    });
+  }, [pcccDevices, pcccInspections, statusFilter, pcccCategoryFilter, departmentFilter, fromDate, toDate, searchTerm, reportType]);
   const filteredDepartments = useMemo(() => {
     return departments.filter((d) => {
       if (departmentFilter !== 'all' && d.name !== departmentFilter) return false;
@@ -940,7 +994,8 @@ export function ReportsView() {
               >
                 {reportType === 'pccc' ? (
                   <>
-                    <option value="all">Tất cả tình trạng kiểm tra</option>
+                    <option value="inspected">Thiết bị đã kiểm tra (Mặc định)</option>
+                    <option value="all">Tất cả thiết bị (kể cả chưa kiểm tra)</option>
                     <option value="pass">Đạt tiêu chuẩn kiểm định</option>
                     <option value="fail">Cần xử lý / Hỏng</option>
                     <option value="expiring">Hết hạn / Sắp hết hạn (30 ngày)</option>
@@ -1062,9 +1117,13 @@ export function ReportsView() {
                 Phòng: {departmentFilter}
               </span>
             )}
-            {statusFilter !== 'all' && (
+            {((reportType === 'pccc' && statusFilter !== 'inspected') || (reportType !== 'pccc' && statusFilter !== 'all')) && (
               <span className="ml-2 px-2 py-0.5 bg-amber-50 dark:bg-amber-950 text-amber-600 rounded-md">
-                Trạng thái: {statusFilter}
+                Trạng thái: {
+                  reportType === 'pccc'
+                    ? (statusFilter === 'all' ? 'Tất cả thiết bị' : statusFilter === 'pass' ? 'Đạt tiêu chuẩn' : statusFilter === 'fail' ? 'Cần xử lý/Hỏng' : statusFilter === 'expiring' ? 'Sắp hết hạn' : 'Chưa kiểm tra')
+                    : statusFilter
+                }
               </span>
             )}
             {(fromDate || toDate) && (
@@ -1722,24 +1781,30 @@ export function ReportsView() {
                     <th className="px-1.5 py-1.5 border text-center w-28 whitespace-nowrap">Người kiểm tra</th>
                     <th className="px-2 py-1.5 border min-w-[140px]">Chi tiết kiểm tra</th>
                     <th className="px-1.5 py-1.5 border text-center w-16 whitespace-nowrap">Đánh giá</th>
-                    <th className="px-1.5 py-1.5 border text-center w-14 whitespace-nowrap">Ký nhận</th>
                     <th className="px-1.5 py-1.5 border min-w-[70px]">Ghi chú</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
                   {filteredPCCCDevices.length === 0 ? (
                     <tr>
-                      <td colSpan={13} className="p-8 text-center text-slate-400">
+                      <td colSpan={12} className="p-8 text-center text-slate-400">
                         Không tìm thấy thiết bị PCCC nào phù hợp với bộ lọc hiện tại.
                       </td>
                     </tr>
                   ) : (
                     filteredPCCCDevices.map((d, idx) => {
                       const catInfo = PCCC_CATEGORIES[d.category];
-                      const insp = pcccInspections.find((i) => i.deviceId === d.id);
+                      const insp = pcccInspections.find((i) => i.deviceId.toLowerCase() === d.id.toLowerCase());
+                      const isInspected = Boolean(insp && insp.checklist && formatPCCCChecklistSummary(insp) !== 'Chưa kiểm tra');
                       const details = formatPCCCChecklistSummary(insp);
-                      const hasLast = !!d.lastInspection;
-                      const isPass = d.lastInspection?.status === 'pass';
+                      const isPass = insp ? insp.overallResult === 'pass' : d.lastInspection?.status === 'pass';
+                      const inspDate = insp?.inspectedAt || (isInspected ? d.lastInspection?.date : '') || '-';
+                      const inspectorName = insp
+                        ? `${insp.inspectorName} (${insp.inspectorId})`
+                        : isInspected && d.lastInspection
+                        ? `${d.lastInspection.inspectorName} (${d.lastInspection.inspectorId})`
+                        : '-';
+                      const noteText = insp?.notes || d.lastInspection?.notes || d.notes || '-';
 
                       return (
                         <tr key={d.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
@@ -1755,20 +1820,16 @@ export function ReportsView() {
                           <td className="px-1.5 py-1 border text-center font-mono whitespace-nowrap text-[10px]">{d.specs}</td>
                           <td className="px-1.5 py-1 border text-center whitespace-nowrap font-mono text-[10px]">{formatPCCCDate(d.inspectionExpiry)}</td>
                           <td className="px-1.5 py-1 border text-center text-[10px] whitespace-nowrap font-mono text-slate-600 dark:text-slate-300">
-                            {d.lastInspection?.date || insp?.inspectedAt || '-'}
+                            {inspDate}
                           </td>
                           <td className="px-1.5 py-1 border text-center whitespace-nowrap text-[10px]">
-                            {d.lastInspection
-                              ? `${d.lastInspection.inspectorName} (${d.lastInspection.inspectorId})`
-                              : insp
-                              ? `${insp.inspectorName} (${insp.inspectorId})`
-                              : '-'}
+                            {inspectorName}
                           </td>
                           <td className="px-2 py-1 border text-[10px] text-slate-700 dark:text-slate-300 max-w-[200px] leading-tight">
                             {details}
                           </td>
                           <td className="px-1.5 py-1 border text-center whitespace-nowrap">
-                            {hasLast ? (
+                            {isInspected ? (
                               <span
                                 className={`px-1.5 py-0.5 rounded-full text-[9px] font-bold border whitespace-nowrap inline-block ${
                                   isPass
@@ -1784,11 +1845,8 @@ export function ReportsView() {
                               </span>
                             )}
                           </td>
-                          <td className="px-1.5 py-1 border text-center whitespace-nowrap text-[10px] font-medium text-slate-600">
-                            {hasLast ? 'Đã ký' : '-'}
-                          </td>
-                          <td className="px-1.5 py-1 border text-[10px] text-slate-500 italic max-w-[100px] truncate" title={d.notes || d.lastInspection?.notes || ''}>
-                            {d.notes || d.lastInspection?.notes || '-'}
+                          <td className="px-1.5 py-1 border text-[10px] text-slate-500 italic max-w-[100px] truncate" title={noteText !== '-' ? noteText : ''}>
+                            {noteText}
                           </td>
                         </tr>
                       );

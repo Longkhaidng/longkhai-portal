@@ -177,12 +177,6 @@ export function PCCCImportExcelModal({
           specs: rawSpecs,
           inspectionExpiry: rawExpiry,
           notes: rawNotes || undefined,
-          lastInspection: {
-            status: 'pass',
-            date: new Date().toISOString().slice(0, 19).replace('T', ' '),
-            inspectorId: currentUser?.id || '2265',
-            inspectorName: currentUser?.name || 'Trần Lê Hữu Lực',
-          },
         });
       });
 
