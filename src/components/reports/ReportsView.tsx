@@ -28,7 +28,12 @@ import { LEAVE_TYPE_LABELS } from '@/types/leave';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { RepairProposal, REPAIR_STATUS_LABELS, REPAIR_STATUS_BADGES } from '@/types/repair';
 import { PCCCDevice, PCCCInspection, PCCC_CATEGORIES, formatPCCCDate } from '@/types/pccc';
-import { PeriodicInspectionView } from '@/components/periodic-inspection/PeriodicInspectionView';
+import {
+  FirstAidInspection,
+  EyewashInspection,
+  StormwaterInspection,
+  GroundwaterSoilInspection,
+} from '@/types/periodic-inspection';
 import {
   StationeryProposal,
   GeneralProposal,
@@ -48,6 +53,7 @@ export function ReportsView() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [pcccCategoryFilter, setPcccCategoryFilter] = useState('all');
+  const [periodicCategoryFilter, setPeriodicCategoryFilter] = useState<'all' | 'first_aid' | 'eyewash' | 'stormwater' | 'groundwater_soil'>('all');
 
   const handleSelectReportType = (type: typeof reportType) => {
     setReportType(type);
@@ -410,6 +416,216 @@ export function ReportsView() {
     });
   }, [departments, departmentFilter, searchTerm]);
 
+
+  // --- Format Helpers for Periodic Inspections ---
+  function formatFirstAidDetails(item: FirstAidInspection): string[] {
+    const entries = item.items ? Object.entries(item.items) : [];
+    if (entries.length === 0) return ['Chưa có dữ liệu vật tư'];
+    const bangGac = ['Băng dính (cuộn)', 'Băng thun kích thước 5 x 200 cm', 'Băng chun', 'Băng cuộn vải (gói)', 'Băng dính cá nhân', 'Gạc thấm nước (10 miếng/gói)', 'Bông hút nước (gói)'];
+    const dungCu = ['Garo cao su', 'Kéo cắt băng', 'Panh không mấu thẳng', 'Panh không mấu cong', 'Găng tay khám bệnh (đôi)'];
+    const satKhuan = ['Nước muối sinh lý NaCl 9 ‰', 'Cồn 70°', 'Dung dịch Povidine'];
+    const nep = ['Nẹp cổ (cái)', 'Nẹp cánh tay (bộ)', 'Nẹp cẳng tay (bộ)', 'Nẹp đùi (bộ)', 'Nẹp cẳng chân (bộ)'];
+
+    const bgCount = bangGac.filter((k) => (item.items[k] ?? 0) > 0).length;
+    const dcCount = dungCu.filter((k) => (item.items[k] ?? 0) > 0).length;
+    const skCount = satKhuan.filter((k) => (item.items[k] ?? 0) > 0).length;
+    const nepCount = nep.filter((k) => (item.items[k] ?? 0) > 0).length;
+
+    return [
+      `Danh mục vật tư: ${entries.length} loại kiểm tra`,
+      `Băng gạc & bông: ${bgCount}/${bangGac.length} loại (Đủ)`,
+      `Dụng cụ sơ cứu: ${dcCount}/${dungCu.length} loại (Đủ)`,
+      `Dung dịch sát khuẩn: ${skCount}/${satKhuan.length} loại (Đủ)`,
+      `Nẹp nắn chỉnh: ${nepCount}/${nep.length} loại (Đủ)`,
+      `Đánh giá tủ: ${item.summaryStatus || 'Đầy đủ'}`,
+    ];
+  }
+
+  function formatEyewashDetails(item: EyewashInspection): string[] {
+    const criteria = ['Nguồn nước', 'Vòi phun', 'Nước chảy liên tục 10-15 phút', 'Nước chảy cao 15cm', 'Máy sạch sẽ'];
+    return criteria.map((c) => `${c}: ${item.items?.[c] || 'Đạt'}`);
+  }
+
+  function formatStormwaterDetails(item: StormwaterInspection): string[] {
+    const qMap: Record<number, string> = {
+      1: 'Trời mưa gần đây',
+      3: 'Nước cống có màu/mùi lạ',
+      4: 'Kho rác tràn đổ',
+      5: 'Kho hóa chất tràn đổ',
+      6: 'Nhà vệ sinh tràn nước',
+      7: 'Nén khí, lò hơi tràn dầu',
+      8: 'Trạm bơm rò rỉ dầu',
+      9: 'Nhà xe rò rỉ xăng',
+      10: 'Cống bị xả thải',
+      11: 'Cống nước thải rò rỉ',
+      12: 'Nguồn nước mưa ô nhiễm',
+    };
+    const list = [1, 3, 4, 5, 7, 8, 11, 12];
+    return list.map((qid) => {
+      const a = item.answers ? item.answers[qid] : undefined;
+      const val = a ? (typeof a === 'string' ? a : a.ketQua) : 'Không';
+      return `${qMap[qid]}: ${val || 'Không'}`;
+    });
+  }
+
+  function formatGroundwaterSoilDetails(item: GroundwaterSoilInspection): string[] {
+    const criteriaMap: Record<number, string> = {
+      1: 'Mùi đất bất thường',
+      2: 'Đất đổi màu, loang dầu',
+      3: 'Thực vật héo úa, chết',
+      4: 'Kho HC thấm nền đất',
+      5: 'Bồn nhiên liệu rò rỉ',
+      6: 'Cống rãnh, hố ga nứt vỡ',
+      7: 'Chất thải thấm xuống đất',
+      8: 'Mặt đất sụt lún, nứt nẻ',
+    };
+    const lines = [1, 2, 3, 4, 5, 6, 7, 8].map((id) => {
+      const a = item.answers ? item.answers[id] : undefined;
+      const val = a ? (typeof a === 'string' ? a : a.ketQua) : 'Đạt';
+      return `${criteriaMap[id]}: ${val || 'Đạt'}`;
+    });
+    if (item.tongHop?.canLayMau) {
+      lines.push(`Lấy mẫu phân tích: ${item.tongHop.canLayMau}`);
+    }
+    return lines;
+  }
+
+  const periodicInspections = useMemo(() => {
+    const scc = storage.getFirstAidInspections() || [];
+    const mrm = storage.getEyewashInspections() || [];
+    const nm = storage.getStormwaterInspections() || [];
+    const ngd = storage.getGroundwaterSoilInspections() || [];
+
+    const list: {
+      id: string;
+      category: 'first_aid' | 'eyewash' | 'stormwater' | 'groundwater_soil';
+      categoryName: string;
+      categoryBadgeCls: string;
+      location: string;
+      thoiGian: string;
+      dateObj: Date;
+      inspector: string;
+      department: string;
+      detailLines: string[];
+      status: string;
+      statusCls: string;
+      notes: string;
+    }[] = [];
+
+    scc.forEach((it) => {
+      const isShort = it.summaryStatus === 'Thiếu vật tư';
+      list.push({
+        id: it.id,
+        category: 'first_aid',
+        categoryName: 'Tủ sơ cấp cứu',
+        categoryBadgeCls: 'bg-rose-50 text-rose-700 border-rose-200',
+        location: it.diaDiem || 'Văn phòng',
+        thoiGian: it.thoiGian || '',
+        dateObj: new Date(it.createdAt || it.thoiGian || 0),
+        inspector: it.nguoiKT || `${it.hoTen} (${it.maNV})`,
+        department: it.boPhan || 'HCNS',
+        detailLines: formatFirstAidDetails(it),
+        status: isShort ? 'THIẾU VẬT TƯ' : 'ĐẦY ĐỦ',
+        statusCls: isShort ? 'text-red-700 bg-red-50 border-red-200' : 'text-emerald-700 bg-emerald-50 border-emerald-200',
+        notes: it.ghiChu || '-',
+      });
+    });
+
+    mrm.forEach((it) => {
+      const isPass = it.danhGiaTongQuat === 'Đạt';
+      list.push({
+        id: it.id,
+        category: 'eyewash',
+        categoryName: 'Máy rửa mắt',
+        categoryBadgeCls: 'bg-cyan-50 text-cyan-700 border-cyan-200',
+        location: it.diaDiem || 'Khu sản xuất',
+        thoiGian: it.thoiGian || '',
+        dateObj: new Date(it.createdAt || it.thoiGian || 0),
+        inspector: it.nguoiKT || `${it.hoTen} (${it.maNV})`,
+        department: it.boPhan || 'HCNS',
+        detailLines: formatEyewashDetails(it),
+        status: isPass ? 'ĐẠT' : 'KHÔNG ĐẠT',
+        statusCls: isPass ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-red-700 bg-red-50 border-red-200',
+        notes: it.deXuat || '-',
+      });
+    });
+
+    nm.forEach((it) => {
+      const isPass = it.danhGiaTongQuat === 'Đạt';
+      list.push({
+        id: it.id,
+        category: 'stormwater',
+        categoryName: 'Nước mưa',
+        categoryBadgeCls: 'bg-blue-50 text-blue-700 border-blue-200',
+        location: 'Hệ thống cống & hố ga',
+        thoiGian: it.thoiGian || '',
+        dateObj: new Date(it.createdAt || it.thoiGian || 0),
+        inspector: it.nguoiKT || `${it.hoTen} (${it.maNV})`,
+        department: it.boPhan || 'HCNS',
+        detailLines: formatStormwaterDetails(it),
+        status: isPass ? 'ĐẠT' : 'CẦN XỬ LÝ',
+        statusCls: isPass ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-red-700 bg-red-50 border-red-200',
+        notes: it.ghiChuTongQuat || '-',
+      });
+    });
+
+    ngd.forEach((it) => {
+      const isPass = it.tongHop?.ketQuaSoBo === 'Đạt';
+      const notes = [it.tongHop?.khuVucNghiNgo ? `KV nghi ngờ: ${it.tongHop.khuVucNghiNgo}` : '', it.tongHop?.khuyenNghi || '']
+        .filter(Boolean)
+        .join('. ');
+      list.push({
+        id: it.id,
+        category: 'groundwater_soil',
+        categoryName: 'Nước ngầm & đất',
+        categoryBadgeCls: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        location: 'Khuôn viên nhà máy',
+        thoiGian: it.thoiGian || '',
+        dateObj: new Date(it.createdAt || it.thoiGian || 0),
+        inspector: it.nguoiKT || `${it.hoTen} (${it.maNV})`,
+        department: it.boPhan || 'HCNS',
+        detailLines: formatGroundwaterSoilDetails(it),
+        status: isPass ? 'ĐẠT' : 'KHÔNG ĐẠT',
+        statusCls: isPass ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-red-700 bg-red-50 border-red-200',
+        notes: notes || '-',
+      });
+    });
+
+    // Sort newest inspections first
+    return list.sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
+  }, []);
+
+  const filteredPeriodicInspections = useMemo(() => {
+    return periodicInspections.filter((item) => {
+      if (periodicCategoryFilter !== 'all' && item.category !== periodicCategoryFilter) return false;
+      if (departmentFilter !== 'all' && item.department !== departmentFilter) return false;
+      if (fromDate) {
+        const itemDateStr = item.dateObj.toISOString().slice(0, 10);
+        if (itemDateStr < fromDate) return false;
+      }
+      if (toDate) {
+        const itemDateStr = item.dateObj.toISOString().slice(0, 10);
+        if (itemDateStr > toDate) return false;
+      }
+      if (statusFilter === 'pass') {
+        if (!['ĐẠT', 'ĐẦY ĐỦ', 'DƯ VẬT TƯ'].includes(item.status)) return false;
+      } else if (statusFilter === 'fail') {
+        if (!['KHÔNG ĐẠT', 'THIẾU VẬT TƯ', 'CẦN XỬ LÝ'].includes(item.status)) return false;
+      }
+      if (searchTerm.trim()) {
+        const s = searchTerm.toLowerCase();
+        const matchId = item.id.toLowerCase().includes(s);
+        const matchCat = item.categoryName.toLowerCase().includes(s);
+        const matchLoc = item.location.toLowerCase().includes(s);
+        const matchInsp = item.inspector.toLowerCase().includes(s);
+        const matchDept = item.department.toLowerCase().includes(s);
+        const matchNote = item.notes.toLowerCase().includes(s);
+        if (!matchId && !matchCat && !matchLoc && !matchInsp && !matchDept && !matchNote) return false;
+      }
+      return true;
+    });
+  }, [periodicInspections, periodicCategoryFilter, departmentFilter, fromDate, toDate, statusFilter, searchTerm]);
+
   // Current active result count
   const currentCount =
     reportType === 'leave'
@@ -426,7 +642,7 @@ export function ReportsView() {
       ? filteredStationeries.length
       : reportType === 'general'
       ? filteredGenerals.length
-      : reportType === 'pccc' ? filteredPCCCDevices.length : filteredDepartments.length;
+      : reportType === 'pccc' ? filteredPCCCDevices.length : reportType === 'periodic_inspection' ? filteredPeriodicInspections.length : filteredDepartments.length;
 
   // Export to Excel handler
   const handleExportExcel = () => {
@@ -951,7 +1167,13 @@ export function ReportsView() {
                 onChange={(e) => setDepartmentFilter(e.target.value)}
                 className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
               >
-                {reportType === 'pccc' ? (
+                {reportType === 'periodic_inspection' ? (
+                  <>
+                    <option value="all">Tất cả kết quả kiểm tra</option>
+                    <option value="pass">Đạt / Đầy đủ tiêu chuẩn</option>
+                    <option value="fail">Không đạt / Cần xử lý / Thiếu</option>
+                  </>
+                ) : reportType === 'pccc' ? (
                   <>
                     <option value="all">Tất cả khu vực</option>
                     <option value="PXHT">PX Hoàn Thiện (PXHT)</option>
@@ -977,11 +1199,7 @@ export function ReportsView() {
           )}
 
           {/* Chủng loại Filter (Dành riêng cho Kiểm tra PCCC) */}
-          {reportType === 'periodic_inspection' && (
-        <div className="mt-4">
-          <PeriodicInspectionView />
-        </div>
-      )}
+          
 
       {reportType === 'pccc' && (
             <div className="flex items-center gap-2">
@@ -1186,7 +1404,7 @@ export function ReportsView() {
           <div className="text-right text-[11px] text-slate-600 dark:text-slate-400 ml-auto shrink-0 print-header-right">
             <div className="whitespace-nowrap font-medium">Ngày xuất báo cáo: {formatDate(new Date().toISOString())}</div>
             <div className="font-mono font-bold whitespace-nowrap">
-              {reportType === 'pccc' ? 'Mã tài liệu: BC-LK-PCCC/2026' : 'Mã tài liệu: BC-LK-2026/01'}
+              {reportType === 'pccc' ? 'Mã tài liệu: BC-LK-PCCC/2026' : reportType === 'periodic_inspection' ? 'Mã tài liệu: BC-LK-ĐK/2026' : 'Mã tài liệu: BC-LK-2026/01'}
             </div>
           </div>
         </div>
@@ -1929,8 +2147,8 @@ export function ReportsView() {
           )}
         </div>
 
-        {/* Factory Signatures block for PCCC */}
-        {reportType === 'pccc' && (
+        {/* Factory Signatures block for PCCC & Periodic Inspection */}
+        {(reportType === 'pccc' || reportType === 'periodic_inspection') && (
           <div className="pt-8 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center text-xs">
             <div className="space-y-12">
               <div className="font-bold uppercase text-slate-900 dark:text-white">NGƯỜI LẬP BÁO CÁO</div>
