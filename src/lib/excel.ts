@@ -803,7 +803,7 @@ export function formatPCCCChecklistSummary(insp?: PCCCInspection): string {
     return `Nút ấn: ${c.data.emergencyButton === 'pass' ? 'Đạt' : 'K.Đạt'}; Chuông: ${c.data.bellSiren === 'pass' ? 'Đạt' : 'K.Đạt'}; Đèn: ${c.data.locationLight === 'pass' ? 'Đạt' : 'K.Đạt'}; Reset: ${c.data.resetSwitch === 'pass' ? 'Đạt' : 'K.Đạt'}`;
   }
   if (c.type === 'tu_voi_vach') {
-    return `Van góc: ${c.data.angleValve === 'pass' ? 'Đạt' : 'K.Đạt'}; Vòi rách/mục: ${c.data.hoseLeak === 'pass' ? 'Đạt' : 'Rò rỉ'}; Ngàm: ${c.data.hoseCoupling === 'pass' ? 'Đạt' : 'Hỏng'}; Lăng phun: ${c.data.nozzleAvailability === 'pass' ? 'Đạt' : 'Thiếu'}; Khớp lăng: ${c.data.nozzleCoupling === 'pass' ? 'Đạt' : 'K.Đạt'}`;
+    return `Van góc: ${c.data.angleValve === 'pass' ? 'Đạt' : 'K.Đạt'}; Vòi (không rách/mục): ${c.data.hoseLeak === 'pass' ? 'Đạt' : 'Rò rỉ'}; Ngàm: ${c.data.hoseCoupling === 'pass' ? 'Đạt' : 'Hỏng'}; Lăng phun: ${c.data.nozzleAvailability === 'pass' ? 'Đạt' : 'Thiếu'}; Khớp lăng: ${c.data.nozzleCoupling === 'pass' ? 'Đạt' : 'K.Đạt'}`;
   }
   if (c.type === 'tram_bom') {
     return `Tủ điện Auto: ${c.data.electricalControl === 'pass' ? 'Đạt' : 'Lỗi'}; Bơm 1: ${c.data.mainPump1 === 'pass' ? 'Đạt' : 'Lỗi'}; Bơm 2: ${c.data.mainPump2 === 'pass' ? 'Đạt' : 'Lỗi'}; Bơm bù: ${c.data.jockeyPump === 'pass' ? 'Đạt' : 'Lỗi'}; Áp lực 7-9bar: ${c.data.pressureGauge === 'pass' ? 'Đạt' : 'Tụt áp'}; Bể nước: ${c.data.waterLevel === 'pass' ? 'Đạt' : 'Cạn'}`;
