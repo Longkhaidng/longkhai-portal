@@ -5,7 +5,7 @@
   "department": "Bộ Phận CNTT",
   "location": "Phòng bảo vệ",
   "issueDescription": "Bóng đèn bị cháy. đề xuất cơ điện ktra",
-  "status": "maintenance_pending",
+  "status": "pending_confirmation",
   "steps": [
     {
       "step": 1,
@@ -33,7 +33,11 @@
       "step": 3,
       "title": "Cơ điện sửa chữa",
       "roleRequired": "maintenance",
-      "status": "pending"
+      "status": "completed",
+      "approverId": "2409",
+      "approverName": "Trịnh Anh Tài",
+      "updatedAt": "2026-10-30T01:48:28.291Z",
+      "comment": "Đã thay thế xong."
     },
     {
       "step": 4,
@@ -45,9 +49,9 @@
       "status": "pending"
     }
   ],
-  "currentStepIndex": 2,
+  "currentStepIndex": 3,
   "createdAt": "2026-10-30T01:30:54.927Z",
-  "updatedAt": "2026-10-30T01:33:33.308Z",
+  "updatedAt": "2026-10-30T01:48:28.291Z",
   "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
   "emailConfig": {
     "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
@@ -58,5 +62,9 @@
   "managerName": "Trần Lê Hữu Lực",
   "managerApprovedAt": "2026-10-30T01:33:33.308Z",
   "managerComment": "",
-  "proposedSolution": "Chuyển cơ điện kiểm tra sửa chữa"
+  "proposedSolution": "Chuyển cơ điện kiểm tra sửa chữa",
+  "maintenanceStaffId": "2409",
+  "maintenanceStaffName": "Trịnh Anh Tài",
+  "maintenanceCompletedAt": "2026-10-30T01:48:28.291Z",
+  "maintenanceNotes": "Đã thay thế xong."
 }
