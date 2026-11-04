@@ -70,7 +70,7 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
         <button
           type="button"
           onClick={onToggleSidebar}
-          className="p-2 -ml-1 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 md:hidden cursor-pointer shrink-0"
+          className="p-2.5 -ml-1 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:bg-slate-200 dark:active:bg-slate-700 md:hidden cursor-pointer shrink-0 touch-manipulation"
           title="Mở menu"
         >
           <Menu className="w-5 h-5" />

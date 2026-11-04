@@ -385,12 +385,15 @@ function PortalAppContent() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors overflow-x-hidden">
-      {/* Sidebar Navigation - Always visible desktop layout */}
+      {/* Sidebar Navigation */}
       <Sidebar
         currentTab={viewingWebSite ? `web_${viewingWebSite.id}` : currentTab}
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
         onSelectTab={(tabId) => {
           setViewingWebSite(null);
           setCurrentTab(tabId);
+          setIsMobileMenuOpen(false);
         }}
         pendingCounts={{
           leave: pendingLeaves,
@@ -401,12 +404,14 @@ function PortalAppContent() {
         }}
         onSelectIntegratedWeb={(site) => {
           setViewingWebSite(site);
+          setIsMobileMenuOpen(false);
         }}
       />
 
       {/* Main App Container */}
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         <Header
+          onToggleSidebar={() => setIsMobileMenuOpen((prev) => !prev)}
           onOpenGitHubSettings={() => {
             setCurrentTab('settings');
           }}
