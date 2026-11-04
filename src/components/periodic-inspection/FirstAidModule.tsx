@@ -184,8 +184,20 @@ export function FirstAidModule({ onSuccessToast }: FirstAidModuleProps) {
         '0'
       )}`;
 
+        // Generate next sequential 4-digit ID (e.g. SCC-0005)
+      const existingFA = storage.getFirstAidInspections();
+      let maxFANum = 0;
+      existingFA.forEach((item) => {
+        const m = item.id.match(/^SCC-(\d+)$/);
+        if (m) {
+          const num = parseInt(m[1], 10);
+          if (num > maxFANum && num < 100000) maxFANum = num;
+        }
+      });
+      const nextFAId = `SCC-${String(maxFANum + 1).padStart(4, '0')}`;
+
       const newRecord: FirstAidInspection = {
-        id: `SCC-${Date.now()}`,
+        id: nextFAId,
         diaDiem: selectedLocation,
         nguoiKT: `${currentUser?.name || 'Nhân viên'} (${currentUser?.id || '---'})`,
         maNV: currentUser?.id || '',

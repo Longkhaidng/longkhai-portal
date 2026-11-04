@@ -18,6 +18,7 @@ import {
   INITIAL_STORMWATER_INSPECTIONS,
   INITIAL_GROUNDWATER_SOIL_INSPECTIONS,
   FIRST_AID_ITEMS_BY_LOCATION,
+  OLD_TO_NEW_PERIODIC_IDS,
 } from './periodic-inspection-data';
 import { StationeryItem, StationeryProposal, GeneralProposal } from '@/types/proposal';
 import { INITIAL_STATIONERY_ITEMS } from './initial-data';
@@ -50,11 +51,11 @@ const STORAGE_KEYS = {
   STATIONERY_PROPOSALS: 'lk_portal_stationery_proposals',
   PCCC_DEVICES: 'lk_portal_pccc_devices',
   PCCC_INSPECTIONS: 'lk_portal_pccc_inspections',
-  PERIODIC_FIRST_AID: 'lk_portal_periodic_first_aid',
+  PERIODIC_FIRST_AID: 'lk_portal_periodic_first_aid_v3',
   PERIODIC_FIRST_AID_STANDARDS: 'lk_portal_periodic_first_aid_standards_v2',
-  PERIODIC_EYEWASH: 'lk_portal_periodic_eyewash',
-  PERIODIC_STORMWATER: 'lk_portal_periodic_stormwater',
-  PERIODIC_GROUNDWATER_SOIL: 'lk_portal_periodic_groundwater_soil',
+  PERIODIC_EYEWASH: 'lk_portal_periodic_eyewash_v3',
+  PERIODIC_STORMWATER: 'lk_portal_periodic_stormwater_v3',
+  PERIODIC_GROUNDWATER_SOIL: 'lk_portal_periodic_groundwater_soil_v3',
   GENERAL_PROPOSALS: 'lk_portal_general_proposals',
   ANNOUNCEMENTS: 'lk_portal_announcements',
   DYNAMIC_FORMS: 'lk_portal_dynamic_forms',
@@ -1174,28 +1175,40 @@ class StorageService {
         const local = this.getFirstAidInspections();
         const map = new Map<string, FirstAidInspection>();
         local.forEach((it) => map.set(it.id, it));
-        periodicFirstAid.forEach((it: FirstAidInspection) => map.set(it.id, it));
+        periodicFirstAid.forEach((it: FirstAidInspection) => {
+          const id = OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id;
+          map.set(id, { ...it, id });
+        });
         localStorage.setItem(STORAGE_KEYS.PERIODIC_FIRST_AID, JSON.stringify(Array.from(map.values())));
       }
       if (Array.isArray(periodicEyewash)) {
         const local = this.getEyewashInspections();
         const map = new Map<string, EyewashInspection>();
         local.forEach((it) => map.set(it.id, it));
-        periodicEyewash.forEach((it: EyewashInspection) => map.set(it.id, it));
+        periodicEyewash.forEach((it: EyewashInspection) => {
+          const id = OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id;
+          map.set(id, { ...it, id });
+        });
         localStorage.setItem(STORAGE_KEYS.PERIODIC_EYEWASH, JSON.stringify(Array.from(map.values())));
       }
       if (Array.isArray(periodicStormwater)) {
         const local = this.getStormwaterInspections();
         const map = new Map<string, StormwaterInspection>();
         local.forEach((it) => map.set(it.id, it));
-        periodicStormwater.forEach((it: StormwaterInspection) => map.set(it.id, it));
+        periodicStormwater.forEach((it: StormwaterInspection) => {
+          const id = OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id;
+          map.set(id, { ...it, id });
+        });
         localStorage.setItem(STORAGE_KEYS.PERIODIC_STORMWATER, JSON.stringify(Array.from(map.values())));
       }
       if (Array.isArray(periodicGroundwaterSoil)) {
         const local = this.getGroundwaterSoilInspections();
         const map = new Map<string, GroundwaterSoilInspection>();
         local.forEach((it) => map.set(it.id, it));
-        periodicGroundwaterSoil.forEach((it: GroundwaterSoilInspection) => map.set(it.id, it));
+        periodicGroundwaterSoil.forEach((it: GroundwaterSoilInspection) => {
+          const id = OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id;
+          map.set(id, { ...it, id });
+        });
         localStorage.setItem(STORAGE_KEYS.PERIODIC_GROUNDWATER_SOIL, JSON.stringify(Array.from(map.values())));
       }
       if (emailConfig && emailConfig.googleScriptUrl) {
@@ -1578,8 +1591,26 @@ class StorageService {
   getFirstAidInspections(): FirstAidInspection[] {
     if (!this.isClient()) return INITIAL_FIRST_AID_INSPECTIONS;
     try {
-      const data = localStorage.getItem(STORAGE_KEYS.PERIODIC_FIRST_AID);
-      if (data) return JSON.parse(data);
+      let data = localStorage.getItem(STORAGE_KEYS.PERIODIC_FIRST_AID);
+      if (!data) {
+        data = localStorage.getItem('lk_portal_periodic_first_aid');
+      }
+      if (data) {
+        const parsed: FirstAidInspection[] = JSON.parse(data);
+        let changed = false;
+        const migrated = parsed.map((item) => {
+          const newId = OLD_TO_NEW_PERIODIC_IDS[item.id];
+          if (newId && newId !== item.id) {
+            changed = true;
+            return { ...item, id: newId };
+          }
+          return item;
+        });
+        if (changed || !localStorage.getItem(STORAGE_KEYS.PERIODIC_FIRST_AID)) {
+          this.saveFirstAidInspections(migrated);
+        }
+        return migrated;
+      }
     } catch {}
     this.saveFirstAidInspections(INITIAL_FIRST_AID_INSPECTIONS);
     return INITIAL_FIRST_AID_INSPECTIONS;
@@ -1672,8 +1703,26 @@ class StorageService {
   getEyewashInspections(): EyewashInspection[] {
     if (!this.isClient()) return INITIAL_EYEWASH_INSPECTIONS;
     try {
-      const data = localStorage.getItem(STORAGE_KEYS.PERIODIC_EYEWASH);
-      if (data) return JSON.parse(data);
+      let data = localStorage.getItem(STORAGE_KEYS.PERIODIC_EYEWASH);
+      if (!data) {
+        data = localStorage.getItem('lk_portal_periodic_eyewash');
+      }
+      if (data) {
+        const parsed: EyewashInspection[] = JSON.parse(data);
+        let changed = false;
+        const migrated = parsed.map((item) => {
+          const newId = OLD_TO_NEW_PERIODIC_IDS[item.id];
+          if (newId && newId !== item.id) {
+            changed = true;
+            return { ...item, id: newId };
+          }
+          return item;
+        });
+        if (changed || !localStorage.getItem(STORAGE_KEYS.PERIODIC_EYEWASH)) {
+          this.saveEyewashInspections(migrated);
+        }
+        return migrated;
+      }
     } catch {}
     this.saveEyewashInspections(INITIAL_EYEWASH_INSPECTIONS);
     return INITIAL_EYEWASH_INSPECTIONS;
@@ -1721,8 +1770,26 @@ class StorageService {
   getStormwaterInspections(): StormwaterInspection[] {
     if (!this.isClient()) return INITIAL_STORMWATER_INSPECTIONS;
     try {
-      const data = localStorage.getItem(STORAGE_KEYS.PERIODIC_STORMWATER);
-      if (data) return JSON.parse(data);
+      let data = localStorage.getItem(STORAGE_KEYS.PERIODIC_STORMWATER);
+      if (!data) {
+        data = localStorage.getItem('lk_portal_periodic_stormwater');
+      }
+      if (data) {
+        const parsed: StormwaterInspection[] = JSON.parse(data);
+        let changed = false;
+        const migrated = parsed.map((item) => {
+          const newId = OLD_TO_NEW_PERIODIC_IDS[item.id];
+          if (newId && newId !== item.id) {
+            changed = true;
+            return { ...item, id: newId };
+          }
+          return item;
+        });
+        if (changed || !localStorage.getItem(STORAGE_KEYS.PERIODIC_STORMWATER)) {
+          this.saveStormwaterInspections(migrated);
+        }
+        return migrated;
+      }
     } catch {}
     this.saveStormwaterInspections(INITIAL_STORMWATER_INSPECTIONS);
     return INITIAL_STORMWATER_INSPECTIONS;
@@ -1770,8 +1837,26 @@ class StorageService {
   getGroundwaterSoilInspections(): GroundwaterSoilInspection[] {
     if (!this.isClient()) return INITIAL_GROUNDWATER_SOIL_INSPECTIONS;
     try {
-      const data = localStorage.getItem(STORAGE_KEYS.PERIODIC_GROUNDWATER_SOIL);
-      if (data) return JSON.parse(data);
+      let data = localStorage.getItem(STORAGE_KEYS.PERIODIC_GROUNDWATER_SOIL);
+      if (!data) {
+        data = localStorage.getItem('lk_portal_periodic_groundwater_soil');
+      }
+      if (data) {
+        const parsed: GroundwaterSoilInspection[] = JSON.parse(data);
+        let changed = false;
+        const migrated = parsed.map((item) => {
+          const newId = OLD_TO_NEW_PERIODIC_IDS[item.id];
+          if (newId && newId !== item.id) {
+            changed = true;
+            return { ...item, id: newId };
+          }
+          return item;
+        });
+        if (changed || !localStorage.getItem(STORAGE_KEYS.PERIODIC_GROUNDWATER_SOIL)) {
+          this.saveGroundwaterSoilInspections(migrated);
+        }
+        return migrated;
+      }
     } catch {}
     this.saveGroundwaterSoilInspections(INITIAL_GROUNDWATER_SOIL_INSPECTIONS);
     return INITIAL_GROUNDWATER_SOIL_INSPECTIONS;

@@ -122,8 +122,20 @@ export function StormwaterModule({ onSuccessToast }: StormwaterModuleProps) {
         '0'
       )}`;
 
+        // Generate next sequential 4-digit ID (e.g. HTNM-0015)
+      const existingSW = storage.getStormwaterInspections();
+      let maxSWNum = 0;
+      existingSW.forEach((item) => {
+        const m = item.id.match(/^HTNM-(\d+)$/);
+        if (m) {
+          const num = parseInt(m[1], 10);
+          if (num > maxSWNum && num < 100000) maxSWNum = num;
+        }
+      });
+      const nextSWId = `HTNM-${String(maxSWNum + 1).padStart(4, '0')}`;
+
       const newRecord: StormwaterInspection = {
-        id: `HTNM-${Date.now()}`,
+        id: nextSWId,
         nguoiKT: `${currentUser?.name || 'Nhân viên'} (${currentUser?.id || '---'})`,
         maNV: currentUser?.id || '',
         hoTen: currentUser?.name || '',

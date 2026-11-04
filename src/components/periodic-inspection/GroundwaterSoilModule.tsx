@@ -98,8 +98,20 @@ export function GroundwaterSoilModule({ onSuccessToast }: GroundwaterSoilModuleP
         '0'
       )}`;
 
+        // Generate next sequential 4-digit ID (e.g. NGD-0007)
+      const existingNGD = storage.getGroundwaterSoilInspections();
+      let maxNGDNum = 0;
+      existingNGD.forEach((item) => {
+        const m = item.id.match(/^NGD-(\d+)$/);
+        if (m) {
+          const num = parseInt(m[1], 10);
+          if (num > maxNGDNum && num < 100000) maxNGDNum = num;
+        }
+      });
+      const nextNGDId = `NGD-${String(maxNGDNum + 1).padStart(4, '0')}`;
+
       const newRecord: GroundwaterSoilInspection = {
-        id: `NGD-${Date.now()}`,
+        id: nextNGDId,
         nguoiKT: `${currentUser?.name || 'Nhân viên'} (${currentUser?.id || '---'})`,
         maNV: currentUser?.id || '',
         hoTen: currentUser?.name || '',

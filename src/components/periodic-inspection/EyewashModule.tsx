@@ -95,8 +95,20 @@ export function EyewashModule({ onSuccessToast }: EyewashModuleProps) {
         '0'
       )}`;
 
+        // Generate next sequential 4-digit ID (e.g. MRM-0139)
+      const existingEW = storage.getEyewashInspections();
+      let maxEWNum = 0;
+      existingEW.forEach((item) => {
+        const m = item.id.match(/^MRM-(\d+)$/);
+        if (m) {
+          const num = parseInt(m[1], 10);
+          if (num > maxEWNum && num < 100000) maxEWNum = num;
+        }
+      });
+      const nextEWId = `MRM-${String(maxEWNum + 1).padStart(4, '0')}`;
+
       const newRecord: EyewashInspection = {
-        id: `MRM-${Date.now()}`,
+        id: nextEWId,
         diaDiem: selectedLocation,
         nguoiKT: `${currentUser?.name || 'Nhân viên'} (${currentUser?.id || '---'})`,
         maNV: currentUser?.id || '',

@@ -23,7 +23,7 @@ export interface FirstAidItemStandard {
 }
 
 export interface FirstAidInspection {
-  id: string; // SCC-timestamp
+  id: string; // SCC-0001
   diaDiem: string; // 'Bếp' | 'Kho 1' | 'Kho 2' | 'Bảo vệ 1' | 'Bảo vệ 2' | 'Cơ điện' | 'Văn phòng'
   nguoiKT: string; // Họ tên (Mã NV)
   maNV: string;
@@ -40,7 +40,7 @@ export interface FirstAidInspection {
 // 2. Máy rửa mắt (Emergency Eyewash)
 // ------------------------------------------
 export interface EyewashInspection {
-  id: string; // MRM-timestamp
+  id: string; // MRM-0001
   diaDiem: string; // 'Kho Hóa chất' | 'Khu Phụ trợ' | 'Khu vực Sấy'
   nguoiKT: string;
   maNV: string;
@@ -73,7 +73,7 @@ export interface StormwaterAnswer {
 }
 
 export interface StormwaterInspection {
-  id: string; // HTNM-timestamp
+  id: string; // HTNM-0001
   nguoiKT: string;
   maNV: string;
   hoTen: string;
@@ -100,7 +100,7 @@ export interface GroundwaterSoilAnswer {
 }
 
 export interface GroundwaterSoilInspection {
-  id: string; // NGD-timestamp
+  id: string; // NGD-0001
   nguoiKT: string;
   maNV: string;
   hoTen: string;

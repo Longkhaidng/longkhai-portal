@@ -28,6 +28,7 @@ import { LEAVE_TYPE_LABELS } from '@/types/leave';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { RepairProposal, REPAIR_STATUS_LABELS, REPAIR_STATUS_BADGES } from '@/types/repair';
 import { PCCCDevice, PCCCInspection, PCCC_CATEGORIES, formatPCCCDate } from '@/types/pccc';
+import { OLD_TO_NEW_PERIODIC_IDS } from '@/lib/periodic-inspection-data';
 import {
   FirstAidInspection,
   EyewashInspection,
@@ -522,7 +523,7 @@ export function ReportsView() {
     scc.forEach((it) => {
       const isShort = it.summaryStatus === 'Thiếu vật tư';
       list.push({
-        id: it.id,
+        id: OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id,
         category: 'first_aid',
         categoryName: 'Tủ sơ cấp cứu',
         categoryBadgeCls: 'bg-rose-50 text-rose-700 border-rose-200',
@@ -541,7 +542,7 @@ export function ReportsView() {
     mrm.forEach((it) => {
       const isPass = it.danhGiaTongQuat === 'Đạt';
       list.push({
-        id: it.id,
+        id: OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id,
         category: 'eyewash',
         categoryName: 'Máy rửa mắt',
         categoryBadgeCls: 'bg-cyan-50 text-cyan-700 border-cyan-200',
@@ -560,7 +561,7 @@ export function ReportsView() {
     nm.forEach((it) => {
       const isPass = it.danhGiaTongQuat === 'Đạt';
       list.push({
-        id: it.id,
+        id: OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id,
         category: 'stormwater',
         categoryName: 'Nước mưa',
         categoryBadgeCls: 'bg-blue-50 text-blue-700 border-blue-200',
@@ -582,7 +583,7 @@ export function ReportsView() {
         .filter(Boolean)
         .join('. ');
       list.push({
-        id: it.id,
+        id: OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id,
         category: 'groundwater_soil',
         categoryName: 'Nước ngầm & đất',
         categoryBadgeCls: 'bg-emerald-50 text-emerald-700 border-emerald-200',
