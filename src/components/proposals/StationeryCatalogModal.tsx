@@ -662,7 +662,7 @@ export function StationeryCatalogModal({
                   <RefreshCw className="w-3.5 h-3.5" />
                   <span>Thay thế toàn bộ</span>
                 </button>
-                <span className="text-[11px] text-slate-400 whitespace-nowrap inline">
+                <span className="text-[11px] text-slate-400 whitespace-nowrap hidden sm:inline">
                   Tổng: <b>{filteredItems.length}</b>
                 </span>
               </div>

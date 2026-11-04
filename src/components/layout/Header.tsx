@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import {
+  Menu,
   Bell,
   Search,
   Sun,
@@ -63,32 +64,41 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
   const hasGitToken = Boolean(gitConfig.token && gitConfig.owner && gitConfig.repo);
 
   return (
-    <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 md:px-6 flex items-center justify-between sticky top-0 z-30 transition-colors">
-      {/* Left: Desktop Search bar */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-72 md:w-80">
-          <Search className="w-4 h-4 text-slate-400" />
+    <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 sm:px-4 md:px-6 flex items-center justify-between sticky top-0 z-30 transition-colors">
+      {/* Left: Mobile Hamburger & Search bar */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        <button
+          type="button"
+          onClick={onToggleSidebar}
+          className="p-2 -ml-1 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 md:hidden cursor-pointer shrink-0"
+          title="Mở menu"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-44 sm:w-64 md:w-80">
+          <Search className="w-4 h-4 text-slate-400 shrink-0" />
           <input
             type="text"
-            placeholder="Tra cứu phiếu, thiết bị, nhân viên..."
+            placeholder="Tra cứu phiếu, thiết bị..."
             className="bg-transparent text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none w-full"
           />
         </div>
       </div>
 
       {/* Right: Theme toggle, Quick Backup, User profile */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
 
         {/* Sync Data Button for All Devices */}
         <div className="relative">
           <button
             onClick={handleManualSync}
             disabled={isSyncing}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/80 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/80 transition-colors shadow-xs cursor-pointer disabled:opacity-50"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/80 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/80 transition-colors shadow-xs cursor-pointer disabled:opacity-50"
             title="Đồng bộ dữ liệu mới nhất từ máy chủ cho thiết bị"
           >
             <RefreshCw className={`w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 ${isSyncing ? 'animate-spin' : ''}`} />
-            <span>{isSyncing ? 'Đang đồng bộ...' : 'Đồng bộ'}</span>
+            <span className="hidden sm:inline">{isSyncing ? 'Đang đồng bộ...' : 'Đồng bộ'}</span>
           </button>
           {syncToast && (
             <div className={`absolute top-full right-0 mt-2 whitespace-nowrap px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-lg z-50 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1 ${
@@ -128,7 +138,7 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
                 console.error('Lỗi sao lưu nhanh:', e);
               }
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:hover:bg-blue-900/80 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/80 transition-colors shadow-xs cursor-pointer"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:hover:bg-blue-900/80 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/80 transition-colors shadow-xs cursor-pointer"
             title="Sao lưu nhanh toàn bộ hệ thống về máy tính (.JSON)"
           >
             <DownloadCloud className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
@@ -152,12 +162,12 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
         <div className="relative">
           <button
             onClick={() => setShowProfileMenu(!showProfileMenu)}
-            className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+            className="flex items-center gap-2 p-1 sm:px-3 sm:py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
           >
             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center uppercase shadow-sm">
               {currentUser?.name ? currentUser.name.slice(0, 2) : 'NV'}
             </div>
-            <div className="text-left">
+            <div className="text-left hidden sm:block">
               <div className="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5 leading-tight">
                 <span>{currentUser?.name || 'Nhân viên'}</span>
                 <span className="text-[10px] bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 px-1.5 py-0.2 rounded font-mono font-semibold">

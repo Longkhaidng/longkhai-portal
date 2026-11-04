@@ -120,14 +120,14 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl p-4 sm:p-6 text-white shadow-xl relative overflow-hidden">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold mb-2 border border-blue-400/30">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-blue-500/20 text-blue-300 text-[11px] sm:text-xs font-semibold mb-2 border border-blue-400/30">
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>Cổng Thông Tin Nhà Máy Long Khải &bull; 2026</span>
             </div>
-            <h1 className="text-2xl font-black tracking-tight">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-black tracking-tight">
               Xin chào, {currentUser?.name}!
             </h1>
             <p className="text-slate-300 text-xs md:text-sm mt-1">
@@ -138,40 +138,40 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
         </div>
       </div>
 
-      {/* 5 Key Metric Cards */}
-      <div className="grid grid-cols-5 gap-4">
+      {/* 5 Key Metric Cards - Tối ưu lưới 2 cột gọn gàng trên điện thoại */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-4">
         {/* Card 1: Total Forms */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">Biểu mẫu tháng này</span>
-            <div className="p-2 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-xl">
-              <FileText className="w-4 h-4" />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider truncate">Biểu mẫu tháng</span>
+            <div className="p-1.5 sm:p-2 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-xl shrink-0">
+              <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
           <div className="mt-2">
-            <div className="text-2xl font-black text-slate-800 dark:text-white">
+            <div className="text-xl sm:text-2xl font-black text-slate-800 dark:text-white">
               {totalFormsThisMonth}
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5 truncate">Tháng {currentMonth + 1}</p>
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">Tháng {currentMonth + 1}</p>
           </div>
         </div>
 
         {/* Card 2: Pending Leaves */}
         <div
           onClick={() => onNavigateTab('leave')}
-          className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer hover:border-blue-400 transition-all group"
+          className="bg-white dark:bg-slate-900 rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer hover:border-blue-400 transition-all group"
         >
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">Đơn phép chờ duyệt</span>
-            <div className="p-2 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 rounded-xl group-hover:scale-110 transition-transform">
-              <CalendarDays className="w-4 h-4" />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider truncate">Phép chờ duyệt</span>
+            <div className="p-1.5 sm:p-2 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 rounded-xl group-hover:scale-110 transition-transform shrink-0">
+              <CalendarDays className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
           <div className="mt-2">
-            <div className="text-2xl font-black text-indigo-600 dark:text-indigo-400">
+            <div className="text-xl sm:text-2xl font-black text-indigo-600 dark:text-indigo-400">
               {pendingLeaves.length}
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5 flex items-center justify-between">
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 flex items-center justify-between">
               <span>Cần duyệt</span>
               <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
             </p>
@@ -181,19 +181,19 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
         {/* Card 3: Pending Attendance */}
         <div
           onClick={() => onNavigateTab('attendance')}
-          className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer hover:border-amber-400 transition-all group"
+          className="bg-white dark:bg-slate-900 rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer hover:border-amber-400 transition-all group"
         >
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">Công chờ duyệt</span>
-            <div className="p-2 bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 rounded-xl group-hover:scale-110 transition-transform">
-              <Clock className="w-4 h-4" />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider truncate">Công chờ duyệt</span>
+            <div className="p-1.5 sm:p-2 bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 rounded-xl group-hover:scale-110 transition-transform shrink-0">
+              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
           <div className="mt-2">
-            <div className="text-2xl font-black text-amber-600 dark:text-amber-400">
+            <div className="text-xl sm:text-2xl font-black text-amber-600 dark:text-amber-400">
               {pendingAttendances.length}
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5 flex items-center justify-between">
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 flex items-center justify-between">
               <span>Quên/mất thẻ</span>
               <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
             </p>
@@ -203,19 +203,19 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
         {/* Card 4: Active Gate Passes */}
         <div
           onClick={() => onNavigateTab('gate_pass')}
-          className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer hover:border-emerald-400 transition-all group"
+          className="bg-white dark:bg-slate-900 rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer hover:border-emerald-400 transition-all group"
         >
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">Ra cổng hiệu lực</span>
-            <div className="p-2 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-xl group-hover:scale-110 transition-transform">
-              <QrCode className="w-4 h-4" />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider truncate">Ra cổng hiệu lực</span>
+            <div className="p-1.5 sm:p-2 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-xl group-hover:scale-110 transition-transform shrink-0">
+              <QrCode className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
           <div className="mt-2">
-            <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
+            <div className="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400">
               {activeGatePasses.length}
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5 flex items-center justify-between">
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 flex items-center justify-between">
               <span>Lưu hành</span>
               <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
             </p>
@@ -225,19 +225,19 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
         {/* Card 5: Departments Count */}
         <div
           onClick={() => onNavigateTab('departments')}
-          className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer hover:border-purple-400 transition-all group"
+          className="col-span-2 sm:col-span-1 lg:col-span-1 bg-white dark:bg-slate-900 rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer hover:border-purple-400 transition-all group"
         >
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">Phòng ban nhà máy</span>
-            <div className="p-2 bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 rounded-xl group-hover:scale-110 transition-transform">
-              <Building2 className="w-4 h-4" />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider truncate">Phòng ban nhà máy</span>
+            <div className="p-1.5 sm:p-2 bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 rounded-xl group-hover:scale-110 transition-transform shrink-0">
+              <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
           <div className="mt-2">
-            <div className="text-2xl font-black text-purple-600 dark:text-purple-400">
+            <div className="text-xl sm:text-2xl font-black text-purple-600 dark:text-purple-400">
               {departments.length}
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5 flex items-center justify-between">
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 flex items-center justify-between">
               <span>{users.length} nhân sự</span>
               <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
             </p>
@@ -246,21 +246,21 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
       </div>
 
       {/* Main 2-column sections */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column (2 spans): Urgent Approvals & Announcements */}
-        <div className="col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-6">
           {/* Pending Leaves List */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs">
             <div className="flex items-center justify-between mb-4">
               <div className="min-w-0 flex-1 pr-2">
-                <h2 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider truncate">
+                <h2 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider truncate">
                   {!canManageOthers
                     ? 'Đơn nghỉ phép của bạn chờ duyệt'
                     : isBOD
                     ? 'Đơn nghỉ phép toàn công ty chờ phê duyệt'
                     : `Đơn nghỉ phép nhân viên ${currentUser?.department || 'bộ phận'} chờ duyệt`} ({pendingLeaves.length})
                 </h2>
-                <p className="text-xs text-slate-400 truncate">
+                <p className="text-[11px] sm:text-xs text-slate-400 truncate">
                   {!canManageOthers
                     ? 'Đơn do bạn nộp đang chờ cấp trên xử lý'
                     : isBOD
@@ -288,10 +288,10 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
                   <div
                     key={item.id}
                     onClick={() => onNavigateTab('leave')}
-                    className="py-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 px-2 rounded-xl cursor-pointer transition-colors gap-2"
+                    className="py-2.5 sm:py-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 px-2 rounded-xl cursor-pointer transition-colors gap-2"
                   >
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
+                      <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                         <span className="font-bold text-xs text-slate-800 dark:text-white">
                           {item.employeeName}
                         </span>
@@ -306,7 +306,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
                         {item.department} &bull; Nghỉ {item.totalDays} ngày ({formatDate(item.fromDate)} - {formatDate(item.toDate)})
                       </div>
                     </div>
-                    <span className="text-xs font-semibold px-2 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/60 shrink-0">
+                    <span className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/60 shrink-0">
                       Chờ duyệt
                     </span>
                   </div>
@@ -316,10 +316,10 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
           </div>
 
           {/* Pending Attendance Confirmations */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs">
             <div className="flex items-center justify-between mb-4">
               <div className="min-w-0 flex-1 pr-2">
-                <h2 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider truncate">
+                <h2 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider truncate">
                   {!canManageOthers
                     ? 'Xác nhận công của bạn chờ duyệt'
                     : isSecurity
@@ -328,7 +328,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
                     ? 'Xác nhận công vào - ra toàn công ty chờ duyệt'
                     : `Xác nhận công nhân viên ${currentUser?.department || 'bộ phận'} chờ duyệt`} ({pendingAttendances.length})
                 </h2>
-                <p className="text-xs text-slate-400 truncate">
+                <p className="text-[11px] sm:text-xs text-slate-400 truncate">
                   {!canManageOthers
                     ? 'Phiếu do bạn nộp đang chờ cấp trên xác nhận'
                     : isSecurity
@@ -358,10 +358,10 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
                   <div
                     key={att.id}
                     onClick={() => onNavigateTab('attendance')}
-                    className="py-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 px-2 rounded-xl cursor-pointer transition-colors gap-2"
+                    className="py-2.5 sm:py-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 px-2 rounded-xl cursor-pointer transition-colors gap-2"
                   >
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
+                      <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                         <span className="font-bold text-xs text-slate-800 dark:text-white">
                           {att.employeeName}
                         </span>
@@ -376,7 +376,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
                         {formatDate(att.date)} &bull; Vào: {att.checkInTime} - Ra: {att.checkOutTime} ({att.department})
                       </div>
                     </div>
-                    <span className="text-xs font-semibold px-2 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/60 shrink-0">
+                    <span className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/60 shrink-0">
                       B.{att.currentStepIndex + 1}/{att.steps.length}
                     </span>
                   </div>

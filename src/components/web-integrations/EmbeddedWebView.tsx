@@ -52,7 +52,7 @@ export function EmbeddedWebView({ site, onBack }: EmbeddedWebViewProps) {
         </div>
 
         {/* Center: URL display badge */}
-        <div className="flex items-center gap-1.5 px-3 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-[11px] font-mono text-slate-500 max-w-md truncate">
+        <div className="hidden md:flex items-center gap-1.5 px-3 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-[11px] font-mono text-slate-500 max-w-md truncate">
           <span className="text-emerald-500 font-bold">HTTPS:</span>
           <span className="truncate">{site.url}</span>
         </div>

@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const viewport: Viewport = {
-  width: 1200,
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
   userScalable: true,
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
@@ -28,10 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" suppressHydrationWarning className="h-full">
-      <head>
-        <meta name="viewport" content="width=1200, user-scalable=yes" />
-      </head>
-      <body className="min-h-full flex flex-col font-sans antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-w-[1200px] overflow-x-auto">
+      <body className="min-h-full flex flex-col font-sans antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-x-hidden">
         {children}
       </body>
     </html>

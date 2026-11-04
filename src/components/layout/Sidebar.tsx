@@ -201,27 +201,50 @@ export function Sidebar({
   });
 
   return (
-    <aside className="w-68 bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800 static shrink-0 min-h-screen">
-      {/* Logo & Brand */}
-      <div className="h-16 px-5 flex items-center justify-between border-b border-slate-800">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/10 p-1 flex items-center justify-center shadow-md border border-white/10 shrink-0">
-            <img
-              src="/logo.png"
-              alt="Long Khai Corporation Logo"
-              className="w-full h-full object-contain"
-            />
-          </div>
-          <div>
-            <div className="font-black text-sm text-white tracking-wide leading-none">
-              LONG KHẢI
+    <>
+      {/* Mobile Drawer Backdrop */}
+      {isOpen && (
+        <div
+          onClick={onClose}
+          className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-40 md:hidden transition-opacity"
+        />
+      )}
+
+      {/* Responsive Sidebar (Static on desktop, drawer on mobile) */}
+      <aside
+        className={`fixed md:static inset-y-0 left-0 z-50 w-72 md:w-64 lg:w-68 bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800 shrink-0 min-h-screen transition-transform duration-300 ease-in-out ${
+          isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full md:translate-x-0'
+        }`}
+      >
+        {/* Logo & Brand & Mobile Close Button */}
+        <div className="h-16 px-4 md:px-5 flex items-center justify-between border-b border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-white/10 p-1 flex items-center justify-center shadow-md border border-white/10 shrink-0">
+              <img
+                src="/logo.png"
+                alt="Long Khai Corporation Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
-            <div className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider mt-0.5">
-              CORPORATION PORTAL
+            <div>
+              <div className="font-black text-sm text-white tracking-wide leading-none">
+                LONG KHẢI
+              </div>
+              <div className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider mt-0.5">
+                CORPORATION PORTAL
+              </div>
             </div>
           </div>
+
+          {/* Close button on mobile drawer */}
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 md:hidden cursor-pointer"
+            title="Đóng menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
-      </div>
 
         {/* User Card in Sidebar */}
         <div className="p-4 mx-3 my-3 rounded-xl bg-slate-800/60 border border-slate-700/50">
@@ -385,5 +408,6 @@ export function Sidebar({
           <div className="text-[10px] text-slate-600 mt-0.5">Phiên bản 2026.2 &bull; Next.js 15</div>
         </div>
       </aside>
+    </>
   );
 }

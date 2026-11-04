@@ -209,7 +209,7 @@ export function StormwaterModule({ onSuccessToast }: StormwaterModuleProps) {
             title="Xuất file Excel"
           >
             <FileSpreadsheet className="w-3.5 h-3.5" />
-            <span className="inline">Xuất Excel</span>
+            <span className="hidden sm:inline">Xuất Excel</span>
           </button>
         </div>
       </div>

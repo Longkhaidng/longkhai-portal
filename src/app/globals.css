@@ -70,10 +70,9 @@ body {
   background: #334155;
 }
 
-/* Fixed Desktop Width & Natural Horizontal Scrolling */
+/* Mobile-optimized responsive layout */
 html, body {
-  min-width: 1200px !important;
-  overflow-x: auto !important;
+  overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
 }
 

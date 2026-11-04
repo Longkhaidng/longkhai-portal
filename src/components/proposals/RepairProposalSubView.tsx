@@ -785,7 +785,90 @@ export function RepairProposalSubView({ defaultTab = 'create' }: RepairProposalS
 
           {/* Proposals Table - Dual Responsive View */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
+            {/* Mobile Card View (md:hidden) */}
+            <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
+              {filteredProposals.length === 0 ? (
+                <div className="px-4 py-12 text-center text-slate-400">
+                  <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-slate-300 opacity-60" />
+                  <p className="text-xs">Không có đề xuất nào phù hợp</p>
+                </div>
+              ) : (
+                filteredProposals.map((item) => {
+                  const badge = REPAIR_STATUS_BADGES[item.status] || REPAIR_STATUS_BADGES.pending_manager;
+                  const isCreator = currentUser?.id.toLowerCase() === item.employeeId.toLowerCase();
+                  const needsConfirmation = isCreator && item.status === 'pending_confirmation';
+                  const needsManager = isManagerOrTL && item.status === 'pending_manager';
+                  const needsMaintenance = isMaintenance && item.status === 'maintenance_pending';
+                  const isActionNeeded = needsConfirmation || needsManager || needsMaintenance;
+
+                  return (
+                    <div
+                      key={`m-rp-${item.id}`}
+                      onClick={() => setSelectedProposal(item)}
+                      className={`p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/40 active:bg-slate-100 dark:active:bg-slate-800/70 transition-colors cursor-pointer space-y-2.5 ${
+                        isActionNeeded ? 'bg-amber-50/20 dark:bg-amber-950/10' : ''
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5">
+                          {isActionNeeded && (
+                            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse shrink-0"></span>
+                          )}
+                          <span className="font-mono font-bold text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-200 dark:border-amber-800/60">
+                            {item.id}
+                          </span>
+                        </div>
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${badge.bg} ${badge.text} ${badge.border}`}
+                        >
+                          {badge.label}
+                        </span>
+                      </div>
+
+                      <div>
+                        <div className="font-bold text-xs text-slate-900 dark:text-white flex items-center justify-between">
+                          <span>{item.employeeName}</span>
+                          <span className="text-[11px] text-slate-500 font-normal">
+                            KV: <strong className="text-slate-800 dark:text-slate-200">{item.location}</strong>
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                          {item.employeeId} &bull; {item.department}
+                        </div>
+                      </div>
+
+                      <div className="text-xs text-slate-700 dark:text-slate-300 line-clamp-2 bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl">
+                        {item.issueDescription}
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800/60 text-[11px]">
+                        <span className="text-slate-400">
+                          {formatDateTime(item.createdAt)}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProposal(item);
+                          }}
+                          className={`inline-flex items-center gap-1 px-3 py-1 rounded-xl font-bold text-xs transition-all cursor-pointer ${
+                            isActionNeeded
+                              ? 'bg-amber-500 text-white shadow-xs'
+                              : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200'
+                          }`}
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          <span>{isActionNeeded ? 'Xử lý ngay' : 'Chi tiết'}</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Desktop Table View (hidden md:block) */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50/80 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
                   <tr>

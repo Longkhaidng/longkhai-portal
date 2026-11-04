@@ -42,6 +42,7 @@ function PortalAppContent() {
   const [currentTab, setCurrentTab] = useState<string>('dashboard');
   const [viewingWebSite, setViewingWebSite] = useState<WebIntegration | null>(null);
   const [dataVersion, setDataVersion] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   React.useEffect(() => {
     const handleStorageChange = () => {
@@ -383,7 +384,7 @@ function PortalAppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors min-w-[1200px] overflow-x-auto">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors overflow-x-hidden">
       {/* Sidebar Navigation - Always visible desktop layout */}
       <Sidebar
         currentTab={viewingWebSite ? `web_${viewingWebSite.id}` : currentTab}
@@ -411,7 +412,7 @@ function PortalAppContent() {
           }}
         />
 
-        <main className="flex-1 p-6 lg:p-8 max-w-7xl mx-auto w-full pb-8">
+        <main className="flex-1 p-3 sm:p-5 lg:p-8 max-w-7xl mx-auto w-full pb-8">
           {renderActiveView()}
         </main>
       </div>

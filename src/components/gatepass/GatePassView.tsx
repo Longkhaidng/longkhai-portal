@@ -1011,7 +1011,109 @@ export function GatePassView() {
 
           {/* Table - Dual Responsive View */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
-        <div className="overflow-x-auto">
+            {/* Mobile Card View (md:hidden) */}
+            <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
+              {filtered.length === 0 ? (
+                <div className="py-10 px-4 text-center text-slate-400 text-xs">
+                  <QrCode className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2 opacity-60" />
+                  Không có phiếu ra vào cổng nào.
+                </div>
+              ) : (
+                filtered.map((item, idx) => {
+                  const getStatusBadge = () => {
+                    if (item.status === 'pending') {
+                      const isTeamLeader = item.steps && item.steps[item.currentStepIndex ?? 0]?.roleRequired === 'team_leader';
+                      return {
+                        text: isTeamLeader ? 'Chờ Tổ trưởng' : 'Chờ Trưởng BP',
+                        badge: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300',
+                      };
+                    }
+                    if (item.status === 'approved') return { text: 'Đã duyệt', badge: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' };
+                    if (item.status === 'departed') return { text: 'Đang ở ngoài', badge: 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300' };
+                    if (item.status === 'completed') return { text: 'Hoàn tất', badge: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300' };
+                    if (item.status === 'rejected') return { text: 'Từ chối', badge: 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300' };
+                    return { text: 'Chờ duyệt', badge: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' };
+                  };
+                  const statusConfig = getStatusBadge();
+                  return (
+                    <div
+                      key={`m-gp-${item.id}-${idx}`}
+                      onClick={() => setSelectedPass(item)}
+                      className="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/40 active:bg-slate-100 dark:active:bg-slate-800/70 transition-colors cursor-pointer space-y-2.5"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-mono font-bold text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800/60">
+                          {item.id}
+                        </span>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${statusConfig.badge}`}>
+                          {statusConfig.text}
+                        </span>
+                      </div>
+
+                      <div>
+                        <div className="font-bold text-xs text-slate-900 dark:text-white flex items-center justify-between">
+                          <span>{item.employeeName}</span>
+                          <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
+                            {item.reasonCategory === 'cong_ty' ? 'Công ty' : item.reasonCategory === 'khac' ? 'Khác' : 'Cá nhân'}
+                            {item.shift ? ` • ${item.shift}` : ''}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                          {item.employeeId} &bull; {item.department}
+                        </div>
+                      </div>
+
+                      <div className="text-xs text-slate-700 dark:text-slate-300 line-clamp-2">
+                        {item.purpose}
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-[11px] bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl">
+                        <div>
+                          <span className="text-slate-400 block text-[10px]">Tài sản:</span>
+                          {item.hasAssets && item.assets && item.assets.length > 0 ? (
+                            <span className="font-semibold text-amber-700 dark:text-amber-400 truncate block">
+                              📦 {item.assets.length} món
+                            </span>
+                          ) : (
+                            <span className="text-slate-500">Không mang theo</span>
+                          )}
+                        </div>
+                        <div>
+                          <span className="text-slate-400 block text-[10px]">Giờ ra/vào:</span>
+                          <span className="font-mono text-slate-800 dark:text-slate-200 block truncate">
+                            {item.actualDepartureTime ? item.actualDepartureTime.slice(11, 16) : 'Chưa ra'} → {item.actualReturnTime ? item.actualReturnTime.slice(11, 16) : 'Chưa về'}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800/60 text-[11px]">
+                        <span className="text-slate-400 truncate max-w-[140px] sm:max-w-none">
+                          Dự kiến: {formatDateTime(item.estimatedDepartureTime)}
+                        </span>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleShowQr(item);
+                            }}
+                            className="px-2.5 py-1 bg-emerald-600 text-white font-bold text-[11px] rounded-lg flex items-center gap-1 shadow-xs cursor-pointer"
+                          >
+                            <QrCode className="w-3.5 h-3.5" />
+                            <span>Mã QR</span>
+                          </button>
+                          <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-0.5">
+                            <ChevronRight className="w-3.5 h-3.5" />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Desktop Table View (hidden md:block) */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
                   <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-bold uppercase tracking-wider">
