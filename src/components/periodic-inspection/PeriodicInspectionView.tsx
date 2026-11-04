@@ -97,7 +97,7 @@ export function PeriodicInspectionView({ initialSubTab }: PeriodicInspectionView
               title="In phiếu hoặc xuất PDF"
             >
               <Printer className="w-4 h-4" />
-              <span className="hidden sm:inline">In Báo Cáo</span>
+              <span className="inline">In Báo Cáo</span>
             </button>
           </div>
         </div>

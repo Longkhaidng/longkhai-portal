@@ -72,8 +72,8 @@ body {
 
 /* Fixed Desktop Width & Natural Horizontal Scrolling */
 html, body {
-  min-width: 1280px;
-  overflow-x: auto;
+  min-width: 1200px !important;
+  overflow-x: auto !important;
   -webkit-tap-highlight-color: transparent;
 }
 

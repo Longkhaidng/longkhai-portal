@@ -383,7 +383,7 @@ function PortalAppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors min-w-[1280px] overflow-x-auto">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors min-w-[1200px] overflow-x-auto">
       {/* Sidebar Navigation - Always visible desktop layout */}
       <Sidebar
         currentTab={viewingWebSite ? `web_${viewingWebSite.id}` : currentTab}
