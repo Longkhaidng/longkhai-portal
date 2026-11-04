@@ -75,7 +75,7 @@ export function PeriodicInspectionView({ initialSubTab }: PeriodicInspectionView
       )}
 
       {/* Main Header Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-900 text-white p-6 shadow-lg shadow-blue-900/10 print:hidden">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-900 text-white p-4 sm:p-6 shadow-lg shadow-blue-900/10 print:hidden">
         <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-blue-200 text-xs font-semibold border border-white/15">

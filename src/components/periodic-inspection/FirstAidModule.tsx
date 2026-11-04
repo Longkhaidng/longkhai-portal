@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
+import { isSuperAdminOrBOD } from '@/lib/permissions';
 import { storage } from '@/lib/storage';
 import { FirstAidInspection, FirstAidItemStandard } from '@/types/periodic-inspection';
-import { FIRST_AID_LOCATIONS, FIRST_AID_ITEMS_BY_LOCATION } from '@/lib/periodic-inspection-data';
+import { FIRST_AID_LOCATIONS } from '@/lib/periodic-inspection-data';
 import * as XLSX from 'xlsx';
 import {
   Plus,
@@ -18,6 +19,9 @@ import {
   MapPin,
   Calendar,
   User as UserIcon,
+  Settings,
+  Save,
+  ShieldCheck,
 } from 'lucide-react';
 
 interface FirstAidModuleProps {
@@ -26,7 +30,18 @@ interface FirstAidModuleProps {
 
 export function FirstAidModule({ onSuccessToast }: FirstAidModuleProps) {
   const { currentUser } = useAuth();
-    const [inspections, setInspections] = useState<FirstAidInspection[]>([]);
+  const isAdmin =
+    isSuperAdminOrBOD(currentUser) ||
+    currentUser?.role === 'admin' ||
+    currentUser?.role === 'manager' ||
+    currentUser?.role === 'ehs' ||
+    (Boolean(currentUser?.department) && /an toàn|ehs|y tế|nhân sự|hcns/i.test(currentUser!.department));
+
+  const [inspections, setInspections] = useState<FirstAidInspection[]>([]);
+  const [allStandards, setAllStandards] = useState<Record<string, FirstAidItemStandard[]>>(() =>
+    storage.getFirstAidStandards()
+  );
+  const [isEditingStandards, setIsEditingStandards] = useState<boolean>(false);
 
   // Form State
   const [selectedLocation, setSelectedLocation] = useState<string>('Văn phòng');
@@ -35,7 +50,6 @@ export function FirstAidModule({ onSuccessToast }: FirstAidModuleProps) {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitMessage, setSubmitMessage] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
 
-        
   // Load inspections from storage
   const loadData = () => {
     const list = storage.getFirstAidInspections();
@@ -48,8 +62,8 @@ export function FirstAidModule({ onSuccessToast }: FirstAidModuleProps) {
 
   // Standard items for selected location
   const currentStandards: FirstAidItemStandard[] =
-    FIRST_AID_ITEMS_BY_LOCATION[selectedLocation] ||
-    FIRST_AID_ITEMS_BY_LOCATION['Văn phòng'] ||
+    allStandards[selectedLocation] ||
+    allStandards['Văn phòng'] ||
     [];
 
   // When location changes, reset quantities to standard
@@ -60,7 +74,7 @@ export function FirstAidModule({ onSuccessToast }: FirstAidModuleProps) {
     });
     setQuantities(initialQty);
     setSubmitMessage(null);
-  }, [selectedLocation]);
+  }, [selectedLocation, allStandards]);
 
   // Group items
   const groupedItems = React.useMemo(() => {
@@ -79,6 +93,43 @@ export function FirstAidModule({ onSuccessToast }: FirstAidModuleProps) {
       ...prev,
       [name]: isNaN(num) || num < 0 ? 0 : num,
     }));
+  };
+
+  const handleUpdateStandardQty = (name: string, newChuan: number) => {
+    const validChuan = Math.max(0, isNaN(newChuan) ? 0 : newChuan);
+    setAllStandards((prev) => {
+      const currentList = prev[selectedLocation] || prev['Văn phòng'] || [];
+      const updatedList = currentList.map((item) =>
+        item.name === name ? { ...item, chuan: validChuan } : item
+      );
+      return {
+        ...prev,
+        [selectedLocation]: updatedList,
+      };
+    });
+  };
+
+  const handleSaveStandards = () => {
+    storage.saveFirstAidStandards(allStandards, {
+      id: currentUser?.id || 'admin',
+      name: currentUser?.name || 'Quản trị viên',
+    });
+    setIsEditingStandards(false);
+    if (onSuccessToast) {
+      onSuccessToast('Đã lưu số lượng chuẩn vật tư y tế thành công!');
+    }
+  };
+
+  const handleResetStandards = () => {
+    if (window.confirm('Bạn có chắc muốn khôi phục số lượng chuẩn về mặc định ban đầu của hệ thống?')) {
+      storage.resetFirstAidStandards();
+      const defaults = storage.getFirstAidStandards();
+      setAllStandards(defaults);
+      setIsEditingStandards(false);
+      if (onSuccessToast) {
+        onSuccessToast('Đã khôi phục số lượng chuẩn về mặc định ban đầu!');
+      }
+    }
   };
 
   const handleSetAllStandard = () => {
@@ -280,49 +331,100 @@ export function FirstAidModule({ onSuccessToast }: FirstAidModuleProps) {
           </div>
 
           {/* Quick Helper Actions & Notice */}
-          <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-blue-50/60 border border-blue-100 rounded-xl text-xs text-blue-800">
+          <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-blue-50/60 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/40 rounded-xl text-xs text-blue-800 dark:text-blue-300">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-blue-700">ℹ️ Hướng dẫn:</span>
+              <span className="font-bold text-blue-700 dark:text-blue-400">ℹ️ Hướng dẫn:</span>
               <span>
-                Nhập số lượng thực tế hiện có trong tủ sơ cấp cứu tại <b className="text-blue-900">{selectedLocation}</b>.
+                Nhập số lượng thực tế hiện có trong tủ sơ cấp cứu tại <b className="text-blue-900 dark:text-blue-200">{selectedLocation}</b>.
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={handleSetAllStandard}
-                className="px-2.5 py-1 text-[11px] font-semibold bg-white text-blue-700 border border-blue-200 rounded-md hover:bg-blue-50 cursor-pointer shadow-2xs"
+                className="px-2.5 py-1 text-[11px] font-semibold bg-white dark:bg-slate-800 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 rounded-md hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer shadow-2xs"
               >
                 Điền tất cả theo chuẩn
               </button>
               <button
                 type="button"
                 onClick={handleSetAllZero}
-                className="px-2.5 py-1 text-[11px] font-semibold bg-white text-slate-600 border border-slate-200 rounded-md hover:bg-slate-50 cursor-pointer shadow-2xs"
+                className="px-2.5 py-1 text-[11px] font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer shadow-2xs"
               >
                 Đặt lại 0
               </button>
+              {isAdmin && !isEditingStandards && (
+                <button
+                  type="button"
+                  onClick={() => setIsEditingStandards(true)}
+                  className="px-2.5 py-1 text-[11px] font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-md cursor-pointer shadow-2xs flex items-center gap-1 transition-colors"
+                >
+                  <Settings className="w-3 h-3" />
+                  <span>Sửa số lượng chuẩn (Admin)</span>
+                </button>
+              )}
             </div>
           </div>
 
-          {/* Checklist Table Grouped by Category */}
-          <div className="overflow-x-auto border border-slate-200 rounded-xl">
-            <table className="w-full text-left text-xs border-collapse">
+          {/* Admin Editing Banner */}
+          {isAdmin && isEditingStandards && (
+            <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div className="flex items-center gap-2 text-xs text-amber-900 dark:text-amber-200">
+                <ShieldCheck className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>
+                  <b>Quyền Admin:</b> Đang chỉnh sửa định mức chuẩn tại <b>{selectedLocation}</b>. Bạn có thể tăng/giảm số lượng chuẩn ở cột &quot;Số lượng chuẩn&quot;, sau đó bấm &quot;Lưu số lượng chuẩn&quot;.
+                </span>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={handleSaveStandards}
+                  className="px-3 py-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg flex items-center gap-1 shadow-2xs cursor-pointer"
+                >
+                  <Save className="w-3.5 h-3.5" />
+                  <span>Lưu số lượng chuẩn</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAllStandards(storage.getFirstAidStandards());
+                    setIsEditingStandards(false);
+                  }}
+                  className="px-2.5 py-1.5 text-xs font-medium bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 rounded-lg hover:bg-slate-50 cursor-pointer"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="button"
+                  onClick={handleResetStandards}
+                  className="px-2 py-1.5 text-xs font-medium text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg cursor-pointer flex items-center gap-1"
+                  title="Khôi phục về chuẩn ban đầu của hệ thống"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  <span>Mặc định</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Checklist Table Grouped by Category with Horizontal Scroll */}
+          <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
+            <table className="w-full text-left text-xs border-collapse min-w-[760px]">
               <thead>
-                <tr className="bg-slate-100/80 text-slate-700 uppercase font-bold text-[11px] border-b border-slate-200">
+                <tr className="bg-slate-100/80 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 uppercase font-bold text-[11px] border-b border-slate-200 dark:border-slate-800">
                   <th className="py-2.5 px-3 w-12 text-center">STT</th>
                   <th className="py-2.5 px-3">Tên vật tư y tế</th>
-                  <th className="py-2.5 px-3 w-28 text-center">Số lượng chuẩn</th>
+                  <th className="py-2.5 px-3 w-36 text-center">Số lượng chuẩn</th>
                   <th className="py-2.5 px-3 w-36 text-center">Số lượng hiện có</th>
                   <th className="py-2.5 px-3 w-28 text-center">Đánh giá</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {Object.entries(groupedItems).map(([groupName, items]) => (
                   <React.Fragment key={groupName}>
                     {/* Group Header Row */}
-                    <tr className="bg-slate-50 font-bold text-blue-900 text-[11px] tracking-wide uppercase">
-                      <td colSpan={5} className="py-2 px-3 bg-blue-50/40 border-y border-blue-100">
+                    <tr className="bg-slate-50 dark:bg-slate-800/40 font-bold text-blue-900 dark:text-blue-300 text-[11px] tracking-wide uppercase">
+                      <td colSpan={5} className="py-2 px-3 bg-blue-50/40 dark:bg-blue-950/30 border-y border-blue-100 dark:border-blue-900/40">
                         {groupName} ({items.length} mục)
                       </td>
                     </tr>
@@ -333,10 +435,38 @@ export function FirstAidModule({ onSuccessToast }: FirstAidModuleProps) {
                       const isOk = actual === it.chuan;
 
                       return (
-                        <tr key={it.name} className="hover:bg-slate-50/60 transition-colors">
+                        <tr key={it.name} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
                           <td className="py-2 px-3 text-center text-slate-400 font-medium">{idx + 1}</td>
-                          <td className="py-2 px-3 font-semibold text-slate-800">{it.name}</td>
-                          <td className="py-2 px-3 text-center font-bold text-slate-600">{it.chuan}</td>
+                          <td className="py-2 px-3 font-semibold text-slate-800 dark:text-slate-200">{it.name}</td>
+                          <td className={`py-2 px-3 text-center ${isEditingStandards ? 'bg-amber-50/60 dark:bg-amber-950/20' : ''}`}>
+                            {isEditingStandards ? (
+                              <div className="inline-flex items-center justify-center gap-1">
+                                <button
+                                  type="button"
+                                  onClick={() => handleUpdateStandardQty(it.name, Math.max(0, it.chuan - 1))}
+                                  className="w-5 h-5 flex items-center justify-center rounded bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold hover:bg-amber-100 border border-amber-300 cursor-pointer shadow-2xs"
+                                >
+                                  -
+                                </button>
+                                <input
+                                  type="number"
+                                  min="0"
+                                  value={it.chuan}
+                                  onChange={(e) => handleUpdateStandardQty(it.name, parseInt(e.target.value, 10))}
+                                  className="w-12 text-center py-0.5 font-bold rounded border border-amber-400 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs focus:outline-hidden"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => handleUpdateStandardQty(it.name, it.chuan + 1)}
+                                  className="w-5 h-5 flex items-center justify-center rounded bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold hover:bg-amber-100 border border-amber-300 cursor-pointer shadow-2xs"
+                                >
+                                  +
+                                </button>
+                              </div>
+                            ) : (
+                              <span className="font-bold text-slate-600 dark:text-slate-400">{it.chuan}</span>
+                            )}
+                          </td>
                           <td className="py-2 px-3 text-center">
                             <div className="inline-flex items-center justify-center gap-1">
                               <button
@@ -344,7 +474,7 @@ export function FirstAidModule({ onSuccessToast }: FirstAidModuleProps) {
                                 onClick={() =>
                                   handleQtyChange(it.name, String(Math.max(0, actual - 1)))
                                 }
-                                className="w-6 h-6 flex items-center justify-center rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold cursor-pointer"
+                                className="w-6 h-6 flex items-center justify-center rounded-md bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold cursor-pointer"
                               >
                                 -
                               </button>
@@ -356,13 +486,13 @@ export function FirstAidModule({ onSuccessToast }: FirstAidModuleProps) {
                                 className={`w-14 text-center py-1 font-bold rounded-md border text-xs focus:outline-hidden ${
                                   isShort
                                     ? 'border-red-400 bg-red-50 text-red-700 ring-1 ring-red-400'
-                                    : 'border-slate-300 bg-white text-slate-800 focus:ring-1 focus:ring-blue-500'
+                                    : 'border-slate-300 bg-white dark:bg-slate-900 text-slate-800 dark:text-white focus:ring-1 focus:ring-blue-500'
                                 }`}
                               />
                               <button
                                 type="button"
                                 onClick={() => handleQtyChange(it.name, String(actual + 1))}
-                                className="w-6 h-6 flex items-center justify-center rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold cursor-pointer"
+                                className="w-6 h-6 flex items-center justify-center rounded-md bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold cursor-pointer"
                               >
                                 +
                               </button>
@@ -370,17 +500,17 @@ export function FirstAidModule({ onSuccessToast }: FirstAidModuleProps) {
                           </td>
                           <td className="py-2 px-3 text-center">
                             {isOk && (
-                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                                 Đủ
                               </span>
                             )}
                             {isShort && (
-                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-800 border border-red-200">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 border border-red-200 dark:border-red-800">
                                 Thiếu ({it.chuan - actual})
                               </span>
                             )}
                             {isExcess && (
-                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                                 Dư (+{actual - it.chuan})
                               </span>
                             )}

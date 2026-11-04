@@ -7,6 +7,7 @@ import { PCCCDevice, PCCCInspection, formatPCCCDate, inferPCCCCategory } from '@
 import { INITIAL_PCCC_DEVICES, INITIAL_PCCC_INSPECTIONS } from './pccc-data';
 import {
   FirstAidInspection,
+  FirstAidItemStandard,
   EyewashInspection,
   StormwaterInspection,
   GroundwaterSoilInspection,
@@ -16,6 +17,7 @@ import {
   INITIAL_EYEWASH_INSPECTIONS,
   INITIAL_STORMWATER_INSPECTIONS,
   INITIAL_GROUNDWATER_SOIL_INSPECTIONS,
+  FIRST_AID_ITEMS_BY_LOCATION,
 } from './periodic-inspection-data';
 import { StationeryItem, StationeryProposal, GeneralProposal } from '@/types/proposal';
 import { INITIAL_STATIONERY_ITEMS } from './initial-data';
@@ -49,6 +51,7 @@ const STORAGE_KEYS = {
   PCCC_DEVICES: 'lk_portal_pccc_devices',
   PCCC_INSPECTIONS: 'lk_portal_pccc_inspections',
   PERIODIC_FIRST_AID: 'lk_portal_periodic_first_aid',
+  PERIODIC_FIRST_AID_STANDARDS: 'lk_portal_periodic_first_aid_standards_v2',
   PERIODIC_EYEWASH: 'lk_portal_periodic_eyewash',
   PERIODIC_STORMWATER: 'lk_portal_periodic_stormwater',
   PERIODIC_GROUNDWATER_SOIL: 'lk_portal_periodic_groundwater_soil',
@@ -1618,6 +1621,51 @@ class StorageService {
         githubToken: this.getGitHubConfig().token,
       }),
     }).catch(() => {});
+  }
+
+  // --- FIRST AID STANDARDS ---
+  getFirstAidStandards(): Record<string, FirstAidItemStandard[]> {
+    if (!this.isClient()) return FIRST_AID_ITEMS_BY_LOCATION;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.PERIODIC_FIRST_AID_STANDARDS);
+      if (data) return JSON.parse(data);
+    } catch {}
+    return FIRST_AID_ITEMS_BY_LOCATION;
+  }
+
+  saveFirstAidStandards(standards: Record<string, FirstAidItemStandard[]>, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    localStorage.setItem(STORAGE_KEYS.PERIODIC_FIRST_AID_STANDARDS, JSON.stringify(standards));
+
+    this.addAuditLog(
+      'update',
+      'periodic_inspection',
+      'FIRST_AID_STANDARDS',
+      byUser?.id || 'admin',
+      byUser?.name || 'Quản trị viên',
+      'Cập nhật định mức số lượng chuẩn vật tư y tế'
+    );
+
+    this.syncFileToGitHub(
+      'periodic-inspections/first-aid-standards.json',
+      JSON.stringify(standards, null, 2),
+      'Update First Aid Item Standards'
+    );
+
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'periodic_first_aid_standards',
+        data: standards,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
+  }
+
+  resetFirstAidStandards(): void {
+    if (!this.isClient()) return;
+    localStorage.removeItem(STORAGE_KEYS.PERIODIC_FIRST_AID_STANDARDS);
   }
 
   // --- PERIODIC INSPECTIONS: EYEWASH ---

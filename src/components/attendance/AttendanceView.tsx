@@ -26,6 +26,7 @@ import {
   Building,
   MinusCircle,
   QrCode,
+  ChevronRight,
 } from 'lucide-react';
 import { formatDate, generateDocId } from '@/lib/utils';
 import { dispatchApprovalEmail, dispatchCBNotificationEmail } from '@/lib/email';
@@ -815,10 +816,10 @@ export function AttendanceView() {
 
       {/* Scope Switcher for Approvers / Managers / Security / Accountant / IT */}
       {canManageOthers && (
-        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 border-b border-slate-200 dark:border-slate-800 pb-2 overflow-x-auto no-scrollbar">
           <button
             onClick={() => setScopeFilter('all')}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+            className={`px-3 py-1.5 sm:px-3.5 sm:py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
               scopeFilter === 'all'
                 ? 'bg-amber-600 text-white shadow-xs'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
@@ -836,7 +837,7 @@ export function AttendanceView() {
           </button>
           <button
             onClick={() => setScopeFilter('approver')}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 sm:px-3.5 sm:py-1.5 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
               scopeFilter === 'approver'
                 ? 'bg-amber-600 text-white shadow-xs'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
@@ -864,7 +865,7 @@ export function AttendanceView() {
           </button>
           <button
             onClick={() => setScopeFilter('my')}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+            className={`px-3 py-1.5 sm:px-3.5 sm:py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
               scopeFilter === 'my'
                 ? 'bg-amber-600 text-white shadow-xs'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
@@ -876,8 +877,8 @@ export function AttendanceView() {
       )}
 
       {/* Filter bar */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center gap-3">
-        <div className="flex-1 min-w-[220px] relative">
+      <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
+        <div className="flex-1 min-w-[200px] relative">
           <Search className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
           <input
             type="text"
@@ -888,12 +889,12 @@ export function AttendanceView() {
           />
         </div>
 
-        <div className="flex items-center gap-2">
-          <Filter className="w-3.5 h-3.5 text-slate-400" />
+        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+          <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
           <select
             value={issueFilter}
             onChange={(e) => setIssueFilter(e.target.value)}
-            className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none"
+            className="flex-1 sm:flex-initial py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none"
           >
             <option value="all">Tất cả lý do</option>
             <option value="mat_the">Mất thẻ nhân viên</option>
@@ -904,7 +905,7 @@ export function AttendanceView() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+            className="flex-1 sm:flex-initial py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="pending">Chờ xử lý</option>
@@ -920,7 +921,7 @@ export function AttendanceView() {
                 setIssueFilter('all');
                 setSearch('');
               }}
-              className="text-xs text-amber-600 dark:text-amber-400 hover:underline px-2 py-1 font-semibold whitespace-nowrap cursor-pointer"
+              className="text-xs text-amber-600 dark:text-amber-400 hover:underline px-2 py-1 font-semibold whitespace-nowrap cursor-pointer shrink-0"
             >
               Đặt lại
             </button>
@@ -928,9 +929,128 @@ export function AttendanceView() {
         </div>
       </div>
 
-      {/* Table */}
+      {/* Table - Dual Responsive View */}
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
-        <div className="overflow-x-auto">
+        {/* Mobile Card View (md:hidden) */}
+        <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
+          {filtered.length === 0 ? (
+            <div className="py-10 px-4 text-center text-slate-400 text-xs">
+              <Clock className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2 opacity-60" />
+              Không tìm thấy phiếu xác nhận công nào.
+            </div>
+          ) : (
+            filtered.map((item, idx) => {
+              const currentStep = item.steps[item.currentStepIndex];
+              return (
+                <div
+                  key={`m-att-${item.id}-${idx}`}
+                  onClick={() => setSelectedItem(item)}
+                  className="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/40 active:bg-slate-100 dark:active:bg-slate-800/70 transition-colors cursor-pointer space-y-2.5"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-mono font-bold text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-200 dark:border-amber-800/60">
+                      {item.id}
+                    </span>
+                    <div>
+                      {item.status === 'pending' && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                          Chờ xử lý ({item.currentStepIndex + 1}/{item.steps.length})
+                        </span>
+                      )}
+                      {item.status === 'approved' && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                          Hoàn tất
+                        </span>
+                      )}
+                      {item.status === 'rejected' && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300">
+                          Bị từ chối
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="font-bold text-xs text-slate-900 dark:text-white flex items-center justify-between">
+                      <span>{item.employeeName}</span>
+                      <span
+                        className={`text-[10px] px-2 py-0.5 rounded font-semibold ${
+                          ISSUE_TYPE_LABELS[item.issueType]?.badge
+                        }`}
+                      >
+                        {ISSUE_TYPE_LABELS[item.issueType]?.text}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      {item.employeeId} &bull; {item.department}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-[11px] bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl">
+                    <div>
+                      <span className="text-slate-400 block text-[10px]">Ca & Ngày:</span>
+                      <span className="font-bold text-slate-800 dark:text-slate-200">
+                        {item.shift} • {formatDate(item.date)}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 block text-[10px]">Giờ thực tế:</span>
+                      <span className="font-mono font-semibold text-emerald-600 dark:text-emerald-400">
+                        {item.actualCheckIn || '--:--'}
+                      </span>
+                      <span className="text-slate-400 mx-1">→</span>
+                      <span className="font-mono font-semibold text-blue-600 dark:text-blue-400">
+                        {item.actualCheckOut || '--:--'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800/60 text-[11px]">
+                    <div className="flex items-center gap-1.5 min-w-0 flex-1 pr-2">
+                      <span className="text-slate-500 truncate">
+                        {item.status === 'approved' ? 'Hoàn tất' : item.status === 'rejected' ? 'Bị từ chối' : currentStep?.stepName || 'Đang xử lý'}
+                      </span>
+                      <div className="flex items-center gap-1 shrink-0">
+                        {item.steps.map((st, i) => (
+                          <div
+                            key={i}
+                            className={`w-3.5 h-1 rounded-full ${
+                              st.status === 'approved'
+                                ? 'bg-emerald-500'
+                                : st.status === 'rejected'
+                                ? 'bg-rose-500'
+                                : i === item.currentStepIndex
+                                ? 'bg-amber-500 animate-pulse'
+                                : 'bg-slate-200 dark:bg-slate-700'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleShowQr(item);
+                        }}
+                        className="px-2 py-1 bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold text-[11px] rounded-lg border border-amber-300 dark:border-amber-800 flex items-center gap-1"
+                      >
+                        <QrCode className="w-3.5 h-3.5" />
+                        <span>Mã QR</span>
+                      </button>
+                      <span className="text-amber-600 dark:text-amber-400 font-semibold flex items-center gap-0.5">
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        {/* Desktop Table View (hidden md:block) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-bold uppercase tracking-wider">
@@ -1316,8 +1436,8 @@ export function AttendanceView() {
 
       {/* MODAL: View and Approve */}
       {selectedItem && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-5 my-8">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 sm:space-y-5 my-auto max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div>
                 <span className="text-[10px] font-mono font-bold text-amber-600 dark:text-amber-400 uppercase">

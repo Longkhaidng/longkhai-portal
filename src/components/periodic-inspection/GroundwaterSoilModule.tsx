@@ -44,12 +44,12 @@ export function GroundwaterSoilModule({ onSuccessToast }: GroundwaterSoilModuleP
     loadData();
   }, []);
 
-  // Initialize all to "Đạt"
+  // Initialize all to "Không có"
   useEffect(() => {
     const initial: Record<number, GroundwaterSoilAnswer> = {};
     GROUNDWATER_SOIL_CRITERIA.forEach((c) => {
       initial[c.id] = {
-        ketQua: 'Đạt',
+        ketQua: 'Không có',
         lyDo: '',
       };
     });
@@ -62,7 +62,7 @@ export function GroundwaterSoilModule({ onSuccessToast }: GroundwaterSoilModuleP
     val: string
   ) => {
     setAnswers((prev) => {
-      const current = prev[id] || { ketQua: 'Đạt', lyDo: '' };
+      const current = prev[id] || { ketQua: 'Không có', lyDo: '' };
       return {
         ...prev,
         [id]: {
@@ -71,18 +71,6 @@ export function GroundwaterSoilModule({ onSuccessToast }: GroundwaterSoilModuleP
         },
       };
     });
-  };
-
-  const handleSetAllDat = () => {
-    const next: Record<number, GroundwaterSoilAnswer> = {};
-    GROUNDWATER_SOIL_CRITERIA.forEach((c) => {
-      next[c.id] = {
-        ketQua: 'Đạt',
-        lyDo: '',
-      };
-    });
-    setAnswers(next);
-    setKetQuaSoBo('Đạt');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -96,7 +84,7 @@ export function GroundwaterSoilModule({ onSuccessToast }: GroundwaterSoilModuleP
       if (missing) {
         setSubmitMessage({
           type: 'err',
-          text: 'Vui lòng đánh giá Đạt / Không đạt cho tất cả 8 nội dung kiểm tra!',
+          text: 'Vui lòng chọn Có / Không có cho tất cả 8 nội dung kiểm tra!',
         });
         setIsSubmitting(false);
         return;
@@ -173,7 +161,7 @@ export function GroundwaterSoilModule({ onSuccessToast }: GroundwaterSoilModuleP
         const a = item.answers ? item.answers[c.id] : undefined;
         row[`Mục ${c.id}: ${c.text}`] = a ? (typeof a === 'string' ? a : a.ketQua) : '---';
         if (a && typeof a !== 'string' && a.lyDo) {
-          row[`Mục ${c.id} (Lý do K.Đạt)`] = a.lyDo;
+          row[`Mục ${c.id} (Lý do)`] = a.lyDo;
         }
       });
 
@@ -244,63 +232,49 @@ export function GroundwaterSoilModule({ onSuccessToast }: GroundwaterSoilModuleP
             </div>
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-blue-50/60 border border-blue-100 rounded-xl text-xs text-blue-800">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-blue-700">ℹ️ Hướng dẫn:</span>
-              <span>Bắt buộc chọn &quot;Đạt&quot; hoặc &quot;Không đạt&quot; cho mỗi nội dung kiểm tra. Cột &quot;Lý do không đạt&quot; chỉ điền khi chọn &quot;Không đạt&quot;.</span>
-            </div>
-            <button
-              type="button"
-              onClick={handleSetAllDat}
-              className="px-2.5 py-1 text-[11px] font-semibold bg-white text-blue-700 border border-blue-200 rounded-md hover:bg-blue-50 cursor-pointer shadow-2xs whitespace-nowrap"
-            >
-              Chọn tất cả Đạt
-            </button>
-          </div>
-
-          {/* Checklist Table */}
-          <div className="overflow-x-auto border border-slate-200 rounded-xl">
-            <table className="w-full text-left text-xs border-collapse">
+          {/* Checklist Table with Horizontal Scroll */}
+          <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
+            <table className="w-full text-left text-xs border-collapse min-w-[800px]">
               <thead>
-                <tr className="bg-slate-100/80 text-slate-700 uppercase font-bold text-[11px] border-b border-slate-200">
+                <tr className="bg-slate-100/80 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 uppercase font-bold text-[11px] border-b border-slate-200 dark:border-slate-800">
                   <th className="py-2.5 px-3 w-12 text-center">STT</th>
                   <th className="py-2.5 px-3">Kiểm tra hiện trường và thu thập dữ liệu sơ bộ</th>
-                  <th className="py-2.5 px-3 w-24 text-center text-emerald-700">Đạt</th>
-                  <th className="py-2.5 px-3 w-28 text-center text-red-700">Không đạt</th>
-                  <th className="py-2.5 px-3 w-64">Lý do không đạt (nếu có)</th>
+                  <th className="py-2.5 px-3 w-24 text-center text-amber-700 dark:text-amber-400">Có</th>
+                  <th className="py-2.5 px-3 w-28 text-center text-emerald-700 dark:text-emerald-400">Không có</th>
+                  <th className="py-2.5 px-3 w-64">Lý do (nếu có)</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {GROUNDWATER_SOIL_CRITERIA.map((c) => {
-                  const ans = answers[c.id] || { ketQua: 'Đạt', lyDo: '' };
-                  const isDat = ans.ketQua === 'Đạt';
-                  const isKhongDat = ans.ketQua === 'Không đạt';
+                  const ans = answers[c.id] || { ketQua: 'Không có', lyDo: '' };
+                  const isCo = ans.ketQua === 'Có';
+                  const isKhongCo = ans.ketQua === 'Không có';
 
                   return (
-                    <tr key={c.id} className="hover:bg-slate-50/60 transition-colors">
+                    <tr key={c.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
                       <td className="py-3 px-3 text-center text-slate-400 font-bold">{c.id}</td>
-                      <td className="py-3 px-3 font-semibold text-slate-800 text-sm whitespace-pre-line">
+                      <td className="py-3 px-3 font-semibold text-slate-800 dark:text-slate-200 text-sm whitespace-pre-line">
                         {c.text}
                       </td>
                       <td className="py-3 px-3 text-center">
-                        <label className="inline-flex items-center justify-center p-1.5 rounded-lg cursor-pointer hover:bg-emerald-50">
+                        <label className="inline-flex items-center justify-center p-1.5 rounded-lg cursor-pointer hover:bg-amber-50 dark:hover:bg-amber-950/40">
                           <input
                             type="radio"
                             name={`soil_criterion_${c.id}`}
-                            checked={isDat}
-                            onChange={() => handleAnswerChange(c.id, 'ketQua', 'Đạt')}
-                            className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 accent-emerald-600 cursor-pointer"
+                            checked={isCo}
+                            onChange={() => handleAnswerChange(c.id, 'ketQua', 'Có')}
+                            className="w-4 h-4 text-amber-600 focus:ring-amber-500 accent-amber-600 cursor-pointer"
                           />
                         </label>
                       </td>
                       <td className="py-3 px-3 text-center">
-                        <label className="inline-flex items-center justify-center p-1.5 rounded-lg cursor-pointer hover:bg-red-50">
+                        <label className="inline-flex items-center justify-center p-1.5 rounded-lg cursor-pointer hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
                           <input
                             type="radio"
                             name={`soil_criterion_${c.id}`}
-                            checked={isKhongDat}
-                            onChange={() => handleAnswerChange(c.id, 'ketQua', 'Không đạt')}
-                            className="w-4 h-4 text-red-600 focus:ring-red-500 accent-red-600 cursor-pointer"
+                            checked={isKhongCo}
+                            onChange={() => handleAnswerChange(c.id, 'ketQua', 'Không có')}
+                            className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 accent-emerald-600 cursor-pointer"
                           />
                         </label>
                       </td>
@@ -309,11 +283,11 @@ export function GroundwaterSoilModule({ onSuccessToast }: GroundwaterSoilModuleP
                           type="text"
                           value={ans.lyDo || ''}
                           onChange={(e) => handleAnswerChange(c.id, 'lyDo', e.target.value)}
-                          placeholder="Nhập nguyên nhân..."
+                          placeholder="Nhập lý do / ghi chú (nếu có)..."
                           className={`w-full text-xs px-2.5 py-1.5 border rounded-lg focus:outline-hidden ${
-                            isKhongDat
-                              ? 'border-red-300 bg-red-50/50 focus:ring-1 focus:ring-red-500'
-                              : 'border-slate-200 bg-white focus:ring-1 focus:ring-blue-500'
+                            isCo
+                              ? 'border-amber-300 bg-amber-50/50 dark:bg-amber-950/30 dark:border-amber-700 focus:ring-1 focus:ring-amber-500 text-slate-800 dark:text-slate-200'
+                              : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:ring-1 focus:ring-blue-500 text-slate-800 dark:text-slate-200'
                           }`}
                         />
                       </td>

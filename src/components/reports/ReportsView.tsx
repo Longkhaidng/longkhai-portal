@@ -486,8 +486,10 @@ export function ReportsView() {
     };
     const lines = [1, 2, 3, 4, 5, 6, 7, 8].map((id) => {
       const a = item.answers ? item.answers[id] : undefined;
-      const val = a ? (typeof a === 'string' ? a : a.ketQua) : 'Đạt';
-      return `${criteriaMap[id]}: ${val || 'Đạt'}`;
+      const rawVal = a ? (typeof a === 'string' ? a : a.ketQua) : 'Không có';
+      const val = rawVal === 'Đạt' ? 'Không có' : rawVal === 'Không đạt' ? 'Có' : (rawVal || 'Không có');
+      const reason = a && typeof a !== 'string' && a.lyDo ? ` (${a.lyDo})` : '';
+      return `${criteriaMap[id]}: ${val}${reason}`;
     });
     if (item.tongHop?.canLayMau) {
       lines.push(`Lấy mẫu phân tích: ${item.tongHop.canLayMau}`);

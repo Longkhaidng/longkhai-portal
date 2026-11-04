@@ -125,26 +125,26 @@ export function ProposalHubView({ initialCategory = 'repair' }: ProposalHubViewP
   return (
     <div className="space-y-6">
       {/* Top Main Banner & Title */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 rounded-3xl p-6 sm:p-7 text-white shadow-lg border border-slate-700/50 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white shadow-lg border border-slate-700/50 relative overflow-hidden">
         {/* Background glow decoration */}
         <div className="absolute -right-16 -top-16 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute -left-16 -bottom-16 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/15 text-amber-400 shrink-0">
-              <ClipboardList className="w-7 h-7" />
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 sm:p-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/15 text-amber-400 shrink-0">
+              <ClipboardList className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">
+                <h1 className="text-lg sm:text-2xl font-black tracking-tight text-white">
                   Phiếu Đề Xuất
                 </h1>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                   Proposal Hub
                 </span>
               </div>
-              <p className="text-xs text-slate-300 mt-1 max-w-xl">
+              <p className="text-[11px] sm:text-xs text-slate-300 mt-0.5 sm:mt-1 max-w-xl">
                 Cổng tiếp nhận và điều phối mọi loại đề xuất nội bộ: Sửa chữa thiết bị máy móc, Yêu cầu văn phòng phẩm, và các Kiến nghị đề xuất khác.
               </p>
             </div>
@@ -156,7 +156,7 @@ export function ProposalHubView({ initialCategory = 'repair' }: ProposalHubViewP
               <button
                 type="button"
                 onClick={() => setShowCatalogModal(true)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 active:scale-95 border border-white/20 text-xs font-bold text-white transition-all backdrop-blur-md cursor-pointer shadow-xs"
+                className="w-full sm:w-auto justify-center flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 active:scale-95 border border-white/20 text-xs font-bold text-white transition-all backdrop-blur-md cursor-pointer shadow-xs"
               >
                 <Settings className="w-4 h-4 text-blue-300" />
                 <span>Quản lý danh mục VPP</span>
@@ -166,7 +166,7 @@ export function ProposalHubView({ initialCategory = 'repair' }: ProposalHubViewP
         </div>
 
         {/* 3 Main Proposal Category Tabs */}
-        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-2.5 mt-6 pt-5 border-t border-white/10">
+        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5 mt-4 pt-3.5 sm:mt-6 sm:pt-5 border-t border-white/10">
           {/* Tab 1: Sửa chữa máy móc thiết bị */}
           <button
             type="button"

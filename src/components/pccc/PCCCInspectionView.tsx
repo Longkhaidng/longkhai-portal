@@ -897,9 +897,101 @@ export function PCCCInspectionView() {
             </span>
           </div>
 
-          {/* Master Devices Table - Co dãn tối ưu */}
-          <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
-            <table className="w-full text-left text-xs border-collapse min-w-[1080px]">
+          {/* Master Devices List - Dual Responsive View */}
+          <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+            {/* Mobile Card View (md:hidden) */}
+            <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
+              {filteredDevices.length === 0 ? (
+                <div className="py-10 text-center text-slate-400 text-xs">
+                  Không tìm thấy thiết bị PCCC nào.
+                </div>
+              ) : (
+                filteredDevices.map((d) => {
+                  const catInfo = PCCC_CATEGORIES[d.category];
+                  return (
+                    <div
+                      key={`m-pccc-${d.id}`}
+                      className="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors space-y-2.5"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-mono font-bold text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/60 px-2 py-0.5 rounded-md border border-red-200 dark:border-red-900/60">
+                          {d.id}
+                        </span>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 border text-slate-700 dark:text-slate-300">
+                          {catInfo?.name || d.category}
+                        </span>
+                      </div>
+
+                      <div>
+                        <div className="font-bold text-xs text-slate-900 dark:text-white">
+                          {d.name}
+                        </div>
+                        <div className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                          📍 {d.location}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-[11px] bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl">
+                        <div>
+                          <span className="text-slate-400 block text-[10px]">Chuẩn kỹ thuật:</span>
+                          <span className="font-mono font-semibold text-slate-800 dark:text-slate-200 truncate block">
+                            {d.specs || '-'}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400 block text-[10px]">Hạn kiểm định:</span>
+                          <span className="font-mono text-slate-700 dark:text-slate-300 block">
+                            {formatPCCCDate(d.inspectionExpiry)}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800/60 gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPreSelectedDevice(d);
+                            setIsInspectionModalOpen(true);
+                          }}
+                          className="flex-1 py-1.5 px-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1 shadow-xs cursor-pointer"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Kiểm tra</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedDeviceForQr(d);
+                            setIsQrCodeModalOpen(true);
+                          }}
+                          className="py-1.5 px-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                        >
+                          <QrCode className="w-3.5 h-3.5" />
+                          <span>QR</span>
+                        </button>
+                        {isAdmin && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setDeviceToEdit(d);
+                              setIsDeviceModalOpen(true);
+                            }}
+                            className="py-1.5 px-2 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-lg text-xs font-semibold cursor-pointer"
+                            title="Sửa"
+                          >
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Master Devices Table - Co dãn tối ưu trên Desktop */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse min-w-[1080px]">
               <thead className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold uppercase text-[10px] sm:text-[11px]">
                 <tr>
                   <th className="py-2.5 px-3 pl-4 w-32 min-w-[120px] whitespace-nowrap">MÃ THIẾT BỊ</th>
@@ -981,6 +1073,7 @@ export function PCCCInspectionView() {
             </table>
           </div>
         </div>
+      </div>
       )}
 
       {/* ALL MODALS */}

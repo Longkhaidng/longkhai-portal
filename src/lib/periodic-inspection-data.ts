@@ -26,928 +26,928 @@ export const FIRST_AID_LOCATIONS: string[] = [
 
 export const FIRST_AID_ITEMS_BY_LOCATION: Record<string, FirstAidItemStandard[]> = {
   "Bếp": [
-    {
-      "name": "Băng dính (cuộn)",
-      "chuan": 2,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng thun kích thước 5 x 200 cm",
-      "chuan": 4,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng chun",
-      "chuan": 4,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng cuộn vải (gói)",
-      "chuan": 2,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng dính cá nhân",
-      "chuan": 5,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Gạc thấm nước (10 miếng/gói)",
-      "chuan": 1,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Bông hút nước (gói)",
-      "chuan": 5,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Garo cao su",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Kéo cắt băng",
-      "chuan": 1,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Panh không mấu thẳng",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Panh không mấu cong",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Găng tay khám bệnh (đôi)",
-      "chuan": 5,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Nước muối sinh lý NaCl 9 ‰",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Cồn 70°",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Dung dịch Povidine",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Kim băng an toàn (các cỡ)",
-      "chuan": 5,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Tấm lót nilon không thấm nước",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Phác đồ sơ cứu",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Danh mục vật tư sơ cấp cứu",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Mặt nạ phòng độc thích hợp",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Kính bảo vệ mắt",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Nẹp cổ (cái)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cánh tay (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cẳng tay (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp đùi (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cẳng chân (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    }
+      {
+          "name": "Băng dính (cuộn)",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng thun kích thước 5 x 200 cm",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng chun",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng cuộn vải (gói)",
+          "chuan": 1,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng dính cá nhân",
+          "chuan": 5,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Gạc thấm nước (10 miếng/gói)",
+          "chuan": 1,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Bông hút nước (gói)",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Garo cao su",
+          "chuan": 2,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Kéo cắt băng",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Panh không mấu thẳng",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Panh không mấu cong",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Găng tay khám bệnh (đôi)",
+          "chuan": 3,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Nước muối sinh lý NaCl 9 ‰",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Cồn 70°",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Dung dịch Povidine",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Kim băng an toàn (các cỡ)",
+          "chuan": 5,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Tấm lót nilon không thấm nước",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Phác đồ sơ cứu",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Danh mục vật tư sơ cấp cứu",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Mặt nạ phòng độc thích hợp",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Kính bảo vệ mắt",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Nẹp cổ (cái)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cánh tay (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cẳng tay (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp đùi (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cẳng chân (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      }
   ],
   "Kho 1": [
-    {
-      "name": "Băng dính (cuộn)",
-      "chuan": 2,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng thun kích thước 5 x 200 cm",
-      "chuan": 4,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng chun",
-      "chuan": 4,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng cuộn vải (gói)",
-      "chuan": 2,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng dính cá nhân",
-      "chuan": 5,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Gạc thấm nước (10 miếng/gói)",
-      "chuan": 1,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Bông hút nước (gói)",
-      "chuan": 5,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Garo cao su",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Kéo cắt băng",
-      "chuan": 1,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Panh không mấu thẳng",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Panh không mấu cong",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Găng tay khám bệnh (đôi)",
-      "chuan": 5,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Nước muối sinh lý NaCl 9 ‰",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Cồn 70°",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Dung dịch Povidine",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Kim băng an toàn (các cỡ)",
-      "chuan": 5,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Tấm lót nilon không thấm nước",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Phác đồ sơ cứu",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Danh mục vật tư sơ cấp cứu",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Mặt nạ phòng độc thích hợp",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Kính bảo vệ mắt",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Nẹp cổ (cái)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cánh tay (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cẳng tay (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp đùi (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cẳng chân (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    }
+      {
+          "name": "Băng dính (cuộn)",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng thun kích thước 5 x 200 cm",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng chun",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng cuộn vải (gói)",
+          "chuan": 1,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng dính cá nhân",
+          "chuan": 5,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Gạc thấm nước (10 miếng/gói)",
+          "chuan": 1,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Bông hút nước (gói)",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Garo cao su",
+          "chuan": 2,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Kéo cắt băng",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Panh không mấu thẳng",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Panh không mấu cong",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Găng tay khám bệnh (đôi)",
+          "chuan": 3,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Nước muối sinh lý NaCl 9 ‰",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Cồn 70°",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Dung dịch Povidine",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Kim băng an toàn (các cỡ)",
+          "chuan": 5,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Tấm lót nilon không thấm nước",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Phác đồ sơ cứu",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Danh mục vật tư sơ cấp cứu",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Mặt nạ phòng độc thích hợp",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Kính bảo vệ mắt",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Nẹp cổ (cái)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cánh tay (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cẳng tay (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp đùi (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cẳng chân (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      }
   ],
   "Kho 2": [
-    {
-      "name": "Băng dính (cuộn)",
-      "chuan": 2,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng thun kích thước 5 x 200 cm",
-      "chuan": 4,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng chun",
-      "chuan": 4,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng cuộn vải (gói)",
-      "chuan": 2,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng dính cá nhân",
-      "chuan": 5,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Gạc thấm nước (10 miếng/gói)",
-      "chuan": 1,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Bông hút nước (gói)",
-      "chuan": 5,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Garo cao su",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Kéo cắt băng",
-      "chuan": 1,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Panh không mấu thẳng",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Panh không mấu cong",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Găng tay khám bệnh (đôi)",
-      "chuan": 5,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Nước muối sinh lý NaCl 9 ‰",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Cồn 70°",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Dung dịch Povidine",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Kim băng an toàn (các cỡ)",
-      "chuan": 5,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Tấm lót nilon không thấm nước",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Phác đồ sơ cứu",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Danh mục vật tư sơ cấp cứu",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Mặt nạ phòng độc thích hợp",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Kính bảo vệ mắt",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Nẹp cổ (cái)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cánh tay (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cẳng tay (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp đùi (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cẳng chân (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    }
+      {
+          "name": "Băng dính (cuộn)",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng thun kích thước 5 x 200 cm",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng chun",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng cuộn vải (gói)",
+          "chuan": 1,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng dính cá nhân",
+          "chuan": 5,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Gạc thấm nước (10 miếng/gói)",
+          "chuan": 1,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Bông hút nước (gói)",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Garo cao su",
+          "chuan": 2,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Kéo cắt băng",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Panh không mấu thẳng",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Panh không mấu cong",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Găng tay khám bệnh (đôi)",
+          "chuan": 3,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Nước muối sinh lý NaCl 9 ‰",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Cồn 70°",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Dung dịch Povidine",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Kim băng an toàn (các cỡ)",
+          "chuan": 5,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Tấm lót nilon không thấm nước",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Phác đồ sơ cứu",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Danh mục vật tư sơ cấp cứu",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Mặt nạ phòng độc thích hợp",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Kính bảo vệ mắt",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Nẹp cổ (cái)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cánh tay (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cẳng tay (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp đùi (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cẳng chân (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      }
   ],
   "Bảo vệ 1": [
-    {
-      "name": "Băng dính (cuộn)",
-      "chuan": 2,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng thun kích thước 5 x 200 cm",
-      "chuan": 4,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng chun",
-      "chuan": 4,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng cuộn vải (gói)",
-      "chuan": 2,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng dính cá nhân",
-      "chuan": 5,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Gạc thấm nước (10 miếng/gói)",
-      "chuan": 1,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Bông hút nước (gói)",
-      "chuan": 5,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Garo cao su",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Kéo cắt băng",
-      "chuan": 1,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Panh không mấu thẳng",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Panh không mấu cong",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Găng tay khám bệnh (đôi)",
-      "chuan": 5,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Nước muối sinh lý NaCl 9 ‰",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Cồn 70°",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Dung dịch Povidine",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Kim băng an toàn (các cỡ)",
-      "chuan": 5,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Tấm lót nilon không thấm nước",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Phác đồ sơ cứu",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Danh mục vật tư sơ cấp cứu",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Mặt nạ phòng độc thích hợp",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Kính bảo vệ mắt",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Nẹp cổ (cái)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cánh tay (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cẳng tay (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp đùi (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cẳng chân (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    }
+      {
+          "name": "Băng dính (cuộn)",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng thun kích thước 5 x 200 cm",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng chun",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng cuộn vải (gói)",
+          "chuan": 1,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng dính cá nhân",
+          "chuan": 5,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Gạc thấm nước (10 miếng/gói)",
+          "chuan": 1,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Bông hút nước (gói)",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Garo cao su",
+          "chuan": 2,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Kéo cắt băng",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Panh không mấu thẳng",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Panh không mấu cong",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Găng tay khám bệnh (đôi)",
+          "chuan": 3,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Nước muối sinh lý NaCl 9 ‰",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Cồn 70°",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Dung dịch Povidine",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Kim băng an toàn (các cỡ)",
+          "chuan": 5,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Tấm lót nilon không thấm nước",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Phác đồ sơ cứu",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Danh mục vật tư sơ cấp cứu",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Mặt nạ phòng độc thích hợp",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Kính bảo vệ mắt",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Nẹp cổ (cái)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cánh tay (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cẳng tay (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp đùi (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cẳng chân (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      }
   ],
   "Bảo vệ 2": [
-    {
-      "name": "Băng dính (cuộn)",
-      "chuan": 2,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng thun kích thước 5 x 200 cm",
-      "chuan": 4,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng chun",
-      "chuan": 4,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng cuộn vải (gói)",
-      "chuan": 2,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng dính cá nhân",
-      "chuan": 5,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Gạc thấm nước (10 miếng/gói)",
-      "chuan": 1,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Bông hút nước (gói)",
-      "chuan": 5,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Garo cao su",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Kéo cắt băng",
-      "chuan": 1,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Panh không mấu thẳng",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Panh không mấu cong",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Găng tay khám bệnh (đôi)",
-      "chuan": 5,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Nước muối sinh lý NaCl 9 ‰",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Cồn 70°",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Dung dịch Povidine",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Kim băng an toàn (các cỡ)",
-      "chuan": 5,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Tấm lót nilon không thấm nước",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Phác đồ sơ cứu",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Danh mục vật tư sơ cấp cứu",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Mặt nạ phòng độc thích hợp",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Kính bảo vệ mắt",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Nẹp cổ (cái)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cánh tay (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cẳng tay (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp đùi (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cẳng chân (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    }
+      {
+          "name": "Băng dính (cuộn)",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng thun kích thước 5 x 200 cm",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng chun",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng cuộn vải (gói)",
+          "chuan": 1,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng dính cá nhân",
+          "chuan": 5,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Gạc thấm nước (10 miếng/gói)",
+          "chuan": 1,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Bông hút nước (gói)",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Garo cao su",
+          "chuan": 2,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Kéo cắt băng",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Panh không mấu thẳng",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Panh không mấu cong",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Găng tay khám bệnh (đôi)",
+          "chuan": 3,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Nước muối sinh lý NaCl 9 ‰",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Cồn 70°",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Dung dịch Povidine",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Kim băng an toàn (các cỡ)",
+          "chuan": 5,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Tấm lót nilon không thấm nước",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Phác đồ sơ cứu",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Danh mục vật tư sơ cấp cứu",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Mặt nạ phòng độc thích hợp",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Kính bảo vệ mắt",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Nẹp cổ (cái)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cánh tay (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cẳng tay (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp đùi (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cẳng chân (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      }
   ],
   "Cơ điện": [
-    {
-      "name": "Băng dính (cuộn)",
-      "chuan": 2,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng thun kích thước 5 x 200 cm",
-      "chuan": 4,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng chun",
-      "chuan": 4,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng cuộn vải (gói)",
-      "chuan": 2,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng dính cá nhân",
-      "chuan": 5,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Gạc thấm nước (10 miếng/gói)",
-      "chuan": 1,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Bông hút nước (gói)",
-      "chuan": 5,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Garo cao su",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Kéo cắt băng",
-      "chuan": 1,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Panh không mấu thẳng",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Panh không mấu cong",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Găng tay khám bệnh (đôi)",
-      "chuan": 5,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Nước muối sinh lý NaCl 9 ‰",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Cồn 70°",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Dung dịch Povidine",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Kim băng an toàn (các cỡ)",
-      "chuan": 5,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Tấm lót nilon không thấm nước",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Phác đồ sơ cứu",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Danh mục vật tư sơ cấp cứu",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Mặt nạ phòng độc thích hợp",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Kính bảo vệ mắt",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Nẹp cổ (cái)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cánh tay (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cẳng tay (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp đùi (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cẳng chân (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    }
+      {
+          "name": "Băng dính (cuộn)",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng thun kích thước 5 x 200 cm",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng chun",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng cuộn vải (gói)",
+          "chuan": 1,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng dính cá nhân",
+          "chuan": 5,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Gạc thấm nước (10 miếng/gói)",
+          "chuan": 1,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Bông hút nước (gói)",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Garo cao su",
+          "chuan": 2,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Kéo cắt băng",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Panh không mấu thẳng",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Panh không mấu cong",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Găng tay khám bệnh (đôi)",
+          "chuan": 3,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Nước muối sinh lý NaCl 9 ‰",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Cồn 70°",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Dung dịch Povidine",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Kim băng an toàn (các cỡ)",
+          "chuan": 5,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Tấm lót nilon không thấm nước",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Phác đồ sơ cứu",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Danh mục vật tư sơ cấp cứu",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Mặt nạ phòng độc thích hợp",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Kính bảo vệ mắt",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Nẹp cổ (cái)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cánh tay (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cẳng tay (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp đùi (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cẳng chân (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      }
   ],
   "Văn phòng": [
-    {
-      "name": "Băng dính (cuộn)",
-      "chuan": 2,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng thun kích thước 5 x 200 cm",
-      "chuan": 4,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng chun",
-      "chuan": 4,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng cuộn vải (gói)",
-      "chuan": 2,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Băng dính cá nhân",
-      "chuan": 5,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Gạc thấm nước (10 miếng/gói)",
-      "chuan": 1,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Bông hút nước (gói)",
-      "chuan": 5,
-      "group": "Băng, Gạc Y Tế"
-    },
-    {
-      "name": "Garo cao su",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Kéo cắt băng",
-      "chuan": 1,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Panh không mấu thẳng",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Panh không mấu cong",
-      "chuan": 2,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Găng tay khám bệnh (đôi)",
-      "chuan": 5,
-      "group": "Dụng Cụ"
-    },
-    {
-      "name": "Nước muối sinh lý NaCl 9 ‰",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Cồn 70°",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Dung dịch Povidine",
-      "chuan": 1,
-      "group": "Dung Dịch Sát Khuẩn"
-    },
-    {
-      "name": "Kim băng an toàn (các cỡ)",
-      "chuan": 5,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Tấm lót nilon không thấm nước",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Phác đồ sơ cứu",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Danh mục vật tư sơ cấp cứu",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Mặt nạ phòng độc thích hợp",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Kính bảo vệ mắt",
-      "chuan": 1,
-      "group": "Vật Tư Khác"
-    },
-    {
-      "name": "Nẹp cổ (cái)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cánh tay (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cẳng tay (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp đùi (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    },
-    {
-      "name": "Nẹp cẳng chân (bộ)",
-      "chuan": 1,
-      "group": "Nẹp Cố Định"
-    }
+      {
+          "name": "Băng dính (cuộn)",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng thun kích thước 5 x 200 cm",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng chun",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng cuộn vải (gói)",
+          "chuan": 1,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Băng dính cá nhân",
+          "chuan": 5,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Gạc thấm nước (10 miếng/gói)",
+          "chuan": 1,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Bông hút nước (gói)",
+          "chuan": 2,
+          "group": "Băng, Gạc Y Tế"
+      },
+      {
+          "name": "Garo cao su",
+          "chuan": 2,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Kéo cắt băng",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Panh không mấu thẳng",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Panh không mấu cong",
+          "chuan": 1,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Găng tay khám bệnh (đôi)",
+          "chuan": 3,
+          "group": "Dụng Cụ"
+      },
+      {
+          "name": "Nước muối sinh lý NaCl 9 ‰",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Cồn 70°",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Dung dịch Povidine",
+          "chuan": 1,
+          "group": "Dung Dịch Sát Khuẩn"
+      },
+      {
+          "name": "Kim băng an toàn (các cỡ)",
+          "chuan": 5,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Tấm lót nilon không thấm nước",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Phác đồ sơ cứu",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Danh mục vật tư sơ cấp cứu",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Mặt nạ phòng độc thích hợp",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Kính bảo vệ mắt",
+          "chuan": 1,
+          "group": "Vật Tư Khác"
+      },
+      {
+          "name": "Nẹp cổ (cái)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cánh tay (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cẳng tay (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp đùi (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      },
+      {
+          "name": "Nẹp cẳng chân (bộ)",
+          "chuan": 1,
+          "group": "Nẹp Cố Định"
+      }
   ]
 };
 
@@ -4869,35 +4869,35 @@ export const INITIAL_GROUNDWATER_SOIL_INSPECTIONS: GroundwaterSoilInspection[] =
     "createdAt": "2026-10-30T05:09:12.791Z",
     "answers": {
       "1": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "2": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "3": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "4": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "5": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "6": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "7": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "8": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       }
     },
@@ -4918,35 +4918,35 @@ export const INITIAL_GROUNDWATER_SOIL_INSPECTIONS: GroundwaterSoilInspection[] =
     "createdAt": "2026-10-30T05:09:12.791Z",
     "answers": {
       "1": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "2": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "3": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "4": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "5": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "6": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "7": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "8": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       }
     },
@@ -4967,35 +4967,35 @@ export const INITIAL_GROUNDWATER_SOIL_INSPECTIONS: GroundwaterSoilInspection[] =
     "createdAt": "2026-10-30T05:09:12.791Z",
     "answers": {
       "1": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "2": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "3": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "4": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "5": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "6": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "7": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "8": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       }
     },
@@ -5016,35 +5016,35 @@ export const INITIAL_GROUNDWATER_SOIL_INSPECTIONS: GroundwaterSoilInspection[] =
     "createdAt": "2026-10-30T05:09:12.791Z",
     "answers": {
       "1": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "2": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "3": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "4": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "5": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "6": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "7": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "8": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       }
     },
@@ -5065,35 +5065,35 @@ export const INITIAL_GROUNDWATER_SOIL_INSPECTIONS: GroundwaterSoilInspection[] =
     "createdAt": "2026-10-30T05:09:12.791Z",
     "answers": {
       "1": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "2": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "3": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "4": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "5": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "6": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "7": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "8": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       }
     },
@@ -5114,35 +5114,35 @@ export const INITIAL_GROUNDWATER_SOIL_INSPECTIONS: GroundwaterSoilInspection[] =
     "createdAt": "2026-10-30T05:09:12.791Z",
     "answers": {
       "1": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "2": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "3": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "4": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "5": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "6": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "7": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       },
       "8": {
-        "ketQua": "Đạt",
+        "ketQua": "Không có",
         "lyDo": ""
       }
     },

@@ -41,7 +41,6 @@ function PortalAppContent() {
   const { currentUser, isLoading, hasPermission } = useAuth();
   const [currentTab, setCurrentTab] = useState<string>('dashboard');
   const [viewingWebSite, setViewingWebSite] = useState<WebIntegration | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [dataVersion, setDataVersion] = useState(0);
 
   React.useEffect(() => {
@@ -384,16 +383,14 @@ function PortalAppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors">
-      {/* Sidebar Navigation */}
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors min-w-[1280px] overflow-x-auto">
+      {/* Sidebar Navigation - Always visible desktop layout */}
       <Sidebar
         currentTab={viewingWebSite ? `web_${viewingWebSite.id}` : currentTab}
         onSelectTab={(tabId) => {
           setViewingWebSite(null);
           setCurrentTab(tabId);
         }}
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
         pendingCounts={{
           leave: pendingLeaves,
           attendance: pendingAtts,
@@ -409,13 +406,12 @@ function PortalAppContent() {
       {/* Main App Container */}
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         <Header
-          onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
           onOpenGitHubSettings={() => {
             setCurrentTab('settings');
           }}
         />
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+        <main className="flex-1 p-6 lg:p-8 max-w-7xl mx-auto w-full pb-8">
           {renderActiveView()}
         </main>
       </div>

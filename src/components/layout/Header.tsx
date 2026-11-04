@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import {
-  Menu,
   Bell,
   Search,
   Sun,
@@ -22,7 +21,7 @@ import {
 import { storage } from '@/lib/storage';
 
 interface HeaderProps {
-  onToggleSidebar: () => void;
+  onToggleSidebar?: () => void;
   onOpenGitHubSettings?: () => void;
 }
 
@@ -65,29 +64,9 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
 
   return (
     <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 md:px-6 flex items-center justify-between sticky top-0 z-30 transition-colors">
-      {/* Left: Mobile hamburger & Search bar */}
+      {/* Left: Desktop Search bar */}
       <div className="flex items-center gap-3">
-        <button
-          onClick={onToggleSidebar}
-          className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors lg:hidden"
-          title="Mở menu"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-
-        {/* Mobile Brand Logo */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <img
-            src="/logo.png"
-            alt="Long Khai Logo"
-            className="w-7 h-7 object-contain"
-          />
-          <span className="font-extrabold text-xs text-slate-900 dark:text-white">
-            LONG KHẢI
-          </span>
-        </div>
-
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-64 md:w-80">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-72 md:w-80">
           <Search className="w-4 h-4 text-slate-400" />
           <input
             type="text"

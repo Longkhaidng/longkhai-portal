@@ -60,8 +60,8 @@ interface MenuItem {
 interface SidebarProps {
   currentTab: string;
   onSelectTab: (tabId: string) => void;
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
   pendingCounts?: {
     leave?: number;
     attendance?: number;
@@ -201,48 +201,27 @@ export function Sidebar({
   });
 
   return (
-    <>
-      {/* Mobile backdrop */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 lg:hidden"
-          onClick={onClose}
-        />
-      )}
-
-      {/* Sidebar container */}
-      <aside
-        className={`fixed top-0 bottom-0 left-0 w-68 bg-slate-900 text-slate-300 z-50 flex flex-col border-r border-slate-800 transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-      >
-        {/* Logo & Brand */}
-        <div className="h-16 px-5 flex items-center justify-between border-b border-slate-800">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 p-1 flex items-center justify-center shadow-md border border-white/10 shrink-0">
-              <img
-                src="/logo.png"
-                alt="Long Khai Corporation Logo"
-                className="w-full h-full object-contain"
-              />
+    <aside className="w-68 bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800 static shrink-0 min-h-screen">
+      {/* Logo & Brand */}
+      <div className="h-16 px-5 flex items-center justify-between border-b border-slate-800">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-white/10 p-1 flex items-center justify-center shadow-md border border-white/10 shrink-0">
+            <img
+              src="/logo.png"
+              alt="Long Khai Corporation Logo"
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div>
+            <div className="font-black text-sm text-white tracking-wide leading-none">
+              LONG KHẢI
             </div>
-            <div>
-              <div className="font-black text-sm text-white tracking-wide leading-none">
-                LONG KHẢI
-              </div>
-              <div className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider mt-0.5">
-                CORPORATION PORTAL
-              </div>
+            <div className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider mt-0.5">
+              CORPORATION PORTAL
             </div>
           </div>
-
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 lg:hidden cursor-pointer"
-          >
-            <X className="w-5 h-5" />
-          </button>
         </div>
+      </div>
 
         {/* User Card in Sidebar */}
         <div className="p-4 mx-3 my-3 rounded-xl bg-slate-800/60 border border-slate-700/50">
@@ -287,7 +266,7 @@ export function Sidebar({
                       toggleExpand(item.id);
                     }
                     onSelectTab(item.id);
-                    if (!hasSub) onClose();
+                    if (!hasSub && onClose) onClose();
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                     isActive && (!hasSub || currentTab === item.id)
@@ -331,7 +310,7 @@ export function Sidebar({
                           key={sub.id}
                           onClick={() => {
                             onSelectTab(sub.id);
-                            onClose();
+                            if (onClose) onClose();
                           }}
                           className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[11px] transition-all cursor-pointer ${
                             isThisSubActive
@@ -375,7 +354,7 @@ export function Sidebar({
                           onSelectTab(`web_${site.id}`);
                         }
                       }
-                      onClose();
+                      if (onClose) onClose();
                     }}
                     className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                       isSiteActive
@@ -406,6 +385,5 @@ export function Sidebar({
           <div className="text-[10px] text-slate-600 mt-0.5">Phiên bản 2026.2 &bull; Next.js 15</div>
         </div>
       </aside>
-    </>
   );
 }

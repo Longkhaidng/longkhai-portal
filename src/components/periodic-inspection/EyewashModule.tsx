@@ -254,29 +254,29 @@ export function EyewashModule({ onSuccessToast }: EyewashModuleProps) {
             </button>
           </div>
 
-          {/* Criteria Checklist Table */}
-          <div className="overflow-x-auto border border-slate-200 rounded-xl">
-            <table className="w-full text-left text-xs border-collapse">
+          {/* Criteria Checklist Table with Horizontal Scroll */}
+          <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
+            <table className="w-full text-left text-xs border-collapse min-w-[650px]">
               <thead>
-                <tr className="bg-slate-100/80 text-slate-700 uppercase font-bold text-[11px] border-b border-slate-200">
+                <tr className="bg-slate-100/80 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 uppercase font-bold text-[11px] border-b border-slate-200 dark:border-slate-800">
                   <th className="py-2.5 px-3 w-12 text-center">STT</th>
                   <th className="py-2.5 px-3">Nội dung kiểm tra</th>
-                  <th className="py-2.5 px-3 w-32 text-center text-emerald-700">Đạt</th>
-                  <th className="py-2.5 px-3 w-32 text-center text-red-700">Không đạt</th>
+                  <th className="py-2.5 px-3 w-32 text-center text-emerald-700 dark:text-emerald-400">Đạt</th>
+                  <th className="py-2.5 px-3 w-32 text-center text-red-700 dark:text-red-400">Không đạt</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {EYEWASH_CRITERIA.map((criterion, idx) => {
                   const val = results[criterion];
                   const isDat = val === 'Đạt';
                   const isKhongDat = val === 'Không đạt';
 
                   return (
-                    <tr key={criterion} className="hover:bg-slate-50/60 transition-colors">
+                    <tr key={criterion} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
                       <td className="py-3 px-3 text-center text-slate-400 font-medium">{idx + 1}</td>
-                      <td className="py-3 px-3 font-semibold text-slate-800 text-sm">{criterion}</td>
+                      <td className="py-3 px-3 font-semibold text-slate-800 dark:text-slate-200 text-sm">{criterion}</td>
                       <td className="py-3 px-3 text-center">
-                        <label className="inline-flex items-center justify-center p-2 rounded-lg cursor-pointer hover:bg-emerald-50 transition-colors">
+                        <label className="inline-flex items-center justify-center p-2 rounded-lg cursor-pointer hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition-colors">
                           <input
                             type="radio"
                             name={`criterion_${idx}`}
@@ -287,7 +287,7 @@ export function EyewashModule({ onSuccessToast }: EyewashModuleProps) {
                         </label>
                       </td>
                       <td className="py-3 px-3 text-center">
-                        <label className="inline-flex items-center justify-center p-2 rounded-lg cursor-pointer hover:bg-red-50 transition-colors">
+                        <label className="inline-flex items-center justify-center p-2 rounded-lg cursor-pointer hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors">
                           <input
                             type="radio"
                             name={`criterion_${idx}`}

@@ -153,6 +153,7 @@ export async function POST(req: NextRequest) {
         | 'pccc_devices'
         | 'pccc_inspections'
         | 'periodic_first_aid'
+        | 'periodic_first_aid_standards'
         | 'periodic_eyewash'
         | 'periodic_stormwater'
         | 'periodic_groundwater_soil';
@@ -213,6 +214,9 @@ export async function POST(req: NextRequest) {
       const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
       relFilePath = `periodic-inspections/first-aid/${year}/${data.id}.json`;
       commitMessage = `Update First Aid Inspection ${data.id}`;
+    } else if (type === 'periodic_first_aid_standards') {
+      relFilePath = 'periodic-inspections/first-aid-standards.json';
+      commitMessage = 'Update First Aid Standards';
     } else if (type === 'periodic_eyewash') {
       const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
       relFilePath = `periodic-inspections/eyewash/${year}/${data.id}.json`;

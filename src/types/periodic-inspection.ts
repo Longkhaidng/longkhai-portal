@@ -95,7 +95,7 @@ export interface GroundwaterSoilCriteria {
 }
 
 export interface GroundwaterSoilAnswer {
-  ketQua: 'Đạt' | 'Không đạt';
+  ketQua: 'Có' | 'Không có' | 'Đạt' | 'Không đạt';
   lyDo?: string;
 }
 

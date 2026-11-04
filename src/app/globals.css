@@ -70,6 +70,27 @@ body {
   background: #334155;
 }
 
+/* Fixed Desktop Width & Natural Horizontal Scrolling */
+html, body {
+  min-width: 1280px;
+  overflow-x: auto;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide scrollbar for clean mobile horizontal pill lists */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Safe area bottom padding for iPhone notch / home indicator */
+.pb-safe {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0.5rem));
+}
+
 /* Print styles for factory paper forms and reports */
 @media print {
   @page {

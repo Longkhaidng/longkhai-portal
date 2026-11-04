@@ -578,10 +578,10 @@ export function LeaveView() {
 
       {/* Scope Switcher for Approvers / Managers / Economic Staff */}
       {canManageOthers && (
-        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 border-b border-slate-200 dark:border-slate-800 pb-2 overflow-x-auto no-scrollbar">
           <button
             onClick={() => setScopeFilter('all')}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+            className={`px-3 py-1.5 sm:px-3.5 sm:py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
               scopeFilter === 'all'
                 ? 'bg-blue-600 text-white shadow-xs'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
@@ -595,7 +595,7 @@ export function LeaveView() {
           </button>
           <button
             onClick={() => setScopeFilter('approver')}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 sm:px-3.5 sm:py-1.5 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
               scopeFilter === 'approver'
                 ? 'bg-amber-600 text-white shadow-xs'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
@@ -610,7 +610,7 @@ export function LeaveView() {
           </button>
           <button
             onClick={() => setScopeFilter('my')}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
+            className={`px-3 py-1.5 sm:px-3.5 sm:py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
               scopeFilter === 'my'
                 ? 'bg-blue-600 text-white shadow-xs'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
@@ -622,8 +622,8 @@ export function LeaveView() {
       )}
 
       {/* Filter and search */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center gap-3">
-        <div className="flex-1 min-w-[220px] relative">
+      <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
+        <div className="flex-1 min-w-[200px] relative">
           <Search className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
           <input
             type="text"
@@ -635,11 +635,11 @@ export function LeaveView() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Filter className="w-3.5 h-3.5 text-slate-400" />
+          <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+            className="flex-1 sm:flex-initial py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="pending">Chờ phê duyệt (Tất cả đơn chờ)</option>
@@ -656,7 +656,7 @@ export function LeaveView() {
                 setStatusFilter('all');
                 setSearch('');
               }}
-              className="text-xs text-blue-600 dark:text-blue-400 hover:underline px-2 py-1 font-semibold whitespace-nowrap cursor-pointer"
+              className="text-xs text-blue-600 dark:text-blue-400 hover:underline px-2 py-1 font-semibold whitespace-nowrap cursor-pointer shrink-0"
             >
               Đặt lại
             </button>
@@ -664,9 +664,108 @@ export function LeaveView() {
         </div>
       </div>
 
-      {/* Table of Leave Requests */}
+      {/* Leave Requests - Dual Responsive View */}
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
-        <div className="overflow-x-auto">
+        {/* Mobile Card View (md:hidden) */}
+        <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
+          {filteredLeaves.length === 0 ? (
+            <div className="py-10 px-4 text-center text-slate-400 text-xs">
+              <CalendarDays className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2 opacity-60" />
+              Không tìm thấy đơn nghỉ phép nào.
+            </div>
+          ) : (
+            filteredLeaves.map((l, idx) => {
+              const currentStep = l.steps[l.currentStepIndex];
+              return (
+                <div
+                  key={`m-${l.id}-${idx}`}
+                  onClick={() => setSelectedLeave(l)}
+                  className="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/40 active:bg-slate-100 dark:active:bg-slate-800/70 transition-colors cursor-pointer space-y-2.5"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-mono font-bold text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-md border border-blue-200 dark:border-blue-800/60">
+                      {l.id}
+                    </span>
+                    <div>
+                      {l.status === 'pending' && (
+                        currentStep?.roleRequired === 'economic' ? (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                            Chờ cắt cơm
+                          </span>
+                        ) : (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                            Chờ duyệt
+                          </span>
+                        )
+                      )}
+                      {l.status === 'approved' && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                          Đã duyệt
+                        </span>
+                      )}
+                      {l.status === 'rejected' && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300">
+                          Từ chối
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="font-bold text-xs text-slate-900 dark:text-white flex items-center justify-between">
+                      <span>{l.employeeName}</span>
+                      <span className="text-[11px] text-blue-600 dark:text-blue-400 font-semibold">
+                        {LEAVE_TYPE_LABELS[l.leaveType]}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      {l.employeeId} &bull; {l.department}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[11px] bg-slate-50 dark:bg-slate-800/50 p-2 rounded-xl">
+                    <span className="text-slate-600 dark:text-slate-300 font-medium">
+                      📅 {formatDate(l.fromDate)} → {formatDate(l.toDate)}
+                    </span>
+                    <span className="font-bold text-slate-900 dark:text-white">
+                      {l.totalDays} ngày
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800/60 text-[11px]">
+                    <div className="flex items-center gap-1.5 min-w-0 flex-1 pr-2">
+                      <span className="text-slate-500 truncate">
+                        {l.status === 'approved' ? 'Hoàn tất phê duyệt' : l.status === 'rejected' ? 'Bị từ chối' : currentStep?.stepName || 'Đang xử lý'}
+                      </span>
+                      <div className="flex items-center gap-1 shrink-0">
+                        {l.steps.map((st, i) => (
+                          <div
+                            key={i}
+                            className={`w-3.5 h-1 rounded-full ${
+                              st.status === 'approved'
+                                ? 'bg-emerald-500'
+                                : st.status === 'rejected'
+                                ? 'bg-rose-500'
+                                : i === l.currentStepIndex
+                                ? 'bg-blue-600 animate-pulse'
+                                : 'bg-slate-200 dark:bg-slate-700'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <span className="text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-0.5 shrink-0">
+                      Chi tiết <ChevronRight className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        {/* Desktop Table View (hidden md:block) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-bold uppercase tracking-wider">
@@ -936,8 +1035,8 @@ export function LeaveView() {
 
       {/* MODAL: View Details & Approval Action */}
       {selectedLeave && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-5 my-8">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 sm:space-y-5 my-auto max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div>
                 <span className="text-[10px] font-mono font-bold text-blue-600 dark:text-blue-400 uppercase">

@@ -261,31 +261,31 @@ export function StormwaterModule({ onSuccessToast }: StormwaterModuleProps) {
             </button>
           </div>
 
-          {/* Checklist Table */}
-          <div className="overflow-x-auto border border-slate-200 rounded-xl">
-            <table className="w-full text-left text-xs border-collapse">
+          {/* Checklist Table with Horizontal Scroll */}
+          <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
+            <table className="w-full text-left text-xs border-collapse min-w-[850px]">
               <thead>
-                <tr className="bg-slate-100/80 text-slate-700 uppercase font-bold text-[11px] border-b border-slate-200">
-                  <th rowSpan={2} className="py-2.5 px-3 w-12 text-center border-r border-slate-200">
+                <tr className="bg-slate-100/80 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 uppercase font-bold text-[11px] border-b border-slate-200 dark:border-slate-800">
+                  <th rowSpan={2} className="py-2.5 px-3 w-12 text-center border-r border-slate-200 dark:border-slate-800">
                     STT
                   </th>
-                  <th rowSpan={2} className="py-2.5 px-3 border-r border-slate-200">
+                  <th rowSpan={2} className="py-2.5 px-3 border-r border-slate-200 dark:border-slate-800">
                     Vị trí / Nội dung kiểm tra
                   </th>
-                  <th colSpan={3} className="py-1.5 px-3 text-center border-r border-slate-200 bg-slate-50">
+                  <th colSpan={3} className="py-1.5 px-3 text-center border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40">
                     Kết quả kiểm tra
                   </th>
                   <th rowSpan={2} className="py-2.5 px-3 w-48">
                     Ghi chú
                   </th>
                 </tr>
-                <tr className="bg-slate-50 text-slate-600 text-[10px] font-bold uppercase border-b border-slate-200">
-                  <th className="py-1 px-2 w-16 text-center border-r border-slate-200 text-amber-700">Có</th>
-                  <th className="py-1 px-2 w-16 text-center border-r border-slate-200 text-emerald-700">Không</th>
-                  <th className="py-1 px-3 border-r border-slate-200">Mô tả chi tiết (nếu có)</th>
+                <tr className="bg-slate-50 dark:bg-slate-800/40 text-slate-600 dark:text-slate-400 text-[10px] font-bold uppercase border-b border-slate-200 dark:border-slate-800">
+                  <th className="py-1 px-2 w-16 text-center border-r border-slate-200 dark:border-slate-800 text-amber-700 dark:text-amber-400">Có</th>
+                  <th className="py-1 px-2 w-16 text-center border-r border-slate-200 dark:border-slate-800 text-emerald-700 dark:text-emerald-400">Không</th>
+                  <th className="py-1 px-3 border-r border-slate-200 dark:border-slate-800">Mô tả chi tiết (nếu có)</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {STORMWATER_QUESTIONS.map((q) => {
                   if (!isQuestionVisible(q)) return null;
 
@@ -297,25 +297,25 @@ export function StormwaterModule({ onSuccessToast }: StormwaterModuleProps) {
                   return (
                     <React.Fragment key={q.id}>
                       {isConclusion && (
-                        <tr className="bg-blue-50/60 font-bold text-blue-900 text-[11px] tracking-wide uppercase border-y border-blue-200">
+                        <tr className="bg-blue-50/60 dark:bg-blue-950/30 font-bold text-blue-900 dark:text-blue-300 text-[11px] tracking-wide uppercase border-y border-blue-200 dark:border-blue-900/40">
                           <td colSpan={6} className="py-2 px-3">
                             Kết Luận Đánh Giá
                           </td>
                         </tr>
                       )}
                       <tr
-                        className={`hover:bg-slate-50/60 transition-colors ${
-                          isConclusion ? 'bg-amber-50/30' : ''
+                        className={`hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors ${
+                          isConclusion ? 'bg-amber-50/30 dark:bg-amber-950/20' : ''
                         }`}
                       >
-                        <td className="py-3 px-3 text-center text-slate-400 font-bold border-r border-slate-100">
+                        <td className="py-3 px-3 text-center text-slate-400 font-bold border-r border-slate-100 dark:border-slate-800">
                           {q.id}
                         </td>
-                        <td className="py-3 px-3 font-semibold text-slate-800 border-r border-slate-100 whitespace-pre-line">
+                        <td className="py-3 px-3 font-semibold text-slate-800 dark:text-slate-200 border-r border-slate-100 dark:border-slate-800 whitespace-pre-line">
                           {q.text}
                         </td>
-                        <td className="py-3 px-2 text-center border-r border-slate-100">
-                          <label className="inline-flex items-center justify-center p-1.5 rounded-lg cursor-pointer hover:bg-amber-50">
+                        <td className="py-3 px-2 text-center border-r border-slate-100 dark:border-slate-800">
+                          <label className="inline-flex items-center justify-center p-1.5 rounded-lg cursor-pointer hover:bg-amber-50 dark:hover:bg-amber-950/40">
                             <input
                               type="radio"
                               name={`stormwater_q_${q.id}`}
@@ -325,8 +325,8 @@ export function StormwaterModule({ onSuccessToast }: StormwaterModuleProps) {
                             />
                           </label>
                         </td>
-                        <td className="py-3 px-2 text-center border-r border-slate-100">
-                          <label className="inline-flex items-center justify-center p-1.5 rounded-lg cursor-pointer hover:bg-emerald-50">
+                        <td className="py-3 px-2 text-center border-r border-slate-100 dark:border-slate-800">
+                          <label className="inline-flex items-center justify-center p-1.5 rounded-lg cursor-pointer hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
                             <input
                               type="radio"
                               name={`stormwater_q_${q.id}`}
@@ -336,13 +336,13 @@ export function StormwaterModule({ onSuccessToast }: StormwaterModuleProps) {
                             />
                           </label>
                         </td>
-                        <td className="py-2 px-3 border-r border-slate-100">
+                        <td className="py-2 px-3 border-r border-slate-100 dark:border-slate-800">
                           <input
                             type="text"
                             value={ans.chiTiet || ''}
                             onChange={(e) => handleAnswerChange(q.id, 'chiTiet', e.target.value)}
                             placeholder="Mô tả nếu có phát sinh..."
-                            className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-blue-500 bg-white"
+                            className="w-full text-xs px-2.5 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-blue-500 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200"
                           />
                         </td>
                         <td className="py-2 px-3">
@@ -351,7 +351,7 @@ export function StormwaterModule({ onSuccessToast }: StormwaterModuleProps) {
                             value={ans.ghiChu || ''}
                             onChange={(e) => handleAnswerChange(q.id, 'ghiChu', e.target.value)}
                             placeholder="Ghi chú (nếu có)..."
-                            className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-blue-500 bg-white"
+                            className="w-full text-xs px-2.5 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-blue-500 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200"
                           />
                         </td>
                       </tr>

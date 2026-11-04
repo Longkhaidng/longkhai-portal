@@ -540,9 +540,113 @@ export function UserManagementView() {
         </div>
       </div>
 
-      {/* Users Table */}
+      {/* Users List - Dual Responsive View */}
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
-        <div className="overflow-x-auto">
+        {/* Mobile Card View (md:hidden) */}
+        <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
+          {filteredUsers.length === 0 ? (
+            <div className="py-10 text-center text-slate-400 text-xs px-4">
+              Chưa có nhân viên nào phù hợp. Vui lòng nhấn "+ Thêm nhân viên mới" hoặc "Tải lên danh sách Excel".
+            </div>
+          ) : (
+            filteredUsers.map((u, index) => {
+              const isRoot = u.id === '2265' || u.id === 'ADMIN01';
+              const permCount = u.role === 'admin' ? CATEGORY_DEFINITIONS.length : u.permissions?.length || 0;
+
+              return (
+                <div
+                  key={`m-u-${u.id}`}
+                  className="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors space-y-2.5"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-bold text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-md border border-blue-200 dark:border-blue-800/60">
+                        {u.id}
+                      </span>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${ROLE_LABELS[u.role]?.badge || 'bg-slate-100 text-slate-700'}`}>
+                        {ROLE_LABELS[u.role]?.label || u.role}
+                      </span>
+                    </div>
+                    {u.isActive ? (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                        Hoạt động
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300">
+                        Tạm khóa
+                      </span>
+                    )}
+                  </div>
+
+                  <div>
+                    <div className="font-bold text-xs text-slate-900 dark:text-white">
+                      {u.name}
+                    </div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      {u.department} &bull; {u.position}
+                    </div>
+                    {u.email && (
+                      <div className="text-[10px] text-slate-400 mt-0.5 font-mono">
+                        {u.email}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-between text-[11px] bg-slate-50 dark:bg-slate-800/50 p-2 rounded-xl">
+                    <span className="text-slate-600 dark:text-slate-300 font-medium">
+                      Quyền: <strong className="text-slate-900 dark:text-white">{permCount}</strong> / {CATEGORY_DEFINITIONS.length} danh mục
+                    </span>
+                    <span className="text-indigo-600 dark:text-indigo-400 font-semibold text-[10px]">
+                      {u.role === 'admin' ? 'Toàn quyền' : `${u.allowedWebIntegrations?.length || 0} website con`}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800/60 gap-1.5 flex-wrap">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <button
+                        onClick={() => handleOpenEditUser(u)}
+                        className="px-2.5 py-1 bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 rounded-lg text-xs font-semibold border border-amber-200 dark:border-amber-800/60 inline-flex items-center gap-1"
+                      >
+                        <Pencil className="w-3 h-3" />
+                        <span>Sửa</span>
+                      </button>
+                      <button
+                        onClick={() => handleOpenPermissions(u)}
+                        className="px-2.5 py-1 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-semibold border border-blue-200 dark:border-blue-800/60 inline-flex items-center gap-1"
+                      >
+                        <ShieldCheck className="w-3 h-3" />
+                        <span>Quyền</span>
+                      </button>
+                      <button
+                        onClick={() => handleResetPassword(u)}
+                        className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700"
+                        title="Đặt lại mật khẩu"
+                      >
+                        <KeyRound className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    {!isRoot && (
+                      <button
+                        onClick={() => handleToggleStatus(u)}
+                        className={`text-[11px] font-semibold px-2 py-1 rounded-lg ${
+                          u.isActive
+                            ? 'text-rose-600 dark:text-rose-400 hover:bg-rose-50'
+                            : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50'
+                        }`}
+                      >
+                        {u.isActive ? 'Khóa' : 'Mở khóa'}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        {/* Desktop Table View (hidden md:block) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-bold uppercase tracking-wider">
@@ -683,8 +787,8 @@ export function UserManagementView() {
 
       {/* MODAL 1: ADD NEW EMPLOYEE MANUALLY */}
       {showAddUserModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-8">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-auto max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div>
                 <h3 className="font-bold text-base text-slate-900 dark:text-white">
@@ -990,8 +1094,8 @@ export function UserManagementView() {
 
       {/* MODAL 2: EXCEL UPLOAD AND PREVIEW */}
       {showUploadModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-8">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-auto max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div>
                 <h3 className="font-bold text-base text-slate-900 dark:text-white">
@@ -1213,8 +1317,8 @@ export function UserManagementView() {
 
       {/* MODAL 3: PERMISSION MATRIX BY CATEGORY & INTEGRATED WEBSITES */}
       {permissionTargetUser && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-8">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-auto max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div>
                 <span className="text-[10px] font-mono font-bold text-blue-600 uppercase">
@@ -1374,8 +1478,8 @@ export function UserManagementView() {
 
       {/* MODAL 4: EDIT EMPLOYEE INFO */}
       {editingUser && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-8">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-auto max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div>
                 <div className="flex items-center gap-2">
