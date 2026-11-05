@@ -124,24 +124,33 @@ function PortalAppContent() {
 
   const pendingOvertime = React.useMemo(() => {
     if (!currentUser) return 0;
-    const all = storage.getOvertimeRegistrations();
-    let count = 0;
-    all.forEach((reg) => {
-      reg.items.forEach((it) => {
-        if (it.employeeId === currentUser.id && it.employeeConfirmStatus === 'pending') {
-          count++;
-        } else if (
-          (currentUser.role === 'admin' ||
-            currentUser.role === 'manager' ||
-            currentUser.position?.toLowerCase().includes('trưởng') ||
-            currentUser.position?.toLowerCase().includes('phụ trách')) &&
-          it.approvalStatus === 'pending'
-        ) {
-          count++;
-        }
+    try {
+      const all = storage.getOvertimeRegistrations();
+      if (!Array.isArray(all)) return 0;
+      let count = 0;
+      all.forEach((reg) => {
+        if (!reg || !Array.isArray(reg.items)) return;
+        reg.items.forEach((it) => {
+          if (!it) return;
+          if (it.employeeId === currentUser.id && it.employeeConfirmStatus === 'pending') {
+            count++;
+          } else if (
+            (currentUser.role === 'admin' ||
+              currentUser.role === 'manager' ||
+              (Boolean(currentUser.position) && (
+                currentUser.position!.toLowerCase().includes('trưởng') ||
+                currentUser.position!.toLowerCase().includes('phụ trách')
+              ))) &&
+            it.approvalStatus === 'pending'
+          ) {
+            count++;
+          }
+        });
       });
-    });
-    return count;
+      return count;
+    } catch {
+      return 0;
+    }
   }, [currentUser]);
 
   const pendingRepairs = userRepairs.filter((r) => {
@@ -317,6 +326,8 @@ function PortalAppContent() {
         }} />;
       case 'departments':
         return <DepartmentManagementView />;
+      case 'overtime':
+        return <OvertimeView />;
       case 'leave':
         return <LeaveView />;
       case 'attendance':

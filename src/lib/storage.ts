@@ -1910,10 +1910,13 @@ class StorageService {
     try {
       const data = localStorage.getItem(STORAGE_KEYS.OVERTIME_REGISTRATIONS);
       if (data) {
-        return JSON.parse(data);
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed)) return parsed;
       }
     } catch {}
-    localStorage.setItem(STORAGE_KEYS.OVERTIME_REGISTRATIONS, JSON.stringify(INITIAL_OVERTIME_REGISTRATIONS));
+    try {
+      localStorage.setItem(STORAGE_KEYS.OVERTIME_REGISTRATIONS, JSON.stringify(INITIAL_OVERTIME_REGISTRATIONS));
+    } catch {}
     return INITIAL_OVERTIME_REGISTRATIONS;
   }
 
@@ -2042,10 +2045,13 @@ class StorageService {
     try {
       const data = localStorage.getItem(STORAGE_KEYS.OVERTIME_MEAL_MENUS);
       if (data) {
-        return JSON.parse(data);
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed)) return parsed;
       }
     } catch {}
-    localStorage.setItem(STORAGE_KEYS.OVERTIME_MEAL_MENUS, JSON.stringify(INITIAL_OVERTIME_MENUS));
+    try {
+      localStorage.setItem(STORAGE_KEYS.OVERTIME_MEAL_MENUS, JSON.stringify(INITIAL_OVERTIME_MENUS));
+    } catch {}
     return INITIAL_OVERTIME_MENUS;
   }
 

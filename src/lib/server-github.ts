@@ -18,10 +18,10 @@ export function resolveServerGitHubConfig(): GitHubConfig {
     }
   } catch {}
 
-  const owner = process.env.GITHUB_OWNER || fileConfig.owner || '';
-  const repo = process.env.GITHUB_REPO || fileConfig.repo || '';
-  const branch = process.env.GITHUB_BRANCH || fileConfig.branch || 'main';
-  const token = process.env.GITHUB_TOKEN || fileConfig.token || '';
+  const owner = process.env.GITHUB_OWNER || process.env.NEXT_PUBLIC_GITHUB_OWNER || fileConfig.owner || 'Longkhaidng';
+  const repo = process.env.GITHUB_REPO || process.env.NEXT_PUBLIC_GITHUB_REPO || fileConfig.repo || 'longkhai-portal';
+  const branch = process.env.GITHUB_BRANCH || process.env.NEXT_PUBLIC_GITHUB_BRANCH || fileConfig.branch || 'main';
+  const token = process.env.GITHUB_TOKEN || process.env.NEXT_PUBLIC_GITHUB_TOKEN || fileConfig.token || '';
   const basePath = process.env.GITHUB_BASE_PATH || fileConfig.basePath || 'company-data';
 
   return {

@@ -139,6 +139,14 @@ export function Sidebar({
       badgeColor: 'bg-emerald-500 text-white',
     },
     {
+      id: 'overtime',
+      permission: 'overtime',
+      label: 'Đăng ký làm thêm giờ',
+      icon: Timer,
+      badgeCount: pendingCounts.overtime,
+      badgeColor: 'bg-amber-500 text-white',
+    },
+    {
       id: 'proposals',
       permission: 'repair', // keeps backward compatibility for all users who had 'repair' permission
       label: 'Phiếu đề xuất',
