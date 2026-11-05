@@ -367,10 +367,10 @@
       "mealOption": "Suất ăn nhà máy theo ca",
       "employeeConfirmStatus": "confirmed",
       "approvalStatus": "pending",
-      "employeeConfirmHours": 2,
-      "employeeConfirmTime": "16:30 - 18:30",
-      "employeeConfirmNote": "Người lao động đã xác nhận đồng ý",
-      "employeeConfirmedAt": "2026-11-05T08:32:12.211Z"
+      "employeeConfirmHours": 3.5,
+      "employeeConfirmTime": "16:30 - 20:00",
+      "employeeConfirmNote": "bắt buộc phải tăng ca 3,5h do không đủ người",
+      "employeeConfirmedAt": "2026-11-05T08:33:01.979Z"
     },
     {
       "id": "OT-ITEM-1793867364219-wol53",
@@ -432,5 +432,5 @@
   ],
   "status": "pending",
   "createdAt": "2026-11-05T08:29:54.429Z",
-  "updatedAt": "2026-11-05T08:32:12.211Z"
+  "updatedAt": "2026-11-05T08:33:01.979Z"
 }
