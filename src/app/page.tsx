@@ -122,18 +122,16 @@ function PortalAppContent() {
   const pendingAtts = userAtts.filter((a) => a.status === 'pending').length;
   const activeGps = userGps.filter((g) => g.status === 'approved' || g.status === 'departed').length;
 
-  const pendingOvertime = React.useMemo(() => {
-    if (!currentUser) return 0;
-    try {
-      const all = storage.getOvertimeRegistrations();
-      if (!Array.isArray(all)) return 0;
-      let count = 0;
+  let pendingOvertime = 0;
+  try {
+    const all = storage.getOvertimeRegistrations();
+    if (Array.isArray(all)) {
       all.forEach((reg) => {
         if (!reg || !Array.isArray(reg.items)) return;
         reg.items.forEach((it) => {
           if (!it) return;
           if (it.employeeId === currentUser.id && it.employeeConfirmStatus === 'pending') {
-            count++;
+            pendingOvertime++;
           } else if (
             (currentUser.role === 'admin' ||
               currentUser.role === 'manager' ||
@@ -143,15 +141,12 @@ function PortalAppContent() {
               ))) &&
             it.approvalStatus === 'pending'
           ) {
-            count++;
+            pendingOvertime++;
           }
         });
       });
-      return count;
-    } catch {
-      return 0;
     }
-  }, [currentUser]);
+  } catch {}
 
   const pendingRepairs = userRepairs.filter((r) => {
     if (currentUser?.role === 'manager' || currentUser?.role === 'team_leader') return r.status === 'pending_manager';
