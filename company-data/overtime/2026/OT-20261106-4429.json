@@ -365,8 +365,12 @@
       "fromTime": "16:30",
       "toTime": "20:00",
       "mealOption": "Suất ăn nhà máy theo ca",
-      "employeeConfirmStatus": "pending",
-      "approvalStatus": "pending"
+      "employeeConfirmStatus": "confirmed",
+      "approvalStatus": "pending",
+      "employeeConfirmHours": 2,
+      "employeeConfirmTime": "16:30 - 18:30",
+      "employeeConfirmNote": "Người lao động đã xác nhận đồng ý",
+      "employeeConfirmedAt": "2026-11-05T08:31:08.300Z"
     },
     {
       "id": "OT-ITEM-1793867364219-wol53",
@@ -428,5 +432,5 @@
   ],
   "status": "pending",
   "createdAt": "2026-11-05T08:29:54.429Z",
-  "updatedAt": "2026-11-05T08:29:54.429Z"
+  "updatedAt": "2026-11-05T08:31:08.300Z"
 }
