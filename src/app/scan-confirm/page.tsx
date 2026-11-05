@@ -24,7 +24,7 @@ import {
 import { formatDate } from '@/lib/utils';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
 
-export const SECURITY_GUARDS = [
+const SECURITY_GUARDS = [
   'Lương Văn Vĩnh',
   'Nguyễn Hữu Lập',
   'Lê Văn Ân',

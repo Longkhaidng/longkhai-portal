@@ -35,6 +35,8 @@ import {
   INITIAL_ANNOUNCEMENTS,
   INITIAL_DYNAMIC_FORMS,
 } from './initial-data';
+import { OvertimeRegistration, OvertimeMealMenu, OvertimeItem, OvertimeApprovalStatus, OvertimeConfirmStatus } from '@/types/overtime';
+import { INITIAL_OVERTIME_MENUS, INITIAL_OVERTIME_REGISTRATIONS } from './overtime-data';
 import { GitHubService } from './github-api';
 import { formatDocId, sortNewestFirst } from './utils';
 
@@ -63,6 +65,8 @@ const STORAGE_KEYS = {
   PLUGINS: 'lk_portal_plugins',
   GITHUB_CONFIG: 'lk_portal_github_config',
   EMAIL_CONFIG: 'lk_portal_email_config',
+  OVERTIME_REGISTRATIONS: 'lk_portal_overtime_registrations',
+  OVERTIME_MEAL_MENUS: 'lk_portal_overtime_meal_menus',
   AUDIT_LOGS: 'lk_portal_audit_logs',
   CURRENT_USER_SESSION: 'lk_portal_current_user_session',
   LAST_BACKUP_DATE: 'lk_portal_last_backup_date',
@@ -1899,6 +1903,200 @@ class StorageService {
       }),
     }).catch(() => {});
   }
+
+  // --- OVERTIME REGISTRATIONS ---
+  getOvertimeRegistrations(): OvertimeRegistration[] {
+    if (!this.isClient()) return INITIAL_OVERTIME_REGISTRATIONS;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.OVERTIME_REGISTRATIONS);
+      if (data) {
+        return JSON.parse(data);
+      }
+    } catch {}
+    localStorage.setItem(STORAGE_KEYS.OVERTIME_REGISTRATIONS, JSON.stringify(INITIAL_OVERTIME_REGISTRATIONS));
+    return INITIAL_OVERTIME_REGISTRATIONS;
+  }
+
+  saveOvertimeRegistration(registration: OvertimeRegistration, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getOvertimeRegistrations();
+    const existingIndex = list.findIndex((r) => r.id === registration.id);
+    const isNew = existingIndex < 0;
+
+    if (isNew) {
+      list.unshift(registration);
+    } else {
+      list[existingIndex] = registration;
+    }
+    localStorage.setItem(STORAGE_KEYS.OVERTIME_REGISTRATIONS, JSON.stringify(list));
+
+    this.addAuditLog(
+      isNew ? 'create' : 'update',
+      'overtime',
+      registration.id,
+      byUser?.id || registration.createdById,
+      byUser?.name || registration.createdByName,
+      `${isNew ? 'Tạo' : 'Cập nhật'} đơn đăng ký làm thêm giờ ${registration.id} (${registration.items.length} người) - Ngày ${registration.registrationDate}`
+    );
+
+    const year = new Date().getFullYear();
+    this.syncFileToGitHub(
+      `overtime/${year}/${registration.id}.json`,
+      JSON.stringify(registration, null, 2),
+      `Save Overtime Registration ${registration.id}`
+    );
+
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'overtime_registration',
+        data: registration,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
+  }
+
+  deleteOvertimeRegistration(id: string, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getOvertimeRegistrations().filter((r) => r.id !== id);
+    localStorage.setItem(STORAGE_KEYS.OVERTIME_REGISTRATIONS, JSON.stringify(list));
+
+    this.addAuditLog(
+      'delete',
+      'overtime',
+      id,
+      byUser?.id || 'admin',
+      byUser?.name || 'Quản trị viên',
+      `Xóa đơn đăng ký làm thêm giờ ${id}`
+    );
+  }
+
+  updateOvertimeItemConfirm(
+    registrationId: string,
+    itemId: string,
+    confirmData: {
+      confirmHours?: number;
+      confirmTime?: string;
+      status: OvertimeConfirmStatus;
+      note?: string;
+    },
+    byUser?: { id: string; name: string }
+  ): void {
+    if (!this.isClient()) return;
+    const list = this.getOvertimeRegistrations();
+    const reg = list.find((r) => r.id === registrationId);
+    if (!reg) return;
+
+    const item = reg.items.find((it) => it.id === itemId);
+    if (!item) return;
+
+    if (confirmData.confirmHours !== undefined) item.employeeConfirmHours = confirmData.confirmHours;
+    if (confirmData.confirmTime !== undefined) item.employeeConfirmTime = confirmData.confirmTime;
+    item.employeeConfirmStatus = confirmData.status;
+    if (confirmData.note !== undefined) item.employeeConfirmNote = confirmData.note;
+    item.employeeConfirmedAt = new Date().toISOString();
+    reg.updatedAt = new Date().toISOString();
+
+    this.saveOvertimeRegistration(reg, byUser);
+  }
+
+  updateOvertimeItemApproval(
+    registrationId: string,
+    itemId: string,
+    approvalStatus: OvertimeApprovalStatus,
+    note?: string,
+    byUser?: { id: string; name: string }
+  ): void {
+    if (!this.isClient()) return;
+    const list = this.getOvertimeRegistrations();
+    const reg = list.find((r) => r.id === registrationId);
+    if (!reg) return;
+
+    const item = reg.items.find((it) => it.id === itemId);
+    if (!item) return;
+
+    item.approvalStatus = approvalStatus;
+    item.approvedBy = byUser?.id;
+    item.approvedByName = byUser?.name;
+    item.approvedAt = new Date().toISOString();
+    if (note) item.approvalNote = note;
+
+    const allApproved = reg.items.every((it) => it.approvalStatus === 'approved');
+    const anyRejected = reg.items.some((it) => it.approvalStatus === 'rejected');
+    if (allApproved) {
+      reg.status = 'approved';
+    } else if (anyRejected && reg.items.every((it) => it.approvalStatus !== 'pending')) {
+      reg.status = 'rejected';
+    } else {
+      reg.status = 'pending';
+    }
+    reg.updatedAt = new Date().toISOString();
+
+    this.saveOvertimeRegistration(reg, byUser);
+  }
+
+  // --- OVERTIME MEAL MENUS ---
+  getOvertimeMealMenus(): OvertimeMealMenu[] {
+    if (!this.isClient()) return INITIAL_OVERTIME_MENUS;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.OVERTIME_MEAL_MENUS);
+      if (data) {
+        return JSON.parse(data);
+      }
+    } catch {}
+    localStorage.setItem(STORAGE_KEYS.OVERTIME_MEAL_MENUS, JSON.stringify(INITIAL_OVERTIME_MENUS));
+    return INITIAL_OVERTIME_MENUS;
+  }
+
+  saveOvertimeMealMenu(menu: OvertimeMealMenu, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getOvertimeMealMenus();
+    const existingIndex = list.findIndex((m) => m.id === menu.id);
+    const isNew = existingIndex < 0;
+
+    if (isNew) {
+      list.unshift(menu);
+    } else {
+      list[existingIndex] = menu;
+    }
+    localStorage.setItem(STORAGE_KEYS.OVERTIME_MEAL_MENUS, JSON.stringify(list));
+
+    this.addAuditLog(
+      isNew ? 'create' : 'update',
+      'overtime',
+      menu.id,
+      byUser?.id || 'admin',
+      byUser?.name || 'HCNS',
+      `${isNew ? 'Thêm' : 'Cập nhật'} món ăn thực đơn tăng ca: ${menu.dishName} - Ngày ${menu.date}`
+    );
+
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'overtime_meal_menu',
+        data: menu,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
+  }
+
+  deleteOvertimeMealMenu(id: string, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getOvertimeMealMenus().filter((m) => m.id !== id);
+    localStorage.setItem(STORAGE_KEYS.OVERTIME_MEAL_MENUS, JSON.stringify(list));
+
+    this.addAuditLog(
+      'delete',
+      'overtime',
+      id,
+      byUser?.id || 'admin',
+      byUser?.name || 'HCNS',
+      `Xóa món ăn thực đơn tăng ca ${id}`
+    );
+  }
+
 }
 
 export const storage = new StorageService();

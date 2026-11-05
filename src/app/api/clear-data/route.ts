@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { resolveServerGitHubConfig } from '@/app/api/github-config/route';
+import { resolveServerGitHubConfig } from '@/lib/server-github';
 import { GitHubService } from '@/lib/github-api';
 
 const BASE_DIR = path.join(process.cwd(), 'company-data');

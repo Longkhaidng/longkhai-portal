@@ -6,6 +6,7 @@ import { CategoryPermission, WebIntegration } from '@/types/user';
 import { storage } from '@/lib/storage';
 import {
   LayoutDashboard,
+  Timer,
   Building2,
   CalendarDays,
   Clock,
@@ -65,6 +66,7 @@ interface SidebarProps {
   pendingCounts?: {
     leave?: number;
     attendance?: number;
+    overtime?: number;
     gatePassActive?: number;
     repair?: number;
     proposals?: number;

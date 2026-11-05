@@ -1,3 +1,4 @@
+import { resolveServerGitHubConfig } from '@/lib/server-github';
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
@@ -6,32 +7,7 @@ import { GitHubConfig } from '@/types/github';
 const CONFIG_PATH = path.join(process.cwd(), 'company-data', 'settings', 'github-config.json');
 const TMP_CONFIG_PATH = path.join('/tmp', 'github-config.json');
 
-export function resolveServerGitHubConfig(): GitHubConfig {
-  const envConfig: GitHubConfig = {
-    owner: process.env.GITHUB_OWNER || process.env.NEXT_PUBLIC_GITHUB_OWNER || 'Longkhaidng',
-    repo: process.env.GITHUB_REPO || process.env.NEXT_PUBLIC_GITHUB_REPO || 'longkhai-portal',
-    branch: process.env.GITHUB_BRANCH || process.env.NEXT_PUBLIC_GITHUB_BRANCH || 'main',
-    token: process.env.GITHUB_TOKEN || process.env.NEXT_PUBLIC_GITHUB_TOKEN || '',
-    basePath: 'company-data',
-  };
 
-  try {
-    const targetPath = fs.existsSync(TMP_CONFIG_PATH) ? TMP_CONFIG_PATH : CONFIG_PATH;
-    if (fs.existsSync(targetPath)) {
-      const fileData = fs.readFileSync(targetPath, 'utf-8');
-      const parsed = JSON.parse(fileData);
-      return {
-        ...envConfig,
-        ...parsed,
-        token: parsed.token || envConfig.token,
-      };
-    }
-  } catch (err: any) {
-    console.warn('Lỗi đọc github-config trên server:', err.message);
-  }
-
-  return envConfig;
-}
 
 export async function GET() {
   const config = resolveServerGitHubConfig();

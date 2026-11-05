@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { resolveServerGitHubConfig } from '@/app/api/github-config/route';
+import { resolveServerGitHubConfig } from '@/lib/server-github';
 import { GitHubService } from '@/lib/github-api';
 
 const BASE_DIR = path.join(process.cwd(), 'company-data');
@@ -91,6 +91,8 @@ export async function GET() {
     const periodicEyewash = scanJsonFiles<any>('periodic-inspections/eyewash');
     const periodicStormwater = scanJsonFiles<any>('periodic-inspections/stormwater');
     const periodicGroundwaterSoil = scanJsonFiles<any>('periodic-inspections/groundwater-soil');
+    const overtimeRegistrations = scanJsonFiles<any>('overtime');
+    const overtimeMealMenus = readJsonFile<any[]>('settings/overtime_meal_menus.json', []);
 
     return NextResponse.json({
       success: true,
@@ -156,7 +158,9 @@ export async function POST(req: NextRequest) {
         | 'periodic_first_aid_standards'
         | 'periodic_eyewash'
         | 'periodic_stormwater'
-        | 'periodic_groundwater_soil';
+        | 'periodic_groundwater_soil'
+        | 'overtime_registration'
+        | 'overtime_meal_menu';
       data: any;
       githubToken?: string;
     };
@@ -225,6 +229,13 @@ export async function POST(req: NextRequest) {
       const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
       relFilePath = `periodic-inspections/stormwater/${year}/${data.id}.json`;
       commitMessage = `Update Stormwater Inspection ${data.id}`;
+    } else if (type === 'overtime_registration') {
+      const year = data.registrationDate ? new Date(data.registrationDate).getFullYear() : new Date().getFullYear();
+      relFilePath = `overtime/${year}/${data.id}.json`;
+      commitMessage = `Update Overtime Registration ${data.id} (${data.status})`;
+    } else if (type === 'overtime_meal_menu') {
+      relFilePath = 'settings/overtime_meal_menus.json';
+      commitMessage = 'Update Overtime Meal Menu';
     } else if (type === 'periodic_groundwater_soil') {
       const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
       relFilePath = `periodic-inspections/groundwater-soil/${year}/${data.id}.json`;

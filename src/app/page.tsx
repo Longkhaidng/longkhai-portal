@@ -10,6 +10,7 @@ import { DepartmentManagementView } from '@/components/departments/DepartmentMan
 import { LeaveView } from '@/components/leave/LeaveView';
 import { AttendanceView } from '@/components/attendance/AttendanceView';
 import { GatePassView } from '@/components/gatepass/GatePassView';
+import { OvertimeView } from '@/components/overtime/OvertimeView';
 import { ProposalHubView } from '@/components/proposals/ProposalHubView';
 import { PCCCInspectionView } from '@/components/pccc/PCCCInspectionView';
 import { PeriodicInspectionView } from '@/components/periodic-inspection/PeriodicInspectionView';
@@ -120,6 +121,28 @@ function PortalAppContent() {
   const pendingLeaves = userLeaves.filter((l) => l.status === 'pending').length;
   const pendingAtts = userAtts.filter((a) => a.status === 'pending').length;
   const activeGps = userGps.filter((g) => g.status === 'approved' || g.status === 'departed').length;
+
+  const pendingOvertime = React.useMemo(() => {
+    if (!currentUser) return 0;
+    const all = storage.getOvertimeRegistrations();
+    let count = 0;
+    all.forEach((reg) => {
+      reg.items.forEach((it) => {
+        if (it.employeeId === currentUser.id && it.employeeConfirmStatus === 'pending') {
+          count++;
+        } else if (
+          (currentUser.role === 'admin' ||
+            currentUser.role === 'manager' ||
+            currentUser.position?.toLowerCase().includes('trưởng') ||
+            currentUser.position?.toLowerCase().includes('phụ trách')) &&
+          it.approvalStatus === 'pending'
+        ) {
+          count++;
+        }
+      });
+    });
+    return count;
+  }, [currentUser]);
 
   const pendingRepairs = userRepairs.filter((r) => {
     if (currentUser?.role === 'manager' || currentUser?.role === 'team_leader') return r.status === 'pending_manager';
@@ -398,6 +421,7 @@ function PortalAppContent() {
         pendingCounts={{
           leave: pendingLeaves,
           attendance: pendingAtts,
+          overtime: pendingOvertime,
           gatePassActive: activeGps,
           repair: totalPendingProposals,
           proposals: totalPendingProposals,
