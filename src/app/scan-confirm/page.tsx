@@ -423,15 +423,15 @@ function ScanConfirmContent() {
 
                       <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/60">
                         <div>
-                          <span className="text-slate-400 text-[11px] block">Ngày mang vào:</span>
+                          <span className="text-slate-400 text-[11px] block">{docData.toDate ? 'Thời gian mang vào:' : 'Ngày mang vào:'}</span>
                           <span className="font-bold text-white">
-                            {formatDate(docData.entryDate)}
+                            {docData.toDate && docData.toDate !== docData.entryDate ? `${formatDate(docData.entryDate)} → ${formatDate(docData.toDate)}` : formatDate(docData.entryDate)}
                           </span>
                         </div>
                         <div>
                           <span className="text-slate-400 text-[11px] block">Ca làm việc:</span>
                           <span className="font-semibold text-amber-300">
-                            {docData.shift || 'Ca làm việc tiêu chuẩn'}
+                            {docData.shift || (docData.toDate ? 'Theo đợt' : 'Ca làm việc tiêu chuẩn')}
                           </span>
                         </div>
                       </div>
@@ -445,8 +445,8 @@ function ScanConfirmContent() {
                         </div>
                       )}
 
-                      <div className="pt-2 border-t border-slate-800/60">
-                        <span className="text-slate-400 text-[11px] block mb-1">Món ăn & Tình trạng bảo quản:</span>
+                      <div className={`pt-2 border-t border-slate-800/60 ${docData.category === 'medicine_drink' ? 'hidden' : ''}`}>
+                        <span className="text-slate-400 text-[11px] block mb-1">Chi tiết món ăn:</span>
                         <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-xs font-medium whitespace-pre-wrap leading-relaxed">
                           {docData.foodDetails || 'Không có mô tả chi tiết'}
                         </div>

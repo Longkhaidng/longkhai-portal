@@ -2218,7 +2218,7 @@ export function ReportsView() {
                     <th className="p-2 border whitespace-nowrap">Ngày mang vào</th>
                     <th className="p-2 border whitespace-nowrap">Ca làm việc</th>
                     <th className="p-2 border whitespace-nowrap">Phân loại</th>
-                    <th className="p-2 border min-w-[200px] text-left">Chi tiết món ăn &amp; Bảo quản</th>
+                    <th className="p-2 border min-w-[200px] text-left">Chi tiết món ăn</th>
                     <th className="p-2 border whitespace-nowrap">Cam kết ATVSTP</th>
                     <th className="p-2 border whitespace-nowrap">Trạng thái</th>
                     <th className="p-2 border whitespace-nowrap text-left">Bảo vệ xác nhận</th>
@@ -2245,10 +2245,10 @@ export function ReportsView() {
                         </td>
                         <td className="p-2 border text-slate-700 dark:text-slate-300 whitespace-nowrap">{f.department}</td>
                         <td className="p-2 border whitespace-nowrap text-center font-medium">
-                          {formatDate(f.entryDate)}
+                          {f.toDate && f.toDate !== f.entryDate ? `${formatDate(f.entryDate)} → ${formatDate(f.toDate)}` : formatDate(f.entryDate)}
                         </td>
                         <td className="p-2 border whitespace-nowrap text-center text-slate-600">
-                          <div>{f.shift}</div>
+                          <div>{f.shift || (f.toDate ? 'Theo đợt' : '-')}</div>
                           {f.timeFrame && <div className="text-[10px] text-slate-400">({f.timeFrame})</div>}
                         </td>
                         <td className="p-2 border whitespace-nowrap text-center">

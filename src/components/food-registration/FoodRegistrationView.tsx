@@ -12,7 +12,8 @@ import {
   FOOD_STATUS_LABELS,
   FOOD_STATUS_BADGES,
   FOOD_ENTRY_SHIFTS,
-  QUICK_STORAGE_TAGS,
+  PREGNANT_FOOD_OPTIONS,
+  VEGETARIAN_FOOD_OPTIONS,
 } from '@/types/food-registration';
 import { FoodQrModal } from './FoodQrModal';
 import { getQrConfirmUrl, generateQrDataUrl } from '@/lib/qr';
@@ -35,14 +36,8 @@ import {
   CheckSquare,
   Square,
   Ban,
-  Trash2,
   Send,
   Loader2,
-  ExternalLink,
-  ChevronRight,
-  Info,
-  History,
-  Sparkles,
 } from 'lucide-react';
 
 export function FoodRegistrationView() {
@@ -56,11 +51,16 @@ export function FoodRegistrationView() {
   const [employeeName, setEmployeeName] = useState<string>('');
   const [department, setDepartment] = useState<string>('');
   const [entryDate, setEntryDate] = useState<string>(new Date().toISOString().slice(0, 10));
+  const [toDate, setToDate] = useState<string>(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 5);
+    return d.toISOString().slice(0, 10);
+  });
   const [shift, setShift] = useState<string>(FOOD_ENTRY_SHIFTS[0]);
-  const [timeFrame, setTimeFrame] = useState<string>('07:30 - 07:55 (Đầu ca)');
   const [category, setCategory] = useState<FoodCategory>('pregnant');
   const [customCategory, setCustomCategory] = useState<string>('');
-  const [foodDetails, setFoodDetails] = useState<string>('');
+  const [foodDetails, setFoodDetails] = useState<string>(PREGNANT_FOOD_OPTIONS[0]);
+  const [customFoodDetails, setCustomFoodDetails] = useState<string>('');
   const [complianceCommitment, setComplianceCommitment] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -84,6 +84,8 @@ export function FoodRegistrationView() {
     currentUser?.role === 'admin' ||
     currentUser?.role === 'hr' ||
     currentUser?.role === 'manager';
+
+  const isDateRange = category === 'pregnant' || category === 'medicine_drink';
 
   // Load Initial Data
   const loadData = () => {
@@ -123,13 +125,20 @@ export function FoodRegistrationView() {
     }, 4500);
   };
 
-  // Quick Append Tag to Food Details
-  const handleAddTag = (tag: string) => {
-    setFoodDetails((prev) => {
-      if (!prev) return tag;
-      if (prev.includes(tag)) return prev;
-      return `${prev}, ${tag}`;
-    });
+  // Switch Food Category
+  const handleCategoryChange = (newCat: FoodCategory) => {
+    setCategory(newCat);
+    if (newCat === 'pregnant') {
+      setFoodDetails(PREGNANT_FOOD_OPTIONS[0]);
+    } else if (newCat === 'vegetarian') {
+      setFoodDetails(VEGETARIAN_FOOD_OPTIONS[0]);
+      setCustomFoodDetails('');
+    } else if (newCat === 'medicine_drink') {
+      setFoodDetails('Nước thuốc');
+    } else if (newCat === 'other') {
+      setFoodDetails('');
+      setCustomCategory('');
+    }
   };
 
   // Submit Registration
@@ -148,18 +157,59 @@ export function FoodRegistrationView() {
       showToast('Vui lòng nhập Bộ phận / Phân xưởng / Chuyền sản xuất.', 'error');
       return;
     }
-    if (!entryDate) {
-      showToast('Vui lòng chọn ngày mang thực phẩm vào.', 'error');
-      return;
+
+    // Date validations
+    if (isDateRange) {
+      if (!entryDate) {
+        showToast('Vui lòng chọn ngày bắt đầu ("Từ ngày").', 'error');
+        return;
+      }
+      if (!toDate) {
+        showToast('Vui lòng chọn ngày kết thúc ("Đến ngày").', 'error');
+        return;
+      }
+      if (toDate < entryDate) {
+        showToast('Ngày kết thúc ("Đến ngày") phải sau hoặc bằng ngày bắt đầu ("Từ ngày").', 'error');
+        return;
+      }
+    } else {
+      if (!entryDate) {
+        showToast('Vui lòng chọn ngày mang thực phẩm vào.', 'error');
+        return;
+      }
+      if (!shift) {
+        showToast('Vui lòng chọn ca làm việc.', 'error');
+        return;
+      }
     }
-    if (category === 'other' && !customCategory.trim()) {
-      showToast('Vui lòng ghi rõ tên loại thực phẩm khi chọn "Khác".', 'error');
-      return;
+
+    // Food details resolution
+    let resolvedFoodDetails = foodDetails.trim();
+    if (category === 'pregnant') {
+      if (!resolvedFoodDetails) resolvedFoodDetails = PREGNANT_FOOD_OPTIONS[0];
+    } else if (category === 'medicine_drink') {
+      resolvedFoodDetails = 'Nước thuốc';
+    } else if (category === 'vegetarian') {
+      if (foodDetails === 'Khác') {
+        if (!customFoodDetails.trim()) {
+          showToast('Vui lòng nhập chi tiết món chay của bạn.', 'error');
+          return;
+        }
+        resolvedFoodDetails = customFoodDetails.trim();
+      } else {
+        resolvedFoodDetails = foodDetails || VEGETARIAN_FOOD_OPTIONS[0];
+      }
+    } else if (category === 'other') {
+      if (!customCategory.trim()) {
+        showToast('Vui lòng ghi rõ phân loại thực phẩm khi chọn "Khác".', 'error');
+        return;
+      }
+      if (!resolvedFoodDetails) {
+        showToast('Vui lòng nhập chi tiết món ăn mang vào.', 'error');
+        return;
+      }
     }
-    if (!foodDetails.trim()) {
-      showToast('Vui lòng mô tả chi tiết món ăn / tình trạng bảo quản.', 'error');
-      return;
-    }
+
     if (!complianceCommitment) {
       showToast('Bạn phải tích chọn cam kết tuân thủ an toàn vệ sinh thực phẩm.', 'error');
       return;
@@ -180,11 +230,12 @@ export function FoodRegistrationView() {
         employeeName: employeeName.trim(),
         department: department.trim(),
         entryDate,
-        shift,
-        timeFrame: timeFrame.trim() || undefined,
+        toDate: isDateRange ? toDate : undefined,
+        shift: isDateRange ? undefined : shift,
         category,
         customCategory: category === 'other' ? customCategory.trim() : undefined,
-        foodDetails: foodDetails.trim(),
+        foodDetails: resolvedFoodDetails,
+        customFoodDetails: category === 'vegetarian' && foodDetails === 'Khác' ? customFoodDetails.trim() : undefined,
         complianceCommitment: true,
         status: 'pending',
         qrCodeUrl: qrUrl,
@@ -202,9 +253,18 @@ export function FoodRegistrationView() {
       const updatedList = storage.getFoodRegistrations();
       setRegistrations(updatedList);
 
-      // Reset form fields (retain employee info)
-      setFoodDetails('');
-      setCustomCategory('');
+      // Reset form fields
+      if (category === 'pregnant') {
+        setFoodDetails(PREGNANT_FOOD_OPTIONS[0]);
+      } else if (category === 'vegetarian') {
+        setFoodDetails(VEGETARIAN_FOOD_OPTIONS[0]);
+        setCustomFoodDetails('');
+      } else if (category === 'medicine_drink') {
+        setFoodDetails('Nước thuốc');
+      } else {
+        setFoodDetails('');
+        setCustomCategory('');
+      }
       setComplianceCommitment(false);
 
       showToast(`Đăng ký thành công! Mã phiếu của bạn là: ${newId}`);
@@ -377,7 +437,7 @@ export function FoodRegistrationView() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Employee ID & Name */}
+            {/* 1. Employee ID & Name */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
@@ -411,7 +471,7 @@ export function FoodRegistrationView() {
               </div>
             </div>
 
-            {/* Department / Workshop / Line */}
+            {/* 2. Department / Workshop / Line */}
             <div>
               <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                 Bộ phận / Phân xưởng / Chuyền sản xuất *
@@ -429,59 +489,7 @@ export function FoodRegistrationView() {
               </div>
             </div>
 
-            {/* Date & Shift */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                  Ngày mang vào *
-                </label>
-                <div className="relative">
-                  <input
-                    type="date"
-                    required
-                    value={entryDate}
-                    onChange={(e) => setEntryDate(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                  Ca làm việc *
-                </label>
-                <select
-                  value={shift}
-                  onChange={(e) => setShift(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
-                >
-                  {FOOD_ENTRY_SHIFTS.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Time Frame */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                Khung giờ mang vào qua cổng
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={timeFrame}
-                  onChange={(e) => setTimeFrame(e.target.value)}
-                  placeholder="Ví dụ: 07:30 - 07:50, Đầu ca 1..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-                <Clock className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
-              </div>
-            </div>
-
-            {/* Food Category Selection (Pills / Radio) */}
+            {/* 3. Food Category Selection (Pills / Radio) */}
             <div>
               <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
                 Phân loại thực phẩm *
@@ -493,7 +501,7 @@ export function FoodRegistrationView() {
                     <button
                       key={cat}
                       type="button"
-                      onClick={() => setCategory(cat)}
+                      onClick={() => handleCategoryChange(cat)}
                       className={`p-2.5 rounded-xl border text-left flex items-center gap-2 transition-all cursor-pointer ${
                         isSelected
                           ? 'bg-emerald-50 dark:bg-emerald-950/50 border-emerald-500 text-emerald-900 dark:text-emerald-300 font-bold shadow-xs'
@@ -521,39 +529,147 @@ export function FoodRegistrationView() {
               )}
             </div>
 
-            {/* Food Details & Preservation */}
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                  Chi tiết món ăn / Tình trạng bảo quản *
+            {/* 4. Food Details Dropdown / Input (Hidden for 'medicine_drink') */}
+            {category === 'pregnant' && (
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  Chi tiết món ăn *
                 </label>
-                <span className="text-[10px] text-slate-400">Đồ khô, tươi sống, tủ lạnh...</span>
+                <select
+                  value={foodDetails}
+                  onChange={(e) => setFoodDetails(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                >
+                  {PREGNANT_FOOD_OPTIONS.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <textarea
-                required
-                rows={3}
-                value={foodDetails}
-                onChange={(e) => setFoodDetails(e.target.value)}
-                placeholder="Ví dụ: Cơm hộp giữ nhiệt, đồ khô đóng gói kín, cần để ngăn mát tủ lạnh phòng ăn..."
-                className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
-              />
+            )}
 
-              {/* Quick Tags Suggestions */}
-              <div className="flex flex-wrap gap-1.5 mt-2">
-                {QUICK_STORAGE_TAGS.map((tag) => (
-                  <button
-                    key={tag}
-                    type="button"
-                    onClick={() => handleAddTag(tag)}
-                    className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-[11px] text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer"
+            {category === 'vegetarian' && (
+              <div className="space-y-2">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  Chi tiết món ăn *
+                </label>
+                <select
+                  value={foodDetails}
+                  onChange={(e) => setFoodDetails(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                >
+                  {VEGETARIAN_FOOD_OPTIONS.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt === 'Khác' ? 'Khác (tự nhập món ăn)' : opt}
+                    </option>
+                  ))}
+                </select>
+
+                {foodDetails === 'Khác' && (
+                  <div className="animate-in fade-in duration-200">
+                    <input
+                      type="text"
+                      required
+                      value={customFoodDetails}
+                      onChange={(e) => setCustomFoodDetails(e.target.value)}
+                      placeholder="Nhập chi tiết món chay mang vào (Ví dụ: Cơm chay sườn non, bánh mỳ chay...)"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-emerald-300 dark:border-emerald-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {category === 'other' && (
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  Chi tiết món ăn *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={foodDetails}
+                  onChange={(e) => setFoodDetails(e.target.value)}
+                  placeholder="Nhập chi tiết món ăn mang vào..."
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+            )}
+
+            {/* 5. Date & Shift Section (Placed AFTER 'Chi tiết món ăn') */}
+            {isDateRange ? (
+              /* Date Range: "Từ ngày" & "Đến ngày" for pregnant & medicine_drink */
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                    Từ ngày *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="date"
+                      required
+                      value={entryDate}
+                      onChange={(e) => setEntryDate(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                    Đến ngày *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="date"
+                      required
+                      min={entryDate}
+                      value={toDate}
+                      onChange={(e) => setToDate(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Single Date & Shift: "Ngày mang vào" & "Ca làm việc" for vegetarian & other */
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                    Ngày mang vào *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="date"
+                      required
+                      value={entryDate}
+                      onChange={(e) => setEntryDate(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                    Ca làm việc *
+                  </label>
+                  <select
+                    value={shift}
+                    onChange={(e) => setShift(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                   >
-                    + {tag}
-                  </button>
-                ))}
+                    {FOOD_ENTRY_SHIFTS.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Compliance Commitment Checkbox (Mandatory) */}
+            {/* 6. Compliance Commitment Checkbox (Mandatory) */}
             <div
               onClick={() => setComplianceCommitment((prev) => !prev)}
               className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 select-none ${
@@ -577,7 +693,7 @@ export function FoodRegistrationView() {
               </div>
             </div>
 
-            {/* Submit Button */}
+            {/* 7. Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting || !complianceCommitment}
@@ -602,58 +718,37 @@ export function FoodRegistrationView() {
           </form>
         </div>
 
-        {/* Right / Bottom Card: History & Tracking Table (7 cols on lg) */}
-        <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 shadow-sm space-y-5">
-          {/* Header & Role Switcher */}
+        {/* History & Management Table Card (7 cols on lg) */}
+        <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 shadow-sm space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
-                <History className="w-5 h-5" />
-              </div>
-              <div>
-                <h2 className="text-base font-bold text-slate-900 dark:text-white">
-                  Lịch Sử Đăng Ký Gần Đây
-                </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  {isGuard || isAdminOrManager
-                    ? (showAllFactory ? 'Đang xem: Toàn nhà máy' : 'Đang xem: Đơn của tôi')
-                    : 'Danh sách các đơn thực phẩm bạn đã đăng ký'}
-                </p>
-              </div>
+            <div>
+              <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <UtensilsCrossed className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <span>Danh Sách Đăng Ký Thực Phẩm Mang Vào</span>
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {isGuard || isAdminOrManager
+                  ? 'Xem và đối soát các lượt thực phẩm qua cổng bảo vệ'
+                  : 'Theo dõi tình trạng đơn đăng ký và lấy mã QR'}
+              </p>
             </div>
 
-            {/* Guard / Admin Toggle */}
             {(isGuard || isAdminOrManager) && (
-              <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl shrink-0">
-                <button
-                  type="button"
-                  onClick={() => setShowAllFactory(false)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                    !showAllFactory
-                      ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
-                      : 'text-slate-500 dark:text-slate-400'
-                  }`}
-                >
-                  Của tôi
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowAllFactory(true)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                    showAllFactory
-                      ? 'bg-emerald-600 text-white shadow-xs'
-                      : 'text-slate-500 dark:text-slate-400'
-                  }`}
-                >
-                  Toàn nhà máy ({registrations.length})
-                </button>
-              </div>
+              <label className="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer self-start sm:self-auto bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                <input
+                  type="checkbox"
+                  checked={showAllFactory}
+                  onChange={(e) => setShowAllFactory(e.target.checked)}
+                  className="rounded text-emerald-600 focus:ring-emerald-500"
+                />
+                <span>Xem toàn bộ nhà máy</span>
+              </label>
             )}
           </div>
 
           {/* Filters Bar */}
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-xs">
-            <div className="relative sm:col-span-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div className="relative">
               <input
                 type="text"
                 value={filterSearch}
@@ -706,7 +801,7 @@ export function FoodRegistrationView() {
                   <tr className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 font-bold">
                     <th className="p-3 whitespace-nowrap">Mã phiếu</th>
                     <th className="p-3 whitespace-nowrap">Người mang vào</th>
-                    <th className="p-3 whitespace-nowrap">Ngày & Ca</th>
+                    <th className="p-3 whitespace-nowrap">Ngày &amp; Ca</th>
                     <th className="p-3 whitespace-nowrap">Phân loại</th>
                     <th className="p-3 min-w-[180px]">Chi tiết món ăn</th>
                     <th className="p-3 whitespace-nowrap">Trạng thái</th>
@@ -747,10 +842,12 @@ export function FoodRegistrationView() {
                       {/* Entry Date & Shift */}
                       <td className="p-3 whitespace-nowrap">
                         <span className="font-semibold text-slate-800 dark:text-slate-200 block">
-                          {formatDate(item.entryDate)}
+                          {item.toDate && item.toDate !== item.entryDate
+                            ? `${formatDate(item.entryDate)} → ${formatDate(item.toDate)}`
+                            : formatDate(item.entryDate)}
                         </span>
                         <span className="text-[10px] text-amber-600 dark:text-amber-400 font-medium block">
-                          {item.shift}
+                          {item.shift || (item.toDate ? 'Theo đợt' : '-')}
                         </span>
                       </td>
 
@@ -766,7 +863,7 @@ export function FoodRegistrationView() {
                         </span>
                       </td>
 
-                      {/* Details & Preservation */}
+                      {/* Details */}
                       <td className="p-3 text-slate-600 dark:text-slate-300">
                         <p className="line-clamp-2 text-xs font-normal" title={item.foodDetails}>
                           {item.foodDetails}

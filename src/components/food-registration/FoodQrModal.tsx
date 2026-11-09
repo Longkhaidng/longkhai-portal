@@ -100,26 +100,26 @@ export function FoodQrModal({ isOpen, onClose, registration }: FoodQrModalProps)
 
             <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
               <div>
-                <span className="text-slate-400 text-[10px] block">Ngày mang vào:</span>
+                <span className="text-slate-400 text-[10px] block">{registration.toDate ? 'Thời gian mang vào:' : 'Ngày mang vào:'}</span>
                 <span className="font-bold text-slate-800 dark:text-slate-200">
-                  {formatDate(registration.entryDate)}
+                  {registration.toDate && registration.toDate !== registration.entryDate ? `${formatDate(registration.entryDate)} → ${formatDate(registration.toDate)}` : formatDate(registration.entryDate)}
                 </span>
               </div>
               <div>
-                <span className="text-slate-400 text-[10px] block">Ca làm việc:</span>
+                <span className="text-slate-400 text-[10px] block">{registration.shift ? 'Ca làm việc:' : 'Hình thức:'}</span>
                 <span className="font-semibold text-amber-600 dark:text-amber-400">
-                  {registration.shift}
+                  {registration.shift || (registration.toDate ? 'Theo đợt' : '-')}
                 </span>
               </div>
             </div>
 
             <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
-              <span className="text-slate-400 text-[10px] block mb-0.5">Phân loại & Món ăn:</span>
+              <span className="text-slate-400 text-[10px] block mb-0.5">{registration.category === 'medicine_drink' ? 'Phân loại thực phẩm:' : 'Phân loại & Món ăn:'}</span>
               <p className="font-semibold text-emerald-700 dark:text-emerald-400">
                 {FOOD_CATEGORY_LABELS[registration.category]}
                 {registration.customCategory ? ` (${registration.customCategory})` : ''}
               </p>
-              <p className="text-slate-600 dark:text-slate-300 text-[11px] mt-0.5 line-clamp-2">
+              <p className={`text-slate-600 dark:text-slate-300 text-[11px] mt-0.5 line-clamp-2 ${registration.category === 'medicine_drink' ? 'hidden' : ''}`}>
                 {registration.foodDetails}
               </p>
             </div>

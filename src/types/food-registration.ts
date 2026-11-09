@@ -48,6 +48,18 @@ export const FOOD_ENTRY_SHIFTS = [
   'Ca khác (Ghi rõ ở ghi chú)',
 ] as const;
 
+export const PREGNANT_FOOD_OPTIONS = [
+  'Bánh + Sữa',
+  'Trái cây + Sữa',
+] as const;
+
+export const VEGETARIAN_FOOD_OPTIONS = [
+  'Bún chay',
+  'Mì quảng chay',
+  'Bánh canh chay',
+  'Khác',
+] as const;
+
 export const QUICK_STORAGE_TAGS = [
   'Đồ khô đóng kín',
   'Đồ ăn tươi chín trong ngày',
@@ -63,11 +75,13 @@ export interface FoodRegistration {
   employeeName: string; // Họ và tên
   department: string; // Bộ phận / Phân xưởng / Chuyền sản xuất
   entryDate: string; // Ngày mang vào (YYYY-MM-DD)
-  shift: string; // Ca làm việc
+  toDate?: string; // Đến ngày (YYYY-MM-DD) khi đăng ký khoảng ngày cho người mang thai / nước thuốc
+  shift?: string; // Ca làm việc (cho thực phẩm chay, khác)
   timeFrame?: string; // Khung giờ mang vào (ví dụ: Đầu ca, 07:30 - 07:55)
   category: FoodCategory; // Phân loại thực phẩm
   customCategory?: string; // Chi tiết loại khác nếu chọn 'other'
-  foodDetails: string; // Chi tiết món ăn / Tình trạng bảo quản
+  foodDetails: string; // Chi tiết món ăn
+  customFoodDetails?: string; // Chi tiết nếu chọn Khác trong món chay
   complianceCommitment: boolean; // Cam kết ATVSTP (bắt buộc true)
   status: FoodRegistrationStatus; // Trạng thái đơn
 
@@ -93,10 +107,10 @@ export const INITIAL_FOOD_REGISTRATIONS: FoodRegistration[] = [
     employeeName: 'Đoàn Thị Thanh Xuân',
     department: 'Phòng Kế Toán',
     entryDate: '2026-11-09',
-    shift: 'Ca HC (08:00 - 16:30)',
+    toDate: '2026-11-14',
     timeFrame: '07:30 - 07:50',
     category: 'pregnant',
-    foodDetails: 'Súp gà hầm hạt sen + Sữa chua nếp cẩm đóng hộp kín, cần để ngăn mát tủ lạnh phòng ăn.',
+    foodDetails: 'Bánh + Sữa',
     complianceCommitment: true,
     status: 'confirmed',
     guardId: '101',
@@ -115,7 +129,7 @@ export const INITIAL_FOOD_REGISTRATIONS: FoodRegistration[] = [
     shift: 'Ca 1 (06:00 - 14:00)',
     timeFrame: '05:35 - 05:50',
     category: 'vegetarian',
-    foodDetails: 'Cơm gạo lứt muối mè + Đậu hũ kho nấm đông cô, mang trong cặp lồng giữ nhiệt dùng cho bữa trưa.',
+    foodDetails: 'Mì quảng chay',
     complianceCommitment: true,
     status: 'pending',
     createdAt: '2026-11-09T00:20:00.000Z',
@@ -127,10 +141,10 @@ export const INITIAL_FOOD_REGISTRATIONS: FoodRegistration[] = [
     employeeName: 'Trần Thị Kim Loan',
     department: 'Phòng HCNS',
     entryDate: '2026-11-09',
-    shift: 'Ca HC (08:00 - 16:30)',
+    toDate: '2026-11-14',
     timeFrame: '07:40 - 08:00',
     category: 'medicine_drink',
-    foodDetails: 'Nước thuốc bắc sắc sẵn trong bình giữ nhiệt 500ml uống ấm sau bữa ăn theo đơn bác sĩ.',
+    foodDetails: 'Nước thuốc',
     complianceCommitment: true,
     status: 'confirmed',
     guardId: '104',
