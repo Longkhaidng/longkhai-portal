@@ -842,12 +842,19 @@
       "gate_pass",
       "announcements",
       "forms",
-      "reports"
+      "reports",
+      "overtime",
+      "food_registration",
+      "repair",
+      "periodic_inspection"
     ],
     "isActive": true,
     "password": "1139",
     "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "updatedAt": "2026-11-09T08:25:44.429Z",
+    "allowedWebIntegrations": [
+      "WEB-001"
+    ]
   },
   {
     "id": "1147",
