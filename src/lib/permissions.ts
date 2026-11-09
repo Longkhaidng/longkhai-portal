@@ -692,3 +692,18 @@ export function filterUserFoodRegistrations(
   // Regular employee
   return registrations.filter((r) => r.employeeId.toLowerCase() === uid);
 }
+
+export function isHROrITDepartment(dept?: string): boolean {
+  if (!dept) return false;
+  const d = dept.toLowerCase();
+  return (
+    d.includes('hcns') ||
+    d.includes('hành chính') ||
+    d.includes('nhân sự') ||
+    d.includes('cntt') ||
+    d.includes('công nghệ thông tin') ||
+    d.includes(' it') ||
+    d.includes('(it)') ||
+    d === 'it'
+  );
+}

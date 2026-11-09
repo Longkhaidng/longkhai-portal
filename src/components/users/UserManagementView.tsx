@@ -1339,24 +1339,67 @@ export function UserManagementView() {
               </button>
             </div>
 
-            {/* Select All Bar */}
-            <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700/60">
-              <span className="text-xs font-bold text-slate-800 dark:text-white">
-                1. Chọn các danh mục hệ thống được phép truy cập:
-              </span>
-              <button
-                type="button"
-                onClick={handleSelectAllPermissions}
-                className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
-              >
-                {selectedPermissions.length === CATEGORY_DEFINITIONS.length
-                  ? 'Bỏ chọn tất cả'
-                  : 'Chọn tất cả'}
-              </button>
+            {/* Select All & Quick Presets Bar */}
+            <div className="space-y-2 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700/60">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-800 dark:text-white">
+                  1. Chọn các danh mục menu được phép truy cập ({selectedPermissions.length} / {CATEGORY_DEFINITIONS.length}):
+                </span>
+                <button
+                  type="button"
+                  onClick={handleSelectAllPermissions}
+                  className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                >
+                  {selectedPermissions.length === CATEGORY_DEFINITIONS.length
+                    ? 'Bỏ chọn tất cả'
+                    : 'Chọn tất cả'}
+                </button>
+              </div>
+
+              {/* Quick Presets */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-1.5 border-t border-slate-200/60 dark:border-slate-700/60 text-[11px]">
+                <span className="text-slate-400 font-medium">Gán nhanh:</span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedPermissions(['dashboard', 'leave', 'attendance', 'gate_pass', 'overtime', 'food_registration', 'repair', 'announcements'])}
+                  className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-blue-400 text-slate-700 dark:text-slate-300 font-medium cursor-pointer"
+                >
+                  Mặc định Nhân viên (8 mục)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const base = new Set(selectedPermissions);
+                    ['pccc', 'periodic_inspection'].forEach((p) => base.add(p as any));
+                    setSelectedPermissions(Array.from(base));
+                  }}
+                  className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 text-slate-700 dark:text-slate-300 font-medium cursor-pointer"
+                >
+                  + An toàn EHS
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const base = new Set(selectedPermissions);
+                    ['reports'].forEach((p) => base.add(p as any));
+                    setSelectedPermissions(Array.from(base));
+                  }}
+                  className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 text-slate-700 dark:text-slate-300 font-medium cursor-pointer"
+                >
+                  + Báo cáo
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedPermissions(CATEGORY_DEFINITIONS.map((c) => c.id))}
+                  className="px-2 py-0.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900 text-blue-700 dark:text-blue-300 font-bold cursor-pointer"
+                >
+                  Toàn bộ (16 mục)
+                </button>
+              </div>
             </div>
 
             {/* Checkbox grid of all categories */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-56 overflow-y-auto p-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-72 overflow-y-auto p-1">
               {CATEGORY_DEFINITIONS.map((cat) => {
                 const isChecked = selectedPermissions.includes(cat.id);
                 return (

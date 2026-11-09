@@ -167,30 +167,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!currentUser) return false;
     // Administrator always has access to everything
     if (currentUser.role === 'admin') return true;
-    // Food intake registration is accessible to all active employees
-    if (category === 'food_registration') {
-      return true;
+
+    // Strict role-based & category-based permissions configured by Admin
+    if (Array.isArray(currentUser.permissions)) {
+      return currentUser.permissions.includes(category);
     }
-    // Overtime registration & confirmation is accessible to all active employees
-    if (category === 'overtime') {
-      return true;
-    }
-    // All active employees have access to self-service repair proposal by default
-    if (category === 'repair') {
-      if (currentUser.permissions?.includes('repair')) return true;
-      if (currentUser.permissions?.includes('leave') || currentUser.permissions?.includes('attendance')) return true;
-    }
-    // PCCC inspection is strictly restricted to authorized staff who have 'pccc' permission
-    if (category === 'pccc') {
-      return currentUser.permissions?.includes('pccc') ?? false;
-    }
-    // Periodic inspection: accessible to admin, ehs, manager, hr, it, or staff with permission
-    if (category === 'periodic_inspection') {
-      if (currentUser.role === 'ehs' || currentUser.role === 'manager' || currentUser.role === 'hr' || currentUser.role === 'it') return true;
-      if (currentUser.permissions?.includes('periodic_inspection') || currentUser.permissions?.includes('pccc')) return true;
-      return true; // Default allow factory inspection access
-    }
-    return currentUser.permissions?.includes(category) ?? false;
+
+    // Default fallback if permissions array is undefined
+    const defaultPerms: CategoryPermission[] = [
+      'dashboard',
+      'leave',
+      'attendance',
+      'gate_pass',
+      'overtime',
+      'food_registration',
+      'repair',
+      'announcements',
+    ];
+    return defaultPerms.includes(category);
   };
 
   const isRole = (role: UserRole): boolean => {

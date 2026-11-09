@@ -27,6 +27,7 @@ import {
   canApproveFoodDept,
   canApproveFoodHR,
   filterUserFoodRegistrations,
+  isHROrITDepartment,
 } from '@/lib/permissions';
 import {
   UtensilsCrossed,
@@ -65,9 +66,8 @@ export function FoodRegistrationView() {
   // Sub-category for pregnant/medicine group: 'pregnant' or 'medicine_drink'
   const [subCategory, setSubCategory] = useState<'pregnant' | 'medicine_drink'>('pregnant');
 
-  // Pregnant Food Checkboxes (default both selected per requirement)
-  const [pregnantBanhSua, setPregnantBanhSua] = useState<boolean>(true);
-  const [pregnantTraiCaySua, setPregnantTraiCaySua] = useState<boolean>(true);
+    // Pregnant Food Option: 'Bánh + Sữa' hoặc 'Trái cây + Sữa'
+  const [pregnantDish, setPregnantDish] = useState<'Bánh + Sữa' | 'Trái cây + Sữa'>('Bánh + Sữa');
 
   // Vegetarian Food Option
   const [vegOption, setVegOption] = useState<string>(VEGETARIAN_FOOD_OPTIONS[0]);
@@ -203,14 +203,11 @@ export function FoodRegistrationView() {
       // Pregnant or Medicine drink
       finalCategory = subCategory;
       if (subCategory === 'pregnant') {
-        const selectedDishes: string[] = [];
-        if (pregnantBanhSua) selectedDishes.push('Bánh + Sữa');
-        if (pregnantTraiCaySua) selectedDishes.push('Trái cây + Sữa');
-        if (selectedDishes.length === 0) {
-          showToast('Vui lòng chọn ít nhất 1 món: Bánh + Sữa hoặc Trái cây + Sữa.', 'error');
+        if (!pregnantDish) {
+          showToast('Vui lòng chọn món: Bánh + Sữa hoặc Trái cây + Sữa.', 'error');
           return;
         }
-        finalFoodDetails = selectedDishes.join(', ');
+        finalFoodDetails = pregnantDish;
       } else {
         // Nước thuốc: Không hiển thị món ăn, gán mặc định Nước thuốc
         finalFoodDetails = 'Nước thuốc';
@@ -284,24 +281,34 @@ export function FoodRegistrationView() {
         // MANG THAI / NƯỚC THUỐC: Luồng duyệt 2 cấp: Trưởng BP -> Trưởng phòng HCNS
         // Khởi tạo các bước duyệt
         const isManagerSender = currentUser?.role === 'manager' || isAdmin;
-        const initialStatus = isManagerSender ? 'pending_hr' : 'pending_dept';
+        const isDeptDirectToHR = isHROrITDepartment(department.trim()) || isHROrITDepartment(currentUser?.department);
+        const isDirectToHR = isManagerSender || isDeptDirectToHR;
+        const initialStatus = isDirectToHR ? 'pending_hr' : 'pending_dept';
 
-        const steps = [
-          {
-            stepName: 'Trưởng bộ phận' as const,
-            roleRequired: 'manager' as const,
-            approverId: isManagerSender ? currentUser?.id : undefined,
-            approverName: isManagerSender ? currentUser?.name : undefined,
-            status: isManagerSender ? ('approved' as const) : ('pending' as const),
-            comment: isManagerSender ? 'Tự tạo đơn cấp quản lý' : undefined,
-            actionAt: isManagerSender ? now : undefined,
-          },
-          {
-            stepName: 'Trưởng phòng HCNS' as const,
-            roleRequired: 'hr' as const,
-            status: 'pending' as const,
-          },
-        ];
+        const steps = (isDeptDirectToHR && !isManagerSender)
+          ? [
+              {
+                stepName: 'Trưởng phòng HCNS' as const,
+                roleRequired: 'hr' as const,
+                status: 'pending' as const,
+              },
+            ]
+          : [
+              {
+                stepName: 'Trưởng bộ phận' as const,
+                roleRequired: 'manager' as const,
+                approverId: isManagerSender ? currentUser?.id : undefined,
+                approverName: isManagerSender ? currentUser?.name : undefined,
+                status: isManagerSender ? ('approved' as const) : ('pending' as const),
+                comment: isManagerSender ? 'Tự tạo đơn cấp quản lý' : undefined,
+                actionAt: isManagerSender ? now : undefined,
+              },
+              {
+                stepName: 'Trưởng phòng HCNS' as const,
+                roleRequired: 'hr' as const,
+                status: 'pending' as const,
+              },
+            ];
 
         newRegistration = {
           id: newId,
@@ -316,7 +323,7 @@ export function FoodRegistrationView() {
           complianceCommitment: true,
           status: initialStatus,
           steps,
-          currentStepIndex: isManagerSender ? 1 : 0,
+          currentStepIndex: isDirectToHR && !isDeptDirectToHR ? 1 : 0,
           qrCodeUrl: qrUrl,
           qrDataUrl,
           createdAt: now,
@@ -561,15 +568,21 @@ export function FoodRegistrationView() {
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                   Mã số NV (MSNV) *
+                  {!(isAdmin || isManager || isHR) && (
+                    <span className="text-[10px] text-slate-400 font-normal ml-1">(Tài khoản của bạn)</span>
+                  )}
                 </label>
                 <div className="relative">
                   <input
                     type="text"
                     required
+                    readOnly={!(isAdmin || isManager || isHR)}
                     value={selectedEmployeeId}
                     onChange={(e) => handleEmployeeIdChange(e.target.value)}
                     placeholder="Ví dụ: 1008"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-mono font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className={`w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white font-mono font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                      !(isAdmin || isManager || isHR) ? 'bg-slate-100 dark:bg-slate-800/80 cursor-not-allowed opacity-90' : 'bg-slate-50 dark:bg-slate-800'
+                    }`}
                   />
                   <UserIcon className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
                 </div>
@@ -582,10 +595,13 @@ export function FoodRegistrationView() {
                 <input
                   type="text"
                   required
+                  readOnly={!(isAdmin || isManager || isHR)}
                   value={employeeName}
                   onChange={(e) => setEmployeeName(e.target.value)}
                   placeholder="Họ và tên nhân viên"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className={`w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                    !(isAdmin || isManager || isHR) ? 'bg-slate-100 dark:bg-slate-800/80 cursor-not-allowed opacity-90' : 'bg-slate-50 dark:bg-slate-800'
+                  }`}
                 />
               </div>
             </div>
@@ -599,10 +615,13 @@ export function FoodRegistrationView() {
                 <input
                   type="text"
                   required
+                  readOnly={!(isAdmin || isManager || isHR)}
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
                   placeholder="Ví dụ: Phân xưởng may - Chuyền 2"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className={`w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                    !(isAdmin || isManager || isHR) ? 'bg-slate-100 dark:bg-slate-800/80 cursor-not-allowed opacity-90' : 'bg-slate-50 dark:bg-slate-800'
+                  }`}
                 />
                 <Building className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
               </div>
@@ -689,7 +708,7 @@ export function FoodRegistrationView() {
                   </div>
                 </div>
 
-                {/* Nếu chọn THỰC PHẨM CHO NGƯỜI MANG THAI: Mặc định chọn 2 tùy chọn Bánh + Sữa và Trái cây + Sữa */}
+                {/* Nếu chọn THỰC PHẨM CHO NGƯỜI MANG THAI: Chọn Bánh + Sữa HOẶC Trái cây + Sữa */}
                 {subCategory === 'pregnant' && (
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
@@ -697,42 +716,44 @@ export function FoodRegistrationView() {
                         Chi tiết món ăn *
                       </label>
                       <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
-                        Mặc định chọn 2 tùy chọn
+                        Chọn 1 trong 2 tùy chọn
                       </span>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       <label
-                        onClick={() => setPregnantBanhSua((prev) => !prev)}
+                        onClick={() => setPregnantDish('Bánh + Sữa')}
                         className={`p-3 rounded-xl border cursor-pointer flex items-center justify-between transition-all select-none ${
-                          pregnantBanhSua
-                            ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-bold'
-                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+                          pregnantDish === 'Bánh + Sữa'
+                            ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-bold shadow-xs'
+                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
                         }`}
                       >
                         <span className="text-xs">🍪 Bánh + Sữa</span>
                         <input
-                          type="checkbox"
-                          checked={pregnantBanhSua}
-                          onChange={() => {}}
-                          className="rounded text-emerald-600 focus:ring-emerald-500"
+                          type="radio"
+                          name="pregnantDishRadio"
+                          checked={pregnantDish === 'Bánh + Sữa'}
+                          onChange={() => setPregnantDish('Bánh + Sữa')}
+                          className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 cursor-pointer"
                         />
                       </label>
 
                       <label
-                        onClick={() => setPregnantTraiCaySua((prev) => !prev)}
+                        onClick={() => setPregnantDish('Trái cây + Sữa')}
                         className={`p-3 rounded-xl border cursor-pointer flex items-center justify-between transition-all select-none ${
-                          pregnantTraiCaySua
-                            ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-bold'
-                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+                          pregnantDish === 'Trái cây + Sữa'
+                            ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-bold shadow-xs'
+                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
                         }`}
                       >
                         <span className="text-xs">🍎 Trái cây + Sữa</span>
                         <input
-                          type="checkbox"
-                          checked={pregnantTraiCaySua}
-                          onChange={() => {}}
-                          className="rounded text-emerald-600 focus:ring-emerald-500"
+                          type="radio"
+                          name="pregnantDishRadio"
+                          checked={pregnantDish === 'Trái cây + Sữa'}
+                          onChange={() => setPregnantDish('Trái cây + Sữa')}
+                          className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 cursor-pointer"
                         />
                       </label>
                     </div>
