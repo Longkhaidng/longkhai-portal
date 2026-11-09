@@ -1136,6 +1136,11 @@ export function FoodRegistrationView() {
                           >
                             {FOOD_STATUS_LABELS[item.status]}
                           </span>
+                          {item.entryLogs && item.entryLogs.length > 0 && (
+                            <span className="text-[10px] text-teal-600 dark:text-teal-400 font-semibold block mt-1">
+                              Đã vào {item.entryLogs.length} lần
+                            </span>
+                          )}
                         </td>
 
                         {/* Actions */}
@@ -1180,7 +1185,7 @@ export function FoodRegistrationView() {
                             )}
 
                             {/* Button: Bảo vệ cổng xác nhận hoặc từ chối */}
-                            {isGuard && item.status === 'approved' && !validity.isExpired && (
+                            {isGuard && (item.status === 'approved' || item.status === 'confirmed') && !validity.isExpired && (
                               <>
                                 <button
                                   type="button"

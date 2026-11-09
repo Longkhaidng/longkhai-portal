@@ -45,7 +45,7 @@ import {
   GENERAL_STATUS_BADGES,
 } from '@/types/proposal';
 import { filterUserLeaves, filterUserAttendances, filterUserGatePasses, filterUserRepairProposals, filterUserStationeryProposals, filterUserGeneralProposals } from '@/lib/permissions';
-import { FoodRegistration, FoodCategory, FOOD_CATEGORY_LABELS, FOOD_STATUS_LABELS, FOOD_STATUS_BADGES } from '@/types/food-registration';
+import { FoodRegistration, FoodReportRow, flattenFoodRegistrationsToReportRows, FoodCategory, FOOD_CATEGORY_LABELS, FOOD_STATUS_LABELS, FOOD_STATUS_BADGES } from '@/types/food-registration';
 
 export function ReportsView() {
   const { currentUser } = useAuth();
@@ -654,27 +654,34 @@ export function ReportsView() {
 
   const foodRegistrations = useMemo(() => storage.getFoodRegistrations(), [foodVersion]);
 
-  const filteredFoods = useMemo(() => {
-    return foodRegistrations.filter((f: FoodRegistration) => {
-      if (departmentFilter !== 'all' && f.department !== departmentFilter) return false;
-      if (statusFilter !== 'all' && f.status !== statusFilter) return false;
-      if (foodCategoryFilter !== 'all' && f.category !== foodCategoryFilter) return false;
-      if (fromDate && f.entryDate < fromDate) return false;
-      if (toDate && f.entryDate > toDate) return false;
+  const allFoodRows = useMemo(() => {
+    return flattenFoodRegistrationsToReportRows(foodRegistrations);
+  }, [foodRegistrations]);
+
+  const filteredFoodRows = useMemo(() => {
+    return allFoodRows.filter((row: FoodReportRow) => {
+      if (departmentFilter !== 'all' && row.department !== departmentFilter) return false;
+      if (statusFilter !== 'all' && row.status !== statusFilter) return false;
+      if (foodCategoryFilter !== 'all' && row.category !== foodCategoryFilter) return false;
+      if (fromDate && row.entryDate < fromDate) return false;
+      if (toDate && row.entryDate > toDate) return false;
       if (searchTerm.trim()) {
         const q = searchTerm.toLowerCase();
         const match =
-          f.id.toLowerCase().includes(q) ||
-          f.employeeId.toLowerCase().includes(q) ||
-          f.employeeName.toLowerCase().includes(q) ||
-          f.foodDetails.toLowerCase().includes(q) ||
-          (f.guardName && f.guardName.toLowerCase().includes(q)) ||
-          (f.rejectedReason && f.rejectedReason.toLowerCase().includes(q));
+          row.id.toLowerCase().includes(q) ||
+          row.employeeId.toLowerCase().includes(q) ||
+          row.employeeName.toLowerCase().includes(q) ||
+          row.foodDetails.toLowerCase().includes(q) ||
+          (row.guardName && row.guardName.toLowerCase().includes(q)) ||
+          (row.note && row.note.toLowerCase().includes(q)) ||
+          row.displayDate.toLowerCase().includes(q);
         if (!match) return false;
       }
       return true;
-    }).sort((a: FoodRegistration, b: FoodRegistration) => b.createdAt.localeCompare(a.createdAt));
-  }, [foodRegistrations, departmentFilter, statusFilter, foodCategoryFilter, fromDate, toDate, searchTerm]);
+    }).sort((a, b) => b.sortTime - a.sortTime);
+  }, [allFoodRows, departmentFilter, statusFilter, foodCategoryFilter, fromDate, toDate, searchTerm]);
+
+  const filteredFoods = filteredFoodRows;
 
   // Current active result count
   const currentCount =
@@ -975,12 +982,12 @@ export function ReportsView() {
         item.notes,
       ]);
     } else if (reportType === 'food_registration') {
-      if (filteredFoods.length === 0) {
+      if (filteredFoodRows.length === 0) {
         alert('Không có dữ liệu đăng ký thực phẩm phù hợp với bộ lọc hiện tại để xuất file Excel.');
         return;
       }
       exportFoodReportToExcel({
-        registrations: filteredFoods,
+        rows: filteredFoodRows,
         subtitle,
         docCode: 'BC-LK-TP/2026',
         fileName: `LONGKHAI_Bao_Cao_THUC_PHAM_${nowStr}`,
@@ -2229,40 +2236,43 @@ export function ReportsView() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredFoods.length === 0 ? (
+                  {filteredFoodRows.length === 0 ? (
                     <tr>
                       <td colSpan={13} className="p-8 text-center text-slate-400">
                         Không tìm thấy dữ liệu đăng ký thực phẩm phù hợp với bộ lọc hiện tại.
                       </td>
                     </tr>
                   ) : (
-                    filteredFoods.map((f: FoodRegistration, idx: number) => (
-                      <tr key={f.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40 text-[11px] align-top">
+                    filteredFoodRows.map((r: FoodReportRow, idx: number) => (
+                      <tr key={r.rowId} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40 text-[11px] align-top">
                         <td className="p-2 border text-center font-semibold">{idx + 1}</td>
                         <td className="p-2 border font-mono font-bold text-emerald-600 whitespace-nowrap text-center">
-                          {f.id}
+                          {r.id}
                         </td>
-                        <td className="p-2 border font-mono text-center">{f.employeeId}</td>
+                        <td className="p-2 border font-mono text-center">{r.employeeId}</td>
                         <td className="p-2 border font-semibold text-slate-900 dark:text-white whitespace-nowrap">
-                          {f.employeeName}
+                          {r.employeeName}
                         </td>
-                        <td className="p-2 border text-slate-700 dark:text-slate-300 whitespace-nowrap">{f.department}</td>
+                        <td className="p-2 border text-slate-700 dark:text-slate-300 whitespace-nowrap">{r.department}</td>
                         <td className="p-2 border whitespace-nowrap text-center font-medium">
-                          {f.toDate && f.toDate !== f.entryDate ? `${formatDate(f.entryDate)} → ${formatDate(f.toDate)}` : formatDate(f.entryDate)}
+                          <div className="font-semibold text-slate-900 dark:text-white">{r.displayDate}</div>
+                          {r.dateRangeText && (
+                            <div className="text-[10px] text-slate-400 font-normal">
+                              {r.dateRangeText}
+                            </div>
+                          )}
                         </td>
-                        <td className="p-2 border whitespace-nowrap text-center text-slate-600">
-                          <div>{f.shift || (f.toDate ? 'Theo đợt' : '-')}</div>
-                          {f.timeFrame && <div className="text-[10px] text-slate-400">({f.timeFrame})</div>}
+                        <td className="p-2 border whitespace-nowrap text-center text-slate-600 dark:text-slate-300">
+                          <div>{r.shift}</div>
+                          {r.timeFrame && <div className="text-[10px] text-slate-400">({r.timeFrame})</div>}
                         </td>
                         <td className="p-2 border whitespace-nowrap text-center">
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                            {(f.category as string) === 'other' && f.customCategory
-                              ? `Khác (${f.customCategory})`
-                              : FOOD_CATEGORY_LABELS[f.category] || f.category}
+                            {FOOD_CATEGORY_LABELS[r.category] || r.category}
                           </span>
                         </td>
                         <td className="p-2 border text-slate-800 dark:text-slate-200 leading-relaxed">
-                          {f.foodDetails}
+                          {r.foodDetails}
                         </td>
                         <td className="p-2 border text-center">
                           <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded">
@@ -2270,17 +2280,17 @@ export function ReportsView() {
                           </span>
                         </td>
                         <td className="p-2 border text-center whitespace-nowrap">
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${FOOD_STATUS_BADGES[f.status] || ''}`}>
-                            {FOOD_STATUS_LABELS[f.status] || f.status}
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${r.statusBadge}`}>
+                            {r.statusLabel}
                           </span>
                         </td>
                         <td className="p-2 border text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                          {f.guardName ? (
+                          {r.guardName ? (
                             <div>
-                              <div className="font-semibold text-slate-900 dark:text-white">{f.guardName}</div>
-                              {f.confirmedAt && (
+                              <div className="font-semibold text-slate-900 dark:text-white">{r.guardName}</div>
+                              {r.guardTime && (
                                 <div className="text-[10px] text-slate-400 font-mono">
-                                  {formatDateTime(f.confirmedAt)}
+                                  {formatDateTime(r.guardTime)}
                                 </div>
                               )}
                             </div>
@@ -2288,8 +2298,8 @@ export function ReportsView() {
                             <span className="text-slate-400 italic">Chưa xác nhận</span>
                           )}
                         </td>
-                        <td className="p-2 border text-slate-600 italic text-[10px]">
-                          {f.status === 'rejected' ? (f.rejectedReason || f.guardNote || '-') : (f.guardNote || '-')}
+                        <td className="p-2 border text-slate-600 dark:text-slate-300 italic text-[10px]">
+                          {r.note || '-'}
                         </td>
                       </tr>
                     ))

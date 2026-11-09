@@ -212,7 +212,33 @@ export function FoodQrModal({ isOpen, onClose, registration }: FoodQrModalProps)
               </p>
             </div>
 
-            {registration.status === 'confirmed' && (
+            {registration.entryLogs && registration.entryLogs.length > 0 && (
+              <div className="space-y-1.5 pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block">
+                  Lịch sử bảo vệ xác nhận ({registration.entryLogs.length} lần):
+                </span>
+                <div className="space-y-1 max-h-32 overflow-y-auto">
+                  {registration.entryLogs.map((log, idx) => (
+                    <div
+                      key={idx}
+                      className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between text-[10px]"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <span className={log.action === 'confirmed' ? 'text-emerald-600 font-bold' : 'text-rose-600 font-bold'}>
+                          {log.action === 'confirmed' ? '✓' : '✕'}
+                        </span>
+                        <span className="font-semibold text-slate-800 dark:text-slate-200">{log.guardName}</span>
+                      </div>
+                      <span className="text-slate-400 font-mono">
+                        {log.timestamp ? new Date(log.timestamp).toLocaleDateString('vi-VN') + ' ' + new Date(log.timestamp).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : '-'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {registration.status === 'confirmed' && (!registration.entryLogs || registration.entryLogs.length === 0) && (
               <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-[11px] text-emerald-700 dark:text-emerald-300 flex items-start gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                 <span>

@@ -192,6 +192,7 @@ function ScanConfirmContent() {
                 if (idx >= 0) list[idx] = data.record;
                 else list.unshift(data.record);
                 localStorage.setItem('lk_portal_food_registrations', JSON.stringify(list));
+                window.dispatchEvent(new Event('food_registrations_updated'));
               }
             }
           } catch {}

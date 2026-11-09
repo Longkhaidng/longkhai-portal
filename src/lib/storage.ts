@@ -2135,8 +2135,46 @@ class StorageService {
     try {
       const data = localStorage.getItem(STORAGE_KEYS.FOOD_REGISTRATIONS);
       if (data) {
-        const parsed = JSON.parse(data);
-        if (Array.isArray(parsed)) return sortNewestFirst(parsed);
+        let parsed: FoodRegistration[] = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          let hasChanges = false;
+          // Bổ sung các bản ghi mẫu mới nếu chưa có
+          INITIAL_FOOD_REGISTRATIONS.forEach((initItem) => {
+            const existingIdx = parsed.findIndex((p) => p.id === initItem.id);
+            if (existingIdx === -1) {
+              parsed.push(initItem);
+              hasChanges = true;
+            } else if (initItem.entryLogs && (!parsed[existingIdx].entryLogs || parsed[existingIdx].entryLogs.length === 0)) {
+              parsed[existingIdx].entryLogs = initItem.entryLogs;
+              hasChanges = true;
+            }
+          });
+
+          // Chuẩn hóa bổ sung entryLogs cho các bản ghi đã được bảo vệ xác nhận
+          parsed = parsed.map((item) => {
+            if ((!item.entryLogs || item.entryLogs.length === 0) && item.confirmedAt && item.guardName) {
+              item.entryLogs = [
+                {
+                  id: `LOG-${item.id}-01`,
+                  guardName: item.guardName,
+                  guardId: item.guardId,
+                  action: item.status === 'guard_rejected' ? 'rejected' : 'confirmed',
+                  note: item.guardNote || item.rejectedReason || 'Đã kiểm tra thực phẩm qua cổng',
+                  timestamp: item.confirmedAt,
+                },
+              ];
+              hasChanges = true;
+            }
+            return item;
+          });
+
+          if (hasChanges) {
+            try {
+              localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(parsed));
+            } catch {}
+          }
+          return sortNewestFirst(parsed);
+        }
       }
     } catch {}
     try {

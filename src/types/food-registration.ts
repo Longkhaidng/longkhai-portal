@@ -263,7 +263,7 @@ export const INITIAL_FOOD_REGISTRATIONS: FoodRegistration[] = [
     mainGroup: 'pregnant_medicine',
     foodDetails: 'Bánh + Sữa, Trái cây + Sữa',
     complianceCommitment: true,
-    status: 'approved',
+    status: 'confirmed',
     steps: [
       {
         stepName: 'Trưởng bộ phận',
@@ -285,31 +285,179 @@ export const INITIAL_FOOD_REGISTRATIONS: FoodRegistration[] = [
       },
     ],
     currentStepIndex: 2,
-    guardId: '101',
-    guardName: 'Nguyễn Hữu Lập',
-    guardNote: 'Đã kiểm tra bao bì sạch sẽ, đóng hộp kín đảm bảo vệ sinh.',
-    confirmedAt: '2026-11-09T07:15:00.000Z',
+    guardId: '102',
+    guardName: 'Lương Văn Vĩnh',
+    guardNote: 'Đã kiểm tra thực phẩm thai sản (Bánh + Sữa), đạt chuẩn ATVSTP.',
+    confirmedAt: '2026-11-10T07:30:00.000Z',
+    entryLogs: [
+      {
+        id: 'LOG-001',
+        guardName: 'Nguyễn Hữu Lập',
+        guardId: '101',
+        action: 'confirmed',
+        note: 'Đã kiểm tra bao bì sạch sẽ, đóng hộp kín đảm bảo vệ sinh.',
+        timestamp: '2026-11-09T07:45:00.000Z',
+      },
+      {
+        id: 'LOG-002',
+        guardName: 'Lương Văn Vĩnh',
+        guardId: '102',
+        action: 'confirmed',
+        note: 'Đã kiểm tra thực phẩm thai sản (Bánh + Sữa), đạt chuẩn ATVSTP.',
+        timestamp: '2026-11-10T07:30:00.000Z',
+      },
+    ],
     createdAt: '2026-11-09T00:15:00.000Z',
-    updatedAt: '2026-11-09T07:15:00.000Z',
+    updatedAt: '2026-11-10T07:30:00.000Z',
   },
   {
     id: 'TP26-0002',
+    employeeId: '1012',
+    employeeName: 'Trần Thị Thu Thủy',
+    department: 'Phòng HCNS',
+    entryDate: '2026-11-09',
+    toDate: '2026-11-23',
+    category: 'medicine_drink',
+    mainGroup: 'pregnant_medicine',
+    foodDetails: 'Nước thuốc',
+    complianceCommitment: true,
+    status: 'confirmed',
+    steps: [
+      {
+        stepName: 'Trưởng bộ phận',
+        roleRequired: 'manager',
+        approverId: '1867',
+        approverName: 'Trương Anh Như Quỳnh',
+        status: 'approved',
+        comment: 'Duyệt mang nước thuốc điều trị theo chỉ định bác sĩ',
+        actionAt: '2026-11-09T01:10:00.000Z',
+      },
+      {
+        stepName: 'Trưởng phòng HCNS',
+        roleRequired: 'hr',
+        approverId: '1867',
+        approverName: 'Trương Anh Như Quỳnh',
+        status: 'approved',
+        comment: 'Đã duyệt cấp phép',
+        actionAt: '2026-11-09T01:15:00.000Z',
+      },
+    ],
+    currentStepIndex: 2,
+    guardId: '101',
+    guardName: 'Nguyễn Hữu Lập',
+    guardNote: 'Đã xác nhận kiểm tra vào/ra thực tế qua quét mã QR',
+    confirmedAt: '2026-11-09T13:41:00.000Z',
+    entryLogs: [
+      {
+        id: 'LOG-003',
+        guardName: 'Nguyễn Hữu Lập',
+        guardId: '101',
+        action: 'confirmed',
+        note: 'Đã xác nhận kiểm tra vào/ra thực tế qua quét mã QR',
+        timestamp: '2026-11-09T13:41:00.000Z',
+      },
+    ],
+    createdAt: '2026-11-09T00:40:00.000Z',
+    updatedAt: '2026-11-09T13:41:00.000Z',
+  },
+  {
+    id: 'TP26-0003',
+    employeeId: '1020',
+    employeeName: 'Lê Văn Minh',
+    department: 'Phân xưởng dệt',
+    entryDate: '2026-11-09',
+    shift: 'Ca HC (08:00 - 16:30)',
+    timeFrame: '07:40 - 08:00',
+    category: 'medicine_drink',
+    mainGroup: 'pregnant_medicine',
+    foodDetails: 'Nước thuốc bắc sắc sẵn trong bình giữ nhiệt 500ml uống ấm sau bữa ăn theo đơn bác sĩ.',
+    complianceCommitment: true,
+    status: 'confirmed',
+    steps: [
+      {
+        stepName: 'Trưởng bộ phận',
+        roleRequired: 'manager',
+        approverId: 'LK-005',
+        approverName: 'Trần Văn Hùng',
+        status: 'approved',
+        actionAt: '2026-11-09T02:00:00.000Z',
+      },
+      {
+        stepName: 'Trưởng phòng HCNS',
+        roleRequired: 'hr',
+        approverId: '1867',
+        approverName: 'Trương Anh Như Quỳnh',
+        status: 'approved',
+        actionAt: '2026-11-09T02:30:00.000Z',
+      },
+    ],
+    currentStepIndex: 2,
+    guardId: '102',
+    guardName: 'Lương Văn Vĩnh',
+    guardNote: 'Đã kiểm tra bình nước có nhãn đạt chuẩn, đồng ý cho mang vào.',
+    confirmedAt: '2026-11-09T07:50:00.000Z',
+    entryLogs: [
+      {
+        id: 'LOG-004',
+        guardName: 'Lương Văn Vĩnh',
+        guardId: '102',
+        action: 'confirmed',
+        note: 'Đã kiểm tra bình nước có nhãn đạt chuẩn, đồng ý cho mang vào.',
+        timestamp: '2026-11-09T07:50:00.000Z',
+      },
+    ],
+    createdAt: '2026-11-09T01:30:00.000Z',
+    updatedAt: '2026-11-09T07:50:00.000Z',
+  },
+  {
+    id: 'TP26-0004',
     employeeId: '1010',
     employeeName: 'Nguyễn Thị Thanh Hiền',
     department: 'Phân xưởng dệt',
     entryDate: '2026-11-09',
     shift: 'Ca 1 (06:00 - 14:00)',
+    timeFrame: '05:35 - 05:50',
     category: 'vegetarian',
     mainGroup: 'vegetarian',
-    foodDetails: 'Mì quảng chay',
+    foodDetails: 'Cơm gạo lứt muối mè + Đậu hũ kho nấm đông cô, mang trong cặp lồng giữ nhiệt dùng cho bữa trưa.',
     complianceCommitment: true,
-    status: 'approved',
+    status: 'confirmed',
+    guardId: '101',
+    guardName: 'Nguyễn Hữu Lập',
+    guardNote: 'Đã kiểm tra bao gói sạch sẽ, đủ điều kiện cho mang vào',
+    confirmedAt: '2026-11-09T11:47:00.000Z',
+    entryLogs: [
+      {
+        id: 'LOG-005',
+        guardName: 'Nguyễn Hữu Lập',
+        guardId: '101',
+        action: 'confirmed',
+        note: 'Đã kiểm tra bao gói sạch sẽ, đủ điều kiện cho mang vào',
+        timestamp: '2026-11-09T11:47:00.000Z',
+      },
+    ],
     expiresAt: new Date(Date.now() + 10 * 60 * 60 * 1000).toISOString(),
-    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    createdAt: '2026-11-09T05:00:00.000Z',
+    updatedAt: '2026-11-09T11:47:00.000Z',
   },
   {
-    id: 'TP26-0003',
+    id: 'TP26-0005',
+    employeeId: '1015',
+    employeeName: 'Lê Thị Mai',
+    department: 'Xưởng May 1',
+    entryDate: '2026-11-08',
+    shift: 'Ca 1 (06:00 - 14:00)',
+    category: 'vegetarian',
+    mainGroup: 'vegetarian',
+    foodDetails: 'Cao lầu chay',
+    complianceCommitment: true,
+    status: 'approved',
+    expiresAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // Đã hết hạn (14 tiếng trước)
+    createdAt: new Date(Date.now() - 14 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 14 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'TP26-0006',
     employeeId: '1002',
     employeeName: 'Trần Thị Kim Loan',
     department: 'Phòng HCNS',
@@ -336,20 +484,201 @@ export const INITIAL_FOOD_REGISTRATIONS: FoodRegistration[] = [
     createdAt: '2026-11-09T02:00:00.000Z',
     updatedAt: '2026-11-09T02:00:00.000Z',
   },
-  {
-    id: 'TP26-0004',
-    employeeId: '1015',
-    employeeName: 'Lê Thị Mai',
-    department: 'Xưởng May 1',
-    entryDate: '2026-11-08',
-    shift: 'Ca 1 (06:00 - 14:00)',
-    category: 'vegetarian',
-    mainGroup: 'vegetarian',
-    foodDetails: 'Cao lầu chay',
-    complianceCommitment: true,
-    status: 'approved',
-    expiresAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // Đã hết hạn (14 tiếng trước)
-    createdAt: new Date(Date.now() - 14 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 14 * 60 * 60 * 1000).toISOString(),
-  },
 ];
+
+// ==========================================
+// CẤU TRÚC DỮ LIỆU BÁO CÁO TỔNG HỢP THỰC PHẨM
+// ==========================================
+export interface FoodReportRow {
+  rowId: string;
+  registration: FoodRegistration;
+  id: string; // Mã phiếu: TP26-0001
+  employeeId: string;
+  employeeName: string;
+  department: string;
+  entryDate: string; // YYYY-MM-DD của ngày mang vào thực tế (hoặc ngày đăng ký)
+  displayDate: string; // Định dạng dd/mm/yyyy
+  isRange: boolean;
+  dateRangeText?: string; // (Đợt: dd/mm/yyyy – dd/mm/yyyy)
+  shift: string;
+  timeFrame?: string;
+  category: FoodCategory;
+  mainGroup?: FoodMainGroup;
+  foodDetails: string;
+  complianceCommitment: boolean;
+  status: 'confirmed' | 'guard_rejected' | FoodRegistrationStatus;
+  statusLabel: string;
+  statusBadge: string;
+  guardName?: string;
+  guardTime?: string;
+  sortTime: number;
+  note?: string;
+  isScanLog: boolean;
+  logIndex?: number;
+}
+
+function formatDateStr(isoOrDate?: string): string {
+  if (!isoOrDate) return '';
+  if (/^\d{4}-\d{2}-\d{2}/.test(isoOrDate)) {
+    const [y, m, d] = isoOrDate.slice(0, 10).split('-');
+    return `${d}/${m}/${y}`;
+  }
+  const dt = new Date(isoOrDate);
+  if (isNaN(dt.getTime())) return isoOrDate;
+  const day = String(dt.getDate()).padStart(2, '0');
+  const month = String(dt.getMonth() + 1).padStart(2, '0');
+  const year = dt.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+/**
+ * Trải phẳng danh sách đăng ký thực phẩm thành các dòng báo cáo chi tiết.
+ * Mỗi lần bảo vệ quét mã xác nhận hoặc từ chối (trong entryLogs) sẽ hiển thị thành 1 dòng riêng biệt
+ * kèm đúng ngày mang vào thực tế, giờ xác nhận và ghi chú của bảo vệ.
+ */
+export function flattenFoodRegistrationsToReportRows(registrations: FoodRegistration[]): FoodReportRow[] {
+  const rows: FoodReportRow[] = [];
+
+  for (const reg of registrations) {
+    const logs = Array.isArray(reg.entryLogs) && reg.entryLogs.length > 0 ? reg.entryLogs : [];
+
+    // Trường hợp 1: Có danh sách nhật ký quét của bảo vệ (entryLogs)
+    if (logs.length > 0) {
+      logs.forEach((log, logIdx) => {
+        let entryDate = reg.entryDate;
+        if (log.timestamp) {
+          const parsed = new Date(log.timestamp);
+          if (!isNaN(parsed.getTime())) {
+            const y = parsed.getFullYear();
+            const m = String(parsed.getMonth() + 1).padStart(2, '0');
+            const d = String(parsed.getDate()).padStart(2, '0');
+            entryDate = `${y}-${m}-${d}`;
+          }
+        }
+
+        const isConfirmed = log.action === 'confirmed';
+        const status: 'confirmed' | 'guard_rejected' = isConfirmed ? 'confirmed' : 'guard_rejected';
+        const statusLabel = isConfirmed ? 'Bảo vệ đã xác nhận' : 'Bảo vệ từ chối';
+        const statusBadge = isConfirmed
+          ? 'bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800'
+          : 'bg-rose-50 text-rose-700 border-rose-300 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-800';
+
+        const hasRange = !!(reg.toDate && reg.toDate !== reg.entryDate);
+        const dateRangeText = hasRange
+          ? `(Đợt: ${formatDateStr(reg.entryDate)} – ${formatDateStr(reg.toDate)})`
+          : undefined;
+
+        rows.push({
+          rowId: `${reg.id}-log-${log.id || logIdx}`,
+          registration: reg,
+          id: reg.id,
+          employeeId: reg.employeeId,
+          employeeName: reg.employeeName,
+          department: reg.department,
+          entryDate,
+          displayDate: formatDateStr(entryDate),
+          isRange: hasRange,
+          dateRangeText,
+          shift: reg.shift || (hasRange ? 'Theo đợt' : '-'),
+          timeFrame: reg.timeFrame,
+          category: reg.category,
+          mainGroup: reg.mainGroup || (reg.category === 'vegetarian' ? 'vegetarian' : 'pregnant_medicine'),
+          foodDetails: reg.foodDetails,
+          complianceCommitment: reg.complianceCommitment,
+          status,
+          statusLabel,
+          statusBadge,
+          guardName: log.guardName,
+          guardTime: log.timestamp,
+          sortTime: log.timestamp ? new Date(log.timestamp).getTime() : new Date(reg.createdAt).getTime(),
+          note: log.action === 'rejected' ? (log.reason || log.note || '-') : (log.note || '-'),
+          isScanLog: true,
+          logIndex: logIdx,
+        });
+      });
+    // Trường hợp 2: Dữ liệu cũ đã có guardName/confirmedAt nhưng chưa lưu vào mảng entryLogs
+    } else if (reg.confirmedAt || reg.guardName) {
+      let entryDate = reg.entryDate;
+      if (reg.confirmedAt) {
+        const parsed = new Date(reg.confirmedAt);
+        if (!isNaN(parsed.getTime())) {
+          const y = parsed.getFullYear();
+          const m = String(parsed.getMonth() + 1).padStart(2, '0');
+          const d = String(parsed.getDate()).padStart(2, '0');
+          entryDate = `${y}-${m}-${d}`;
+        }
+      }
+      const isRejected = reg.status === 'guard_rejected';
+      const status: 'confirmed' | 'guard_rejected' = isRejected ? 'guard_rejected' : 'confirmed';
+      const statusLabel = isRejected ? 'Bảo vệ từ chối' : 'Bảo vệ đã xác nhận';
+      const statusBadge = isRejected
+        ? 'bg-rose-50 text-rose-700 border-rose-300 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-800'
+        : 'bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800';
+
+      const hasRange = !!(reg.toDate && reg.toDate !== reg.entryDate);
+      const dateRangeText = hasRange
+        ? `(Đợt: ${formatDateStr(reg.entryDate)} – ${formatDateStr(reg.toDate)})`
+        : undefined;
+
+      rows.push({
+        rowId: `${reg.id}-legacy`,
+        registration: reg,
+        id: reg.id,
+        employeeId: reg.employeeId,
+        employeeName: reg.employeeName,
+        department: reg.department,
+        entryDate,
+        displayDate: formatDateStr(entryDate),
+        isRange: hasRange,
+        dateRangeText,
+        shift: reg.shift || (hasRange ? 'Theo đợt' : '-'),
+        timeFrame: reg.timeFrame,
+        category: reg.category,
+        mainGroup: reg.mainGroup || (reg.category === 'vegetarian' ? 'vegetarian' : 'pregnant_medicine'),
+        foodDetails: reg.foodDetails,
+        complianceCommitment: reg.complianceCommitment,
+        status,
+        statusLabel,
+        statusBadge,
+        guardName: reg.guardName,
+        guardTime: reg.confirmedAt,
+        sortTime: reg.confirmedAt ? new Date(reg.confirmedAt).getTime() : new Date(reg.createdAt).getTime(),
+        note: reg.guardNote || reg.rejectedReason || '-',
+        isScanLog: true,
+      });
+    // Trường hợp 3: Đơn mới tạo/chờ duyệt, chưa qua cổng bảo vệ lần nào
+    } else {
+      const hasRange = !!(reg.toDate && reg.toDate !== reg.entryDate);
+      rows.push({
+        rowId: `${reg.id}-reg`,
+        registration: reg,
+        id: reg.id,
+        employeeId: reg.employeeId,
+        employeeName: reg.employeeName,
+        department: reg.department,
+        entryDate: reg.entryDate,
+        displayDate: hasRange
+          ? `${formatDateStr(reg.entryDate)} – ${formatDateStr(reg.toDate)}`
+          : formatDateStr(reg.entryDate),
+        isRange: hasRange,
+        dateRangeText: undefined,
+        shift: reg.shift || (hasRange ? 'Theo đợt' : '-'),
+        timeFrame: reg.timeFrame,
+        category: reg.category,
+        mainGroup: reg.mainGroup || (reg.category === 'vegetarian' ? 'vegetarian' : 'pregnant_medicine'),
+        foodDetails: reg.foodDetails,
+        complianceCommitment: reg.complianceCommitment,
+        status: reg.status,
+        statusLabel: FOOD_STATUS_LABELS[reg.status] || reg.status,
+        statusBadge: FOOD_STATUS_BADGES[reg.status] || '',
+        guardName: undefined,
+        guardTime: undefined,
+        sortTime: new Date(reg.createdAt).getTime(),
+        note: reg.status === 'rejected' ? (reg.rejectedReason || '-') : (reg.guardNote || '-'),
+        isScanLog: false,
+      });
+    }
+  }
+
+  return rows;
+}

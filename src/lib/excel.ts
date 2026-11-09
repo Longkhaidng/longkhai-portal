@@ -5,7 +5,7 @@ import { GatePass } from '@/types/gatePass';
 import { AttendanceConfirm, ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { StationeryProposal, STATIONERY_STATUS_LABELS } from '@/types/proposal';
 import { PCCCDevice, PCCCInspection, PCCC_CATEGORIES, formatPCCCDate } from '@/types/pccc';
-import { FoodRegistration, FOOD_CATEGORY_LABELS, FOOD_STATUS_LABELS } from '@/types/food-registration';
+import { FoodRegistration, FoodReportRow, flattenFoodRegistrationsToReportRows, FOOD_CATEGORY_LABELS, FOOD_STATUS_LABELS } from '@/types/food-registration';
 import { formatDate, formatDateTime } from '@/lib/utils';
 
 export interface ParsedEmployeeResult {
@@ -1095,7 +1095,8 @@ export async function exportPCCCReportToExcel(opts: ExportPCCCReportOptions) {
 }
 
 export interface ExportFoodReportOptions {
-  registrations: FoodRegistration[];
+  registrations?: FoodRegistration[];
+  rows?: FoodReportRow[];
   subtitle?: string;
   docCode?: string;
   fileName?: string;
@@ -1120,15 +1121,16 @@ export async function exportFoodReportToExcel(opts: ExportFoodReportOptions) {
     'Ghi chú / Lý do từ chối',
   ];
 
-  const rows = opts.registrations.map((r, idx) => {
-    const catLabel =
-      (r as any).category === 'other' && (r as any).customCategory
-        ? `Khác (${r.customCategory})`
-        : FOOD_CATEGORY_LABELS[r.category] || r.category;
-    const statusLabel = FOOD_STATUS_LABELS[r.status] || r.status;
-    const guardText = r.guardName ? `${r.guardName}${r.guardId ? ` (${r.guardId})` : ''}` : '-';
-    const confirmTime = r.confirmedAt ? formatDateTime(r.confirmedAt) : '-';
-    const noteText = r.status === 'rejected' || r.status === 'guard_rejected' ? (r.rejectedReason || r.guardNote || '-') : (r.guardNote || '-');
+  const reportRows: FoodReportRow[] = opts.rows && opts.rows.length > 0
+    ? opts.rows
+    : flattenFoodRegistrationsToReportRows(opts.registrations || []);
+
+  const rows = reportRows.map((r, idx) => {
+    const catLabel = FOOD_CATEGORY_LABELS[r.category] || r.category;
+    const dateText = r.dateRangeText ? `${r.displayDate} ${r.dateRangeText}` : r.displayDate;
+    const guardText = r.guardName || '-';
+    const confirmTime = r.guardTime ? formatDateTime(r.guardTime) : '-';
+    const noteText = r.note || '-';
 
     return [
       idx + 1,
@@ -1136,13 +1138,13 @@ export async function exportFoodReportToExcel(opts: ExportFoodReportOptions) {
       r.employeeId,
       r.employeeName,
       r.department,
-      r.toDate && r.toDate !== r.entryDate ? `${formatDate(r.entryDate)} - ${formatDate(r.toDate)}` : formatDate(r.entryDate),
-      r.shift || (r.toDate ? 'Theo đợt' : '-'),
+      dateText,
+      r.shift,
       r.timeFrame || '-',
       catLabel,
       r.foodDetails,
       r.complianceCommitment ? 'Đã cam kết' : 'Chưa',
-      statusLabel,
+      r.statusLabel,
       guardText,
       confirmTime,
       noteText,
