@@ -121,14 +121,13 @@
     "role": "security",
     "permissions": [
       "dashboard",
-      "attendance",
-      "gate_pass",
       "announcements"
     ],
     "isActive": true,
     "password": "102",
     "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "updatedAt": "2026-11-09T03:23:19.965Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "103",
