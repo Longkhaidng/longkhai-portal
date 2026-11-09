@@ -2209,6 +2209,93 @@ class StorageService {
     } catch {}
   }
 
+  approveFoodRegistrationByDept(
+    id: string,
+    approver: { id: string; name: string },
+    comment?: string
+  ): void {
+    if (!this.isClient()) return;
+    const list = this.getFoodRegistrations();
+    const item = list.find((r) => r.id === id);
+    if (!item) return;
+
+    if (!item.steps || item.steps.length === 0) {
+      item.steps = [
+        { stepName: 'Trưởng bộ phận', roleRequired: 'manager', status: 'pending' },
+        { stepName: 'Trưởng phòng HCNS', roleRequired: 'hr', status: 'pending' },
+      ];
+    }
+
+    item.steps[0] = {
+      stepName: 'Trưởng bộ phận',
+      roleRequired: 'manager',
+      approverId: approver.id,
+      approverName: approver.name,
+      status: 'approved',
+      comment: comment || 'Đã duyệt',
+      actionAt: new Date().toISOString(),
+    };
+
+    item.status = 'pending_hr';
+    item.currentStepIndex = 1;
+    item.updatedAt = new Date().toISOString();
+
+    this.saveFoodRegistration(item, approver);
+  }
+
+  approveFoodRegistrationByHR(
+    id: string,
+    approver: { id: string; name: string },
+    comment?: string
+  ): void {
+    if (!this.isClient()) return;
+    const list = this.getFoodRegistrations();
+    const item = list.find((r) => r.id === id);
+    if (!item) return;
+
+    if (!item.steps || item.steps.length === 0) {
+      item.steps = [
+        { stepName: 'Trưởng bộ phận', roleRequired: 'manager', status: 'approved' },
+        { stepName: 'Trưởng phòng HCNS', roleRequired: 'hr', status: 'pending' },
+      ];
+    }
+
+    item.steps[1] = {
+      stepName: 'Trưởng phòng HCNS',
+      roleRequired: 'hr',
+      approverId: approver.id,
+      approverName: approver.name,
+      status: 'approved',
+      comment: comment || 'Đã duyệt',
+      actionAt: new Date().toISOString(),
+    };
+
+    item.status = 'approved';
+    item.currentStepIndex = 2;
+    item.updatedAt = new Date().toISOString();
+
+    this.saveFoodRegistration(item, approver);
+  }
+
+  rejectFoodRegistrationByApprover(
+    id: string,
+    approver: { id: string; name: string },
+    reason: string
+  ): void {
+    if (!this.isClient()) return;
+    const list = this.getFoodRegistrations();
+    const item = list.find((r) => r.id === id);
+    if (!item) return;
+
+    item.status = 'rejected';
+    item.rejectedReason = reason;
+    item.rejectedBy = approver.name;
+    item.rejectedAt = new Date().toISOString();
+    item.updatedAt = new Date().toISOString();
+
+    this.saveFoodRegistration(item, approver);
+  }
+
   confirmFoodRegistration(
     id: string,
     guardName: string,
@@ -2220,12 +2307,23 @@ class StorageService {
     const item = list.find((r) => r.id === id);
     if (!item) return;
 
+    const now = new Date().toISOString();
+    const newLog = {
+      id: "LOG-" + Date.now(),
+      guardId,
+      guardName,
+      action: 'confirmed' as const,
+      note: guardNote,
+      timestamp: now,
+    };
+
     item.status = 'confirmed';
     item.guardName = guardName;
     item.guardId = guardId || item.guardId;
     item.guardNote = guardNote || item.guardNote;
-    item.confirmedAt = new Date().toISOString();
-    item.updatedAt = new Date().toISOString();
+    item.confirmedAt = now;
+    item.entryLogs = [...(item.entryLogs || []), newLog];
+    item.updatedAt = now;
 
     this.saveFoodRegistration(item, { id: guardId || 'guard', name: guardName });
   }
@@ -2241,11 +2339,22 @@ class StorageService {
     const item = list.find((r) => r.id === id);
     if (!item) return;
 
-    item.status = 'rejected';
+    const now = new Date().toISOString();
+    const newLog = {
+      id: "LOG-" + Date.now(),
+      guardId,
+      guardName,
+      action: 'rejected' as const,
+      reason,
+      timestamp: now,
+    };
+
+    item.status = 'guard_rejected';
     item.guardName = guardName;
     item.guardId = guardId || item.guardId;
     item.rejectedReason = reason;
-    item.updatedAt = new Date().toISOString();
+    item.entryLogs = [...(item.entryLogs || []), newLog];
+    item.updatedAt = now;
 
     this.saveFoodRegistration(item, { id: guardId || 'guard', name: guardName });
   }

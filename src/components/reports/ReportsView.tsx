@@ -1174,7 +1174,7 @@ export function ReportsView() {
                 <option value="pregnant">Thức ăn mang thai</option>
                 <option value="vegetarian">Thực phẩm chay</option>
                 <option value="medicine_drink">Nước thuốc</option>
-                <option value="other">Khác</option>
+
               </select>
             </div>
           )}
@@ -1267,9 +1267,12 @@ export function ReportsView() {
                 ) : reportType === 'food_registration' ? (
                   <>
                     <option value="all">Tất cả trạng thái</option>
-                    <option value="pending">Chờ bảo vệ xác nhận</option>
+                    <option value="pending_dept">Chờ Trưởng BP duyệt</option>
+                    <option value="pending_hr">Chờ Trưởng phòng HCNS duyệt</option>
+                    <option value="approved">Đã duyệt (Có mã QR)</option>
                     <option value="confirmed">Bảo vệ xác nhận</option>
-                    <option value="rejected">Không xác nhận (Từ chối)</option>
+                    <option value="rejected">Từ chối duyệt</option>
+                    <option value="guard_rejected">Bảo vệ từ chối tại cổng</option>
                     <option value="cancelled">Đã hủy</option>
                   </>
                 ) : reportType === 'leave' ? (
@@ -2253,7 +2256,7 @@ export function ReportsView() {
                         </td>
                         <td className="p-2 border whitespace-nowrap text-center">
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                            {f.category === 'other' && f.customCategory
+                            {(f.category as string) === 'other' && f.customCategory
                               ? `Khác (${f.customCategory})`
                               : FOOD_CATEGORY_LABELS[f.category] || f.category}
                           </span>

@@ -1122,13 +1122,13 @@ export async function exportFoodReportToExcel(opts: ExportFoodReportOptions) {
 
   const rows = opts.registrations.map((r, idx) => {
     const catLabel =
-      r.category === 'other' && r.customCategory
+      (r as any).category === 'other' && (r as any).customCategory
         ? `Khác (${r.customCategory})`
         : FOOD_CATEGORY_LABELS[r.category] || r.category;
     const statusLabel = FOOD_STATUS_LABELS[r.status] || r.status;
     const guardText = r.guardName ? `${r.guardName}${r.guardId ? ` (${r.guardId})` : ''}` : '-';
     const confirmTime = r.confirmedAt ? formatDateTime(r.confirmedAt) : '-';
-    const noteText = r.status === 'rejected' ? (r.rejectedReason || r.guardNote || '-') : (r.guardNote || '-');
+    const noteText = r.status === 'rejected' || r.status === 'guard_rejected' ? (r.rejectedReason || r.guardNote || '-') : (r.guardNote || '-');
 
     return [
       idx + 1,

@@ -15,6 +15,7 @@ import { ProposalHubView } from '@/components/proposals/ProposalHubView';
 import { PCCCInspectionView } from '@/components/pccc/PCCCInspectionView';
 import { PeriodicInspectionView } from '@/components/periodic-inspection/PeriodicInspectionView';
 import { FoodRegistrationView } from '@/components/food-registration/FoodRegistrationView';
+import { checkFoodQrValidity } from '@/types/food-registration';
 import { AnnouncementView } from '@/components/announcements/AnnouncementView';
 import { DynamicFormsView } from '@/components/forms/DynamicFormsView';
 import { ReportsView } from '@/components/reports/ReportsView';
@@ -37,6 +38,9 @@ import {
   isApproverRole,
   isSecurityRole,
   isMaintenanceStaff,
+  isHRHead,
+  canApproveFoodDept,
+  canApproveFoodHR,
 } from '@/lib/permissions';
 
 function PortalAppContent() {
@@ -189,11 +193,17 @@ function PortalAppContent() {
   try {
     const allFoods = storage.getFoodRegistrations();
     if (Array.isArray(allFoods)) {
-      if (isSecurity || currentUser.role === 'admin') {
-        pendingFoods = allFoods.filter((f) => f.status === 'pending').length;
+      if (isSecurity) {
+        pendingFoods = allFoods.filter((f) => (f.status === 'approved' || f.status === 'confirmed') && !checkFoodQrValidity(f).isExpired).length;
+      } else if (currentUser.role === 'admin') {
+        pendingFoods = allFoods.filter((f) => f.status === 'pending_dept' || f.status === 'pending_hr').length;
+      } else if (isHRHead(currentUser)) {
+        pendingFoods = allFoods.filter((f) => f.status === 'pending_hr').length;
+      } else if (currentUser.role === 'manager') {
+        pendingFoods = allFoods.filter((f) => canApproveFoodDept(currentUser, f)).length;
       } else {
         pendingFoods = allFoods.filter(
-          (f) => f.employeeId.toLowerCase() === currentUser.id.toLowerCase() && f.status === 'pending'
+          (f) => f.employeeId.toLowerCase() === currentUser.id.toLowerCase() && (f.status === 'pending_dept' || f.status === 'pending_hr')
         ).length;
       }
     }

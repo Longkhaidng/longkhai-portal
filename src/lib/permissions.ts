@@ -4,6 +4,7 @@ import { GatePass } from '@/types/gatePass';
 import { AttendanceConfirm } from '@/types/attendance';
 import { RepairProposal } from '@/types/repair';
 import { StationeryProposal, GeneralProposal } from '@/types/proposal';
+import { FoodRegistration } from '@/types/food-registration';
 
 export type DocumentScope = 'my' | 'approver' | 'all';
 
@@ -608,4 +609,86 @@ export function filterUserGeneralProposals(
   }
 
   return proposals.filter((p) => p.employeeId.toLowerCase() === uid);
+}
+
+/**
+ * Check if the user is HR Department Head / Trưởng phòng HCNS
+ * (ID 1867, role manager in HCNS/Nhân sự, or Admin/BOD)
+ */
+export function isHRHead(user?: User | null): boolean {
+  if (!user) return false;
+  if (isSuperAdminOrBOD(user)) return true;
+  if (user.id === '1867') return true;
+  const dept = (user.department || '').toLowerCase();
+  const isHCNS = dept.includes('hcns') || dept.includes('hành chính') || dept.includes('nhân sự');
+  return isHCNS && (user.role === 'manager' || user.role === 'hr');
+}
+
+/**
+ * Check if user can approve a Food Registration at Step 1 (Trưởng bộ phận)
+ */
+export function canApproveFoodDept(user: User | null, item: FoodRegistration): boolean {
+  if (!user) return false;
+  if (item.status !== 'pending_dept') return false;
+  if (isSuperAdminOrBOD(user)) return true;
+  if (user.role === 'manager') {
+    return isSameDepartment(user.department, item.department);
+  }
+  return false;
+}
+
+/**
+ * Check if user can approve a Food Registration at Step 2 (Trưởng phòng HCNS)
+ */
+export function canApproveFoodHR(user: User | null, item: FoodRegistration): boolean {
+  if (!user) return false;
+  if (item.status !== 'pending_hr') return false;
+  return isHRHead(user);
+}
+
+/**
+ * Filter food registrations based on user role & scope
+ */
+export function filterUserFoodRegistrations(
+  registrations: FoodRegistration[],
+  user: User | null,
+  scope: DocumentScope = 'all'
+): FoodRegistration[] {
+  if (!user) return [];
+  const uid = user.id.toLowerCase();
+  const isAdmin = isSuperAdminOrBOD(user);
+  const isSecurity = isSecurityRole(user);
+  const isHR = isHRHead(user) || user.role === 'hr' || user.role === 'cb';
+
+  if (isAdmin || isSecurity) {
+    if (scope === 'my') return registrations.filter((r) => r.employeeId.toLowerCase() === uid);
+    return registrations;
+  }
+
+  if (scope === 'my') {
+    return registrations.filter((r) => r.employeeId.toLowerCase() === uid);
+  }
+
+  if (scope === 'approver') {
+    return registrations.filter((r) => {
+      if (r.employeeId.toLowerCase() === uid) return false;
+      if (canApproveFoodDept(user, r)) return true;
+      if (canApproveFoodHR(user, r)) return true;
+      return false;
+    });
+  }
+
+  // Scope 'all'
+  if (isHR) {
+    return registrations;
+  }
+
+  if (user.role === 'manager') {
+    return registrations.filter(
+      (r) => r.employeeId.toLowerCase() === uid || isSameDepartment(user.department, r.department)
+    );
+  }
+
+  // Regular employee
+  return registrations.filter((r) => r.employeeId.toLowerCase() === uid);
 }

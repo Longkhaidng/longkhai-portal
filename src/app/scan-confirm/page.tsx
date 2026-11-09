@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
+import { checkFoodQrValidity } from '@/types/food-registration';
 
 const SECURITY_GUARDS = [
   'Lương Văn Vĩnh',
@@ -44,6 +45,7 @@ function ScanConfirmContent() {
   const [docType, setDocType] = useState<'gate_pass' | 'attendance' | 'food'>('gate_pass');
   const [employeeInfo, setEmployeeInfo] = useState<any>(null);
   const [managerInfo, setManagerInfo] = useState<any>(null);
+  const foodValidity = docType === 'food' && docData ? checkFoodQrValidity(docData) : null;
 
   // Form states for security action
   const [guardName, setGuardName] = useState<string>(SECURITY_GUARDS[0]);
@@ -460,94 +462,134 @@ function ScanConfirmContent() {
                   </div>
 
                   {/* Status & Guard Action */}
-                  {docData.status === 'confirmed' ? (
-                    <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-700/80 text-emerald-200 space-y-2">
-                      <div className="flex items-center gap-2 font-bold text-sm text-emerald-400">
-                        <CheckCircle2 className="w-5 h-5 shrink-0" />
-                        <span>BẢO VỆ ĐÃ XÁC NHẬN CHO MANG VÀO</span>
-                      </div>
-                      <div className="text-xs space-y-1 text-slate-300">
-                        <p>Bảo vệ xác nhận: <b className="text-white">{docData.guardName || 'Bảo vệ cổng'}</b></p>
-                        {docData.confirmedAt && <p>Thời gian: {new Date(docData.confirmedAt).toLocaleString('vi-VN')}</p>}
-                        {docData.guardNote && <p className="italic text-emerald-300/90">&ldquo;{docData.guardNote}&rdquo;</p>}
-                      </div>
-                    </div>
-                  ) : docData.status === 'rejected' ? (
-                    <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-800 text-rose-200 space-y-2">
-                      <div className="flex items-center gap-2 font-bold text-sm text-rose-400">
-                        <XCircle className="w-5 h-5 shrink-0" />
-                        <span>BẢO VỆ TỪ CHỐI / KHÔNG XÁC NHẬN</span>
-                      </div>
-                      <div className="text-xs space-y-1 text-slate-300">
-                        <p>Bảo vệ kiểm tra: <b className="text-white">{docData.guardName || 'Bảo vệ cổng'}</b></p>
-                        <p className="text-rose-300 font-medium">Lý do từ chối: {docData.rejectedReason || 'Không đảm bảo ATVSTP'}</p>
+                  {foodValidity?.isExpired ? (
+                    /* EXPIRED NOTICE: As requested by user */
+                    <div className="p-5 rounded-2xl bg-rose-950/80 border-2 border-rose-500 text-center space-y-2.5 animate-in fade-in">
+                      <AlertTriangle className="w-10 h-10 text-rose-400 mx-auto" />
+                      <h4 className="text-sm sm:text-base font-black text-rose-200 uppercase tracking-wide">
+                        Thời hạn đem thực phẩm vào nhà máy của bạn đã hết hiệu lực.
+                      </h4>
+                      <p className="text-xs text-rose-300">
+                        Mã QR này không còn giá trị sử dụng qua cổng bảo vệ. Nhân viên bảo vệ không được phép xác nhận cho mang vào.
+                      </p>
+                      <div className="text-[11px] text-slate-400 pt-1 border-t border-rose-900/60 font-mono">
+                        {docData.category === 'vegetarian'
+                          ? 'Mã QR thực phẩm chay có thời hạn trong 12h kể từ lúc đăng ký.'
+                          : "Thời hạn đăng ký đã kết thúc vào ngày " + (docData.toDate || docData.entryDate) + "."}
                       </div>
                     </div>
-                  ) : docData.status === 'cancelled' ? (
-                    <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-slate-400 text-center py-4 text-xs font-semibold">
-                      Đơn đăng ký này đã được người lao động hủy bỏ.
+                  ) : !foodValidity?.isValid ? (
+                    /* NOT APPROVED OR CANCELLED */
+                    <div className="p-5 rounded-2xl bg-amber-950/80 border-2 border-amber-500/80 text-center space-y-2 animate-in fade-in">
+                      <AlertTriangle className="w-9 h-9 text-amber-400 mx-auto" />
+                      <h4 className="text-xs sm:text-sm font-bold text-amber-200 uppercase">
+                        Chưa Được Cấp Phép Mang Vào
+                      </h4>
+                      <p className="text-xs text-amber-300 font-medium">
+                        {foodValidity?.message || 'Đơn đăng ký cần được phê duyệt trước khi được phép mang vào.'}
+                      </p>
                     </div>
                   ) : (
-                    /* PENDING: Action box for security */
-                    <div className="p-4 rounded-2xl bg-slate-950 border border-emerald-600/60 space-y-3">
-                      <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase">
-                        <ShieldCheck className="w-4 h-4" />
-                        <span>Xác nhận kiểm tra thực phẩm tại cổng</span>
+                    /* VALID: Action box for security */
+                    <div className="space-y-4">
+                      {/* Validity Status Pill */}
+                      <div className="p-3 rounded-2xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                          <span>MÃ QR HỢP LỆ</span>
+                        </div>
+                        <span className="text-[11px] font-medium text-emerald-200">{foodValidity.remainingText}</span>
                       </div>
 
-                      <div className="space-y-3 text-xs">
-                        <div>
-                          <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
-                            Tên bảo vệ trực ca: *
-                          </label>
-                          <select
-                            value={guardName}
-                            onChange={(e) => setGuardName(e.target.value)}
-                            className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-semibold cursor-pointer"
-                          >
-                            {SECURITY_GUARDS.map((g) => (
-                              <option key={g} value={g}>
-                                {g}
-                              </option>
+                      {/* Security Action Card */}
+                      <div className="p-4 rounded-2xl bg-slate-950 border border-emerald-600/60 space-y-3">
+                        <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase">
+                          <ShieldCheck className="w-4 h-4" />
+                          <span>Xác nhận kiểm tra thực phẩm tại cổng</span>
+                        </div>
+
+                        <div className="space-y-3 text-xs">
+                          <div>
+                            <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
+                              Tên bảo vệ trực ca: *
+                            </label>
+                            <select
+                              value={guardName}
+                              onChange={(e) => setGuardName(e.target.value)}
+                              className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-semibold cursor-pointer"
+                            >
+                              {SECURITY_GUARDS.map((g) => (
+                                <option key={g} value={g}>
+                                  {g}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div>
+                            <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
+                              Ghi chú / Nhận xét kiểm tra:
+                            </label>
+                            <input
+                              type="text"
+                              value={note}
+                              onChange={(e) => setNote(e.target.value)}
+                              placeholder="Ví dụ: Đã kiểm tra đúng món, đóng hộp kín đảm bảo ATVSTP"
+                              className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                            />
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-2.5 pt-2">
+                            <button
+                              type="button"
+                              disabled={isSubmitting}
+                              onClick={() => handleFoodAction('confirm')}
+                              className="w-full py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer disabled:opacity-50"
+                            >
+                              <CheckCircle2 className="w-4 h-4" />
+                              <span>Xác nhận cho mang vào</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              disabled={isSubmitting}
+                              onClick={() => handleFoodAction('reject')}
+                              className="w-full py-3 px-3 rounded-xl bg-rose-600/90 hover:bg-rose-600 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                            >
+                              <XCircle className="w-4 h-4" />
+                              <span>Từ chối</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Entry History Logs if any */}
+                      {Array.isArray(docData.entryLogs) && docData.entryLogs.length > 0 && (
+                        <div className="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+                          <span className="text-[11px] font-bold text-slate-300 block">
+                            Lịch sử các lần đem vào qua cổng ({docData.entryLogs.length} lượt):
+                          </span>
+                          <div className="space-y-1.5 max-h-36 overflow-y-auto">
+                            {docData.entryLogs.map((log: any, idx: number) => (
+                              <div
+                                key={idx}
+                                className="flex items-center justify-between text-[11px] p-2 rounded-xl bg-slate-900 border border-slate-800/80"
+                              >
+                                <div>
+                                  <span className={log.action === 'confirmed' ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
+                                    {log.action === 'confirmed' ? '✓ Đã cho vào' : '✕ Từ chối'}
+                                  </span>
+                                  <span className="text-slate-400 ml-1.5">({log.guardName})</span>
+                                  {log.reason && <p className="text-[10px] text-rose-300 italic">{log.reason}</p>}
+                                </div>
+                                <span className="text-slate-400 font-mono text-[10px]">
+                                  {new Date(log.timestamp).toLocaleString('vi-VN')}
+                                </span>
+                              </div>
                             ))}
-                          </select>
+                          </div>
                         </div>
-
-                        <div>
-                          <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
-                            Ghi chú / Nhận xét kiểm tra:
-                          </label>
-                          <input
-                            type="text"
-                            value={note}
-                            onChange={(e) => setNote(e.target.value)}
-                            placeholder="Ví dụ: Đã kiểm tra bao gói sạch sẽ, đủ điều kiện mang vào"
-                            className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-2.5 pt-2">
-                          <button
-                            type="button"
-                            disabled={isSubmitting}
-                            onClick={() => handleFoodAction('confirm')}
-                            className="w-full py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer disabled:opacity-50"
-                          >
-                            <CheckCircle2 className="w-4 h-4" />
-                            <span>Xác nhận cho mang vào</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            disabled={isSubmitting}
-                            onClick={() => handleFoodAction('reject')}
-                            className="w-full py-3 px-3 rounded-xl bg-rose-600/90 hover:bg-rose-600 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
-                          >
-                            <XCircle className="w-4 h-4" />
-                            <span>Không xác nhận</span>
-                          </button>
-                        </div>
-                      </div>
+                      )}
                     </div>
                   )}
                 </div>

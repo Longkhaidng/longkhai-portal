@@ -4,6 +4,7 @@ import path from 'path';
 import { resolveServerGitHubConfig } from '@/lib/server-github';
 import { GitHubService } from '@/lib/github-api';
 import nodemailer from 'nodemailer';
+import { checkFoodQrValidity } from '@/types/food-registration';
 
 const BASE_DIR = path.join(process.cwd(), 'company-data');
 const TMP_DIR = path.join('/tmp', 'company-data');
@@ -163,7 +164,7 @@ export async function GET(req: NextRequest) {
       const gitConfig = resolveServerGitHubConfig();
       if (gitConfig.token && gitConfig.owner && gitConfig.repo) {
         const ghService = new GitHubService(gitConfig);
-        const subDir = type === 'gate_pass' ? 'gate-pass' : 'attendance';
+        const subDir = type === 'gate_pass' ? 'gate-pass' : type === 'attendance' ? 'attendance' : 'food-registration';
         const year = new Date().getFullYear();
         const possibleRelPath = `${subDir}/${year}/${id}.json`;
         const ghFile = await ghService.getFile(`${gitConfig.basePath || 'company-data'}/${possibleRelPath}`);
@@ -221,7 +222,7 @@ export async function POST(req: NextRequest) {
     } = body as {
       type: 'gate_pass' | 'attendance' | 'food';
       id: string;
-      action: 'depart' | 'return' | 'confirm_security' | 'confirm_check_in' | 'confirm_check_out' | 'check_in' | 'check_out';
+      action: 'depart' | 'return' | 'confirm_security' | 'confirm_check_in' | 'confirm_check_out' | 'check_in' | 'check_out' | 'confirm' | 'reject';
       actualTime?: string;
       actualCheckIn?: string;
       actualCheckOut?: string;
@@ -259,7 +260,7 @@ export async function POST(req: NextRequest) {
     let relPath = found?.relPath || '';
 
     if (!doc && ghService) {
-      const subDir = type === 'gate_pass' ? 'gate-pass' : 'attendance';
+      const subDir = type === 'gate_pass' ? 'gate-pass' : type === 'attendance' ? 'attendance' : 'food-registration';
       const year = new Date().getFullYear();
       const possibleRelPath = `${subDir}/${year}/${id}.json`;
       const ghFile = await ghService.getFile(`${gitConfig.basePath || 'company-data'}/${possibleRelPath}`);
@@ -437,11 +438,69 @@ export async function POST(req: NextRequest) {
         `;
         sendEmailBackground(managerEmail, subject, emailHtml, origin);
       }
+
+    // ==========================================
+    // 3. FOOD REGISTRATION (ĐĂNG KÝ THỰC PHẨM)
+    // ==========================================
+    } else if (type === 'food') {
+      const validity = checkFoodQrValidity(doc);
+      if (validity.isExpired) {
+        return NextResponse.json({
+          success: false,
+          message: 'Thời hạn đem thực phẩm vào nhà máy của bạn đã hết hiệu lực.',
+          record: doc,
+        }, { status: 400 });
+      }
+
+      if (!validity.isValid) {
+        return NextResponse.json({
+          success: false,
+          message: validity.message || 'Phiếu chưa được phê duyệt hợp lệ!',
+          record: doc,
+        }, { status: 400 });
+      }
+
+      if (action === 'confirm' || action === 'confirm_security') {
+        doc.status = 'confirmed';
+        doc.guardName = finalGuard;
+        doc.guardNote = (note || '').trim() || 'Đã kiểm tra thực phẩm đúng danh mục cho phép mang vào';
+        doc.confirmedAt = now;
+        doc.updatedAt = now;
+
+        const newLog = {
+          id: `LOG-${Date.now()}`,
+          guardName: finalGuard,
+          action: 'confirmed',
+          note: doc.guardNote,
+          timestamp: now,
+        };
+        doc.entryLogs = [...(doc.entryLogs || []), newLog];
+
+        resultMessage = `✓ Bảo vệ ${finalGuard} đã xác nhận cho nhân viên ${doc.employeeName} mang thực phẩm vào nhà máy lúc ${new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} thành công!`;
+      } else if (action === 'reject') {
+        doc.status = 'guard_rejected';
+        doc.guardName = finalGuard;
+        doc.rejectedReason = (note || '').trim() || 'Thực phẩm không đúng danh mục đã đăng ký hoặc không đảm bảo ATVSTP';
+        doc.updatedAt = now;
+
+        const newLog = {
+          id: `LOG-${Date.now()}`,
+          guardName: finalGuard,
+          action: 'rejected',
+          reason: doc.rejectedReason,
+          timestamp: now,
+        };
+        doc.entryLogs = [...(doc.entryLogs || []), newLog];
+
+        resultMessage = `✕ Bảo vệ ${finalGuard} đã TỪ CHỐI cho mang vào: ${doc.rejectedReason}`;
+      } else {
+        return NextResponse.json({ success: false, message: 'Thao tác không hợp lệ đối với phiếu thực phẩm' }, { status: 400 });
+      }
     }
 
     // Determine target file path
     if (!relPath) {
-      const subDir = type === 'gate_pass' ? 'gate-pass' : 'attendance';
+      const subDir = type === 'gate_pass' ? 'gate-pass' : type === 'attendance' ? 'attendance' : 'food-registration';
       const year = new Date().getFullYear();
       relPath = `${subDir}/${year}/${doc.id}.json`;
     }
