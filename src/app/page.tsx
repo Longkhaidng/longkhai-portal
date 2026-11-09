@@ -14,6 +14,7 @@ import { OvertimeView } from '@/components/overtime/OvertimeView';
 import { ProposalHubView } from '@/components/proposals/ProposalHubView';
 import { PCCCInspectionView } from '@/components/pccc/PCCCInspectionView';
 import { PeriodicInspectionView } from '@/components/periodic-inspection/PeriodicInspectionView';
+import { FoodRegistrationView } from '@/components/food-registration/FoodRegistrationView';
 import { AnnouncementView } from '@/components/announcements/AnnouncementView';
 import { DynamicFormsView } from '@/components/forms/DynamicFormsView';
 import { ReportsView } from '@/components/reports/ReportsView';
@@ -66,6 +67,7 @@ function PortalAppContent() {
           else if (targetType === 'repair') setCurrentTab('proposals_repair');
           else if (targetType === 'stationery') setCurrentTab('proposals_stationery');
           else if (targetType === 'general') setCurrentTab('proposals_general');
+          else if (targetType === 'food') setCurrentTab('food_registration');
         }
       }
     }
@@ -183,6 +185,20 @@ function PortalAppContent() {
 
   const totalPendingProposals = pendingRepairs + pendingStationeries + pendingGenerals;
 
+  let pendingFoods = 0;
+  try {
+    const allFoods = storage.getFoodRegistrations();
+    if (Array.isArray(allFoods)) {
+      if (isSecurity || currentUser.role === 'admin') {
+        pendingFoods = allFoods.filter((f) => f.status === 'pending').length;
+      } else {
+        pendingFoods = allFoods.filter(
+          (f) => f.employeeId.toLowerCase() === currentUser.id.toLowerCase() && f.status === 'pending'
+        ).length;
+      }
+    }
+  } catch {}
+
   // Render view by tab with RBAC Guard
   const renderActiveView = () => {
     // If viewing an integrated website
@@ -280,6 +296,7 @@ function PortalAppContent() {
         'leave',
         'attendance',
         'gate_pass',
+        'food_registration',
         'repair',
         'announcements',
         'forms',
@@ -321,6 +338,8 @@ function PortalAppContent() {
         }} />;
       case 'departments':
         return <DepartmentManagementView />;
+      case 'food_registration':
+        return <FoodRegistrationView />;
       case 'overtime':
         return <OvertimeView />;
       case 'leave':
@@ -431,6 +450,7 @@ function PortalAppContent() {
           gatePassActive: activeGps,
           repair: totalPendingProposals,
           proposals: totalPendingProposals,
+          foodRegistration: pendingFoods,
         }}
         onSelectIntegratedWeb={(site) => {
           setViewingWebSite(site);

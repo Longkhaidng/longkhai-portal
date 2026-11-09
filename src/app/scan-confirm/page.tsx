@@ -20,6 +20,7 @@ import {
   AlertCircle,
   ArrowRight,
   Package,
+  UtensilsCrossed,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
@@ -35,12 +36,12 @@ const SECURITY_GUARDS = [
 function ScanConfirmContent() {
   const searchParams = useSearchParams();
   const rawId = searchParams.get('id') || searchParams.get('code') || '';
-  const paramType = searchParams.get('type') as 'gate_pass' | 'attendance' | null;
+  const paramType = searchParams.get('type') as 'gate_pass' | 'attendance' | 'food' | null;
 
   const [isLoading, setIsLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [docData, setDocData] = useState<any>(null);
-  const [docType, setDocType] = useState<'gate_pass' | 'attendance'>('gate_pass');
+  const [docType, setDocType] = useState<'gate_pass' | 'attendance' | 'food'>('gate_pass');
   const [employeeInfo, setEmployeeInfo] = useState<any>(null);
   const [managerInfo, setManagerInfo] = useState<any>(null);
 
@@ -150,6 +151,70 @@ function ScanConfirmContent() {
           success: false,
           title: 'Lỗi kết nối',
           message: err.message || 'Không thể gửi dữ liệu lên máy chủ.',
+        });
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
+
+  
+  // Handle Security Action for Food Registration
+  const handleFoodAction = (action: 'confirm' | 'reject') => {
+    if (!docData) return;
+    setIsSubmitting(true);
+
+    const payload = {
+      type: 'food',
+      id: docData.id,
+      action,
+      guardName: guardName.trim() || 'Bảo vệ cổng (Quét QR)',
+      note: note.trim() || (action === 'confirm' ? 'Đã kiểm tra thực phẩm đảm bảo ATVSTP, đóng gói kín' : 'Không đảm bảo an toàn vệ sinh thực phẩm'),
+    };
+
+    fetch('/api/scan-confirm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setDocData(data.record);
+          try {
+            if (typeof window !== 'undefined') {
+              const localFood = localStorage.getItem('lk_portal_food_registrations');
+              if (localFood) {
+                const list = JSON.parse(localFood);
+                const idx = list.findIndex((f: any) => f.id === data.record.id);
+                if (idx >= 0) list[idx] = data.record;
+                else list.unshift(data.record);
+                localStorage.setItem('lk_portal_food_registrations', JSON.stringify(list));
+              }
+            }
+          } catch {}
+
+          setResultModal({
+            show: true,
+            success: action === 'confirm',
+            title: action === 'confirm' ? 'Xác Nhận Cho Mang Vào Thành Công' : 'Đã Từ Chối / Không Xác Nhận',
+            message: data.message,
+          });
+        } else {
+          setResultModal({
+            show: true,
+            success: false,
+            title: 'Lỗi xử lý',
+            message: data.message || 'Có lỗi xảy ra khi xác nhận.',
+          });
+        }
+      })
+      .catch((err) => {
+        setResultModal({
+          show: true,
+          success: false,
+          title: 'Lỗi kết nối',
+          message: err.message || 'Không thể kết nối máy chủ.',
         });
       })
       .finally(() => {
@@ -331,6 +396,162 @@ function ScanConfirmContent() {
                   </div>
                 </div>
               </div>
+
+              
+              {/* DETAILS: FOOD REGISTRATION */}
+              {docType === 'food' && (
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800/90 space-y-3">
+                    <div className="flex items-center gap-2 text-xs font-bold text-slate-300 border-b border-slate-800 pb-2">
+                      <UtensilsCrossed className="w-4 h-4 text-emerald-400" />
+                      <span>CHI TIẾT THỰC PHẨM ĐĂNG KÝ MANG VÀO</span>
+                    </div>
+
+                    <div className="space-y-2.5 text-xs">
+                      <div>
+                        <span className="text-slate-400 text-[11px] block mb-1">Phân loại thực phẩm:</span>
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                          {docData.category === 'pregnant'
+                            ? '🤰 Thức ăn cho người mang thai'
+                            : docData.category === 'vegetarian'
+                            ? '🥗 Thực phẩm chay'
+                            : docData.category === 'medicine_drink'
+                            ? '🍵 Nước thuốc'
+                            : docData.customCategory ? `🍱 Khác (${docData.customCategory})` : '🍱 Khác'}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/60">
+                        <div>
+                          <span className="text-slate-400 text-[11px] block">Ngày mang vào:</span>
+                          <span className="font-bold text-white">
+                            {formatDate(docData.entryDate)}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400 text-[11px] block">Ca làm việc:</span>
+                          <span className="font-semibold text-amber-300">
+                            {docData.shift || 'Ca làm việc tiêu chuẩn'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {docData.timeFrame && (
+                        <div>
+                          <span className="text-slate-400 text-[11px] block">Khung giờ dự kiến mang vào:</span>
+                          <span className="font-semibold text-slate-200">
+                            {docData.timeFrame}
+                          </span>
+                        </div>
+                      )}
+
+                      <div className="pt-2 border-t border-slate-800/60">
+                        <span className="text-slate-400 text-[11px] block mb-1">Món ăn & Tình trạng bảo quản:</span>
+                        <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-xs font-medium whitespace-pre-wrap leading-relaxed">
+                          {docData.foodDetails || 'Không có mô tả chi tiết'}
+                        </div>
+                      </div>
+
+                      <div className="p-2.5 rounded-xl bg-blue-950/30 border border-blue-800/50 text-[11px] text-blue-300 flex items-start gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+                        <span>Người lao động đã cam kết ATVSTP, sử dụng trong ngày và không mang vào khu vực sản xuất.</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Status & Guard Action */}
+                  {docData.status === 'confirmed' ? (
+                    <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-700/80 text-emerald-200 space-y-2">
+                      <div className="flex items-center gap-2 font-bold text-sm text-emerald-400">
+                        <CheckCircle2 className="w-5 h-5 shrink-0" />
+                        <span>BẢO VỆ ĐÃ XÁC NHẬN CHO MANG VÀO</span>
+                      </div>
+                      <div className="text-xs space-y-1 text-slate-300">
+                        <p>Bảo vệ xác nhận: <b className="text-white">{docData.guardName || 'Bảo vệ cổng'}</b></p>
+                        {docData.confirmedAt && <p>Thời gian: {new Date(docData.confirmedAt).toLocaleString('vi-VN')}</p>}
+                        {docData.guardNote && <p className="italic text-emerald-300/90">&ldquo;{docData.guardNote}&rdquo;</p>}
+                      </div>
+                    </div>
+                  ) : docData.status === 'rejected' ? (
+                    <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-800 text-rose-200 space-y-2">
+                      <div className="flex items-center gap-2 font-bold text-sm text-rose-400">
+                        <XCircle className="w-5 h-5 shrink-0" />
+                        <span>BẢO VỆ TỪ CHỐI / KHÔNG XÁC NHẬN</span>
+                      </div>
+                      <div className="text-xs space-y-1 text-slate-300">
+                        <p>Bảo vệ kiểm tra: <b className="text-white">{docData.guardName || 'Bảo vệ cổng'}</b></p>
+                        <p className="text-rose-300 font-medium">Lý do từ chối: {docData.rejectedReason || 'Không đảm bảo ATVSTP'}</p>
+                      </div>
+                    </div>
+                  ) : docData.status === 'cancelled' ? (
+                    <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-slate-400 text-center py-4 text-xs font-semibold">
+                      Đơn đăng ký này đã được người lao động hủy bỏ.
+                    </div>
+                  ) : (
+                    /* PENDING: Action box for security */
+                    <div className="p-4 rounded-2xl bg-slate-950 border border-emerald-600/60 space-y-3">
+                      <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase">
+                        <ShieldCheck className="w-4 h-4" />
+                        <span>Xác nhận kiểm tra thực phẩm tại cổng</span>
+                      </div>
+
+                      <div className="space-y-3 text-xs">
+                        <div>
+                          <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
+                            Tên bảo vệ trực ca: *
+                          </label>
+                          <select
+                            value={guardName}
+                            onChange={(e) => setGuardName(e.target.value)}
+                            className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-semibold cursor-pointer"
+                          >
+                            {SECURITY_GUARDS.map((g) => (
+                              <option key={g} value={g}>
+                                {g}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
+                            Ghi chú / Nhận xét kiểm tra:
+                          </label>
+                          <input
+                            type="text"
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                            placeholder="Ví dụ: Đã kiểm tra bao gói sạch sẽ, đủ điều kiện mang vào"
+                            className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2.5 pt-2">
+                          <button
+                            type="button"
+                            disabled={isSubmitting}
+                            onClick={() => handleFoodAction('confirm')}
+                            className="w-full py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer disabled:opacity-50"
+                          >
+                            <CheckCircle2 className="w-4 h-4" />
+                            <span>Xác nhận cho mang vào</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            disabled={isSubmitting}
+                            onClick={() => handleFoodAction('reject')}
+                            className="w-full py-3 px-3 rounded-xl bg-rose-600/90 hover:bg-rose-600 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                          >
+                            <XCircle className="w-4 h-4" />
+                            <span>Không xác nhận</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* DETAILS: GATE PASS */}
               {docType === 'gate_pass' && (

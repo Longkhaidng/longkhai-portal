@@ -167,6 +167,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!currentUser) return false;
     // Administrator always has access to everything
     if (currentUser.role === 'admin') return true;
+    // Food intake registration is accessible to all active employees
+    if (category === 'food_registration') {
+      return true;
+    }
     // Overtime registration & confirmation is accessible to all active employees
     if (category === 'overtime') {
       return true;

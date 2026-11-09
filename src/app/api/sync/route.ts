@@ -93,6 +93,7 @@ export async function GET() {
     const periodicGroundwaterSoil = scanJsonFiles<any>('periodic-inspections/groundwater-soil');
     const overtimeRegistrations = scanJsonFiles<any>('overtime');
     const overtimeMealMenus = readJsonFile<any[]>('settings/overtime_meal_menus.json', []);
+    const foodRegistrations = scanJsonFiles<any>('food-registration');
 
     return NextResponse.json({
       success: true,
@@ -116,6 +117,7 @@ export async function GET() {
         periodicGroundwaterSoil,
         emailConfig,
         githubConfig,
+        foodRegistrations,
       },
       counts: {
         users: users.length,
@@ -128,6 +130,7 @@ export async function GET() {
         stationeryItems: stationeryItems.length,
         pcccDevices: pcccDevices.length,
         pcccInspections: pcccInspections.length,
+        foodRegistrations: foodRegistrations.length,
       },
     });
   } catch (err: any) {
@@ -160,7 +163,8 @@ export async function POST(req: NextRequest) {
         | 'periodic_stormwater'
         | 'periodic_groundwater_soil'
         | 'overtime_registration'
-        | 'overtime_meal_menu';
+        | 'overtime_meal_menu'
+        | 'food_registration';
       data: any;
       githubToken?: string;
     };
@@ -229,6 +233,10 @@ export async function POST(req: NextRequest) {
       const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
       relFilePath = `periodic-inspections/stormwater/${year}/${data.id}.json`;
       commitMessage = `Update Stormwater Inspection ${data.id}`;
+    } else if (type === 'food_registration') {
+      const year = data.entryDate ? new Date(data.entryDate).getFullYear() : new Date().getFullYear();
+      relFilePath = `food-registration/${year}/${data.id}.json`;
+      commitMessage = `Update Food Registration ${data.id} (${data.status})`;
     } else if (type === 'overtime_registration') {
       const year = data.registrationDate ? new Date(data.registrationDate).getFullYear() : new Date().getFullYear();
       relFilePath = `overtime/${year}/${data.id}.json`;

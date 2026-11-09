@@ -37,6 +37,7 @@ import {
 } from './initial-data';
 import { OvertimeRegistration, OvertimeMealMenu, OvertimeItem, OvertimeApprovalStatus, OvertimeConfirmStatus } from '@/types/overtime';
 import { INITIAL_OVERTIME_MENUS, INITIAL_OVERTIME_REGISTRATIONS } from './overtime-data';
+import { FoodRegistration, INITIAL_FOOD_REGISTRATIONS } from '@/types/food-registration';
 import { GitHubService } from './github-api';
 import { formatDocId, sortNewestFirst } from './utils';
 
@@ -67,6 +68,7 @@ const STORAGE_KEYS = {
   EMAIL_CONFIG: 'lk_portal_email_config',
   OVERTIME_REGISTRATIONS: 'lk_portal_overtime_registrations',
   OVERTIME_MEAL_MENUS: 'lk_portal_overtime_meal_menus',
+  FOOD_REGISTRATIONS: 'lk_portal_food_registrations',
   AUDIT_LOGS: 'lk_portal_audit_logs',
   CURRENT_USER_SESSION: 'lk_portal_current_user_session',
   LAST_BACKUP_DATE: 'lk_portal_last_backup_date',
@@ -1101,6 +1103,10 @@ class StorageService {
         periodicGroundwaterSoil,
         emailConfig,
         githubConfig,
+      foodRegistrations,
+
+
+  
       } = json.data;
 
       if (Array.isArray(users) && users.length > 0) {
@@ -1114,6 +1120,13 @@ class StorageService {
       }
       if (Array.isArray(webIntegrations) && webIntegrations.length > 0) {
         localStorage.setItem(STORAGE_KEYS.WEB_INTEGRATIONS, JSON.stringify(webIntegrations));
+      }
+      if (Array.isArray(foodRegistrations)) {
+        const local = this.getFoodRegistrations();
+        const map = new Map<string, FoodRegistration>();
+        local.forEach((f: FoodRegistration) => map.set(formatDocId(f.id), { ...f, id: formatDocId(f.id) }));
+        foodRegistrations.forEach((f: FoodRegistration) => map.set(formatDocId(f.id), { ...f, id: formatDocId(f.id) }));
+        localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(Array.from(map.values())));
       }
       if (Array.isArray(leaveRequests)) {
         const local = this.getLeaveRequests();
@@ -1284,6 +1297,7 @@ class StorageService {
     const plugins = this.getPlugins();
     const emailConfig = this.getEmailConfig();
     const githubConfig = this.getGitHubConfig();
+    const foodRegistrations = this.getFoodRegistrations();
 
     this.setLastBackupDate();
 
@@ -1303,6 +1317,7 @@ class StorageService {
         announcements: announcements.length,
         dynamicForms: dynamicForms.length,
         formSubmissions: formSubmissions.length,
+        foodRegistrations: foodRegistrations.length,
       },
       data: {
         leaveRequests,
@@ -1319,6 +1334,10 @@ class StorageService {
         plugins,
         emailConfig,
         githubConfig,
+      foodRegistrations,
+
+
+  
       },
     };
   }
@@ -1347,6 +1366,8 @@ class StorageService {
       plugins,
       emailConfig,
       githubConfig,
+      foodRegistrations,
+
     } = backup.data;
 
     let restoredCount = 0;
@@ -1362,6 +1383,10 @@ class StorageService {
     if (Array.isArray(attendanceConfirms)) {
       localStorage.setItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS, JSON.stringify(attendanceConfirms));
       restoredCount += attendanceConfirms.length;
+    }
+    if (Array.isArray(foodRegistrations)) {
+      localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(foodRegistrations));
+      restoredCount += foodRegistrations.length;
     }
     if (Array.isArray(repairProposals)) {
       localStorage.setItem(STORAGE_KEYS.REPAIR_PROPOSALS, JSON.stringify(repairProposals));
@@ -2101,6 +2126,140 @@ class StorageService {
       byUser?.name || 'HCNS',
       `Xóa món ăn thực đơn tăng ca ${id}`
     );
+  }
+
+
+  // --- FOOD INTAKE REGISTRATIONS (ĐĂNG KÝ THỰC PHẨM MANG VÀO NHÀ MÁY) ---
+  getFoodRegistrations(): FoodRegistration[] {
+    if (!this.isClient()) return INITIAL_FOOD_REGISTRATIONS;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.FOOD_REGISTRATIONS);
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed)) return sortNewestFirst(parsed);
+      }
+    } catch {}
+    try {
+      localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(INITIAL_FOOD_REGISTRATIONS));
+    } catch {}
+    return INITIAL_FOOD_REGISTRATIONS;
+  }
+
+  saveFoodRegistration(registration: FoodRegistration, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getFoodRegistrations();
+    const existingIndex = list.findIndex((r) => r.id === registration.id);
+    const isNew = existingIndex < 0;
+
+    if (isNew) {
+      list.unshift(registration);
+    } else {
+      list[existingIndex] = {
+        ...list[existingIndex],
+        ...registration,
+        updatedAt: new Date().toISOString(),
+      };
+    }
+    localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(list));
+
+    this.addAuditLog(
+      isNew ? 'create' : 'update',
+      'food_registration',
+      registration.id,
+      byUser?.id || registration.employeeId,
+      byUser?.name || registration.employeeName,
+      `${isNew ? 'Đăng ký mang thực phẩm vào nhà máy' : 'Cập nhật đăng ký thực phẩm'} - Mã ${registration.id} (${registration.employeeName})`
+    );
+
+    const year = new Date().getFullYear();
+    const filePath = `food-registration/${year}/${registration.id}.json`;
+    this.syncFileToGitHub(filePath, JSON.stringify(registration, null, 2), `Update food registration ${registration.id}`);
+
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'food_registration',
+        data: registration,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
+
+    try {
+      window.dispatchEvent(new Event('food_registrations_updated'));
+    } catch {}
+  }
+
+  deleteFoodRegistration(id: string, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getFoodRegistrations().filter((r) => r.id !== id);
+    localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(list));
+
+    this.addAuditLog(
+      'delete',
+      'food_registration',
+      id,
+      byUser?.id || 'admin',
+      byUser?.name || 'Admin',
+      `Xóa phiếu đăng ký thực phẩm ${id}`
+    );
+
+    try {
+      window.dispatchEvent(new Event('food_registrations_updated'));
+    } catch {}
+  }
+
+  confirmFoodRegistration(
+    id: string,
+    guardName: string,
+    guardNote?: string,
+    guardId?: string
+  ): void {
+    if (!this.isClient()) return;
+    const list = this.getFoodRegistrations();
+    const item = list.find((r) => r.id === id);
+    if (!item) return;
+
+    item.status = 'confirmed';
+    item.guardName = guardName;
+    item.guardId = guardId || item.guardId;
+    item.guardNote = guardNote || item.guardNote;
+    item.confirmedAt = new Date().toISOString();
+    item.updatedAt = new Date().toISOString();
+
+    this.saveFoodRegistration(item, { id: guardId || 'guard', name: guardName });
+  }
+
+  rejectFoodRegistration(
+    id: string,
+    guardName: string,
+    reason: string,
+    guardId?: string
+  ): void {
+    if (!this.isClient()) return;
+    const list = this.getFoodRegistrations();
+    const item = list.find((r) => r.id === id);
+    if (!item) return;
+
+    item.status = 'rejected';
+    item.guardName = guardName;
+    item.guardId = guardId || item.guardId;
+    item.rejectedReason = reason;
+    item.updatedAt = new Date().toISOString();
+
+    this.saveFoodRegistration(item, { id: guardId || 'guard', name: guardName });
+  }
+
+  cancelFoodRegistration(id: string, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getFoodRegistrations();
+    const item = list.find((r) => r.id === id);
+    if (!item) return;
+
+    item.status = 'cancelled';
+    item.updatedAt = new Date().toISOString();
+
+    this.saveFoodRegistration(item, byUser);
   }
 
 }

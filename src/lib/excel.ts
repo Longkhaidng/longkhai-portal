@@ -5,6 +5,7 @@ import { GatePass } from '@/types/gatePass';
 import { AttendanceConfirm, ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { StationeryProposal, STATIONERY_STATUS_LABELS } from '@/types/proposal';
 import { PCCCDevice, PCCCInspection, PCCC_CATEGORIES, formatPCCCDate } from '@/types/pccc';
+import { FoodRegistration, FOOD_CATEGORY_LABELS, FOOD_STATUS_LABELS } from '@/types/food-registration';
 import { formatDate, formatDateTime } from '@/lib/utils';
 
 export interface ParsedEmployeeResult {
@@ -1086,6 +1087,76 @@ export async function exportPCCCReportToExcel(opts: ExportPCCCReportOptions) {
   const buffer = await workbook.xlsx.writeBuffer();
   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
   downloadBlob(blob, `${opts.fileName}.xlsx`);
+}
+
+export interface ExportFoodReportOptions {
+  registrations: FoodRegistration[];
+  subtitle?: string;
+  docCode?: string;
+  fileName?: string;
+}
+
+export async function exportFoodReportToExcel(opts: ExportFoodReportOptions) {
+  const headers = [
+    'STT',
+    'Mã phiếu',
+    'MSNV',
+    'Họ và tên',
+    'Bộ phận / Phân xưởng',
+    'Ngày mang vào',
+    'Ca làm việc',
+    'Khung giờ',
+    'Phân loại thực phẩm',
+    'Chi tiết món ăn & Bảo quản',
+    'Cam kết ATVSTP',
+    'Trạng thái',
+    'Bảo vệ xác nhận',
+    'Thời gian xác nhận',
+    'Ghi chú / Lý do từ chối',
+  ];
+
+  const rows = opts.registrations.map((r, idx) => {
+    const catLabel =
+      r.category === 'other' && r.customCategory
+        ? `Khác (${r.customCategory})`
+        : FOOD_CATEGORY_LABELS[r.category] || r.category;
+    const statusLabel = FOOD_STATUS_LABELS[r.status] || r.status;
+    const guardText = r.guardName ? `${r.guardName}${r.guardId ? ` (${r.guardId})` : ''}` : '-';
+    const confirmTime = r.confirmedAt ? formatDateTime(r.confirmedAt) : '-';
+    const noteText = r.status === 'rejected' ? (r.rejectedReason || r.guardNote || '-') : (r.guardNote || '-');
+
+    return [
+      idx + 1,
+      r.id,
+      r.employeeId,
+      r.employeeName,
+      r.department,
+      formatDate(r.entryDate),
+      r.shift,
+      r.timeFrame || '-',
+      catLabel,
+      r.foodDetails,
+      r.complianceCommitment ? 'Đã cam kết' : 'Chưa',
+      statusLabel,
+      guardText,
+      confirmTime,
+      noteText,
+    ];
+  });
+
+  const now = new Date();
+  const dateSuffix = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+  const defaultFileName = `Bao_Cao_Thuc_Pham_Mang_Vao_${dateSuffix}`;
+
+  await exportReportToExcel({
+    title: 'THỰC PHẨM MANG VÀO NHÀ MÁY',
+    subtitle: opts.subtitle || 'Dữ liệu đăng ký thực phẩm tự chuẩn bị của nhân viên nhà máy',
+    docCode: opts.docCode || 'BC-LK-TP/2026',
+    headers,
+    rows,
+    fileName: opts.fileName || defaultFileName,
+    centerCols: [0, 1, 2, 5, 6, 7, 10, 11, 12, 13],
+  });
 }
 
 export async function exportDocumentsBackupToExcel(

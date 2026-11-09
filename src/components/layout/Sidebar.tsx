@@ -29,6 +29,7 @@ import {
   ClipboardList,
   Flame,
   ClipboardCheck,
+  UtensilsCrossed,
   ChevronDown,
 } from 'lucide-react';
 
@@ -70,6 +71,7 @@ interface SidebarProps {
     gatePassActive?: number;
     repair?: number;
     proposals?: number;
+    foodRegistration?: number;
   };
   onSelectIntegratedWeb?: (site: WebIntegration) => void;
 }
@@ -145,6 +147,14 @@ export function Sidebar({
       icon: Timer,
       badgeCount: pendingCounts.overtime,
       badgeColor: 'bg-amber-500 text-white',
+    },
+    {
+      id: 'food_registration',
+      permission: 'food_registration',
+      label: 'Thực phẩm mang vào',
+      icon: UtensilsCrossed,
+      badgeCount: pendingCounts.foodRegistration,
+      badgeColor: 'bg-emerald-500 text-white',
     },
     {
       id: 'proposals',

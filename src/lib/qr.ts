@@ -1,10 +1,10 @@
 import QRCode from 'qrcode';
 
 /**
- * Build the full public URL for scanning and confirming a document (Gate Pass or Attendance Confirm)
+ * Build the full public URL for scanning and confirming a document (Gate Pass, Attendance Confirm, or Food Registration)
  * This allows guards to scan with any smartphone camera and open directly without logging in.
  */
-export function getQrConfirmUrl(type: 'gate_pass' | 'attendance', id: string, origin?: string): string {
+export function getQrConfirmUrl(type: 'gate_pass' | 'attendance' | 'food', id: string, origin?: string): string {
   const base =
     origin ||
     (typeof window !== 'undefined' ? window.location.origin : '') ||

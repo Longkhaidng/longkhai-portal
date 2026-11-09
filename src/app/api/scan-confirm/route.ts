@@ -16,9 +16,9 @@ function ensureDir(dirPath: string) {
   } catch {}
 }
 
-function findAndLoadDoc(type: 'gate_pass' | 'attendance', docId: string): { doc: any; relPath: string } | null {
+function findAndLoadDoc(type: 'gate_pass' | 'attendance' | 'food', docId: string): { doc: any; relPath: string } | null {
   const cleanId = docId.toUpperCase();
-  const subDir = type === 'gate_pass' ? 'gate-pass' : 'attendance';
+  const subDir = type === 'gate_pass' ? 'gate-pass' : type === 'attendance' ? 'attendance' : 'food-registration';
 
   const searchInDir = (rootDir: string): { doc: any; relPath: string } | null => {
     const targetDir = path.join(rootDir, subDir);
@@ -124,7 +124,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     let id = searchParams.get('id') || searchParams.get('code') || '';
-    let type = (searchParams.get('type') as 'gate_pass' | 'attendance' | null) || null;
+    let type = (searchParams.get('type') as 'gate_pass' | 'attendance' | 'food' | null) || null;
 
     // Handle token format LONGKHAI_GATEPASS:ID:USER:TIME
     if (id.includes('LONGKHAI_GATEPASS:')) {
@@ -141,6 +141,7 @@ export async function GET(req: NextRequest) {
     if (!type) {
       if (id.startsWith('GP')) type = 'gate_pass';
       else if (id.startsWith('ATT')) type = 'attendance';
+      else if (id.startsWith('TP')) type = 'food';
       else type = 'gate_pass';
     }
 
@@ -218,7 +219,7 @@ export async function POST(req: NextRequest) {
       guardName,
       note,
     } = body as {
-      type: 'gate_pass' | 'attendance';
+      type: 'gate_pass' | 'attendance' | 'food';
       id: string;
       action: 'depart' | 'return' | 'confirm_security' | 'confirm_check_in' | 'confirm_check_out' | 'check_in' | 'check_out';
       actualTime?: string;
@@ -235,7 +236,7 @@ export async function POST(req: NextRequest) {
 
     id = id.trim().toUpperCase();
     if (!type) {
-      type = id.startsWith('GP') ? 'gate_pass' : 'attendance';
+      type = id.startsWith('GP') ? 'gate_pass' : id.startsWith('TP') ? 'food' : 'attendance';
     }
 
     let found = findAndLoadDoc(type, id);

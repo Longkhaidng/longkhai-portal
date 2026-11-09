@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
-import { exportReportToExcel, exportStationeryReportToExcel, exportPCCCReportToExcel, formatPCCCChecklistSummary } from '@/lib/excel';
+import { exportReportToExcel, exportStationeryReportToExcel, exportPCCCReportToExcel, exportFoodReportToExcel, formatPCCCChecklistSummary } from '@/lib/excel';
 import {
   Flame,
   ClipboardCheck,
@@ -17,6 +17,7 @@ import {
   QrCode,
   Building2,
   Utensils,
+  UtensilsCrossed,
   Search,
   RotateCcw,
   Wrench,
@@ -44,10 +45,11 @@ import {
   GENERAL_STATUS_BADGES,
 } from '@/types/proposal';
 import { filterUserLeaves, filterUserAttendances, filterUserGatePasses, filterUserRepairProposals, filterUserStationeryProposals, filterUserGeneralProposals } from '@/lib/permissions';
+import { FoodRegistration, FoodCategory, FOOD_CATEGORY_LABELS, FOOD_STATUS_LABELS, FOOD_STATUS_BADGES } from '@/types/food-registration';
 
 export function ReportsView() {
   const { currentUser } = useAuth();
-  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'repair' | 'stationery' | 'general' | 'departments' | 'pccc' | 'periodic_inspection'>('leave');
+  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'repair' | 'stationery' | 'general' | 'departments' | 'pccc' | 'periodic_inspection' | 'food_registration'>('leave');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('all');
@@ -55,12 +57,14 @@ export function ReportsView() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [pcccCategoryFilter, setPcccCategoryFilter] = useState('all');
   const [periodicCategoryFilter, setPeriodicCategoryFilter] = useState<'all' | 'first_aid' | 'eyewash' | 'stormwater' | 'groundwater_soil'>('all');
+  const [foodCategoryFilter, setFoodCategoryFilter] = useState<'all' | FoodCategory>('all');
 
   const handleSelectReportType = (type: typeof reportType) => {
     setReportType(type);
     setStatusFilter(type === 'pccc' ? 'inspected' : 'all');
     setPcccCategoryFilter('all');
     setPeriodicCategoryFilter('all');
+    setFoodCategoryFilter('all');
     setDepartmentFilter('all');
     setSearchTerm('');
   };
@@ -122,6 +126,7 @@ export function ReportsView() {
     setStatusFilter(reportType === 'pccc' ? 'inspected' : 'all');
     setPcccCategoryFilter('all');
     setPeriodicCategoryFilter('all');
+    setFoodCategoryFilter('all');
   };
 
   const hasActiveFilters =
@@ -634,6 +639,43 @@ export function ReportsView() {
     });
   }, [periodicInspections, periodicCategoryFilter, departmentFilter, fromDate, toDate, statusFilter, searchTerm]);
 
+  // 8. Filtered Food Registrations
+  const [foodVersion, setFoodVersion] = useState(0);
+
+  useEffect(() => {
+    const handleSync = () => setFoodVersion((v) => v + 1);
+    window.addEventListener('storage', handleSync);
+    window.addEventListener('food_registrations_updated', handleSync);
+    return () => {
+      window.removeEventListener('storage', handleSync);
+      window.removeEventListener('food_registrations_updated', handleSync);
+    };
+  }, []);
+
+  const foodRegistrations = useMemo(() => storage.getFoodRegistrations(), [foodVersion]);
+
+  const filteredFoods = useMemo(() => {
+    return foodRegistrations.filter((f: FoodRegistration) => {
+      if (departmentFilter !== 'all' && f.department !== departmentFilter) return false;
+      if (statusFilter !== 'all' && f.status !== statusFilter) return false;
+      if (foodCategoryFilter !== 'all' && f.category !== foodCategoryFilter) return false;
+      if (fromDate && f.entryDate < fromDate) return false;
+      if (toDate && f.entryDate > toDate) return false;
+      if (searchTerm.trim()) {
+        const q = searchTerm.toLowerCase();
+        const match =
+          f.id.toLowerCase().includes(q) ||
+          f.employeeId.toLowerCase().includes(q) ||
+          f.employeeName.toLowerCase().includes(q) ||
+          f.foodDetails.toLowerCase().includes(q) ||
+          (f.guardName && f.guardName.toLowerCase().includes(q)) ||
+          (f.rejectedReason && f.rejectedReason.toLowerCase().includes(q));
+        if (!match) return false;
+      }
+      return true;
+    }).sort((a: FoodRegistration, b: FoodRegistration) => b.createdAt.localeCompare(a.createdAt));
+  }, [foodRegistrations, departmentFilter, statusFilter, foodCategoryFilter, fromDate, toDate, searchTerm]);
+
   // Current active result count
   const currentCount =
     reportType === 'leave'
@@ -650,7 +692,7 @@ export function ReportsView() {
       ? filteredStationeries.length
       : reportType === 'general'
       ? filteredGenerals.length
-      : reportType === 'pccc' ? filteredPCCCDevices.length : reportType === 'periodic_inspection' ? filteredPeriodicInspections.length : filteredDepartments.length;
+      : reportType === 'pccc' ? filteredPCCCDevices.length : reportType === 'periodic_inspection' ? filteredPeriodicInspections.length : reportType === 'food_registration' ? filteredFoods.length : filteredDepartments.length;
 
   // Export to Excel handler
   const handleExportExcel = () => {
@@ -932,6 +974,18 @@ export function ReportsView() {
         item.status,
         item.notes,
       ]);
+    } else if (reportType === 'food_registration') {
+      if (filteredFoods.length === 0) {
+        alert('Không có dữ liệu đăng ký thực phẩm phù hợp với bộ lọc hiện tại để xuất file Excel.');
+        return;
+      }
+      exportFoodReportToExcel({
+        registrations: filteredFoods,
+        subtitle,
+        docCode: 'BC-LK-TP/2026',
+        fileName: `LONGKHAI_Bao_Cao_THUC_PHAM_${nowStr}`,
+      });
+      return;
     } else if (reportType === 'departments') {
       title = 'CƠ CẤU PHÒNG BAN';
       fileName = `LONGKHAI_Bao_Cao_PHONG_BAN_${nowStr}`;
@@ -1016,6 +1070,7 @@ export function ReportsView() {
           { key: 'general', label: 'Đề xuất khác', icon: FileQuestion, count: filteredGenerals.length },
           { key: 'pccc', label: 'Kiểm tra PCCC', icon: Flame, count: filteredPCCCDevices.length },
           { key: 'periodic_inspection', label: 'Kiểm tra định kỳ', icon: ClipboardCheck, count: filteredPeriodicInspections.length },
+          { key: 'food_registration', label: 'Thực phẩm mang vào', icon: UtensilsCrossed, count: filteredFoods.length },
           { key: 'departments', label: 'Cơ cấu phòng ban', icon: Building2, count: filteredDepartments.length },
         ].map((tab) => {
           const Icon = tab.icon;
@@ -1066,6 +1121,8 @@ export function ReportsView() {
                   ? 'Tìm phòng ban, mã số, quản lý...'
                   : reportType === 'stationery'
                   ? 'Tìm mã, người gửi, tên VPP...'
+                  : reportType === 'food_registration'
+                  ? 'Tìm mã, MSNV, họ tên, món ăn, bảo vệ...'
                   : reportType === 'repair'
                   ? 'Tìm mã, người gửi, vị trí, sự cố...'
                   : 'Tìm kiếm theo mã, họ tên, lý do...'
@@ -1098,6 +1155,26 @@ export function ReportsView() {
                 <option value="eyewash">Máy rửa mắt</option>
                 <option value="stormwater">Hệ thống nước mưa</option>
                 <option value="groundwater_soil">Nước ngầm &amp; Đất</option>
+              </select>
+            </div>
+          )}
+
+          {/* Sub-category filter for Food Registration */}
+          {reportType === 'food_registration' && (
+            <div className="flex items-center gap-1.5">
+              <span className="font-semibold text-slate-600 dark:text-slate-400 whitespace-nowrap text-xs">
+                Loại thực phẩm:
+              </span>
+              <select
+                value={foodCategoryFilter}
+                onChange={(e) => setFoodCategoryFilter(e.target.value as any)}
+                className="py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+              >
+                <option value="all">Tất cả loại ({foodRegistrations.length})</option>
+                <option value="pregnant">Thức ăn mang thai</option>
+                <option value="vegetarian">Thực phẩm chay</option>
+                <option value="medicine_drink">Nước thuốc</option>
+                <option value="other">Khác</option>
               </select>
             </div>
           )}
@@ -1186,6 +1263,14 @@ export function ReportsView() {
                     <option value="fail">Cần xử lý / Hỏng</option>
                     <option value="expiring">Sắp hết hạn (30 ngày)</option>
                     <option value="none">Chưa kiểm tra</option>
+                  </>
+                ) : reportType === 'food_registration' ? (
+                  <>
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="pending">Chờ bảo vệ xác nhận</option>
+                    <option value="confirmed">Bảo vệ xác nhận</option>
+                    <option value="rejected">Không xác nhận (Từ chối)</option>
+                    <option value="cancelled">Đã hủy</option>
                   </>
                 ) : reportType === 'leave' ? (
                   <>
@@ -1339,7 +1424,7 @@ export function ReportsView() {
           <div className="text-right text-[11px] text-slate-600 dark:text-slate-400 ml-auto shrink-0 print-header-right">
             <div className="whitespace-nowrap font-medium">Ngày xuất báo cáo: {formatDate(new Date().toISOString())}</div>
             <div className="font-mono font-bold whitespace-nowrap">
-              {reportType === 'pccc' ? 'Mã tài liệu: BC-LK-PCCC/2026' : reportType === 'periodic_inspection' ? 'Mã tài liệu: BC-LK-ĐK/2026' : 'Mã tài liệu: BC-LK-2026/01'}
+              {reportType === 'pccc' ? 'Mã tài liệu: BC-LK-PCCC/2026' : reportType === 'periodic_inspection' ? 'Mã tài liệu: BC-LK-ĐK/2026' : reportType === 'food_registration' ? 'Mã tài liệu: BC-LK-TP/2026' : 'Mã tài liệu: BC-LK-2026/01'}
             </div>
           </div>
         </div>
@@ -1366,6 +1451,8 @@ export function ReportsView() {
               ? 'KIỂM TRA THIẾT BỊ PCCC'
               : reportType === 'periodic_inspection'
               ? 'KIỂM TRA ĐỊNH KỲ (AN TOÀN & MÔI TRƯỜNG)'
+              : reportType === 'food_registration'
+              ? 'THỰC PHẨM MANG VÀO NHÀ MÁY'
               : 'CƠ CẤU PHÒNG BAN'}
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -2117,6 +2204,98 @@ export function ReportsView() {
             </div>
           )}
 
+          {/* FOOD REGISTRATION REPORT TABLE */}
+          {reportType === 'food_registration' && (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold text-center">
+                    <th className="p-2 border w-10">STT</th>
+                    <th className="p-2 border whitespace-nowrap">Mã phiếu</th>
+                    <th className="p-2 border whitespace-nowrap">MSNV</th>
+                    <th className="p-2 border whitespace-nowrap text-left">Họ và tên</th>
+                    <th className="p-2 border whitespace-nowrap text-left">Phân xưởng / Chuyền</th>
+                    <th className="p-2 border whitespace-nowrap">Ngày mang vào</th>
+                    <th className="p-2 border whitespace-nowrap">Ca làm việc</th>
+                    <th className="p-2 border whitespace-nowrap">Phân loại</th>
+                    <th className="p-2 border min-w-[200px] text-left">Chi tiết món ăn &amp; Bảo quản</th>
+                    <th className="p-2 border whitespace-nowrap">Cam kết ATVSTP</th>
+                    <th className="p-2 border whitespace-nowrap">Trạng thái</th>
+                    <th className="p-2 border whitespace-nowrap text-left">Bảo vệ xác nhận</th>
+                    <th className="p-2 border min-w-[120px] text-left">Ghi chú / Lý do</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredFoods.length === 0 ? (
+                    <tr>
+                      <td colSpan={13} className="p-8 text-center text-slate-400">
+                        Không tìm thấy dữ liệu đăng ký thực phẩm phù hợp với bộ lọc hiện tại.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredFoods.map((f: FoodRegistration, idx: number) => (
+                      <tr key={f.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40 text-[11px] align-top">
+                        <td className="p-2 border text-center font-semibold">{idx + 1}</td>
+                        <td className="p-2 border font-mono font-bold text-emerald-600 whitespace-nowrap text-center">
+                          {f.id}
+                        </td>
+                        <td className="p-2 border font-mono text-center">{f.employeeId}</td>
+                        <td className="p-2 border font-semibold text-slate-900 dark:text-white whitespace-nowrap">
+                          {f.employeeName}
+                        </td>
+                        <td className="p-2 border text-slate-700 dark:text-slate-300 whitespace-nowrap">{f.department}</td>
+                        <td className="p-2 border whitespace-nowrap text-center font-medium">
+                          {formatDate(f.entryDate)}
+                        </td>
+                        <td className="p-2 border whitespace-nowrap text-center text-slate-600">
+                          <div>{f.shift}</div>
+                          {f.timeFrame && <div className="text-[10px] text-slate-400">({f.timeFrame})</div>}
+                        </td>
+                        <td className="p-2 border whitespace-nowrap text-center">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                            {f.category === 'other' && f.customCategory
+                              ? `Khác (${f.customCategory})`
+                              : FOOD_CATEGORY_LABELS[f.category] || f.category}
+                          </span>
+                        </td>
+                        <td className="p-2 border text-slate-800 dark:text-slate-200 leading-relaxed">
+                          {f.foodDetails}
+                        </td>
+                        <td className="p-2 border text-center">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded">
+                            ✓ Đã cam kết
+                          </span>
+                        </td>
+                        <td className="p-2 border text-center whitespace-nowrap">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${FOOD_STATUS_BADGES[f.status] || ''}`}>
+                            {FOOD_STATUS_LABELS[f.status] || f.status}
+                          </span>
+                        </td>
+                        <td className="p-2 border text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                          {f.guardName ? (
+                            <div>
+                              <div className="font-semibold text-slate-900 dark:text-white">{f.guardName}</div>
+                              {f.confirmedAt && (
+                                <div className="text-[10px] text-slate-400 font-mono">
+                                  {formatDateTime(f.confirmedAt)}
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-slate-400 italic">Chưa xác nhận</span>
+                          )}
+                        </td>
+                        <td className="p-2 border text-slate-600 italic text-[10px]">
+                          {f.status === 'rejected' ? (f.rejectedReason || f.guardNote || '-') : (f.guardNote || '-')}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+
           {/* DEPARTMENTS REPORT TABLE */}
           {reportType === 'departments' && (
             <table className="w-full text-left border-collapse text-xs">
@@ -2153,6 +2332,31 @@ export function ReportsView() {
             </table>
           )}
         </div>
+
+        {/* Factory Signatures block for Food Registration */}
+        {reportType === 'food_registration' && (
+          <div className="pt-8 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center text-xs">
+            <div className="space-y-12">
+              <div className="font-bold uppercase text-slate-900 dark:text-white">NGƯỜI LẬP BÁO CÁO</div>
+              <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
+            </div>
+
+            <div className="space-y-12">
+              <div className="font-bold uppercase text-slate-900 dark:text-white">ĐỘI TRƯỞNG BẢO VỆ</div>
+              <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
+            </div>
+
+            <div className="space-y-12">
+              <div className="font-bold uppercase text-slate-900 dark:text-white">PHÒNG HCNS</div>
+              <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
+            </div>
+
+            <div className="space-y-12">
+              <div className="font-bold uppercase text-slate-900 dark:text-white">BAN GIÁM ĐỐC DUYỆT</div>
+              <div className="text-[11px] text-slate-400 italic">(Ký, đóng dấu)</div>
+            </div>
+          </div>
+        )}
 
         {/* Factory Signatures block for PCCC & Periodic Inspection */}
         {(reportType === 'pccc' || reportType === 'periodic_inspection') && (

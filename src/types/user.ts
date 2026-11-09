@@ -16,6 +16,7 @@ export type CategoryPermission =
   | 'leave'
   | 'attendance'
   | 'overtime'
+  | 'food_registration'
   | 'gate_pass'
   | 'repair'
   | 'pccc'
@@ -41,6 +42,7 @@ export const CATEGORY_DEFINITIONS: CategoryInfo[] = [
   { id: 'leave', name: 'Đơn xin nghỉ phép', description: 'Tạo và phê duyệt đơn nghỉ phép', iconName: 'CalendarDays' },
   { id: 'attendance', name: 'Xác nhận công', description: 'Xác nhận công vào - ra do quên/mất thẻ', iconName: 'Clock' },
   { id: 'overtime', name: 'Đăng ký làm thêm giờ', description: 'Đăng ký tăng ca cá nhân / theo tổ, ăn giữa ca và theo dõi xác nhận', iconName: 'Timer' },
+  { id: 'food_registration', name: 'Thực phẩm mang vào', description: 'Đăng ký mang thực phẩm vào nhà máy, cam kết ATVSTP và quét QR bảo vệ', iconName: 'UtensilsCrossed' },
   { id: 'gate_pass', name: 'Ra vào cổng', description: 'Phiếu ra cổng, tài sản & quét mã QR bảo vệ', iconName: 'QrCode' },
   { id: 'repair', name: 'Đề xuất sửa chữa', description: 'Phiếu đề xuất sửa chữa cơ điện / bảo trì thiết bị', iconName: 'Wrench' },
   { id: 'pccc', name: 'Kiểm tra PCCC', description: 'Dashboard 111 thiết bị, checklist kiểm định 6 chủng loại & quét mã QR', iconName: 'Flame' },
