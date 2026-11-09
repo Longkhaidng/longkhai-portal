@@ -66,8 +66,9 @@ export function FoodRegistrationView() {
   // Sub-category for pregnant/medicine group: 'pregnant' or 'medicine_drink'
   const [subCategory, setSubCategory] = useState<'pregnant' | 'medicine_drink'>('pregnant');
 
-    // Pregnant Food Option: 'Bánh + Sữa' hoặc 'Trái cây + Sữa'
-  const [pregnantDish, setPregnantDish] = useState<'Bánh + Sữa' | 'Trái cây + Sữa'>('Bánh + Sữa');
+  // Pregnant Food Checkboxes (mặc định chọn 2 combo)
+  const [pregnantBanhSua, setPregnantBanhSua] = useState<boolean>(true);
+  const [pregnantTraiCaySua, setPregnantTraiCaySua] = useState<boolean>(true);
 
   // Vegetarian Food Option
   const [vegOption, setVegOption] = useState<string>(VEGETARIAN_FOOD_OPTIONS[0]);
@@ -203,11 +204,14 @@ export function FoodRegistrationView() {
       // Pregnant or Medicine drink
       finalCategory = subCategory;
       if (subCategory === 'pregnant') {
-        if (!pregnantDish) {
-          showToast('Vui lòng chọn món: Bánh + Sữa hoặc Trái cây + Sữa.', 'error');
+        const selectedDishes: string[] = [];
+        if (pregnantBanhSua) selectedDishes.push('Bánh + Sữa');
+        if (pregnantTraiCaySua) selectedDishes.push('Trái cây + Sữa');
+        if (selectedDishes.length === 0) {
+          showToast('Vui lòng chọn ít nhất 1 combo: Bánh + Sữa hoặc Trái cây + Sữa.', 'error');
           return;
         }
-        finalFoodDetails = pregnantDish;
+        finalFoodDetails = selectedDishes.join(' hoặc ');
       } else {
         // Nước thuốc: Không hiển thị món ăn, gán mặc định Nước thuốc
         finalFoodDetails = 'Nước thuốc';
@@ -708,7 +712,7 @@ export function FoodRegistrationView() {
                   </div>
                 </div>
 
-                {/* Nếu chọn THỰC PHẨM CHO NGƯỜI MANG THAI: Chọn Bánh + Sữa HOẶC Trái cây + Sữa */}
+                {/* Nếu chọn THỰC PHẨM CHO NGƯỜI MANG THAI: Mặc định chọn 2 combo, có chữ HOẶC ở giữa */}
                 {subCategory === 'pregnant' && (
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
@@ -716,44 +720,48 @@ export function FoodRegistrationView() {
                         Chi tiết món ăn *
                       </label>
                       <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
-                        Chọn 1 trong 2 tùy chọn
+                        Mặc định chọn 2 combo
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                       <label
-                        onClick={() => setPregnantDish('Bánh + Sữa')}
-                        className={`p-3 rounded-xl border cursor-pointer flex items-center justify-between transition-all select-none ${
-                          pregnantDish === 'Bánh + Sữa'
+                        onClick={() => setPregnantBanhSua((prev) => !prev)}
+                        className={`flex-1 p-3 rounded-xl border cursor-pointer flex items-center justify-between transition-all select-none ${
+                          pregnantBanhSua
                             ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-bold shadow-xs'
                             : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
                         }`}
                       >
                         <span className="text-xs">🍪 Bánh + Sữa</span>
                         <input
-                          type="radio"
-                          name="pregnantDishRadio"
-                          checked={pregnantDish === 'Bánh + Sữa'}
-                          onChange={() => setPregnantDish('Bánh + Sữa')}
-                          className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 cursor-pointer"
+                          type="checkbox"
+                          checked={pregnantBanhSua}
+                          onChange={() => {}}
+                          className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 cursor-pointer"
                         />
                       </label>
 
+                      <div className="flex items-center justify-center shrink-0 py-0.5 sm:py-0">
+                        <span className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider border border-slate-200 dark:border-slate-700 shadow-2xs">
+                          hoặc
+                        </span>
+                      </div>
+
                       <label
-                        onClick={() => setPregnantDish('Trái cây + Sữa')}
-                        className={`p-3 rounded-xl border cursor-pointer flex items-center justify-between transition-all select-none ${
-                          pregnantDish === 'Trái cây + Sữa'
+                        onClick={() => setPregnantTraiCaySua((prev) => !prev)}
+                        className={`flex-1 p-3 rounded-xl border cursor-pointer flex items-center justify-between transition-all select-none ${
+                          pregnantTraiCaySua
                             ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-bold shadow-xs'
                             : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
                         }`}
                       >
                         <span className="text-xs">🍎 Trái cây + Sữa</span>
                         <input
-                          type="radio"
-                          name="pregnantDishRadio"
-                          checked={pregnantDish === 'Trái cây + Sữa'}
-                          onChange={() => setPregnantDish('Trái cây + Sữa')}
-                          className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 cursor-pointer"
+                          type="checkbox"
+                          checked={pregnantTraiCaySua}
+                          onChange={() => {}}
+                          className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 cursor-pointer"
                         />
                       </label>
                     </div>
