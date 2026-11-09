@@ -160,6 +160,7 @@ export async function GET(req: NextRequest) {
 
     // Fallback: check GitHub
     let doc = found?.doc;
+    if (doc?.foodDetails) { doc.foodDetails = doc.foodDetails.replace(/Bánh \+ Sữa,\s*Trái cây \+ Sữa/gi, 'Bánh + Sữa hoặc Trái cây + Sữa'); }
     if (!doc) {
       const gitConfig = resolveServerGitHubConfig();
       if (gitConfig.token && gitConfig.owner && gitConfig.repo) {
@@ -257,6 +258,7 @@ export async function POST(req: NextRequest) {
     }
 
     let doc = found?.doc;
+    if (doc?.foodDetails) { doc.foodDetails = doc.foodDetails.replace(/Bánh \+ Sữa,\s*Trái cây \+ Sữa/gi, 'Bánh + Sữa hoặc Trái cây + Sữa'); }
     let relPath = found?.relPath || '';
 
     if (!doc && ghService) {
@@ -280,6 +282,7 @@ export async function POST(req: NextRequest) {
     }
 
     const now = new Date().toISOString();
+    const currentTimeVN = new Date().toLocaleTimeString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', hour: '2-digit', minute: '2-digit', hour12: false });
     const finalGuard = (guardName || '').trim() || 'Bảo vệ cổng (Quét QR)';
     let resultMessage = '';
 
@@ -311,8 +314,8 @@ export async function POST(req: NextRequest) {
         doc.updatedAt = now;
 
         resultMessage = doc.timeType === 'nghi_cuoi_gio'
-          ? `✓ Bảo vệ đã xác nhận giờ RA CỔNG (Nghỉ cuối giờ) cho nhân viên ${doc.employeeName} lúc ${new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}. Phiếu đã hoàn tất!`
-          : `✓ Bảo vệ đã xác nhận giờ RA CỔNG cho nhân viên ${doc.employeeName} lúc ${new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} thành công!`;
+          ? `✓ Bảo vệ đã xác nhận giờ RA CỔNG (Nghỉ cuối giờ) cho nhân viên ${doc.employeeName} lúc ${currentTimeVN}. Phiếu đã hoàn tất!`
+          : `✓ Bảo vệ đã xác nhận giờ RA CỔNG cho nhân viên ${doc.employeeName} lúc ${currentTimeVN} thành công!`;
 
       } else if (action === 'return') {
         doc.status = 'completed';
@@ -320,7 +323,7 @@ export async function POST(req: NextRequest) {
         doc.securityReturnGuardId = finalGuard;
         doc.updatedAt = now;
 
-        resultMessage = `✓ Bảo vệ đã xác nhận giờ VÀO CỔNG LẠI cho nhân viên ${doc.employeeName} lúc ${new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}. Phiếu đã hoàn tất!`;
+        resultMessage = `✓ Bảo vệ đã xác nhận giờ VÀO CỔNG LẠI cho nhân viên ${doc.employeeName} lúc ${currentTimeVN}. Phiếu đã hoàn tất!`;
       } else {
         return NextResponse.json({ success: false, message: 'Thao tác không hợp lệ đối với phiếu ra vào cổng' }, { status: 400 });
       }
@@ -345,7 +348,7 @@ export async function POST(req: NextRequest) {
 
       const pad = (n: number) => String(n).padStart(2, '0');
       const dNow = new Date();
-      const currentHHmm = `${pad(dNow.getHours())}:${pad(dNow.getMinutes())}`;
+      const currentHHmm = currentTimeVN;
 
       // Case A: Confirm Time In (Xác nhận thời gian vào)
       if (action === 'confirm_check_in' || action === 'check_in') {
@@ -476,7 +479,7 @@ export async function POST(req: NextRequest) {
         };
         doc.entryLogs = [...(doc.entryLogs || []), newLog];
 
-        resultMessage = `✓ Bảo vệ ${finalGuard} đã xác nhận cho nhân viên ${doc.employeeName} mang thực phẩm vào nhà máy lúc ${new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} thành công!`;
+        resultMessage = `✓ Bảo vệ ${finalGuard} đã xác nhận cho nhân viên ${doc.employeeName} mang thực phẩm vào nhà máy lúc ${currentTimeVN} thành công!`;
       } else if (action === 'reject') {
         doc.status = 'guard_rejected';
         doc.guardName = finalGuard;
