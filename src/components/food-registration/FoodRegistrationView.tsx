@@ -605,7 +605,7 @@ export function FoodRegistrationView() {
             </div>
             <div>
               <h2 className="text-base font-bold text-slate-900 dark:text-white">
-                Biểu Mẫu Đăng Ký Mang Vào
+                Đăn ký thực phẩm/ Nước uống
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Chọn danh mục và điền thông tin để cấp mã QR kiểm soát
@@ -1067,7 +1067,7 @@ export function FoodRegistrationView() {
               <div className="text-xs leading-relaxed">
                 <span className="font-bold block mb-0.5">Cam kết tuân thủ bắt buộc:</span>
                 <span className="italic">
-                  &ldquo;Cam kết thực phẩm đảm bảo nguồn gốc, dùng trong ngày, không mang vào khu vực sản xuất và tự chịu trách nhiệm về ATVSTP.&rdquo;
+                  &ldquo;Tôi tự chịu trách nhiệm về ATVSTP và mọi rủi ro phát sinh liên quan đến thực phẩm, nước uống do tôi mang vào Công ty.&rdquo;
                 </span>
               </div>
             </div>
