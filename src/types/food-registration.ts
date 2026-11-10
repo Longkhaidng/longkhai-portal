@@ -114,7 +114,8 @@ export interface FoodRegistration {
   employeeName: string; // Họ và tên
   department: string; // Bộ phận / Phân xưởng / Chuyền sản xuất
   entryDate: string; // Ngày mang vào (YYYY-MM-DD) hoặc Từ ngày
-  toDate?: string; // Đến ngày (YYYY-MM-DD) cho mang thai / nước thuốc
+  toDate?: string; // Đến ngày (YYYY-MM-DD) hoặc Ngày kết thúc cho mang thai / nước thuốc
+  durationDays?: number; // Số ngày cần mang vào
   shift?: string; // Ca làm việc (cho thực phẩm chay)
   timeFrame?: string;
   category: FoodCategory;

@@ -20,7 +20,7 @@ import {
 } from '@/types/food-registration';
 import { FoodQrModal } from './FoodQrModal';
 import { getQrConfirmUrl, generateQrDataUrl } from '@/lib/qr';
-import { generateDocId, formatDate, formatDateTime } from '@/lib/utils';
+import { generateDocId, formatDate, formatDateTime, calculateEndDate } from '@/lib/utils';
 import {
   isSecurityRole,
   isSuperAdminOrBOD,
@@ -34,6 +34,7 @@ import {
   UtensilsCrossed,
   Plus,
   QrCode,
+  Lock,
   ShieldCheck,
   CheckCircle2,
   XCircle,
@@ -88,13 +89,27 @@ export function FoodRegistrationView() {
   const [department, setDepartment] = useState<string>('');
 
   // Dates & Shifts
-  const [entryDate, setEntryDate] = useState<string>(new Date().toISOString().slice(0, 10));
+  const [durationDays, setDurationDays] = useState<number>(14);
+  const [entryDate, setEntryDate] = useState<string>(() => new Date().toISOString().slice(0, 10));
   const [toDate, setToDate] = useState<string>(() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 14); // Mặc định 2 tuần cho chế độ dài ngày
-    return d.toISOString().slice(0, 10);
+    const today = new Date().toISOString().slice(0, 10);
+    return calculateEndDate(today, 14);
   });
   const [shift, setShift] = useState<string>(FOOD_ENTRY_SHIFTS[0]);
+
+  const handleDurationDaysChange = (val: number) => {
+    setDurationDays(val);
+    if (val > 0 && entryDate) {
+      setToDate(calculateEndDate(entryDate, val));
+    }
+  };
+
+  const handleEntryDateChange = (val: string) => {
+    setEntryDate(val);
+    if (durationDays > 0 && val) {
+      setToDate(calculateEndDate(val, durationDays));
+    }
+  };
 
   const [complianceCommitment, setComplianceCommitment] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -216,14 +231,8 @@ export function FoodRegistrationView() {
       // Pregnant or Medicine drink
       finalCategory = subCategory;
       if (subCategory === 'pregnant') {
-        const selectedDishes: string[] = [];
-        if (pregnantBanhSua) selectedDishes.push('Bánh + Sữa');
-        if (pregnantTraiCaySua) selectedDishes.push('Trái cây + Sữa');
-        if (selectedDishes.length === 0) {
-          showToast('Vui lòng chọn ít nhất 1 combo: Bánh + Sữa hoặc Trái cây + Sữa.', 'error');
-          return;
-        }
-        finalFoodDetails = selectedDishes.join(' hoặc ');
+        // Cố định 2 combo, không cho chỉnh sửa
+        finalFoodDetails = 'Bánh + Sữa hoặc Trái cây + Sữa';
       } else {
         // Nước thuốc: Bắt buộc nhập lý do
         if (!medicineReason.trim()) {
@@ -233,16 +242,20 @@ export function FoodRegistrationView() {
         finalFoodDetails = `Nước thuốc (Lý do: ${medicineReason.trim()})`;
       }
 
+      if (!durationDays || durationDays <= 0) {
+        showToast('Vui lòng nhập số ngày cần mang vào hợp lệ (tối thiểu 1 ngày).', 'error');
+        return;
+      }
       if (!entryDate) {
-        showToast('Vui lòng chọn ngày bắt đầu ("Từ ngày").', 'error');
+        showToast('Vui lòng chọn ngày bắt đầu.', 'error');
         return;
       }
       if (!toDate) {
-        showToast('Vui lòng chọn ngày kết thúc ("Đến ngày").', 'error');
+        showToast('Ngày kết thúc không hợp lệ.', 'error');
         return;
       }
       if (toDate < entryDate) {
-        showToast('Ngày kết thúc ("Đến ngày") phải sau hoặc bằng ngày bắt đầu ("Từ ngày").', 'error');
+        showToast('Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.', 'error');
         return;
       }
     }
@@ -341,6 +354,7 @@ export function FoodRegistrationView() {
           department: department.trim(),
           entryDate,
           toDate,
+          durationDays,
           category: finalCategory,
           mainGroup: 'pregnant_medicine',
           foodDetails: finalFoodDetails,
@@ -378,6 +392,9 @@ export function FoodRegistrationView() {
       setCustomVegUnit('');
       setVegNotes('');
       setMedicineReason('');
+      setDurationDays(14);
+      setEntryDate(new Date().toISOString().slice(0, 10));
+      setToDate(calculateEndDate(new Date().toISOString().slice(0, 10), 14));
       setComplianceCommitment(false);
     } catch (err: any) {
       showToast(err.message || 'Có lỗi xảy ra khi gửi đăng ký.', 'error');
@@ -742,33 +759,29 @@ export function FoodRegistrationView() {
                   </div>
                 </div>
 
-                {/* Nếu chọn THỰC PHẨM CHO NGƯỜI MANG THAI: Mặc định chọn 2 combo, có chữ HOẶC ở giữa */}
+                {/* Nếu chọn THỰC PHẨM CHO NGƯỜI MANG THAI: Cố định 2 combo, không cho chỉnh sửa */}
                 {subCategory === 'pregnant' && (
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
                       <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                         Chi tiết món ăn *
                       </label>
-                      
                     </div>
 
                     <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                      <label
-                        onClick={() => setPregnantBanhSua((prev) => !prev)}
-                        className={`flex-1 p-3 rounded-xl border cursor-pointer flex items-center justify-between transition-all select-none ${
-                          pregnantBanhSua
-                            ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-bold shadow-xs'
-                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
-                        }`}
+                      <div
+                        className="flex-1 p-3 rounded-xl border border-emerald-500 bg-emerald-50/80 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200 font-bold shadow-xs flex items-center justify-between select-none cursor-not-allowed opacity-95"
+                        title="Mục chi tiết món ăn cố định theo quy định, không cho phép chỉnh sửa"
                       >
                         <span className="text-xs">🍪 Bánh + Sữa</span>
                         <input
                           type="checkbox"
-                          checked={pregnantBanhSua}
-                          onChange={() => {}}
-                          className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 cursor-pointer"
+                          checked={true}
+                          disabled
+                          readOnly
+                          className="w-4 h-4 rounded text-emerald-600 border-slate-300 cursor-not-allowed"
                         />
-                      </label>
+                      </div>
 
                       <div className="flex items-center justify-center shrink-0 py-0.5 sm:py-0">
                         <span className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider border border-slate-200 dark:border-slate-700 shadow-2xs">
@@ -776,22 +789,19 @@ export function FoodRegistrationView() {
                         </span>
                       </div>
 
-                      <label
-                        onClick={() => setPregnantTraiCaySua((prev) => !prev)}
-                        className={`flex-1 p-3 rounded-xl border cursor-pointer flex items-center justify-between transition-all select-none ${
-                          pregnantTraiCaySua
-                            ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-bold shadow-xs'
-                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
-                        }`}
+                      <div
+                        className="flex-1 p-3 rounded-xl border border-emerald-500 bg-emerald-50/80 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200 font-bold shadow-xs flex items-center justify-between select-none cursor-not-allowed opacity-95"
+                        title="Mục chi tiết món ăn cố định theo quy định, không cho phép chỉnh sửa"
                       >
                         <span className="text-xs">🍎 Trái cây + Sữa</span>
                         <input
                           type="checkbox"
-                          checked={pregnantTraiCaySua}
-                          onChange={() => {}}
-                          className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 cursor-pointer"
+                          checked={true}
+                          disabled
+                          readOnly
+                          className="w-4 h-4 rounded text-emerald-600 border-slate-300 cursor-not-allowed"
                         />
-                      </label>
+                      </div>
                     </div>
 
                     <p className="mt-2.5 text-xs text-amber-600 dark:text-amber-400 font-medium italic flex items-center gap-1.5">
@@ -818,32 +828,53 @@ export function FoodRegistrationView() {
                   </div>
                 )}
 
-                {/* Thời gian Từ ngày -> Đến ngày */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                {/* Thời gian: Số ngày cần mang vào -> Ngày bắt đầu -> Ngày kết thúc (Tự động tính, không cho sửa) */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
                   <div>
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                      Từ ngày *
+                      Số ngày cần mang vào *
                     </label>
                     <input
-                      type="date"
+                      type="number"
                       required
-                      value={entryDate}
-                      onChange={(e) => setEntryDate(e.target.value)}
+                      min={1}
+                      value={durationDays}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value, 10);
+                        const days = isNaN(val) ? 0 : val;
+                        handleDurationDaysChange(days);
+                      }}
+                      placeholder="Ví dụ: 14"
                       className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
 
                   <div>
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                      Đến ngày *
+                      Ngày bắt đầu *
                     </label>
                     <input
                       type="date"
                       required
-                      min={entryDate}
-                      value={toDate}
-                      onChange={(e) => setToDate(e.target.value)}
+                      value={entryDate}
+                      onChange={(e) => handleEntryDateChange(e.target.value)}
                       className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center justify-between">
+                      <span>Ngày kết thúc *</span>
+                      <span className="text-[10px] text-slate-400 font-normal italic">(Tự động tính)</span>
+                    </label>
+                    <input
+                      type="date"
+                      required
+                      readOnly
+                      disabled
+                      value={toDate}
+                      title="Ngày kết thúc được tự động tính từ Ngày bắt đầu + Số ngày cần mang vào, không cho phép chỉnh sửa"
+                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 text-xs text-slate-600 dark:text-slate-300 font-semibold cursor-not-allowed opacity-90"
                     />
                   </div>
                 </div>

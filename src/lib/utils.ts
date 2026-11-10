@@ -112,3 +112,22 @@ export function sortNewestFirst<T extends { id: string; createdAt?: string; date
     return (b.id || '').localeCompare(a.id || '');
   });
 }
+
+/**
+ * Tính ngày kết thúc = Ngày bắt đầu + Số ngày (YYYY-MM-DD)
+ */
+export function calculateEndDate(startDateStr: string, days: number): string {
+  if (!startDateStr || isNaN(days) || days <= 0) return startDateStr;
+  try {
+    const [year, month, day] = startDateStr.split('-').map(Number);
+    if (!year || !month || !day) return startDateStr;
+    const date = new Date(year, month - 1, day);
+    date.setDate(date.getDate() + Number(days));
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  } catch {
+    return startDateStr;
+  }
+}
