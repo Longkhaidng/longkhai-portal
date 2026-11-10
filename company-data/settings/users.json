@@ -1,5 +1,26 @@
 [
   {
+    "id": "2876",
+    "name": "Nguyễn Thị Huyền Trang",
+    "department": "Phân xưởng hoàn thành",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "phone": "0774908824",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
+    "economicStaffId": "2415",
+    "permissions": [
+      "dashboard",
+      "announcements",
+      "food_registration"
+    ],
+    "allowedWebIntegrations": [],
+    "isActive": true,
+    "password": "2876",
+    "createdAt": "2026-11-10T08:35:11.708Z",
+    "updatedAt": "2026-11-10T08:35:11.708Z"
+  },
+  {
     "id": "2874",
     "name": "Trần Văn Quốc Dũng",
     "department": "Phân xưởng hoàn thành",
