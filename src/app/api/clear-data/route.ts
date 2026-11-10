@@ -84,15 +84,39 @@ export async function POST(req: NextRequest) {
     }
 
     const deletedCounts: Record<string, number> = {};
+    const now = Date.now();
+
+    // Read and update cleared collections timestamps
+    let clearedMap: Record<string, number> = {};
+    const metaPathTmp = path.join(TMP_DIR, '.cleared_collections.json');
+    const metaPathBase = path.join(BASE_DIR, '.cleared_collections.json');
+    try {
+      if (fs.existsSync(metaPathTmp)) {
+        clearedMap = JSON.parse(fs.readFileSync(metaPathTmp, 'utf-8'));
+      } else if (fs.existsSync(metaPathBase)) {
+        clearedMap = JSON.parse(fs.readFileSync(metaPathBase, 'utf-8'));
+      }
+    } catch {}
 
     for (const target of targetList) {
       const relDir = TARGET_DIR_MAP[target];
       if (!relDir) continue;
+      clearedMap[relDir] = now;
       let count = 0;
       count += deleteFilesRecursive(path.join(BASE_DIR, relDir));
       count += deleteFilesRecursive(path.join(TMP_DIR, relDir));
       deletedCounts[target] = count;
     }
+
+    // Persist cleared timestamp file in /tmp and BASE_DIR
+    try {
+      if (!fs.existsSync(TMP_DIR)) fs.mkdirSync(TMP_DIR, { recursive: true });
+      fs.writeFileSync(metaPathTmp, JSON.stringify(clearedMap, null, 2), 'utf-8');
+    } catch {}
+    try {
+      if (!fs.existsSync(BASE_DIR)) fs.mkdirSync(BASE_DIR, { recursive: true });
+      fs.writeFileSync(metaPathBase, JSON.stringify(clearedMap, null, 2), 'utf-8');
+    } catch {}
 
     // Optionally clean on GitHub if token configured
     const gitConfig = resolveServerGitHubConfig();

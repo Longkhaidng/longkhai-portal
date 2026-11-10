@@ -37,8 +37,31 @@ function readJsonFile<T>(relPath: string, defaultValue: T): T {
   return defaultValue;
 }
 
+function getClearedTimestamp(subDir: string): number {
+  try {
+    const tmpMeta = path.join(TMP_DIR, '.cleared_collections.json');
+    if (fs.existsSync(tmpMeta)) {
+      const data = JSON.parse(fs.readFileSync(tmpMeta, 'utf-8'));
+      if (data && typeof data[subDir] === 'number') {
+        return data[subDir];
+      }
+    }
+  } catch {}
+  try {
+    const baseMeta = path.join(BASE_DIR, '.cleared_collections.json');
+    if (fs.existsSync(baseMeta)) {
+      const data = JSON.parse(fs.readFileSync(baseMeta, 'utf-8'));
+      if (data && typeof data[subDir] === 'number') {
+        return data[subDir];
+      }
+    }
+  } catch {}
+  return 0;
+}
+
 function scanJsonFiles<T>(subDir: string): T[] {
   const results: Map<string, T> = new Map();
+  const clearedAt = getClearedTimestamp(subDir);
 
   // Helper to read directory recursively
   const readDir = (dir: string) => {
@@ -49,8 +72,14 @@ function scanJsonFiles<T>(subDir: string): T[] {
         const full = path.join(dir, entry.name);
         if (entry.isDirectory()) {
           readDir(full);
-        } else if (entry.isFile() && entry.name.endsWith('.json')) {
+        } else if (entry.isFile() && entry.name.endsWith('.json') && !entry.name.startsWith('.')) {
           try {
+            if (clearedAt > 0) {
+              const stat = fs.statSync(full);
+              if (stat.mtimeMs <= clearedAt) {
+                continue;
+              }
+            }
             const content = fs.readFileSync(full, 'utf-8');
             const parsed = JSON.parse(content);
             if (parsed && parsed.id) {
@@ -118,6 +147,8 @@ export async function GET() {
         emailConfig,
         githubConfig,
         foodRegistrations,
+        overtimeRegistrations,
+        overtimeMealMenus,
       },
       counts: {
         users: users.length,
@@ -131,6 +162,7 @@ export async function GET() {
         pcccDevices: pcccDevices.length,
         pcccInspections: pcccInspections.length,
         foodRegistrations: foodRegistrations.length,
+        overtimeRegistrations: overtimeRegistrations.length,
       },
     });
   } catch (err: any) {

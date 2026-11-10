@@ -1103,11 +1103,33 @@ class StorageService {
         periodicGroundwaterSoil,
         emailConfig,
         githubConfig,
-      foodRegistrations,
-
-
-  
+        foodRegistrations,
+        overtimeRegistrations,
+        overtimeMealMenus,
       } = json.data;
+
+      const mergeWithRecentLocal = <T extends { id: string; createdAt?: string; updatedAt?: string }>(
+        serverList: T[],
+        localList: T[],
+        formatFn?: (id: string) => string
+      ): T[] => {
+        const map = new Map<string, T>();
+        serverList.forEach((item) => {
+          const id = formatFn ? formatFn(item.id) : item.id;
+          map.set(id, { ...item, id });
+        });
+        const now = Date.now();
+        localList.forEach((item) => {
+          const id = formatFn ? formatFn(item.id) : item.id;
+          if (!map.has(id)) {
+            const time = new Date(item.createdAt || item.updatedAt || 0).getTime();
+            if (time > 0 && now - time < 15000) {
+              map.set(id, { ...item, id });
+            }
+          }
+        });
+        return Array.from(map.values());
+      };
 
       if (Array.isArray(users) && users.length > 0) {
         localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
@@ -1123,52 +1145,49 @@ class StorageService {
       }
       if (Array.isArray(foodRegistrations)) {
         const local = this.getFoodRegistrations();
-        const map = new Map<string, FoodRegistration>();
-        local.forEach((f: FoodRegistration) => map.set(formatDocId(f.id), { ...f, id: formatDocId(f.id) }));
-        foodRegistrations.forEach((f: FoodRegistration) => map.set(formatDocId(f.id), { ...f, id: formatDocId(f.id) }));
-        localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(Array.from(map.values())));
+        const merged = mergeWithRecentLocal(foodRegistrations, local, formatDocId);
+        localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(merged));
+        try {
+          window.dispatchEvent(new Event('food_registrations_updated'));
+        } catch {}
       }
       if (Array.isArray(leaveRequests)) {
         const local = this.getLeaveRequests();
-        const map = new Map<string, LeaveRequest>();
-        local.forEach((r) => map.set(formatDocId(r.id), { ...r, id: formatDocId(r.id) }));
-        leaveRequests.forEach((r) => map.set(formatDocId(r.id), { ...r, id: formatDocId(r.id) }));
-        localStorage.setItem(STORAGE_KEYS.LEAVE_REQUESTS, JSON.stringify(Array.from(map.values())));
+        const merged = mergeWithRecentLocal(leaveRequests, local, formatDocId);
+        localStorage.setItem(STORAGE_KEYS.LEAVE_REQUESTS, JSON.stringify(merged));
       }
       if (Array.isArray(gatePasses)) {
         const local = this.getGatePasses();
-        const map = new Map<string, GatePass>();
-        local.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
-        gatePasses.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
-        localStorage.setItem(STORAGE_KEYS.GATE_PASSES, JSON.stringify(Array.from(map.values())));
+        const merged = mergeWithRecentLocal(gatePasses, local, formatDocId);
+        localStorage.setItem(STORAGE_KEYS.GATE_PASSES, JSON.stringify(merged));
       }
       if (Array.isArray(attendanceConfirms)) {
         const local = this.getAttendanceConfirms();
-        const map = new Map<string, AttendanceConfirm>();
-        local.forEach((a) => map.set(formatDocId(a.id), { ...a, id: formatDocId(a.id) }));
-        attendanceConfirms.forEach((a) => map.set(formatDocId(a.id), { ...a, id: formatDocId(a.id) }));
-        localStorage.setItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS, JSON.stringify(Array.from(map.values())));
+        const merged = mergeWithRecentLocal(attendanceConfirms, local, formatDocId);
+        localStorage.setItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS, JSON.stringify(merged));
       }
       if (Array.isArray(repairProposals)) {
         const local = this.getRepairProposals();
-        const map = new Map<string, RepairProposal>();
-        local.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
-        repairProposals.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
-        localStorage.setItem(STORAGE_KEYS.REPAIR_PROPOSALS, JSON.stringify(Array.from(map.values())));
+        const merged = mergeWithRecentLocal(repairProposals, local, formatDocId);
+        localStorage.setItem(STORAGE_KEYS.REPAIR_PROPOSALS, JSON.stringify(merged));
       }
       if (Array.isArray(stationeryProposals)) {
         const local = this.getStationeryProposals();
-        const map = new Map<string, StationeryProposal>();
-        local.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
-        stationeryProposals.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
-        localStorage.setItem(STORAGE_KEYS.STATIONERY_PROPOSALS, JSON.stringify(Array.from(map.values())));
+        const merged = mergeWithRecentLocal(stationeryProposals, local, formatDocId);
+        localStorage.setItem(STORAGE_KEYS.STATIONERY_PROPOSALS, JSON.stringify(merged));
       }
       if (Array.isArray(generalProposals)) {
         const local = this.getGeneralProposals();
-        const map = new Map<string, GeneralProposal>();
-        local.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
-        generalProposals.forEach((p) => map.set(formatDocId(p.id), { ...p, id: formatDocId(p.id) }));
-        localStorage.setItem(STORAGE_KEYS.GENERAL_PROPOSALS, JSON.stringify(Array.from(map.values())));
+        const merged = mergeWithRecentLocal(generalProposals, local, formatDocId);
+        localStorage.setItem(STORAGE_KEYS.GENERAL_PROPOSALS, JSON.stringify(merged));
+      }
+      if (Array.isArray(overtimeRegistrations)) {
+        const local = this.getOvertimeRegistrations();
+        const merged = mergeWithRecentLocal(overtimeRegistrations, local);
+        localStorage.setItem(STORAGE_KEYS.OVERTIME_REGISTRATIONS, JSON.stringify(merged));
+      }
+      if (Array.isArray(overtimeMealMenus) && overtimeMealMenus.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.OVERTIME_MEAL_MENUS, JSON.stringify(overtimeMealMenus));
       }
       if (Array.isArray(stationeryItems) && stationeryItems.length > 0) {
         localStorage.setItem(STORAGE_KEYS.STATIONERY_ITEMS, JSON.stringify(stationeryItems));
@@ -1183,10 +1202,8 @@ class StorageService {
       }
       if (Array.isArray(pcccInspections)) {
         const local = this.getPCCCInspections();
-        const map = new Map<string, PCCCInspection>();
-        local.forEach((insp) => map.set(insp.id, insp));
-        pcccInspections.forEach((insp) => map.set(insp.id, insp));
-        localStorage.setItem(STORAGE_KEYS.PCCC_INSPECTIONS, JSON.stringify(Array.from(map.values())));
+        const merged = mergeWithRecentLocal(pcccInspections, local);
+        localStorage.setItem(STORAGE_KEYS.PCCC_INSPECTIONS, JSON.stringify(merged));
       }
       if (Array.isArray(periodicFirstAid)) {
         const local = this.getFirstAidInspections();
@@ -1515,14 +1532,16 @@ class StorageService {
     if (!this.isClient()) return INITIAL_PCCC_INSPECTIONS;
     try {
       const data = localStorage.getItem(STORAGE_KEYS.PCCC_INSPECTIONS);
-      if (data) {
+      if (data !== null) {
         const parsed = JSON.parse(data);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
           return sortNewestFirst(parsed);
         }
       }
     } catch {}
-    localStorage.setItem(STORAGE_KEYS.PCCC_INSPECTIONS, JSON.stringify(INITIAL_PCCC_INSPECTIONS));
+    if (INITIAL_PCCC_INSPECTIONS.length > 0) {
+      localStorage.setItem(STORAGE_KEYS.PCCC_INSPECTIONS, JSON.stringify(INITIAL_PCCC_INSPECTIONS));
+    }
     return INITIAL_PCCC_INSPECTIONS;
   }
 
@@ -1624,6 +1643,10 @@ class StorageService {
       localStorage.setItem(STORAGE_KEYS.PCCC_INSPECTIONS, '[]');
       clearedLabels.push('Kiểm tra PCCC');
     }
+
+    try {
+      window.dispatchEvent(new Event('storage'));
+    } catch {}
 
     let serverRes: any = null;
     try {
@@ -1971,14 +1994,16 @@ class StorageService {
     if (!this.isClient()) return INITIAL_OVERTIME_REGISTRATIONS;
     try {
       const data = localStorage.getItem(STORAGE_KEYS.OVERTIME_REGISTRATIONS);
-      if (data) {
+      if (data !== null) {
         const parsed = JSON.parse(data);
         if (Array.isArray(parsed)) return parsed;
       }
     } catch {}
-    try {
-      localStorage.setItem(STORAGE_KEYS.OVERTIME_REGISTRATIONS, JSON.stringify(INITIAL_OVERTIME_REGISTRATIONS));
-    } catch {}
+    if (INITIAL_OVERTIME_REGISTRATIONS.length > 0) {
+      try {
+        localStorage.setItem(STORAGE_KEYS.OVERTIME_REGISTRATIONS, JSON.stringify(INITIAL_OVERTIME_REGISTRATIONS));
+      } catch {}
+    }
     return INITIAL_OVERTIME_REGISTRATIONS;
   }
 
