@@ -1,5 +1,26 @@
 [
   {
+    "id": "2874",
+    "name": "Trần Văn Quốc Dũng",
+    "department": "Phân xưởng hoàn thành",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "phone": "0903130554",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
+    "permissions": [
+      "dashboard",
+      "announcements",
+      "food_registration"
+    ],
+    "allowedWebIntegrations": [],
+    "isActive": true,
+    "password": "2874",
+    "createdAt": "2026-11-10T08:31:24.874Z",
+    "updatedAt": "2026-11-10T08:31:24.874Z"
+  },
+  {
     "id": "2871",
     "name": "Hồ Thị Thuý Quyền",
     "department": "Phân xưởng hoàn thành",
