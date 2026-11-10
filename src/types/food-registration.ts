@@ -202,10 +202,13 @@ export function checkFoodQrValidity(registration: FoodRegistration): FoodQrValid
     }
 
     if (registration.status === 'pending_hr') {
+      const isDirect = registration.steps?.length === 1;
       return {
         isValid: false,
         isExpired: false,
-        message: 'Đơn đã qua Trưởng BP duyệt, đang chờ Trưởng phòng HCNS phê duyệt.',
+        message: isDirect
+          ? 'Đơn đang chờ Trưởng phòng HCNS phê duyệt. Mã QR sẽ được kích hoạt sau khi duyệt.'
+          : 'Đơn đã qua Trưởng BP duyệt, đang chờ Trưởng phòng HCNS phê duyệt.',
       };
     }
 
@@ -480,15 +483,11 @@ export const INITIAL_FOOD_REGISTRATIONS: FoodRegistration[] = [
     toDate: '2026-11-16',
     category: 'medicine_drink',
     mainGroup: 'pregnant_medicine',
-    foodDetails: 'Nước thuốc',
+    foodDetails: 'Nước thuốc (Lý do: Uống thuốc điều trị sau bữa ăn)',
+    medicineReason: 'Uống thuốc điều trị sau bữa ăn',
     complianceCommitment: true,
-    status: 'pending_dept',
+    status: 'pending_hr',
     steps: [
-      {
-        stepName: 'Trưởng bộ phận',
-        roleRequired: 'manager',
-        status: 'pending',
-      },
       {
         stepName: 'Trưởng phòng HCNS',
         roleRequired: 'hr',

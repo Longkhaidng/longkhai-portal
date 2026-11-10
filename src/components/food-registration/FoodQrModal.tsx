@@ -101,31 +101,48 @@ export function FoodQrModal({ isOpen, onClose, registration }: FoodQrModalProps)
             <div className="w-full p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-800 text-left space-y-3">
               <div className="flex items-center gap-2 text-amber-800 dark:text-amber-200 font-bold text-xs">
                 <Clock className="w-4 h-4 text-amber-500 shrink-0" />
-                <span>Quy trình phê duyệt 2 cấp (Chưa cấp mã QR)</span>
+                <span>
+                  {registration.steps && registration.steps.length === 1
+                    ? 'Đang chờ Trưởng phòng HCNS phê duyệt (Chưa cấp mã QR)'
+                    : 'Quy trình phê duyệt 2 cấp (Chưa cấp mã QR)'}
+                </span>
               </div>
               <p className="text-xs text-amber-700 dark:text-amber-300">
-                Theo quy định, thực phẩm chế độ dài ngày cần được Trưởng bộ phận và Trưởng phòng HCNS phê duyệt. Mã QR sẽ được cấp tự động sau khi phê duyệt hoàn tất.
+                {registration.steps && registration.steps.length === 1
+                  ? 'Đơn đăng ký của nhân viên Phòng HCNS được chuyển trực tiếp đến Trưởng phòng HCNS phê duyệt. Mã QR sẽ được kích hoạt ngay sau khi Trưởng phòng HCNS phê duyệt.'
+                  : 'Theo quy định, thực phẩm chế độ dài ngày cần được Trưởng bộ phận và Trưởng phòng HCNS phê duyệt. Mã QR sẽ được cấp tự động sau khi phê duyệt hoàn tất.'}
               </p>
 
               <div className="space-y-2 pt-2 border-t border-amber-200 dark:border-amber-800/60 text-xs">
-                {/* Step 1: Dept Head */}
-                <div className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-900">
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">1. Trưởng bộ phận</span>
-                  <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400">
-                    {registration.steps?.[0]?.status === 'approved' ? '✓ Đã duyệt' : 'Đang chờ duyệt'}
-                  </span>
-                </div>
-                {/* Step 2: HR Head */}
-                <div className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-900">
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">2. Trưởng phòng HCNS</span>
-                  <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400">
-                    {registration.steps?.[1]?.status === 'approved'
-                      ? '✓ Đã duyệt'
-                      : registration.steps?.[0]?.status === 'approved'
-                      ? 'Chờ duyệt'
-                      : 'Chờ bước 1'}
-                  </span>
-                </div>
+                {registration.steps && registration.steps.length === 1 ? (
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-900">
+                    <span className="font-semibold text-slate-800 dark:text-slate-200">Trưởng phòng HCNS duyệt</span>
+                    <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400">
+                      {registration.steps?.[0]?.status === 'approved' ? '✓ Đã duyệt' : 'Đang chờ duyệt'}
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    {/* Step 1: Dept Head */}
+                    <div className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-900">
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">1. Trưởng bộ phận</span>
+                      <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400">
+                        {registration.steps?.[0]?.status === 'approved' ? '✓ Đã duyệt' : 'Đang chờ duyệt'}
+                      </span>
+                    </div>
+                    {/* Step 2: HR Head */}
+                    <div className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-900">
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">2. Trưởng phòng HCNS</span>
+                      <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400">
+                        {registration.steps?.[1]?.status === 'approved'
+                          ? '✓ Đã duyệt'
+                          : registration.steps?.[0]?.status === 'approved'
+                          ? 'Chờ duyệt'
+                          : 'Chờ bước 1'}
+                      </span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           ) : (

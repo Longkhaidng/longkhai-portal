@@ -119,6 +119,7 @@ export function FoodRegistrationView() {
   const isAdmin = isSuperAdminOrBOD(currentUser);
   const isHR = isHRHead(currentUser);
   const isManager = currentUser?.role === 'manager';
+  const isHRDeptEmployee = isHROrITDepartment(department.trim()) || isHROrITDepartment(currentUser?.department);
 
   // Load Initial Data
   const loadData = () => {
@@ -308,7 +309,7 @@ export function FoodRegistrationView() {
         const isDirectToHR = isManagerSender || isDeptDirectToHR;
         const initialStatus = isDirectToHR ? 'pending_hr' : 'pending_dept';
 
-        const steps = (isDeptDirectToHR && !isManagerSender)
+        const steps = isDeptDirectToHR
           ? [
               {
                 stepName: 'Trưởng phòng HCNS' as const,
@@ -347,7 +348,7 @@ export function FoodRegistrationView() {
           complianceCommitment: true,
           status: initialStatus,
           steps,
-          currentStepIndex: isDirectToHR && !isDeptDirectToHR ? 1 : 0,
+          currentStepIndex: isManagerSender && !isDeptDirectToHR ? 1 : 0,
           qrCodeUrl: qrUrl,
           qrDataUrl,
           createdAt: now,
@@ -360,7 +361,11 @@ export function FoodRegistrationView() {
         });
 
         setRegistrations(storage.getFoodRegistrations());
-        showToast(`Gửi đơn thành công (${newId})! Đơn đang chuyển Trưởng bộ phận & Trưởng phòng HCNS duyệt.`);
+        if (isDeptDirectToHR) {
+          showToast(`Gửi đơn thành công (${newId})! Đơn đã được chuyển trực tiếp đến Trưởng phòng HCNS duyệt.`);
+        } else {
+          showToast(`Gửi đơn thành công (${newId})! Đơn đang chuyển Trưởng bộ phận & Trưởng phòng HCNS duyệt.`);
+        }
 
         setSelectedQrItem(newRegistration);
         setIsQrModalOpen(true);
@@ -849,10 +854,16 @@ export function FoodRegistrationView() {
                 <div className="p-3 rounded-xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-[11px] text-amber-800 dark:text-amber-300 space-y-1">
                   <div className="flex items-center gap-1.5 font-bold">
                     <UserCheck className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
-                    <span>Luồng duyệt 2 cấp theo quy định:</span>
+                    <span>
+                      {isHRDeptEmployee
+                        ? 'Luồng duyệt trực tiếp Trưởng phòng HCNS:'
+                        : 'Luồng duyệt 2 cấp theo quy định:'}
+                    </span>
                   </div>
                   <p className="leading-relaxed">
-                    Người lao động ➔ Trưởng bộ phận ➔ Trưởng phòng HCNS. Khi được phê duyệt hoàn tất, mã QR có hiệu lực trong khoảng thời gian đã duyệt sẽ được kích hoạt.
+                    {isHRDeptEmployee
+                      ? 'Đối với nhân viên thuộc bộ phận Phòng HCNS: Đơn đăng ký được chuyển trực tiếp đến Trưởng phòng HCNS phê duyệt (không qua bước duyệt Trưởng BP). Sau khi Trưởng phòng HCNS duyệt, mã QR sẽ được kích hoạt.'
+                      : 'Người lao động ➔ Trưởng bộ phận ➔ Trưởng phòng HCNS. Khi được phê duyệt hoàn tất, mã QR có hiệu lực trong khoảng thời gian đã duyệt sẽ được kích hoạt.'}
                   </p>
                 </div>
               </div>
@@ -1054,6 +1065,8 @@ export function FoodRegistrationView() {
                   <span>
                     {mainGroup === 'vegetarian'
                       ? 'Gửi Đăng Ký & Nhận Mã QR 12h'
+                      : isHRDeptEmployee
+                      ? 'Gửi Đăng Ký Trực Tiếp Trưởng Phòng HCNS'
                       : 'Gửi Đăng Ký Trình Duyệt 2 Cấp'}
                   </span>
                 </>
@@ -1395,6 +1408,8 @@ export function FoodRegistrationView() {
                 <h3 className="text-base font-bold text-slate-900 dark:text-white">
                   {approvingItem.level === 'dept'
                     ? '1. Trưởng Bộ Phận Phê Duyệt'
+                    : isHROrITDepartment(approvingItem.item.department)
+                    ? 'Trưởng Phòng HCNS Phê Duyệt (Duyệt trực tiếp)'
                     : '2. Trưởng Phòng HCNS Phê Duyệt'}
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400">

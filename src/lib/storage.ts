@@ -2298,18 +2298,21 @@ class StorageService {
       ];
     }
 
-    item.steps[1] = {
+    const hrStepIdx = item.steps.findIndex((st) => st.roleRequired === 'hr');
+    const targetIdx = hrStepIdx >= 0 ? hrStepIdx : item.steps.length - 1;
+
+    item.steps[targetIdx] = {
       stepName: 'Trưởng phòng HCNS',
       roleRequired: 'hr',
       approverId: approver.id,
       approverName: approver.name,
       status: 'approved',
-      comment: comment || 'Đã duyệt',
+      comment: comment || 'Đồng ý phê duyệt',
       actionAt: new Date().toISOString(),
     };
 
     item.status = 'approved';
-    item.currentStepIndex = 2;
+    item.currentStepIndex = item.steps.length;
     item.updatedAt = new Date().toISOString();
 
     this.saveFoodRegistration(item, approver);
