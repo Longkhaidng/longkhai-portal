@@ -1569,7 +1569,17 @@ class StorageService {
   }
 
   async clearAllDocuments(
-    targets: ('gate_pass' | 'leave_request' | 'attendance')[],
+    targets: (
+      | 'gate_pass'
+      | 'leave_request'
+      | 'attendance'
+      | 'food_registration'
+      | 'overtime'
+      | 'repair'
+      | 'stationery'
+      | 'general_proposal'
+      | 'pccc_inspections'
+    )[],
     byUser?: { id: string; name: string }
   ): Promise<{ success: boolean; message: string; deletedCounts?: any }> {
     if (!this.isClient()) return { success: false, message: 'Chỉ hỗ trợ trên trình duyệt' };
@@ -1586,6 +1596,33 @@ class StorageService {
     if (targets.includes('attendance')) {
       localStorage.setItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS, '[]');
       clearedLabels.push('Phiếu xác nhận công');
+    }
+    if (targets.includes('food_registration')) {
+      localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, '[]');
+      clearedLabels.push('Đăng ký thực phẩm');
+      try {
+        window.dispatchEvent(new Event('food_registrations_updated'));
+      } catch {}
+    }
+    if (targets.includes('overtime')) {
+      localStorage.setItem(STORAGE_KEYS.OVERTIME_REGISTRATIONS, '[]');
+      clearedLabels.push('Đăng ký tăng ca');
+    }
+    if (targets.includes('repair')) {
+      localStorage.setItem(STORAGE_KEYS.REPAIR_PROPOSALS, '[]');
+      clearedLabels.push('Đề xuất sửa chữa');
+    }
+    if (targets.includes('stationery')) {
+      localStorage.setItem(STORAGE_KEYS.STATIONERY_PROPOSALS, '[]');
+      clearedLabels.push('Đề xuất VPP');
+    }
+    if (targets.includes('general_proposal')) {
+      localStorage.setItem(STORAGE_KEYS.GENERAL_PROPOSALS, '[]');
+      clearedLabels.push('Đề xuất chung');
+    }
+    if (targets.includes('pccc_inspections')) {
+      localStorage.setItem(STORAGE_KEYS.PCCC_INSPECTIONS, '[]');
+      clearedLabels.push('Kiểm tra PCCC');
     }
 
     let serverRes: any = null;
@@ -2134,45 +2171,9 @@ class StorageService {
     if (!this.isClient()) return INITIAL_FOOD_REGISTRATIONS;
     try {
       const data = localStorage.getItem(STORAGE_KEYS.FOOD_REGISTRATIONS);
-      if (data) {
-        let parsed: FoodRegistration[] = JSON.parse(data);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          let hasChanges = false;
-          // Bổ sung các bản ghi mẫu mới nếu chưa có
-          INITIAL_FOOD_REGISTRATIONS.forEach((initItem) => {
-            const existingIdx = parsed.findIndex((p) => p.id === initItem.id);
-            if (existingIdx === -1) {
-              parsed.push(initItem);
-              hasChanges = true;
-            } else if (initItem.entryLogs && (!parsed[existingIdx].entryLogs || parsed[existingIdx].entryLogs.length === 0)) {
-              parsed[existingIdx].entryLogs = initItem.entryLogs;
-              hasChanges = true;
-            }
-          });
-
-          // Chuẩn hóa bổ sung entryLogs cho các bản ghi đã được bảo vệ xác nhận
-          parsed = parsed.map((item) => {
-            if ((!item.entryLogs || item.entryLogs.length === 0) && item.confirmedAt && item.guardName) {
-              item.entryLogs = [
-                {
-                  id: `LOG-${item.id}-01`,
-                  guardName: item.guardName,
-                  guardId: item.guardId,
-                  action: item.status === 'guard_rejected' ? 'rejected' : 'confirmed',
-                  note: item.guardNote || item.rejectedReason || 'Đã kiểm tra thực phẩm qua cổng',
-                  timestamp: item.confirmedAt,
-                },
-              ];
-              hasChanges = true;
-            }
-            return item;
-          });
-
-          if (hasChanges) {
-            try {
-              localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(parsed));
-            } catch {}
-          }
+      if (data !== null) {
+        const parsed: FoodRegistration[] = JSON.parse(data);
+        if (Array.isArray(parsed)) {
           return [...parsed].sort(compareFoodRegistrationsNewestFirst);
         }
       }

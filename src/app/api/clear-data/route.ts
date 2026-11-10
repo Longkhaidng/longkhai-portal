@@ -32,47 +32,69 @@ function deleteFilesRecursive(dirPath: string): number {
   return count;
 }
 
+export type ClearTargetType =
+  | 'gate_pass'
+  | 'leave_request'
+  | 'attendance'
+  | 'food_registration'
+  | 'overtime'
+  | 'repair'
+  | 'stationery'
+  | 'general_proposal'
+  | 'pccc_inspections';
+
+const ALL_TARGETS: ClearTargetType[] = [
+  'gate_pass',
+  'leave_request',
+  'attendance',
+  'food_registration',
+  'overtime',
+  'repair',
+  'stationery',
+  'general_proposal',
+  'pccc_inspections',
+];
+
+const TARGET_DIR_MAP: Record<ClearTargetType, string> = {
+  gate_pass: 'gate-pass',
+  leave_request: 'leave-request',
+  attendance: 'attendance',
+  food_registration: 'food-registration',
+  overtime: 'overtime',
+  repair: 'repair-proposal',
+  stationery: 'stationery-proposal',
+  general_proposal: 'general-proposal',
+  pccc_inspections: path.join('pccc', 'inspections'),
+};
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { targets, deleteAll } = body as {
-      targets?: ('gate_pass' | 'leave_request' | 'attendance')[];
+      targets?: ClearTargetType[];
       deleteAll?: boolean;
     };
 
-    const targetList = deleteAll
-      ? ['gate_pass', 'leave_request', 'attendance']
-      : targets || [];
+    const targetList: ClearTargetType[] = deleteAll
+      ? ALL_TARGETS
+      : (targets || []).filter((t): t is ClearTargetType => ALL_TARGETS.includes(t));
 
     if (targetList.length === 0) {
       return NextResponse.json({ success: false, message: 'Chưa chọn loại dữ liệu cần xóa' }, { status: 400 });
     }
 
-    const deletedCounts: Record<string, number> = {
-      gate_pass: 0,
-      leave_request: 0,
-      attendance: 0,
-    };
+    const deletedCounts: Record<string, number> = {};
 
-    // 1. Delete Gate Passes
-    if (targetList.includes('gate_pass')) {
-      deletedCounts.gate_pass += deleteFilesRecursive(path.join(BASE_DIR, 'gate-pass'));
-      deletedCounts.gate_pass += deleteFilesRecursive(path.join(TMP_DIR, 'gate-pass'));
+    for (const target of targetList) {
+      const relDir = TARGET_DIR_MAP[target];
+      if (!relDir) continue;
+      let count = 0;
+      count += deleteFilesRecursive(path.join(BASE_DIR, relDir));
+      count += deleteFilesRecursive(path.join(TMP_DIR, relDir));
+      deletedCounts[target] = count;
     }
 
-    // 2. Delete Leave Requests
-    if (targetList.includes('leave_request')) {
-      deletedCounts.leave_request += deleteFilesRecursive(path.join(BASE_DIR, 'leave-request'));
-      deletedCounts.leave_request += deleteFilesRecursive(path.join(TMP_DIR, 'leave-request'));
-    }
-
-    // 3. Delete Attendance Confirms
-    if (targetList.includes('attendance')) {
-      deletedCounts.attendance += deleteFilesRecursive(path.join(BASE_DIR, 'attendance'));
-      deletedCounts.attendance += deleteFilesRecursive(path.join(TMP_DIR, 'attendance'));
-    }
-
-    // 4. Optionally clean on GitHub if token configured
+    // Optionally clean on GitHub if token configured
     const gitConfig = resolveServerGitHubConfig();
     if (gitConfig.token && gitConfig.owner && gitConfig.repo) {
       try {
@@ -91,14 +113,9 @@ export async function POST(req: NextRequest) {
           }
         };
 
-        if (targetList.includes('gate_pass')) {
-          cleanGitHubDir('gate-pass').catch(() => {});
-        }
-        if (targetList.includes('leave_request')) {
-          cleanGitHubDir('leave-request').catch(() => {});
-        }
-        if (targetList.includes('attendance')) {
-          cleanGitHubDir('attendance').catch(() => {});
+        for (const target of targetList) {
+          const relDir = TARGET_DIR_MAP[target].replace(/\\/g, '/');
+          cleanGitHubDir(relDir).catch(() => {});
         }
       } catch (ghErr) {
         console.warn('Lỗi dọn dẹp trên GitHub:', ghErr);

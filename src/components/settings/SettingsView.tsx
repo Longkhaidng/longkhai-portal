@@ -104,6 +104,12 @@ export function SettingsView() {
   const [leaveCount, setLeaveCount] = useState<number>(0);
   const [gatePassCount, setGatePassCount] = useState<number>(0);
   const [attCount, setAttCount] = useState<number>(0);
+  const [foodCount, setFoodCount] = useState<number>(0);
+  const [overtimeCount, setOvertimeCount] = useState<number>(0);
+  const [repairCount, setRepairCount] = useState<number>(0);
+  const [stationeryCount, setStationeryCount] = useState<number>(0);
+  const [generalCount, setGeneralCount] = useState<number>(0);
+  const [pcccInspCount, setPcccInspCount] = useState<number>(0);
 
   // Clear data state
   const [showClearModal, setShowClearModal] = useState<boolean>(false);
@@ -111,10 +117,22 @@ export function SettingsView() {
     gate_pass: boolean;
     leave_request: boolean;
     attendance: boolean;
+    food_registration: boolean;
+    overtime: boolean;
+    repair: boolean;
+    stationery: boolean;
+    general_proposal: boolean;
+    pccc_inspections: boolean;
   }>({
     gate_pass: true,
     leave_request: true,
     attendance: true,
+    food_registration: true,
+    overtime: true,
+    repair: true,
+    stationery: true,
+    general_proposal: true,
+    pccc_inspections: true,
   });
   const [confirmDeleteText, setConfirmDeleteText] = useState<string>('');
   const [isClearing, setIsClearing] = useState<boolean>(false);
@@ -170,6 +188,12 @@ export function SettingsView() {
     setLeaveCount(storage.getLeaveRequests().length);
     setGatePassCount(storage.getGatePasses().length);
     setAttCount(storage.getAttendanceConfirms().length);
+    setFoodCount(storage.getFoodRegistrations().length);
+    setOvertimeCount(storage.getOvertimeRegistrations().length);
+    setRepairCount(storage.getRepairProposals().length);
+    setStationeryCount(storage.getStationeryProposals().length);
+    setGeneralCount(storage.getGeneralProposals().length);
+    setPcccInspCount(storage.getPCCCInspections().length);
     setLastBackupDate(storage.getLastBackupDate());
     setBackupInterval(storage.getBackupIntervalDays());
     setIsDue(storage.isBackupDue());
@@ -305,10 +329,26 @@ export function SettingsView() {
       return;
     }
 
-    const selectedTargets: ('gate_pass' | 'leave_request' | 'attendance')[] = [];
+    const selectedTargets: (
+      | 'gate_pass'
+      | 'leave_request'
+      | 'attendance'
+      | 'food_registration'
+      | 'overtime'
+      | 'repair'
+      | 'stationery'
+      | 'general_proposal'
+      | 'pccc_inspections'
+    )[] = [];
     if (clearTargets.gate_pass) selectedTargets.push('gate_pass');
     if (clearTargets.leave_request) selectedTargets.push('leave_request');
     if (clearTargets.attendance) selectedTargets.push('attendance');
+    if (clearTargets.food_registration) selectedTargets.push('food_registration');
+    if (clearTargets.overtime) selectedTargets.push('overtime');
+    if (clearTargets.repair) selectedTargets.push('repair');
+    if (clearTargets.stationery) selectedTargets.push('stationery');
+    if (clearTargets.general_proposal) selectedTargets.push('general_proposal');
+    if (clearTargets.pccc_inspections) selectedTargets.push('pccc_inspections');
 
     if (selectedTargets.length === 0) {
       showToast({
@@ -751,7 +791,19 @@ export function SettingsView() {
                 <div className="flex gap-2">
                   <button
                     type="button"
-                    onClick={() => setClearTargets({ gate_pass: true, leave_request: true, attendance: true })}
+                    onClick={() =>
+                      setClearTargets({
+                        gate_pass: true,
+                        leave_request: true,
+                        attendance: true,
+                        food_registration: true,
+                        overtime: true,
+                        repair: true,
+                        stationery: true,
+                        general_proposal: true,
+                        pccc_inspections: true,
+                      })
+                    }
                     className="text-[11px] text-blue-600 dark:text-blue-400 hover:underline font-semibold cursor-pointer"
                   >
                     Chọn tất cả
@@ -759,7 +811,19 @@ export function SettingsView() {
                   <span className="text-slate-300">|</span>
                   <button
                     type="button"
-                    onClick={() => setClearTargets({ gate_pass: false, leave_request: false, attendance: false })}
+                    onClick={() =>
+                      setClearTargets({
+                        gate_pass: false,
+                        leave_request: false,
+                        attendance: false,
+                        food_registration: false,
+                        overtime: false,
+                        repair: false,
+                        stationery: false,
+                        general_proposal: false,
+                        pccc_inspections: false,
+                      })
+                    }
                     className="text-[11px] text-slate-500 hover:underline font-semibold cursor-pointer"
                   >
                     Bỏ chọn
@@ -818,6 +882,108 @@ export function SettingsView() {
                     <div className="text-[10px] font-normal opacity-80 mt-0.5">({attCount} phiếu)</div>
                   </div>
                 </label>
+
+                <label className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-colors ${
+                  clearTargets.food_registration
+                    ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={clearTargets.food_registration}
+                    onChange={(e) => setClearTargets({ ...clearTargets, food_registration: e.target.checked })}
+                    className="rounded text-rose-600 focus:ring-rose-500"
+                  />
+                  <div className="text-xs">
+                    <div>Đăng ký thực phẩm mang vào</div>
+                    <div className="text-[10px] font-normal opacity-80 mt-0.5">({foodCount} phiếu)</div>
+                  </div>
+                </label>
+
+                <label className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-colors ${
+                  clearTargets.overtime
+                    ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={clearTargets.overtime}
+                    onChange={(e) => setClearTargets({ ...clearTargets, overtime: e.target.checked })}
+                    className="rounded text-rose-600 focus:ring-rose-500"
+                  />
+                  <div className="text-xs">
+                    <div>Đăng ký tăng ca & cơm</div>
+                    <div className="text-[10px] font-normal opacity-80 mt-0.5">({overtimeCount} đợt)</div>
+                  </div>
+                </label>
+
+                <label className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-colors ${
+                  clearTargets.repair
+                    ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={clearTargets.repair}
+                    onChange={(e) => setClearTargets({ ...clearTargets, repair: e.target.checked })}
+                    className="rounded text-rose-600 focus:ring-rose-500"
+                  />
+                  <div className="text-xs">
+                    <div>Đề xuất sửa chữa</div>
+                    <div className="text-[10px] font-normal opacity-80 mt-0.5">({repairCount} đề xuất)</div>
+                  </div>
+                </label>
+
+                <label className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-colors ${
+                  clearTargets.stationery
+                    ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={clearTargets.stationery}
+                    onChange={(e) => setClearTargets({ ...clearTargets, stationery: e.target.checked })}
+                    className="rounded text-rose-600 focus:ring-rose-500"
+                  />
+                  <div className="text-xs">
+                    <div>Đề xuất văn phòng phẩm</div>
+                    <div className="text-[10px] font-normal opacity-80 mt-0.5">({stationeryCount} đề xuất)</div>
+                  </div>
+                </label>
+
+                <label className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-colors ${
+                  clearTargets.general_proposal
+                    ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={clearTargets.general_proposal}
+                    onChange={(e) => setClearTargets({ ...clearTargets, general_proposal: e.target.checked })}
+                    className="rounded text-rose-600 focus:ring-rose-500"
+                  />
+                  <div className="text-xs">
+                    <div>Đề xuất chung</div>
+                    <div className="text-[10px] font-normal opacity-80 mt-0.5">({generalCount} đề xuất)</div>
+                  </div>
+                </label>
+
+                <label className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-colors ${
+                  clearTargets.pccc_inspections
+                    ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={clearTargets.pccc_inspections}
+                    onChange={(e) => setClearTargets({ ...clearTargets, pccc_inspections: e.target.checked })}
+                    className="rounded text-rose-600 focus:ring-rose-500"
+                  />
+                  <div className="text-xs">
+                    <div>Nhật ký kiểm tra PCCC</div>
+                    <div className="text-[10px] font-normal opacity-80 mt-0.5">({pcccInspCount} lượt)</div>
+                  </div>
+                </label>
               </div>
 
               <div className="p-3 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-900/60 text-[11px] text-amber-900 dark:text-amber-300 flex items-start gap-2">
@@ -834,7 +1000,7 @@ export function SettingsView() {
                 <button
                   type="button"
                   onClick={() => setShowClearModal(true)}
-                  disabled={!clearTargets.gate_pass && !clearTargets.leave_request && !clearTargets.attendance}
+                  disabled={!Object.values(clearTargets).some(Boolean)}
                   className="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 disabled:opacity-40 text-white rounded-xl font-bold text-xs shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer shrink-0"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -1314,10 +1480,16 @@ export function SettingsView() {
 
             <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 space-y-2">
               <p className="font-semibold text-slate-900 dark:text-white">Các mục sẽ bị dọn dẹp sạch sẽ:</p>
-              <ul className="list-disc pl-4 space-y-1 text-[11px]">
+              <ul className="list-disc pl-4 space-y-1 text-[11px] max-h-48 overflow-y-auto">
                 {clearTargets.gate_pass && <li>Toàn bộ phiếu ra vào cổng ({gatePassCount} phiếu)</li>}
                 {clearTargets.leave_request && <li>Toàn bộ đơn xin nghỉ phép ({leaveCount} đơn)</li>}
                 {clearTargets.attendance && <li>Toàn bộ phiếu xác nhận công ({attCount} phiếu)</li>}
+                {clearTargets.food_registration && <li>Toàn bộ đăng ký thực phẩm mang vào ({foodCount} phiếu)</li>}
+                {clearTargets.overtime && <li>Toàn bộ đăng ký tăng ca & cơm ({overtimeCount} đợt)</li>}
+                {clearTargets.repair && <li>Toàn bộ đề xuất sửa chữa ({repairCount} đề xuất)</li>}
+                {clearTargets.stationery && <li>Toàn bộ đề xuất văn phòng phẩm ({stationeryCount} đề xuất)</li>}
+                {clearTargets.general_proposal && <li>Toàn bộ đề xuất chung ({generalCount} đề xuất)</li>}
+                {clearTargets.pccc_inspections && <li>Toàn bộ nhật ký kiểm tra PCCC ({pcccInspCount} lượt)</li>}
               </ul>
             </div>
 
