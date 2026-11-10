@@ -9,6 +9,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (employeeId: string, password: string) => Promise<{ success: boolean; message: string }>;
   logout: () => void;
+  changePassword: (oldPassword: string, newPassword: string) => Promise<{ success: boolean; message: string }>;
   hasPermission: (category: CategoryPermission) => boolean;
   isRole: (role: UserRole) => boolean;
   reloadCurrentUser: () => void;
@@ -163,6 +164,84 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem(SESSION_KEY);
   };
 
+  const changePassword = async (
+    oldPassword: string,
+    newPassword: string
+  ): Promise<{ success: boolean; message: string }> => {
+    if (!currentUser) {
+      return { success: false, message: 'Bạn chưa đăng nhập vào hệ thống.' };
+    }
+
+    const cleanOld = oldPassword.trim();
+    const cleanNew = newPassword.trim();
+
+    if (!cleanOld) {
+      return { success: false, message: 'Vui lòng nhập mật khẩu hiện tại.' };
+    }
+
+    if (!cleanNew) {
+      return { success: false, message: 'Vui lòng nhập mật khẩu mới.' };
+    }
+
+    if (cleanNew.length < 6) {
+      return { success: false, message: 'Mật khẩu mới phải có ít nhất 6 ký tự để đảm bảo an toàn.' };
+    }
+
+    const currentValidPassword = currentUser.password || 'LK@123456';
+    if (cleanOld !== currentValidPassword) {
+      return {
+        success: false,
+        message: 'Mật khẩu hiện tại không chính xác. Mật khẩu mặc định ban đầu là LK@123456 nếu bạn chưa từng đổi.',
+      };
+    }
+
+    if (cleanNew === cleanOld) {
+      return {
+        success: false,
+        message: 'Mật khẩu mới không được trùng với mật khẩu hiện tại.',
+      };
+    }
+
+    // Cập nhật người dùng trong danh sách lưu trữ
+    const users = storage.getUsers();
+    const userIndex = users.findIndex(
+      (u) => u.id.toLowerCase() === currentUser.id.toLowerCase()
+    );
+
+    if (userIndex === -1) {
+      return { success: false, message: 'Không tìm thấy thông tin tài khoản người dùng trong hệ thống.' };
+    }
+
+    const updatedUser: User = {
+      ...users[userIndex],
+      password: cleanNew,
+      updatedAt: new Date().toISOString(),
+    };
+
+    users[userIndex] = updatedUser;
+    storage.saveUsers(users, {
+      id: currentUser.id,
+      name: currentUser.name,
+    });
+
+    // Cập nhật state currentUser
+    setCurrentUser(updatedUser);
+
+    storage.addAuditLog(
+      'update',
+      'auth',
+      currentUser.id,
+      currentUser.id,
+      currentUser.name,
+      `Người dùng ${currentUser.name} (MSNV: ${currentUser.id}) đã tự đổi mật khẩu tài khoản thành công`
+    );
+
+    return {
+      success: true,
+      message: 'Đổi mật khẩu thành công! Mật khẩu mới đã được cập nhật và có hiệu lực ngay lập tức.',
+    };
+  };
+
   const hasPermission = (category: CategoryPermission): boolean => {
     if (!currentUser) return false;
     // Administrator always has access to everything
@@ -203,6 +282,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         login,
         logout,
+        changePassword,
         hasPermission,
         isRole,
         reloadCurrentUser,

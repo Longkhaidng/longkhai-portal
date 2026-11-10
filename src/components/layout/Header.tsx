@@ -16,8 +16,10 @@ import {
   DownloadCloud,
   RefreshCw,
   Check,
+  KeyRound,
 } from 'lucide-react';
 import { storage } from '@/lib/storage';
+import { ChangePasswordModal } from '@/components/auth/ChangePasswordModal';
 
 interface HeaderProps {
   onToggleSidebar?: () => void;
@@ -27,6 +29,7 @@ interface HeaderProps {
 export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
   const { currentUser, logout } = useAuth();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncToast, setSyncToast] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -194,13 +197,26 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
                 </div>
               </div>
 
+              <div className="py-1 border-b border-slate-100 dark:border-slate-800">
+                <button
+                  onClick={() => {
+                    setShowProfileMenu(false);
+                    setIsChangePasswordOpen(true);
+                  }}
+                  className="w-full text-left px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 font-semibold transition-colors cursor-pointer"
+                >
+                  <KeyRound className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  <span>Đổi mật khẩu</span>
+                </button>
+              </div>
+
               <div className="pt-1">
                 <button
                   onClick={() => {
                     setShowProfileMenu(false);
                     logout();
                   }}
-                  className="w-full text-left px-4 py-2 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-2 font-semibold"
+                  className="w-full text-left px-4 py-2 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-2 font-semibold cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Đăng xuất</span>
@@ -210,6 +226,12 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
           )}
         </div>
       </div>
+
+      {/* Change Password Modal */}
+      <ChangePasswordModal
+        isOpen={isChangePasswordOpen}
+        onClose={() => setIsChangePasswordOpen(false)}
+      />
     </header>
   );
 }
