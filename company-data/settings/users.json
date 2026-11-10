@@ -476,12 +476,16 @@
       "gate_pass",
       "announcements",
       "forms",
-      "reports"
+      "reports",
+      "food_registration",
+      "overtime",
+      "repair"
     ],
     "isActive": true,
     "password": "1030",
     "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "updatedAt": "2026-11-10T02:30:03.740Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "1035",
