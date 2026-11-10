@@ -1,5 +1,26 @@
 [
   {
+    "id": "2871",
+    "name": "Hồ Thị Thuý Quyền",
+    "department": "Phân xưởng hoàn thành",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "phone": "0344714460",
+    "teamLeaderId": "2830",
+    "departmentHeadId": "1051",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
+    "permissions": [
+      "dashboard",
+      "announcements",
+      "food_registration"
+    ],
+    "allowedWebIntegrations": [],
+    "isActive": true,
+    "password": "2871",
+    "createdAt": "2026-11-10T08:29:12.386Z",
+    "updatedAt": "2026-11-10T08:29:12.386Z"
+  },
+  {
     "id": "BOD",
     "name": "Phạm Đình Tú",
     "department": "Ban Giám Đốc",
