@@ -253,12 +253,13 @@
       "gate_pass",
       "announcements",
       "food_registration",
-      "repair"
+      "repair",
+      "overtime"
     ],
     "isActive": true,
     "password": "1008",
     "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:27:56.514Z",
+    "updatedAt": "2026-11-10T02:31:13.461Z",
     "allowedWebIntegrations": []
   },
   {
