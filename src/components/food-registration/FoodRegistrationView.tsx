@@ -15,6 +15,7 @@ import {
   FOOD_ENTRY_SHIFTS,
   PREGNANT_FOOD_OPTIONS,
   VEGETARIAN_FOOD_OPTIONS,
+  VEGETARIAN_UNITS,
   checkFoodQrValidity,
 } from '@/types/food-registration';
 import { FoodQrModal } from './FoodQrModal';
@@ -73,6 +74,13 @@ export function FoodRegistrationView() {
   // Vegetarian Food Option
   const [vegOption, setVegOption] = useState<string>(VEGETARIAN_FOOD_OPTIONS[0]);
   const [customVegDish, setCustomVegDish] = useState<string>('');
+  const [vegQuantity, setVegQuantity] = useState<number>(1);
+  const [vegUnit, setVegUnit] = useState<string>('Tô/Hộp');
+  const [customVegUnit, setCustomVegUnit] = useState<string>('');
+  const [vegNotes, setVegNotes] = useState<string>('');
+
+  // Medicine Drink Reason (bắt buộc)
+  const [medicineReason, setMedicineReason] = useState<string>('');
 
   // Form Basic Info
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>('');
@@ -183,15 +191,18 @@ export function FoodRegistrationView() {
 
     if (isVeg) {
       finalCategory = 'vegetarian';
-      if (vegOption === 'Khác') {
-        if (!customVegDish.trim()) {
-          showToast('Vui lòng nhập tên món chay bạn muốn mang vào.', 'error');
-          return;
-        }
-        finalFoodDetails = customVegDish.trim();
-      } else {
-        finalFoodDetails = vegOption;
+      const dishName = vegOption === 'Khác' ? customVegDish.trim() : vegOption;
+      if (vegOption === 'Khác' && !customVegDish.trim()) {
+        showToast('Vui lòng nhập tên món chay bạn muốn mang vào.', 'error');
+        return;
       }
+      if (vegUnit === 'Khác' && !customVegUnit.trim()) {
+        showToast('Vui lòng nhập đơn vị tính khác cho món chay.', 'error');
+        return;
+      }
+      const unitStr = vegUnit === 'Khác' ? customVegUnit.trim() : vegUnit;
+      finalFoodDetails = `${dishName} (SL: ${vegQuantity} ${unitStr})${vegNotes.trim() ? ` - Ghi chú: ${vegNotes.trim()}` : ''}`;
+
       if (!entryDate) {
         showToast('Vui lòng chọn ngày mang thực phẩm vào.', 'error');
         return;
@@ -213,8 +224,12 @@ export function FoodRegistrationView() {
         }
         finalFoodDetails = selectedDishes.join(' hoặc ');
       } else {
-        // Nước thuốc: Không hiển thị món ăn, gán mặc định Nước thuốc
-        finalFoodDetails = 'Nước thuốc';
+        // Nước thuốc: Bắt buộc nhập lý do
+        if (!medicineReason.trim()) {
+          showToast('Vui lòng nhập lý do mang nước thuốc vào nhà máy (bắt buộc).', 'error');
+          return;
+        }
+        finalFoodDetails = `Nước thuốc (Lý do: ${medicineReason.trim()})`;
       }
 
       if (!entryDate) {
@@ -261,6 +276,10 @@ export function FoodRegistrationView() {
           mainGroup: 'vegetarian',
           foodDetails: finalFoodDetails,
           customFoodDetails: vegOption === 'Khác' ? customVegDish.trim() : undefined,
+          quantity: vegQuantity,
+          unit: vegUnit === 'Khác' ? customVegUnit.trim() : vegUnit,
+          customUnit: vegUnit === 'Khác' ? customVegUnit.trim() : undefined,
+          notes: vegNotes.trim() || undefined,
           complianceCommitment: true,
           status: 'approved', // Cấp ngay mã QR hợp lệ trong 12h
           expiresAt,
@@ -324,6 +343,7 @@ export function FoodRegistrationView() {
           category: finalCategory,
           mainGroup: 'pregnant_medicine',
           foodDetails: finalFoodDetails,
+          medicineReason: subCategory === 'medicine_drink' ? medicineReason.trim() : undefined,
           complianceCommitment: true,
           status: initialStatus,
           steps,
@@ -348,6 +368,11 @@ export function FoodRegistrationView() {
 
       // Reset form
       setCustomVegDish('');
+      setVegQuantity(1);
+      setVegUnit('Tô/Hộp');
+      setCustomVegUnit('');
+      setVegNotes('');
+      setMedicineReason('');
       setComplianceCommitment(false);
     } catch (err: any) {
       showToast(err.message || 'Có lỗi xảy ra khi gửi đăng ký.', 'error');
@@ -768,11 +793,20 @@ export function FoodRegistrationView() {
                   </div>
                 )}
 
-                {/* Nếu chọn NƯỚC THUỐC: Chỉ hiển thị thời gian đăng ký Từ ngày -> Đến ngày (không hiển thị món ăn) */}
+                {/* Nếu chọn NƯỚC THUỐC: Lý do mang nước thuốc vào (mục này bắt buộc phải nhập) */}
                 {subCategory === 'medicine_drink' && (
-                  <div className="p-3 rounded-xl bg-teal-50/70 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-900 text-xs text-teal-800 dark:text-teal-300 flex items-center gap-2">
-                    <Info className="w-4 h-4 shrink-0 text-teal-600 dark:text-teal-400" />
-                    <span>Nước thuốc uống y tế: Hệ thống tự động ghi nhận danh mục và thời hạn mang vào.</span>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                      Lý do mang nước thuốc vào: *
+                    </label>
+                    <textarea
+                      required
+                      rows={3}
+                      value={medicineReason}
+                      onChange={(e) => setMedicineReason(e.target.value)}
+                      placeholder="Nhập lý do bắt buộc (Ví dụ: Uống thuốc bắc/thuốc nam điều trị theo đơn bác sĩ sau bữa ăn, nước thảo dược hỗ trợ sức khỏe...)"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium leading-relaxed"
+                    />
                   </div>
                 )}
 
@@ -822,26 +856,82 @@ export function FoodRegistrationView() {
             {/* SECTION B: THỰC PHẨM CHAY */}
             {mainGroup === 'vegetarian' && (
               <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-4">
-                {/* Danh sách món chay: Bún chay, Mì quảng chay, Bánh canh chay, Cao lầu chay, Khác */}
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    Chọn món chay mang vào: *
-                  </label>
-                  <select
-                    value={vegOption}
-                    onChange={(e) => setVegOption(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
-                  >
-                    {VEGETARIAN_FOOD_OPTIONS.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt === 'Khác' ? 'Khác (Người lao động tự nhập vào)' : opt}
-                      </option>
-                    ))}
-                  </select>
+                {/* Hàng gồm: Chọn món chay mang vào, Số lượng, Đơn vị tính */}
+                <div className="space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
+                    <div className="sm:col-span-6">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                        Chọn món chay mang vào: *
+                      </label>
+                      <select
+                        value={vegOption}
+                        onChange={(e) => setVegOption(e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                      >
+                        {VEGETARIAN_FOOD_OPTIONS.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt === 'Khác' ? 'Khác (Người lao động tự nhập vào)' : opt}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
-                  {/* Khi chọn 'Khác', người lao động tự nhập vào */}
+                    <div className="sm:col-span-3">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                        Số lượng: *
+                      </label>
+                      <input
+                        type="number"
+                        min={1}
+                        step={1}
+                        required
+                        value={vegQuantity}
+                        onChange={(e) => setVegQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-bold text-center focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
+
+                    <div className="sm:col-span-3">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                        Đơn vị tính: *
+                      </label>
+                      <select
+                        value={vegUnit}
+                        onChange={(e) => setVegUnit(e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                      >
+                        {VEGETARIAN_UNITS.map((u) => (
+                          <option key={u} value={u}>
+                            {u === 'Khác' ? 'Khác (tự nhập)' : u}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Khi chọn Đơn vị tính là 'Khác' */}
+                  {vegUnit === 'Khác' && (
+                    <div className="animate-in fade-in duration-200">
+                      <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">
+                        Nhập đơn vị tính khác (người lao động tự nhập): *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={customVegUnit}
+                        onChange={(e) => setCustomVegUnit(e.target.value)}
+                        placeholder="Ví dụ: Phần, Suất, Chai, Bát..."
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                      />
+                    </div>
+                  )}
+
+                  {/* Khi chọn món 'Khác', người lao động tự nhập vào */}
                   {vegOption === 'Khác' && (
-                    <div className="mt-2.5 animate-in fade-in duration-200">
+                    <div className="animate-in fade-in duration-200">
+                      <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">
+                        Nhập tên món chay khác: *
+                      </label>
                       <input
                         type="text"
                         required
@@ -852,6 +942,20 @@ export function FoodRegistrationView() {
                       />
                     </div>
                   )}
+
+                  {/* Thêm mục ghi chú phía dưới */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                      Ghi chú:
+                    </label>
+                    <input
+                      type="text"
+                      value={vegNotes}
+                      onChange={(e) => setVegNotes(e.target.value)}
+                      placeholder="Ví dụ: Đựng trong cặp lồng giữ nhiệt, đồ ăn kèm..."
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                    />
+                  </div>
                 </div>
 
                 {/* Ngày mang vào & Ca làm việc */}

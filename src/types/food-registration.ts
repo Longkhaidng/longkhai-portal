@@ -69,6 +69,16 @@ export const VEGETARIAN_FOOD_OPTIONS = [
   'Khác',
 ] as const;
 
+export const VEGETARIAN_UNITS = [
+  'Kg',
+  'Lon',
+  'Tô/Hộp',
+  'Gói(bịch)',
+  'Khác',
+] as const;
+
+export type VegetarianUnit = typeof VEGETARIAN_UNITS[number] | string;
+
 export const QUICK_STORAGE_TAGS = [
   'Đồ khô đóng kín',
   'Đồ ăn tươi chín trong ngày',
@@ -112,6 +122,11 @@ export interface FoodRegistration {
   customCategory?: string;
   foodDetails: string; // Chi tiết món ăn
   customFoodDetails?: string; // Chi tiết nếu chọn Khác trong món chay
+  quantity?: number; // Số lượng (cho thực phẩm chay)
+  unit?: string; // Đơn vị tính: Kg, Lon, Tô/Hộp, Gói(bịch), Khác
+  customUnit?: string; // Đơn vị tự nhập nếu chọn Khác
+  notes?: string; // Ghi chú thêm
+  medicineReason?: string; // Lý do mang nước thuốc vào (bắt buộc với nước thuốc)
   complianceCommitment: boolean; // Cam kết ATVSTP (bắt buộc true)
   status: FoodRegistrationStatus;
 

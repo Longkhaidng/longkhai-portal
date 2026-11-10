@@ -813,13 +813,33 @@ function ScanConfirmContent() {
                         </div>
                       )}
 
-                      {/* Chi tiết món ăn: normalized to 'Bánh + Sữa hoặc Trái cây + Sữa' */}
-                      <div className={`pt-2 border-t border-slate-800/60 ${docData.category === 'medicine_drink' ? 'hidden' : ''}`}>
-                        <span className="text-slate-400 text-[11px] block mb-1">Chi tiết món ăn:</span>
-                        <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-xs font-semibold whitespace-pre-wrap leading-relaxed">
-                          {normalizedFoodDetails}
+                      {/* Chi tiết món ăn hoặc Lý do nước thuốc */}
+                      {docData.category === 'medicine_drink' ? (
+                        <div className="pt-2 border-t border-slate-800/60">
+                          <span className="text-slate-400 text-[11px] block mb-1">Lý do mang nước thuốc vào:</span>
+                          <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-xs font-semibold whitespace-pre-wrap leading-relaxed">
+                            {docData.medicineReason || docData.foodDetails || 'Uống nước thuốc theo nhu cầu y tế'}
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="pt-2 border-t border-slate-800/60">
+                          <span className="text-slate-400 text-[11px] block mb-1">Chi tiết món ăn:</span>
+                          <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-xs font-semibold whitespace-pre-wrap leading-relaxed">
+                            {normalizedFoodDetails}
+                          </div>
+                          {docData.category === 'pregnant' && (
+                            <div className="mt-2 text-[11px] text-amber-400 italic font-medium">
+                              * Chú thích: Chỉ được đem theo 02 đơn vị mỗi món.
+                            </div>
+                          )}
+                          {docData.notes && (
+                            <div className="mt-2 text-[11px] text-slate-300">
+                              <span className="text-slate-400 font-medium">Ghi chú: </span>
+                              {docData.notes}
+                            </div>
+                          )}
+                        </div>
+                      )}
 
                       <div className="p-2.5 rounded-xl bg-blue-950/30 border border-blue-800/50 text-[11px] text-blue-300 flex items-start gap-2">
                         <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />

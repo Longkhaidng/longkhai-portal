@@ -201,15 +201,27 @@ export function FoodQrModal({ isOpen, onClose, registration }: FoodQrModalProps)
 
             <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
               <span className="text-slate-400 text-[10px] block mb-0.5">
-                {registration.category === 'medicine_drink' ? 'Phân loại thực phẩm:' : 'Phân loại & Món ăn:'}
+                {registration.category === 'medicine_drink' ? 'Phân loại & Lý do mang vào:' : 'Phân loại & Món ăn:'}
               </span>
               <p className="font-semibold text-emerald-700 dark:text-emerald-400">
                 {FOOD_CATEGORY_LABELS[registration.category]}
                 {registration.customCategory ? ` (${registration.customCategory})` : ''}
               </p>
-              <p className={`text-slate-600 dark:text-slate-300 text-[11px] mt-0.5 line-clamp-2 ${registration.category === 'medicine_drink' ? 'hidden' : ''}`}>
-                {registration.foodDetails}
+              <p className="text-slate-600 dark:text-slate-300 text-[11px] mt-0.5 line-clamp-2">
+                {registration.category === 'medicine_drink'
+                  ? (registration.medicineReason || registration.foodDetails)
+                  : registration.foodDetails}
               </p>
+              {registration.category === 'pregnant' && (
+                <p className="text-[10px] text-amber-600 dark:text-amber-400 italic mt-1 font-medium">
+                  * Chú thích: Chỉ được đem theo 02 đơn vị mỗi món.
+                </p>
+              )}
+              {registration.notes && (
+                <p className="text-[10px] text-slate-500 mt-1">
+                  <span className="font-medium text-slate-400">Ghi chú:</span> {registration.notes}
+                </p>
+              )}
             </div>
 
             {registration.entryLogs && registration.entryLogs.length > 0 && (
