@@ -890,7 +890,7 @@ export function FoodRegistrationView() {
                   </div>
                   <p className="leading-relaxed">
                     {isHRDeptEmployee
-                      ? 'Đối với nhân viên thuộc bộ phận Phòng HCNS: Đơn đăng ký được chuyển trực tiếp đến Trưởng phòng HCNS phê duyệt (không qua bước duyệt Trưởng BP). Sau khi Trưởng phòng HCNS duyệt, mã QR sẽ được kích hoạt.'
+                      ? 'Nhân viên ➔ Trưởng phòng HCNS. Sau khi Trưởng phòng HCNS duyệt, mã QR có hiệu lực trong khoảng thời gian đã duyệt sẽ được kích hoạt.'
                       : 'Người lao động ➔ Trưởng bộ phận ➔ Trưởng phòng HCNS. Khi được phê duyệt hoàn tất, mã QR có hiệu lực trong khoảng thời gian đã duyệt sẽ được kích hoạt.'}
                   </p>
                 </div>
