@@ -830,8 +830,8 @@ export function FoodRegistrationView() {
 
                 {/* Thời gian: Số ngày cần mang vào -> Ngày bắt đầu -> Ngày kết thúc (Tự động tính, không cho sửa) */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <div className="flex flex-col justify-between">
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 sm:min-h-[32px] leading-snug">
                       Số ngày cần mang vào *
                     </label>
                     <input
@@ -845,12 +845,12 @@ export function FoodRegistrationView() {
                         handleDurationDaysChange(days);
                       }}
                       placeholder="Ví dụ: 14"
-                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500"
+                      className="w-full h-10 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <div className="flex flex-col justify-between">
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 sm:min-h-[32px] leading-snug">
                       Ngày bắt đầu *
                     </label>
                     <input
@@ -858,14 +858,13 @@ export function FoodRegistrationView() {
                       required
                       value={entryDate}
                       onChange={(e) => handleEntryDateChange(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500"
+                      className="w-full h-10 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center justify-between">
-                      <span>Ngày kết thúc *</span>
-                      <span className="text-[10px] text-slate-400 font-normal italic">(Tự động tính)</span>
+                  <div className="flex flex-col justify-between">
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 sm:min-h-[32px] leading-snug">
+                      Ngày kết thúc *
                     </label>
                     <input
                       type="date"
@@ -873,8 +872,8 @@ export function FoodRegistrationView() {
                       readOnly
                       disabled
                       value={toDate}
-                      title="Ngày kết thúc được tự động tính từ Ngày bắt đầu + Số ngày cần mang vào, không cho phép chỉnh sửa"
-                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 text-xs text-slate-600 dark:text-slate-300 font-semibold cursor-not-allowed opacity-90"
+                      title="Ngày kết thúc được tự động tính từ Ngày bắt đầu + Số ngày cần mang vào (không cho phép chỉnh sửa)"
+                      className="w-full h-10 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 text-xs text-slate-600 dark:text-slate-300 font-semibold cursor-not-allowed opacity-90"
                     />
                   </div>
                 </div>
