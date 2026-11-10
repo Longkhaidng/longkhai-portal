@@ -31,7 +31,6 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
-    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "announcements",
@@ -41,7 +40,7 @@
     "isActive": true,
     "password": "2871",
     "createdAt": "2026-11-10T08:29:12.386Z",
-    "updatedAt": "2026-11-10T08:29:53.675Z"
+    "updatedAt": "2026-11-10T08:33:51.826Z"
   },
   {
     "id": "BOD",
