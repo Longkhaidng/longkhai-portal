@@ -8,6 +8,7 @@
     "phone": "0903130554",
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
+    "economicStaffId": "2415",
     "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
@@ -18,7 +19,7 @@
     "isActive": true,
     "password": "2874",
     "createdAt": "2026-11-10T08:31:24.874Z",
-    "updatedAt": "2026-11-10T08:31:24.874Z"
+    "updatedAt": "2026-11-10T08:33:42.378Z"
   },
   {
     "id": "2871",
