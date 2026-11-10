@@ -12,9 +12,7 @@ import {
   User as UserIcon,
   Shield,
   Key,
-  Database,
   Building2,
-  HardDrive,
   DownloadCloud,
   RefreshCw,
   Check,
@@ -196,31 +194,7 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
                 </div>
               </div>
 
-              <div className="py-1">
-                <button
-                  onClick={() => {
-                    setShowProfileMenu(false);
-                    onOpenGitHubSettings?.();
-                  }}
-                  className="w-full text-left px-4 py-2 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2"
-                >
-                  <HardDrive className="w-4 h-4 text-blue-600" />
-                  <span>Sao lưu & Quản lý dữ liệu</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    setShowProfileMenu(false);
-                    onOpenGitHubSettings?.();
-                  }}
-                  className="w-full text-left px-4 py-2 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2"
-                >
-                  <Database className="w-4 h-4 text-slate-400" />
-                  <span>Cài đặt kết nối GitHub & Email</span>
-                </button>
-              </div>
-
-              <div className="pt-1 border-t border-slate-100 dark:border-slate-800">
+              <div className="pt-1">
                 <button
                   onClick={() => {
                     setShowProfileMenu(false);
