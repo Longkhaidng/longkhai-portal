@@ -89,12 +89,14 @@
     "permissions": [
       "dashboard",
       "food_registration",
-      "announcements"
+      "announcements",
+      "reports"
     ],
     "isActive": true,
     "password": "2864",
     "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "updatedAt": "2026-11-10T08:52:47.511Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "1867",
