@@ -202,12 +202,16 @@
       "leave",
       "attendance",
       "gate_pass",
-      "announcements"
+      "announcements",
+      "overtime",
+      "food_registration",
+      "repair"
     ],
     "isActive": true,
     "password": "1002",
     "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "updatedAt": "2026-11-10T02:27:37.170Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "1005",
