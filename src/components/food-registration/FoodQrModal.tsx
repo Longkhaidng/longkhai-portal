@@ -214,7 +214,7 @@ export function FoodQrModal({ isOpen, onClose, registration }: FoodQrModalProps)
               </p>
               {registration.category === 'pregnant' && (
                 <p className="text-[10px] text-amber-600 dark:text-amber-400 italic mt-1 font-medium">
-                  * Chú thích: Chỉ được đem theo 02 đơn vị mỗi món.
+                  * Ghi chú: Mỗi người chỉ được phép mang vào 02 đơn vị cho mỗi loại thực phẩm.
                 </p>
               )}
               {registration.notes && (

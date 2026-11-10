@@ -829,7 +829,7 @@ function ScanConfirmContent() {
                           </div>
                           {docData.category === 'pregnant' && (
                             <div className="mt-2 text-[11px] text-amber-400 italic font-medium">
-                              * Chú thích: Chỉ được đem theo 02 đơn vị mỗi món.
+                              * Ghi chú: Mỗi người chỉ được phép mang vào 02 đơn vị cho mỗi loại thực phẩm.
                             </div>
                           )}
                           {docData.notes && (

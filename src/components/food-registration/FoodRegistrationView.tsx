@@ -790,6 +790,11 @@ export function FoodRegistrationView() {
                         />
                       </label>
                     </div>
+
+                    <p className="mt-2.5 text-xs text-amber-600 dark:text-amber-400 font-medium italic flex items-center gap-1.5">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
+                      * Ghi chú: Mỗi người chỉ được phép mang vào 02 đơn vị cho mỗi loại thực phẩm.
+                    </p>
                   </div>
                 )}
 
@@ -1417,6 +1422,11 @@ export function FoodRegistrationView() {
                   {formatDate(approvingItem.item.entryDate)} → {formatDate(approvingItem.item.toDate || approvingItem.item.entryDate)}
                 </span>
               </div>
+              {approvingItem.item.category === 'pregnant' && (
+                <div className="text-[11px] text-amber-600 dark:text-amber-400 font-medium italic pt-1 border-t border-slate-200/60 dark:border-slate-700/60">
+                  * Ghi chú: Mỗi người chỉ được phép mang vào 02 đơn vị cho mỗi loại thực phẩm.
+                </div>
+              )}
             </div>
 
             <div>
