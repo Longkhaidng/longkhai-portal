@@ -11,14 +11,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "announcements",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
-    "allowedWebIntegrations": [],
     "isActive": true,
     "password": "2876",
-    "createdAt": "2026-11-10T08:35:11.708Z",
-    "updatedAt": "2026-11-10T08:35:11.708Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2874",
@@ -32,14 +31,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "announcements",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
-    "allowedWebIntegrations": [],
     "isActive": true,
     "password": "2874",
-    "createdAt": "2026-11-10T08:31:24.874Z",
-    "updatedAt": "2026-11-10T08:33:55.146Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2871",
@@ -53,14 +51,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "announcements",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
-    "allowedWebIntegrations": [],
     "isActive": true,
     "password": "2871",
-    "createdAt": "2026-11-10T08:29:12.386Z",
-    "updatedAt": "2026-11-10T08:33:51.826Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "BOD",
@@ -76,8 +73,8 @@
     ],
     "isActive": true,
     "password": "BOD",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-30T01:30:01.538Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2864",
@@ -91,21 +88,13 @@
     "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "forms",
-      "reports",
-      "overtime",
       "food_registration",
-      "repair"
+      "announcements"
     ],
     "isActive": true,
     "password": "2864",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:27:02.865Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1867",
@@ -135,9 +124,8 @@
     ],
     "isActive": true,
     "password": "1867",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-09T09:13:13.541Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2265",
@@ -155,19 +143,22 @@
       "leave",
       "attendance",
       "gate_pass",
+      "overtime",
+      "food_registration",
       "repair",
+      "pccc",
+      "periodic_inspection",
       "announcements",
       "forms",
       "reports",
       "users",
       "web_integrations",
-      "plugins",
       "settings"
     ],
     "isActive": true,
     "password": "2265",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "101",
@@ -177,13 +168,13 @@
     "role": "security",
     "permissions": [
       "dashboard",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "101",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-09T04:46:29.509Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "102",
@@ -193,13 +184,13 @@
     "role": "security",
     "permissions": [
       "dashboard",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "102",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-09T03:23:19.965Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "103",
@@ -209,14 +200,13 @@
     "role": "security",
     "permissions": [
       "dashboard",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "103",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "104",
@@ -226,14 +216,13 @@
     "role": "security",
     "permissions": [
       "dashboard",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "104",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "105",
@@ -243,14 +232,13 @@
     "role": "security",
     "permissions": [
       "dashboard",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "105",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1002",
@@ -262,19 +250,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "overtime",
       "food_registration",
-      "repair"
+      "announcements"
     ],
     "isActive": true,
     "password": "1002",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:27:37.170Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1005",
@@ -286,19 +268,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "overtime",
-      "repair",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1005",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:27:49.146Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1008",
@@ -311,19 +287,13 @@
     "departmentHeadEmail": "trang.vuong@longkhai.com.vn",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
       "food_registration",
-      "repair",
-      "overtime"
+      "announcements"
     ],
     "isActive": true,
     "password": "1008",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:31:13.461Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1010",
@@ -336,19 +306,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "overtime",
       "food_registration",
-      "repair"
+      "announcements"
     ],
     "isActive": true,
     "password": "1010",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:28:08.154Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1012",
@@ -361,19 +325,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "overtime",
-      "repair",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1012",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:28:23.850Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1014",
@@ -386,19 +344,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
       "food_registration",
-      "overtime",
-      "repair"
+      "announcements"
     ],
     "isActive": true,
     "password": "1014",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:29:11.523Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1015",
@@ -411,14 +363,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "announcements",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1015",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T08:35:39.081Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1020",
@@ -431,19 +382,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "overtime",
-      "repair",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1020",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:29:23.900Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1022",
@@ -456,19 +401,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "overtime",
-      "repair",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1022",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:29:35.148Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1025",
@@ -481,19 +420,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
       "food_registration",
-      "overtime",
-      "repair"
+      "announcements"
     ],
     "isActive": true,
     "password": "1025",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:29:41.637Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1026",
@@ -505,19 +438,13 @@
     "economicStaffId": "2421",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
       "food_registration",
-      "overtime",
-      "repair"
+      "announcements"
     ],
     "isActive": true,
     "password": "1026",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:29:48.708Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1030",
@@ -530,21 +457,13 @@
     "departmentHeadEmail": "tu.pham@longkhai.com.vn",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "forms",
-      "reports",
       "food_registration",
-      "overtime",
-      "repair"
+      "announcements"
     ],
     "isActive": true,
     "password": "1030",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:30:03.740Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1035",
@@ -556,19 +475,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "overtime",
-      "repair",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1035",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:30:13.989Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1049",
@@ -580,19 +493,13 @@
     "economicStaffId": "2421",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "overtime",
-      "repair",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1049",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:30:20.989Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1051",
@@ -605,14 +512,13 @@
     "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
-      "announcements",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1051",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T08:36:09.432Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1056",
@@ -625,19 +531,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "overtime",
-      "repair",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1056",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:30:37.990Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1061",
@@ -650,19 +550,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "overtime",
-      "repair",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1061",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:31:23.222Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1070",
@@ -675,19 +569,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "overtime",
-      "repair",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1070",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:31:31.023Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1079",
@@ -699,20 +587,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "reports",
-      "overtime",
-      "repair",
-      "food_registration"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1079",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:31:41.599Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1085",
@@ -724,19 +605,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
       "food_registration",
-      "overtime",
-      "repair"
+      "announcements"
     ],
     "isActive": true,
     "password": "1085",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-10T02:31:48.471Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1094",
@@ -749,15 +624,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1094",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1096",
@@ -770,15 +643,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1096",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1097",
@@ -790,15 +661,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1097",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1101",
@@ -811,15 +680,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1101",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1104",
@@ -832,15 +699,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1104",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1114",
@@ -852,16 +717,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "reports"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1114",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1116",
@@ -874,15 +736,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1116",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1118",
@@ -894,15 +754,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1118",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1119",
@@ -915,15 +773,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1119",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1121",
@@ -936,15 +792,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1121",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1131",
@@ -956,15 +810,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1131",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1139",
@@ -977,24 +829,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "forms",
-      "reports",
-      "overtime",
       "food_registration",
-      "repair",
-      "periodic_inspection"
+      "announcements"
     ],
     "isActive": true,
     "password": "1139",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-11-09T08:25:44.429Z",
-    "allowedWebIntegrations": [
-      "WEB-001"
-    ]
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1147",
@@ -1007,15 +848,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1147",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1158",
@@ -1028,15 +867,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1158",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1204",
@@ -1049,15 +886,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1204",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1205",
@@ -1070,15 +905,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1205",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1240",
@@ -1091,15 +924,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1240",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1241",
@@ -1112,15 +943,13 @@
     "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1241",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1243",
@@ -1132,15 +961,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1243",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1246",
@@ -1152,15 +979,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1246",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1253",
@@ -1172,15 +997,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1253",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1255",
@@ -1193,15 +1016,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1255",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1258",
@@ -1214,15 +1035,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1258",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1264",
@@ -1235,15 +1054,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1264",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1271",
@@ -1255,15 +1072,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1271",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1282",
@@ -1276,15 +1091,13 @@
     "departmentHeadEmail": "trang.vuong@longkhai.com.vn",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1282",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1305",
@@ -1297,15 +1110,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1305",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1307",
@@ -1318,15 +1129,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1307",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1308",
@@ -1339,15 +1148,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1308",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1348",
@@ -1360,15 +1167,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1348",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1368",
@@ -1381,15 +1186,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1368",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1400",
@@ -1402,15 +1205,13 @@
     "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1400",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1403",
@@ -1422,16 +1223,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "reports"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1403",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1413",
@@ -1444,15 +1242,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1413",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1418",
@@ -1465,15 +1261,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1418",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1419",
@@ -1486,15 +1280,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1419",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1443",
@@ -1507,15 +1299,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1443",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1444",
@@ -1528,15 +1318,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1444",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1466",
@@ -1548,15 +1336,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1466",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1491",
@@ -1569,15 +1355,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1491",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1503",
@@ -1590,15 +1374,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1503",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1527",
@@ -1611,15 +1393,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1527",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1532",
@@ -1632,15 +1412,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1532",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1554",
@@ -1652,16 +1430,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "reports"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1554",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1559",
@@ -1673,15 +1448,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1559",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1598",
@@ -1694,15 +1467,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1598",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1635",
@@ -1715,15 +1486,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1635",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1637",
@@ -1736,15 +1505,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1637",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1640",
@@ -1757,15 +1524,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1640",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1643",
@@ -1778,15 +1543,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1643",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1649",
@@ -1799,15 +1562,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1649",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1672",
@@ -1819,15 +1580,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1672",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1679",
@@ -1840,15 +1599,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1679",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1706",
@@ -1861,15 +1618,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1706",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1770",
@@ -1882,15 +1637,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1770",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1778",
@@ -1902,15 +1655,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1778",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1785",
@@ -1923,15 +1674,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1785",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1802",
@@ -1944,15 +1693,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1802",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1804",
@@ -1965,15 +1712,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1804",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1809",
@@ -1986,15 +1731,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1809",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1849",
@@ -2007,15 +1750,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1849",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1894",
@@ -2028,15 +1769,13 @@
     "departmentHeadEmail": "tu.pham@longkhai.com.vn",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1894",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1912",
@@ -2049,15 +1788,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1912",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1924",
@@ -2070,15 +1807,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1924",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1926",
@@ -2091,15 +1826,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1926",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1927",
@@ -2111,17 +1844,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "pccc"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "1927",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-28T05:47:31.654Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1975",
@@ -2134,15 +1863,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1975",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1983",
@@ -2155,15 +1882,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1983",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2033",
@@ -2175,15 +1900,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2033",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2039",
@@ -2195,15 +1918,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2039",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2040",
@@ -2215,15 +1936,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2040",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2043",
@@ -2236,15 +1955,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2043",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2102",
@@ -2257,15 +1974,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2102",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2105",
@@ -2278,15 +1993,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2105",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2107",
@@ -2299,15 +2012,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2107",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2118",
@@ -2320,15 +2031,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2118",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2120",
@@ -2341,15 +2050,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2120",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2121",
@@ -2362,15 +2069,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2121",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2123",
@@ -2383,15 +2088,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2123",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2124",
@@ -2404,15 +2107,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2124",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2131",
@@ -2425,15 +2126,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2131",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2139",
@@ -2446,15 +2145,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2139",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2140",
@@ -2467,15 +2164,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2140",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2146",
@@ -2488,15 +2183,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2146",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2154",
@@ -2509,15 +2202,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2154",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2164",
@@ -2529,15 +2220,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2164",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2190",
@@ -2550,15 +2239,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2190",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2196",
@@ -2571,15 +2258,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2196",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2227",
@@ -2592,15 +2277,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2227",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2243",
@@ -2613,15 +2296,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2243",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2247",
@@ -2634,15 +2315,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2247",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2250",
@@ -2655,15 +2334,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2250",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2254",
@@ -2676,15 +2353,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2254",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2267",
@@ -2697,15 +2372,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2267",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2268",
@@ -2717,15 +2390,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2268",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2277",
@@ -2738,15 +2409,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2277",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2284",
@@ -2759,15 +2428,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2284",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2287",
@@ -2779,15 +2446,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2287",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2293",
@@ -2799,15 +2464,13 @@
     "economicStaffId": "2421",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2293",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2297",
@@ -2819,15 +2482,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2297",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2320",
@@ -2840,15 +2501,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2320",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2332",
@@ -2860,15 +2519,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2332",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2336",
@@ -2881,15 +2538,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2336",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2341",
@@ -2902,15 +2557,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2341",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2342",
@@ -2923,15 +2576,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2342",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2344",
@@ -2944,15 +2595,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2344",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2351",
@@ -2964,15 +2613,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2351",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2359",
@@ -2985,15 +2632,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2359",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2365",
@@ -3006,15 +2651,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2365",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2366",
@@ -3027,15 +2670,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2366",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2373",
@@ -3048,15 +2689,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2373",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2374",
@@ -3069,15 +2708,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2374",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2380",
@@ -3089,17 +2726,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "forms",
-      "reports"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "2380",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2388",
@@ -3112,15 +2745,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2388",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2391",
@@ -3133,15 +2764,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2391",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2399",
@@ -3154,15 +2783,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2399",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2409",
@@ -3175,18 +2802,13 @@
     "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "reports",
-      "pccc"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "2409",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-28T05:47:40.886Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2410",
@@ -3199,15 +2821,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2410",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2415",
@@ -3220,15 +2840,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2415",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2421",
@@ -3241,15 +2859,13 @@
     "economicStaffId": "2421",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2421",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2431",
@@ -3262,15 +2878,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2431",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2435",
@@ -3283,15 +2897,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2435",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2436",
@@ -3304,15 +2916,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2436",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2446",
@@ -3325,15 +2935,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2446",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2448",
@@ -3346,15 +2954,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2448",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2471",
@@ -3367,15 +2973,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2471",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2472",
@@ -3388,15 +2992,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2472",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2473",
@@ -3409,15 +3011,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2473",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2474",
@@ -3430,15 +3030,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2474",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2476",
@@ -3451,15 +3049,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2476",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2486",
@@ -3472,15 +3068,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2486",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2489",
@@ -3493,15 +3087,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2489",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2500",
@@ -3514,15 +3106,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2500",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2502",
@@ -3535,15 +3125,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2502",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2506",
@@ -3556,15 +3144,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2506",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2507",
@@ -3576,15 +3162,13 @@
     "economicStaffId": "2421",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2507",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2509",
@@ -3597,15 +3181,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2509",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2510",
@@ -3618,15 +3200,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2510",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2515",
@@ -3639,15 +3219,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2515",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2522",
@@ -3660,15 +3238,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2522",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2525",
@@ -3681,15 +3257,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2525",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2528",
@@ -3702,15 +3276,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2528",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2529",
@@ -3722,15 +3294,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2529",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2535",
@@ -3742,15 +3312,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2535",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2539",
@@ -3762,15 +3330,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2539",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2560",
@@ -3783,15 +3349,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2560",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2576",
@@ -3803,15 +3367,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2576",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2598",
@@ -3823,15 +3385,13 @@
     "economicStaffId": "2421",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2598",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2602",
@@ -3843,15 +3403,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2602",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2611",
@@ -3864,15 +3422,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2611",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2613",
@@ -3884,15 +3440,13 @@
     "economicStaffId": "2421",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2613",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2615",
@@ -3905,15 +3459,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2615",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2620",
@@ -3926,15 +3478,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2620",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2625",
@@ -3947,15 +3497,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2625",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2626",
@@ -3968,15 +3516,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2626",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2627",
@@ -3989,15 +3535,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2627",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2629",
@@ -4010,15 +3554,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2629",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2632",
@@ -4031,15 +3573,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2632",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2645",
@@ -4051,16 +3591,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "reports"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "2645",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2646",
@@ -4072,15 +3609,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2646",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2656",
@@ -4093,15 +3628,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2656",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2663",
@@ -4114,15 +3647,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2663",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2667",
@@ -4135,15 +3666,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2667",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2669",
@@ -4156,15 +3685,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2669",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2671",
@@ -4177,15 +3704,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2671",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2685",
@@ -4198,15 +3723,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2685",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2692",
@@ -4219,15 +3742,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2692",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2710",
@@ -4240,15 +3761,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2710",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2713",
@@ -4261,15 +3780,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2713",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2717",
@@ -4282,15 +3799,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2717",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2725",
@@ -4303,15 +3818,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2725",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2727",
@@ -4323,15 +3836,13 @@
     "departmentHeadEmail": "trang.vuong@longkhai.com.vn",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2727",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2732",
@@ -4343,15 +3854,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2732",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2736",
@@ -4364,15 +3873,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2736",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2737",
@@ -4385,15 +3892,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2737",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2739",
@@ -4406,15 +3911,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2739",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2740",
@@ -4427,15 +3930,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2740",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2741",
@@ -4448,15 +3949,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2741",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2742",
@@ -4469,15 +3968,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2742",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2745",
@@ -4489,15 +3986,13 @@
     "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2745",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2747",
@@ -4510,15 +4005,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2747",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2752",
@@ -4531,15 +4024,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2752",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2754",
@@ -4552,15 +4043,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2754",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2755",
@@ -4573,15 +4062,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2755",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2760",
@@ -4593,15 +4080,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2760",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2765",
@@ -4614,15 +4099,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2765",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2772",
@@ -4635,15 +4118,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2772",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2777",
@@ -4655,15 +4136,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2777",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2778",
@@ -4675,15 +4154,13 @@
     "economicStaffId": "2421",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2778",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2781",
@@ -4696,15 +4173,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2781",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2791",
@@ -4717,15 +4192,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2791",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2793",
@@ -4737,15 +4210,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2793",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2795",
@@ -4757,15 +4228,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2795",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2800",
@@ -4777,15 +4246,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2800",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2802",
@@ -4798,15 +4265,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2802",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2810",
@@ -4818,15 +4283,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2810",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2809",
@@ -4839,15 +4302,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2809",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2811",
@@ -4859,15 +4320,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2811",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2816",
@@ -4880,15 +4339,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2816",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2817",
@@ -4901,15 +4358,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2817",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2818",
@@ -4922,18 +4377,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
-      "announcements",
-      "forms",
-      "reports",
-      "users"
+      "food_registration",
+      "announcements"
     ],
     "isActive": true,
     "password": "2818",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2819",
@@ -4946,15 +4396,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2819",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2820",
@@ -4966,15 +4414,13 @@
     "economicStaffId": "2421",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2820",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2822",
@@ -4987,15 +4433,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2822",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2823",
@@ -5008,15 +4452,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2823",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2826",
@@ -5029,15 +4471,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2826",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2830",
@@ -5049,15 +4489,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2830",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2831",
@@ -5069,15 +4507,13 @@
     "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2831",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2834",
@@ -5090,15 +4526,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2834",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2836",
@@ -5111,15 +4545,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2836",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2838",
@@ -5132,15 +4564,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2838",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2839",
@@ -5153,15 +4583,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2839",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2841",
@@ -5174,15 +4602,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2841",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2843",
@@ -5195,15 +4621,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2843",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2846",
@@ -5216,15 +4640,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2846",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2847",
@@ -5237,15 +4659,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2847",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2848",
@@ -5257,15 +4677,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2848",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2850",
@@ -5278,15 +4696,13 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2850",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2851",
@@ -5298,15 +4714,13 @@
     "economicStaffId": "2421",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2851",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2852",
@@ -5319,15 +4733,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2852",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2854",
@@ -5340,15 +4752,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2854",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2856",
@@ -5360,15 +4770,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2856",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1386",
@@ -5380,15 +4788,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1386",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2424",
@@ -5400,15 +4806,13 @@
     "economicStaffId": "1139",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2424",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1142",
@@ -5419,15 +4823,13 @@
     "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1142",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1310",
@@ -5438,15 +4840,13 @@
     "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1310",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1311",
@@ -5457,15 +4857,13 @@
     "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1311",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1312",
@@ -5476,15 +4874,13 @@
     "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1312",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "1141",
@@ -5495,15 +4891,13 @@
     "departmentHeadId": "2831",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "1141",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2866",
@@ -5516,15 +4910,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2866",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2867",
@@ -5537,15 +4929,13 @@
     "economicStaffId": "2576",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2867",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2868",
@@ -5558,15 +4948,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2868",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2869",
@@ -5578,15 +4966,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2869",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2857",
@@ -5599,15 +4985,13 @@
     "economicStaffId": "2777",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2857",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2861",
@@ -5619,15 +5003,13 @@
     "economicStaffId": "2795",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2861",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   },
   {
     "id": "2862",
@@ -5640,14 +5022,12 @@
     "economicStaffId": "2415",
     "permissions": [
       "dashboard",
-      "leave",
-      "attendance",
-      "gate_pass",
+      "food_registration",
       "announcements"
     ],
     "isActive": true,
     "password": "2862",
-    "createdAt": "2026-10-24T06:17:08.495Z",
-    "updatedAt": "2026-10-24T06:17:08.495Z"
+    "createdAt": "2026-11-10T08:50:03.788Z",
+    "updatedAt": "2026-11-10T08:50:03.788Z"
   }
 ]
