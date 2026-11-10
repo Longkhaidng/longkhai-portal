@@ -37,7 +37,7 @@ import {
 } from './initial-data';
 import { OvertimeRegistration, OvertimeMealMenu, OvertimeItem, OvertimeApprovalStatus, OvertimeConfirmStatus } from '@/types/overtime';
 import { INITIAL_OVERTIME_MENUS, INITIAL_OVERTIME_REGISTRATIONS } from './overtime-data';
-import { FoodRegistration, INITIAL_FOOD_REGISTRATIONS } from '@/types/food-registration';
+import { FoodRegistration, INITIAL_FOOD_REGISTRATIONS, compareFoodRegistrationsNewestFirst } from '@/types/food-registration';
 import { GitHubService } from './github-api';
 import { formatDocId, sortNewestFirst } from './utils';
 
@@ -2173,14 +2173,14 @@ class StorageService {
               localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(parsed));
             } catch {}
           }
-          return sortNewestFirst(parsed);
+          return [...parsed].sort(compareFoodRegistrationsNewestFirst);
         }
       }
     } catch {}
     try {
       localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(INITIAL_FOOD_REGISTRATIONS));
     } catch {}
-    return INITIAL_FOOD_REGISTRATIONS;
+    return [...INITIAL_FOOD_REGISTRATIONS].sort(compareFoodRegistrationsNewestFirst);
   }
 
   saveFoodRegistration(registration: FoodRegistration, byUser?: { id: string; name: string }): void {

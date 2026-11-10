@@ -5,7 +5,7 @@ import { GatePass } from '@/types/gatePass';
 import { AttendanceConfirm, ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { StationeryProposal, STATIONERY_STATUS_LABELS } from '@/types/proposal';
 import { PCCCDevice, PCCCInspection, PCCC_CATEGORIES, formatPCCCDate } from '@/types/pccc';
-import { FoodRegistration, FoodReportRow, flattenFoodRegistrationsToReportRows, FOOD_CATEGORY_LABELS, FOOD_STATUS_LABELS } from '@/types/food-registration';
+import { FoodRegistration, FoodReportRow, flattenFoodRegistrationsToReportRows, compareFoodReportRowsNewestFirst, FOOD_CATEGORY_LABELS, FOOD_STATUS_LABELS } from '@/types/food-registration';
 import { formatDate, formatDateTime } from '@/lib/utils';
 
 export interface ParsedEmployeeResult {
@@ -1121,9 +1121,10 @@ export async function exportFoodReportToExcel(opts: ExportFoodReportOptions) {
     'Ghi chú / Lý do từ chối',
   ];
 
-  const reportRows: FoodReportRow[] = opts.rows && opts.rows.length > 0
+  const rawReportRows: FoodReportRow[] = opts.rows && opts.rows.length > 0
     ? opts.rows
     : flattenFoodRegistrationsToReportRows(opts.registrations || []);
+  const reportRows: FoodReportRow[] = [...rawReportRows].sort(compareFoodReportRowsNewestFirst);
 
   const rows = reportRows.map((r, idx) => {
     const catLabel = FOOD_CATEGORY_LABELS[r.category] || r.category;

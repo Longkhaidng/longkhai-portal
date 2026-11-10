@@ -456,7 +456,7 @@ export const INITIAL_FOOD_REGISTRATIONS: FoodRegistration[] = [
       },
     ],
     expiresAt: new Date(Date.now() + 10 * 60 * 60 * 1000).toISOString(),
-    createdAt: '2026-11-09T05:00:00.000Z',
+    createdAt: '2026-11-09T01:45:00.000Z',
     updatedAt: '2026-11-09T11:47:00.000Z',
   },
   {
@@ -472,8 +472,8 @@ export const INITIAL_FOOD_REGISTRATIONS: FoodRegistration[] = [
     complianceCommitment: true,
     status: 'approved',
     expiresAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // Đã hết hạn (14 tiếng trước)
-    createdAt: new Date(Date.now() - 14 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 14 * 60 * 60 * 1000).toISOString(),
+    createdAt: '2026-11-09T02:00:00.000Z',
+    updatedAt: '2026-11-09T02:00:00.000Z',
   },
   {
     id: 'TP26-0006',
@@ -496,8 +496,8 @@ export const INITIAL_FOOD_REGISTRATIONS: FoodRegistration[] = [
       },
     ],
     currentStepIndex: 0,
-    createdAt: '2026-11-09T02:00:00.000Z',
-    updatedAt: '2026-11-09T02:00:00.000Z',
+    createdAt: '2026-11-09T02:30:00.000Z',
+    updatedAt: '2026-11-09T02:30:00.000Z',
   },
 ];
 
@@ -547,15 +547,94 @@ function formatDateStr(isoOrDate?: string): string {
 }
 
 /**
+ * Trích xuất số sequence từ mã phiếu để so sánh thứ tự đăng ký (ví dụ: TP26-0009 -> 26000009).
+ */
+export function extractRegistrationSequence(id?: string): number {
+  if (!id) return 0;
+  const match = id.match(/^[A-Za-z]+(\d{2})-(\d+)$/);
+  if (match) {
+    const year = parseInt(match[1], 10);
+    const seq = parseInt(match[2], 10);
+    return year * 1000000 + seq;
+  }
+  const matchNum = id.match(/-(\d+)$/);
+  if (matchNum) {
+    return parseInt(matchNum[1], 10);
+  }
+  return 0;
+}
+
+/**
+ * So sánh 2 đơn đăng ký thực phẩm để đơn mới nhất luôn xếp trên cùng.
+ * Ưu tiên: Mã phiếu sequence mới hơn (TP26-0009 > TP26-0008 ...) -> Thời gian tạo đơn (createdAt) mới hơn.
+ */
+export function compareFoodRegistrationsNewestFirst(a: FoodRegistration, b: FoodRegistration): number {
+  const seqA = extractRegistrationSequence(a.id);
+  const seqB = extractRegistrationSequence(b.id);
+  if (seqA > 0 && seqB > 0 && seqA !== seqB) {
+    return seqB - seqA;
+  }
+
+  const timeA = new Date(a.createdAt || a.entryDate || 0).getTime();
+  const timeB = new Date(b.createdAt || b.entryDate || 0).getTime();
+  if (timeB !== timeA) {
+    return timeB - timeA;
+  }
+
+  return (b.id || '').localeCompare(a.id || '');
+}
+
+/**
+ * So sánh 2 dòng báo cáo thực phẩm để dữ liệu đăng ký mới nhất hiển thị trên cùng.
+ * 1. Khác đơn đăng ký: Đơn nào đăng ký mới nhất thì hiển thị trước (trên cùng).
+ * 2. Cùng một đơn đăng ký: Lần bảo vệ quét xác nhận mới nhất hiển thị trước lần quét cũ hơn.
+ */
+export function compareFoodReportRowsNewestFirst(a: FoodReportRow, b: FoodReportRow): number {
+  if (a.id !== b.id) {
+    const seqA = extractRegistrationSequence(a.id);
+    const seqB = extractRegistrationSequence(b.id);
+    if (seqA > 0 && seqB > 0 && seqA !== seqB) {
+      return seqB - seqA;
+    }
+
+    const regTimeA = new Date(a.registration?.createdAt || 0).getTime();
+    const regTimeB = new Date(b.registration?.createdAt || 0).getTime();
+    if (regTimeB !== regTimeA) {
+      return regTimeB - regTimeA;
+    }
+
+    return (b.id || '').localeCompare(a.id || '');
+  }
+
+  // Cùng 1 mã phiếu: xếp theo lần quét bảo vệ mới nhất lên trước
+  const logTimeA = a.guardTime ? new Date(a.guardTime).getTime() : 0;
+  const logTimeB = b.guardTime ? new Date(b.guardTime).getTime() : 0;
+  if (logTimeB !== logTimeA) {
+    return logTimeB - logTimeA;
+  }
+
+  return (b.logIndex ?? 0) - (a.logIndex ?? 0);
+}
+
+/**
  * Trải phẳng danh sách đăng ký thực phẩm thành các dòng báo cáo chi tiết.
  * Mỗi lần bảo vệ quét mã xác nhận hoặc từ chối (trong entryLogs) sẽ hiển thị thành 1 dòng riêng biệt
  * kèm đúng ngày mang vào thực tế, giờ xác nhận và ghi chú của bảo vệ.
+ * Dữ liệu đăng ký mới nhất luôn được hiển thị trên cùng.
  */
 export function flattenFoodRegistrationsToReportRows(registrations: FoodRegistration[]): FoodReportRow[] {
+  // Sắp xếp đơn đăng ký mới nhất lên trên
+  const sortedRegs = [...registrations].sort(compareFoodRegistrationsNewestFirst);
   const rows: FoodReportRow[] = [];
 
-  for (const reg of registrations) {
-    const logs = Array.isArray(reg.entryLogs) && reg.entryLogs.length > 0 ? reg.entryLogs : [];
+  for (const reg of sortedRegs) {
+    const rawLogs = Array.isArray(reg.entryLogs) && reg.entryLogs.length > 0 ? reg.entryLogs : [];
+    // Sắp xếp các lần quét bảo vệ của đơn từ mới nhất đến cũ nhất
+    const logs = [...rawLogs].sort((l1, l2) => {
+      const t1 = l1.timestamp ? new Date(l1.timestamp).getTime() : 0;
+      const t2 = l2.timestamp ? new Date(l2.timestamp).getTime() : 0;
+      return t2 - t1;
+    });
 
     // Trường hợp 1: Có danh sách nhật ký quét của bảo vệ (entryLogs)
     if (logs.length > 0) {
@@ -605,7 +684,7 @@ export function flattenFoodRegistrationsToReportRows(registrations: FoodRegistra
           statusBadge,
           guardName: log.guardName,
           guardTime: log.timestamp,
-          sortTime: log.timestamp ? new Date(log.timestamp).getTime() : new Date(reg.createdAt).getTime(),
+          sortTime: new Date(reg.createdAt).getTime(),
           note: log.action === 'rejected' ? (log.reason || log.note || '-') : (log.note || '-'),
           isScanLog: true,
           logIndex: logIdx,
@@ -657,7 +736,7 @@ export function flattenFoodRegistrationsToReportRows(registrations: FoodRegistra
         statusBadge,
         guardName: reg.guardName,
         guardTime: reg.confirmedAt,
-        sortTime: reg.confirmedAt ? new Date(reg.confirmedAt).getTime() : new Date(reg.createdAt).getTime(),
+        sortTime: new Date(reg.createdAt).getTime(),
         note: reg.guardNote || reg.rejectedReason || '-',
         isScanLog: true,
       });
@@ -695,5 +774,5 @@ export function flattenFoodRegistrationsToReportRows(registrations: FoodRegistra
     }
   }
 
-  return rows;
+  return rows.sort(compareFoodReportRowsNewestFirst);
 }

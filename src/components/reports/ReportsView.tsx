@@ -45,7 +45,7 @@ import {
   GENERAL_STATUS_BADGES,
 } from '@/types/proposal';
 import { filterUserLeaves, filterUserAttendances, filterUserGatePasses, filterUserRepairProposals, filterUserStationeryProposals, filterUserGeneralProposals } from '@/lib/permissions';
-import { FoodRegistration, FoodReportRow, flattenFoodRegistrationsToReportRows, FoodCategory, FOOD_CATEGORY_LABELS, FOOD_STATUS_LABELS, FOOD_STATUS_BADGES } from '@/types/food-registration';
+import { FoodRegistration, FoodReportRow, flattenFoodRegistrationsToReportRows, compareFoodReportRowsNewestFirst, FoodCategory, FOOD_CATEGORY_LABELS, FOOD_STATUS_LABELS, FOOD_STATUS_BADGES } from '@/types/food-registration';
 
 export function ReportsView() {
   const { currentUser } = useAuth();
@@ -678,7 +678,7 @@ export function ReportsView() {
         if (!match) return false;
       }
       return true;
-    }).sort((a, b) => b.sortTime - a.sortTime);
+    }).sort(compareFoodReportRowsNewestFirst);
   }, [allFoodRows, departmentFilter, statusFilter, foodCategoryFilter, fromDate, toDate, searchTerm]);
 
   const filteredFoods = filteredFoodRows;
