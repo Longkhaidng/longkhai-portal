@@ -171,12 +171,15 @@
     "permissions": [
       "dashboard",
       "food_registration",
-      "announcements"
+      "announcements",
+      "gate_pass",
+      "attendance"
     ],
     "isActive": true,
     "password": "101",
     "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "updatedAt": "2026-11-11T05:40:57.405Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "102",
