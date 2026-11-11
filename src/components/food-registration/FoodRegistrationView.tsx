@@ -1305,7 +1305,7 @@ export function FoodRegistrationView() {
                     <div className="p-3 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/40 text-xs space-y-2">
                       <div>
                         <span className="text-[10px] font-semibold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide block">
-                          {item.category === 'medicine_drink' ? 'Nước thuốc mang vào & Lý do:' : 'Chi tiết món ăn được duyệt:'}
+                          {item.category === 'medicine_drink' ? 'Nước thuốc mang vào & Lý do:' : 'Chi tiết món ăn mang vào:'}
                         </span>
                         <p className="font-bold text-slate-900 dark:text-white text-xs mt-0.5">
                           {item.foodDetails}
