@@ -1095,6 +1095,44 @@ export function GatePassView() {
                           Dự kiến: {formatDateTime(item.estimatedDepartureTime)}
                         </span>
                         <div className="flex items-center gap-2 shrink-0">
+                          {isSecurity && item.status === 'completed' && (
+                            <span className="text-emerald-600 dark:text-emerald-400 font-bold text-[11px] flex items-center gap-1">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>Đã xác nhận</span>
+                            </span>
+                          )}
+                          {isSecurity && item.status === 'rejected' && (
+                            <span className="text-rose-600 dark:text-rose-400 font-bold text-[11px] flex items-center gap-1">
+                              <XCircle className="w-3.5 h-3.5" />
+                              <span>Đã từ chối</span>
+                            </span>
+                          )}
+                          {isSecurity && item.status === 'approved' && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (item.timeType === 'nghi_dau_gio') {
+                                  handleConfirmEntry(item);
+                                } else {
+                                  handleConfirmDeparture(item);
+                                }
+                              }}
+                              className="px-2.5 py-1 bg-blue-600 text-white font-bold text-[11px] rounded-lg shadow-xs cursor-pointer active:scale-95"
+                            >
+                              Cho ra cổng
+                            </button>
+                          )}
+                          {isSecurity && item.status === 'departed' && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleConfirmReturn(item);
+                              }}
+                              className="px-2.5 py-1 bg-emerald-600 text-white font-bold text-[11px] rounded-lg shadow-xs cursor-pointer active:scale-95"
+                            >
+                              Vào cổng lại
+                            </button>
+                          )}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -2195,6 +2233,22 @@ export function GatePassView() {
                     </button>
                   )}
                 </div>
+              </div>
+            )}
+
+            {/* Khi bảo vệ đã xác nhận hoàn tất */}
+            {(isSecurity || isBOD) && selectedPass.status === 'completed' && (
+              <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-900/40 flex items-center gap-2 text-emerald-800 dark:text-emerald-300 text-xs font-bold">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>✓ Đã xác nhận hoàn tất ra / vào cổng ({formatDateTime(selectedPass.actualReturnTime || selectedPass.actualDepartureTime)})</span>
+              </div>
+            )}
+
+            {/* Khi phiếu bị từ chối */}
+            {(isSecurity || isBOD) && selectedPass.status === 'rejected' && (
+              <div className="p-3 bg-rose-50 dark:bg-rose-950/40 rounded-xl border border-rose-200 dark:border-rose-900/40 flex items-center gap-2 text-rose-800 dark:text-rose-300 text-xs font-bold">
+                <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                <span>✕ Phiếu đã bị từ chối {selectedPass.rejectionReason ? `: ${selectedPass.rejectionReason}` : ''}</span>
               </div>
             )}
 

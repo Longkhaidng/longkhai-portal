@@ -869,6 +869,26 @@ function ScanConfirmContent() {
                         {foodValidity?.message || 'Đơn đăng ký cần được phê duyệt trước khi được phép mang vào.'}
                       </p>
                     </div>
+                  ) : docData.status === 'confirmed' ? (
+                    <div className="p-5 rounded-2xl bg-teal-950/80 border-2 border-teal-500 text-center space-y-2 animate-in fade-in">
+                      <CheckCircle2 className="w-10 h-10 text-teal-400 mx-auto" />
+                      <h4 className="text-sm sm:text-base font-black text-teal-200 uppercase tracking-wide">
+                        ĐÃ XÁC NHẬN CHO MANG VÀO
+                      </h4>
+                      <p className="text-xs text-teal-300">
+                        Phiếu này đã được bảo vệ xác nhận cho nhân viên mang thực phẩm vào nhà máy.
+                      </p>
+                    </div>
+                  ) : docData.status === 'guard_rejected' || docData.status === 'rejected' ? (
+                    <div className="p-5 rounded-2xl bg-rose-950/80 border-2 border-rose-500 text-center space-y-2 animate-in fade-in">
+                      <XCircle className="w-10 h-10 text-rose-400 mx-auto" />
+                      <h4 className="text-sm sm:text-base font-black text-rose-200 uppercase tracking-wide">
+                        ĐÃ TỪ CHỐI TẠI CỔNG
+                      </h4>
+                      <p className="text-xs text-rose-300">
+                        Phiếu này đã bị bảo vệ ghi nhận từ chối cho mang vào nhà máy.
+                      </p>
+                    </div>
                   ) : (
                     /* Valid Food Ticket Action */
                     <div className="space-y-4">
@@ -1006,6 +1026,20 @@ function ScanConfirmContent() {
                           <LogIn className="w-4 h-4" />
                           <span>{isSubmitting ? 'ĐANG LƯU...' : 'Xác nhận ĐÃ VÀO CỔNG LẠI'}</span>
                         </button>
+                      )}
+
+                      {docData.status === 'completed' && (
+                        <div className="p-3.5 rounded-xl bg-teal-950/80 border border-teal-500 text-center text-teal-300 font-bold text-xs flex items-center justify-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-teal-400" />
+                          <span>Đã xác nhận hoàn tất ra / vào cổng!</span>
+                        </div>
+                      )}
+
+                      {docData.status === 'rejected' && (
+                        <div className="p-3.5 rounded-xl bg-rose-950/80 border border-rose-500 text-center text-rose-300 font-bold text-xs flex items-center justify-center gap-2">
+                          <XCircle className="w-4 h-4 text-rose-400" />
+                          <span>Phiếu đã bị từ chối</span>
+                        </div>
                       )}
                     </div>
                   </div>

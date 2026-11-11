@@ -10,6 +10,7 @@ import {
 } from '@/types/food-registration';
 import {
   X,
+  XCircle,
   Download,
   QrCode,
   CheckCircle2,
@@ -25,9 +26,19 @@ interface FoodQrModalProps {
   isOpen: boolean;
   onClose: () => void;
   registration: FoodRegistration | null;
+  isGuard?: boolean;
+  onGuardConfirm?: (item: FoodRegistration) => void;
+  onGuardReject?: (item: FoodRegistration) => void;
 }
 
-export function FoodQrModal({ isOpen, onClose, registration }: FoodQrModalProps) {
+export function FoodQrModal({
+  isOpen,
+  onClose,
+  registration,
+  isGuard,
+  onGuardConfirm,
+  onGuardReject,
+}: FoodQrModalProps) {
   const qrRef = useRef<HTMLImageElement>(null);
 
   if (!isOpen || !registration) return null;
@@ -280,6 +291,48 @@ export function FoodQrModal({ isOpen, onClose, registration }: FoodQrModalProps)
             {registration.status === 'rejected' && (
               <div className="p-2 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-[11px] text-rose-700 dark:text-rose-300">
                 Lý do từ chối: <b>{registration.rejectedReason || 'Không đảm bảo an toàn vệ sinh'}</b>
+              </div>
+            )}
+
+            {/* Khối bảo vệ cổng kiểm tra & xác nhận trong modal */}
+            {isGuard && (
+              <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
+                {registration.status === 'approved' && !validity.isExpired ? (
+                  <div className="p-3 rounded-2xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800 space-y-2">
+                    <div className="text-xs font-bold text-teal-900 dark:text-teal-200 flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 text-teal-600" />
+                      <span>Bảo vệ cổng kiểm tra &amp; xác nhận tại chỗ:</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => onGuardConfirm?.(registration)}
+                        className="py-2.5 px-3 rounded-xl bg-teal-600 hover:bg-teal-500 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer"
+                      >
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Cho vào</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onGuardReject?.(registration)}
+                        className="py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer"
+                      >
+                        <XCircle className="w-4 h-4" />
+                        <span>Từ chối</span>
+                      </button>
+                    </div>
+                  </div>
+                ) : registration.status === 'confirmed' ? (
+                  <div className="p-3 rounded-2xl bg-teal-50 dark:bg-teal-950/40 border border-teal-300 dark:border-teal-800 flex items-center justify-center gap-2 text-teal-700 dark:text-teal-300 font-bold text-xs">
+                    <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />
+                    <span>Đã xác nhận cho mang vào</span>
+                  </div>
+                ) : registration.status === 'guard_rejected' || registration.status === 'rejected' ? (
+                  <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-800 flex items-center justify-center gap-2 text-rose-700 dark:text-rose-300 font-bold text-xs">
+                    <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                    <span>Đã từ chối tại cổng</span>
+                  </div>
+                ) : null}
               </div>
             )}
           </div>
