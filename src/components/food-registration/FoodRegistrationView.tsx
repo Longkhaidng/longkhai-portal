@@ -605,7 +605,7 @@ export function FoodRegistrationView() {
             </div>
             <div>
               <h2 className="text-base font-bold text-slate-900 dark:text-white">
-                Đăng ký thực phẩm/ Nước uống
+                Đăng Ký Thực Phẩm/ Nước Uống
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Chọn danh mục và điền thông tin để cấp mã QR kiểm soát
