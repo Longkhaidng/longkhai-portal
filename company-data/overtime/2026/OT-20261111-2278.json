@@ -24,10 +24,13 @@
       "toTime": "18:00",
       "mealOption": "Không áp dụng (< 2h)",
       "employeeConfirmStatus": "pending",
-      "approvalStatus": "pending"
+      "approvalStatus": "rejected",
+      "approvedBy": "2265",
+      "approvedByName": "Trần Lê Hữu Lực",
+      "approvedAt": "2026-11-11T01:20:00.021Z"
     }
   ],
-  "status": "pending",
+  "status": "rejected",
   "createdAt": "2026-11-11T01:19:42.278Z",
-  "updatedAt": "2026-11-11T01:19:42.278Z"
+  "updatedAt": "2026-11-11T01:20:00.021Z"
 }
