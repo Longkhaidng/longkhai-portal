@@ -1244,55 +1244,60 @@ export function FoodRegistrationView() {
                     key={`m-food-${item.id}`}
                     className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3 hover:border-emerald-300 dark:hover:border-emerald-800 transition-all"
                   >
-                    {/* Header: Mã phiếu, Phân loại & Badge trạng thái */}
+                    {/* Header: Mã phiếu (Ẩn Phân loại & Badge trạng thái khi bảo vệ đăng nhập theo yêu cầu) */}
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSelectedQrItem(item);
-                            setIsQrModalOpen(true);
-                          }}
-                          className="font-mono font-black text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800/60 flex items-center gap-1.5 cursor-pointer active:scale-95 transition-transform"
-                          title="Bấm để xem mã QR"
-                        >
+                        <span className="font-mono font-black text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800/60 flex items-center gap-1.5">
                           <QrCode className="w-3.5 h-3.5" />
                           <span>{item.id}</span>
-                        </button>
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-700 dark:text-slate-300">
-                          <span>{FOOD_CATEGORY_ICONS[item.category]}</span>
-                          <span>{FOOD_CATEGORY_LABELS[item.category]}</span>
                         </span>
+                        {!isGuard && (
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                            <span>{FOOD_CATEGORY_ICONS[item.category]}</span>
+                            <span>{FOOD_CATEGORY_LABELS[item.category]}</span>
+                          </span>
+                        )}
                       </div>
 
-                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${FOOD_STATUS_BADGES[item.status]}`}>
-                        {FOOD_STATUS_LABELS[item.status]}
-                      </span>
+                      {!isGuard && (
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${FOOD_STATUS_BADGES[item.status]}`}>
+                          {FOOD_STATUS_LABELS[item.status]}
+                        </span>
+                      )}
                     </div>
 
-                    {/* Thông tin nhân viên */}
-                    <div className="flex items-start justify-between gap-2 pt-1 border-t border-slate-100 dark:border-slate-800/60">
-                      <div>
-                        <div className="font-black text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
-                          <UserIcon className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                          <span>{item.employeeName}</span>
+                    {/* Thông tin nhân viên: Căn chỉnh lại tên nhân viên và MSNV, phòng ban (Ẩn thời hạn hiệu lực khi là bảo vệ) */}
+                    <div className="pt-2 border-t border-slate-100 dark:border-slate-800/60">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="space-y-1">
+                          <div className="font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
+                            <UserIcon className="w-4 h-4 text-emerald-600 shrink-0" />
+                            <span>{item.employeeName}</span>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-600 dark:text-slate-400">
+                            <span className="font-mono font-bold text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[11px]">
+                              MSNV: {item.employeeId}
+                            </span>
+                            <span className="text-slate-300 dark:text-slate-600">&bull;</span>
+                            <span className="font-medium text-slate-700 dark:text-slate-300">
+                              {item.department}
+                            </span>
+                          </div>
                         </div>
-                        <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
-                          MSNV: <b className="text-slate-700 dark:text-slate-300">{item.employeeId}</b> &bull; {item.department}
-                        </div>
-                      </div>
 
-                      {/* Hiệu lực thời gian */}
-                      <div className="text-right shrink-0">
-                        {validity.isExpired ? (
-                          <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300">
-                            Hết hiệu lực
-                          </span>
-                        ) : validity.remainingText ? (
-                          <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold block">
-                            {validity.remainingText}
-                          </span>
-                        ) : null}
+                        {!isGuard && (
+                          <div className="text-right shrink-0">
+                            {validity.isExpired ? (
+                              <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300">
+                                Hết hiệu lực
+                              </span>
+                            ) : validity.remainingText ? (
+                              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold block">
+                                {validity.remainingText}
+                              </span>
+                            ) : null}
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -1339,28 +1344,30 @@ export function FoodRegistrationView() {
 
                     {/* Thanh hành động dành riêng cho điện thoại / tablet */}
                     <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
-                      {/* Nút xem QR nhanh cho người lao động / bảo vệ */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedQrItem(item);
-                          setIsQrModalOpen(true);
-                        }}
-                        className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
-                      >
-                        <QrCode className="w-4 h-4" />
-                        <span>{isApproved || isConfirmed ? 'Mở mã QR quét cổng' : 'Xem chi tiết & QR'}</span>
-                      </button>
+                      {/* Nút xem QR nhanh CHỈ hiển thị khi người dùng không phải bảo vệ */}
+                      {!isGuard && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedQrItem(item);
+                            setIsQrModalOpen(true);
+                          }}
+                          className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                        >
+                          <QrCode className="w-4 h-4" />
+                          <span>{isApproved || isConfirmed ? 'Mở mã QR quét cổng' : 'Xem chi tiết & QR'}</span>
+                        </button>
+                      )}
 
                       {/* Hành động của bảo vệ hoặc cấp duyệt */}
                       {isGuard ? (
-                        <div className="flex items-center gap-2">
+                        <div className="w-full flex items-center justify-end gap-2">
                           {isApproved && !validity.isExpired ? (
-                            <>
+                            <div className="w-full grid grid-cols-2 gap-2">
                               <button
                                 type="button"
                                 onClick={() => handleGuardConfirm(item)}
-                                className="px-3 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer"
+                                className="py-2.5 px-3 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer"
                               >
                                 <CheckCircle2 className="w-4 h-4" />
                                 <span>Cho vào</span>
@@ -1368,19 +1375,19 @@ export function FoodRegistrationView() {
                               <button
                                 type="button"
                                 onClick={() => setRejectingItem({ item, level: 'guard' })}
-                                className="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer"
+                                className="py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer"
                               >
                                 <XCircle className="w-4 h-4" />
                                 <span>Từ chối</span>
                               </button>
-                            </>
+                            </div>
                           ) : isConfirmed ? (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-teal-50 dark:bg-teal-950/60 border border-teal-300 dark:border-teal-800 text-teal-700 dark:text-teal-300 font-bold text-xs">
+                            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal-50 dark:bg-teal-950/60 border border-teal-300 dark:border-teal-800 text-teal-700 dark:text-teal-300 font-bold text-xs">
                               <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />
                               <span>Đã xác nhận</span>
                             </span>
                           ) : isRejected ? (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-300 font-bold text-xs">
+                            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-300 font-bold text-xs">
                               <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
                               <span>Đã từ chối</span>
                             </span>
