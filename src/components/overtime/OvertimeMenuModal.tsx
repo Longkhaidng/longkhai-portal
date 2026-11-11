@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { OvertimeMealMenu } from '@/types/overtime';
+import { OvertimeMealMenu, OVERTIME_WEEKLY_MENU } from '@/types/overtime';
 import { X, Utensils, Plus, Trash2, Edit3, Calendar, Clock, Check, FileText } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
@@ -116,7 +116,66 @@ export function OvertimeMenuModal({
 
         {/* Content */}
         <div className="p-5 overflow-y-auto space-y-6 flex-1 text-xs text-slate-700 dark:text-slate-200">
-          {/* Form thêm/sửa món ăn */}
+          {/* Bảng Thực Đơn Tăng Ca Quy Định Theo Số Giờ (Thứ 2 - Thứ 7) */}
+          <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2.5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="font-bold text-xs uppercase text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                <Utensils className="w-4 h-4 text-emerald-600" />
+                <span>Thực Đơn Tăng Ca Quy Định Theo Số Giờ (Áp dụng tự động)</span>
+              </div>
+              <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium italic">
+                * Món ăn chỉ được phép chọn 1 trong các dòng tùy vào số giờ tăng ca
+              </span>
+            </div>
+
+            <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead className="bg-emerald-600 text-white font-bold">
+                  <tr>
+                    <th className="p-2.5 w-20 text-center border-r border-emerald-500">Thứ ngày</th>
+                    <th className="p-2.5 border-r border-emerald-500">2 giờ</th>
+                    <th className="p-2.5 border-r border-emerald-500">3 giờ</th>
+                    <th className="p-2.5">4 giờ</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700 bg-white dark:bg-slate-900">
+                  {[1, 2, 3, 4, 5, 6].map((dayIdx) => {
+                    const rule = OVERTIME_WEEKLY_MENU[dayIdx];
+                    return (
+                      <tr key={dayIdx} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                        <td className="p-2.5 font-bold text-center text-emerald-700 dark:text-emerald-400 border-r border-slate-200 dark:border-slate-700 bg-emerald-50/40 dark:bg-emerald-950/20">
+                          {rule.dayName}
+                        </td>
+                        <td className="p-2.5 border-r border-slate-200 dark:border-slate-700 align-top">
+                          {rule.twoHours.map((dish, i) => (
+                            <div key={i} className="py-0.5 text-slate-800 dark:text-slate-200 font-medium">
+                              &bull; {dish}
+                            </div>
+                          ))}
+                        </td>
+                        <td className="p-2.5 border-r border-slate-200 dark:border-slate-700 align-top">
+                          {rule.threeOrMoreHours.map((dish, i) => (
+                            <div key={i} className="py-0.5 text-slate-800 dark:text-slate-200 font-medium">
+                              &bull; {dish}
+                            </div>
+                          ))}
+                        </td>
+                        <td className="p-2.5 align-top">
+                          {rule.threeOrMoreHours.map((dish, i) => (
+                            <div key={i} className="py-0.5 text-slate-800 dark:text-slate-200 font-medium">
+                              &bull; {dish}
+                            </div>
+                          ))}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Form thêm/sửa món ăn bổ sung */}
           <form
             onSubmit={handleSubmit}
             className="p-4 bg-emerald-50/60 dark:bg-emerald-950/20 rounded-2xl border border-emerald-200 dark:border-emerald-900/50 space-y-3"

@@ -1996,7 +1996,19 @@ class StorageService {
       const data = localStorage.getItem(STORAGE_KEYS.OVERTIME_REGISTRATIONS);
       if (data !== null) {
         const parsed = JSON.parse(data);
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed)) {
+          return parsed.map((reg: OvertimeRegistration) => ({
+            ...reg,
+            status: reg.status === 'rejected' ? 'rejected' : 'approved',
+            items: (reg.items || []).map((it) => ({
+              ...it,
+              employeeConfirmStatus: it.employeeConfirmStatus === 'rejected' ? 'rejected' : 'confirmed',
+              employeeConfirmTime: it.employeeConfirmTime || `${it.fromTime} - ${it.toTime}`,
+              employeeConfirmHours: it.employeeConfirmHours !== undefined ? it.employeeConfirmHours : it.hours,
+              approvalStatus: it.approvalStatus === 'rejected' ? 'rejected' : 'approved',
+            })),
+          }));
+        }
       }
     } catch {}
     if (INITIAL_OVERTIME_REGISTRATIONS.length > 0) {

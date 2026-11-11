@@ -24,6 +24,7 @@ import {
   calculateOvertimeTimes,
   computeHoursBetween,
   checkEmployeeEditDeadline,
+  getOvertimeMealOptions,
 } from '@/types/overtime';
 import { OvertimeTeamModal } from './OvertimeTeamModal';
 import { OvertimeConfirmModal } from './OvertimeConfirmModal';
@@ -152,8 +153,11 @@ export function OvertimeView() {
 
     const defaultShift = 'Ca HC (08:00 - 16:30)';
     const defaultOvertimeType: OvertimeCategory = 'sau_ca';
-    const defaultHours = 1.5;
+    const defaultHours = 2;
     const times = calculateOvertimeTimes(defaultShift, defaultOvertimeType, defaultHours);
+    const defaultMeal = defaultHours < 2
+      ? 'Không áp dụng (< 2h)'
+      : (getOvertimeMealOptions(registrationDate, defaultHours)[0] || 'Tự túc / Không ăn');
 
     const newItem: OvertimeItem = {
       id: `OT-ITEM-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
@@ -170,9 +174,14 @@ export function OvertimeView() {
       hours: defaultHours,
       fromTime: times.fromTime,
       toTime: times.toTime,
-      mealOption: defaultHours < 2 ? 'Không áp dụng (< 2h)' : 'Tự túc / Không ăn',
-      employeeConfirmStatus: 'pending',
-      approvalStatus: 'pending',
+      mealOption: defaultMeal,
+      employeeConfirmTime: `${times.fromTime} - ${times.toTime}`,
+      employeeConfirmHours: defaultHours,
+      employeeConfirmStatus: 'confirmed',
+      employeeConfirmedAt: new Date().toISOString(),
+      approvalStatus: 'approved',
+      approvedByName: currentUser?.name || 'Trưởng bộ phận',
+      approvedAt: new Date().toISOString(),
     };
 
     setRegistrationItems((prev) => [...prev, newItem]);
@@ -241,14 +250,25 @@ export function OvertimeView() {
           }
         }
 
-        // Check meal rule: under 2 hours no meal applied
+        // Check meal rule: under 2 hours no meal applied, >= 2 hours pick from weekly menu
         if (updated.hours < 2) {
           updated.mealOption = 'Không áp dụng (< 2h)';
-        } else if (
-          updated.mealOption === 'Không áp dụng (< 2h)' ||
-          !updated.mealOption
-        ) {
-          updated.mealOption = availableMealsForDate[0]?.dishName || 'Tự túc / Không ăn';
+        } else {
+          const opts = getOvertimeMealOptions(registrationDate, updated.hours);
+          if (
+            !updated.mealOption ||
+            updated.mealOption === 'Không áp dụng (< 2h)' ||
+            updated.mealOption === 'Suất ăn nhà máy theo ca' ||
+            (!opts.includes(updated.mealOption) && updated.mealOption !== 'Tự túc / Không ăn')
+          ) {
+            updated.mealOption = opts[0] || 'Tự túc / Không ăn';
+          }
+        }
+
+        // Auto-sync employee confirm time & hours with agreement time
+        if (updates.hours !== undefined || updates.fromTime !== undefined || updates.toTime !== undefined) {
+          updated.employeeConfirmTime = `${updated.fromTime} - ${updated.toTime}`;
+          updated.employeeConfirmHours = updated.hours;
         }
 
         return updated;
@@ -283,8 +303,17 @@ export function OvertimeView() {
         createdRole: currentUser?.role || 'employee',
         department: currentUser?.department || 'Nhà máy',
         notes: batchNotes.trim() || undefined,
-        items: registrationItems,
-        status: 'pending',
+        items: registrationItems.map((it) => ({
+          ...it,
+          employeeConfirmStatus: it.employeeConfirmStatus === 'rejected' ? 'rejected' : 'confirmed',
+          employeeConfirmTime: it.employeeConfirmTime || `${it.fromTime} - ${it.toTime}`,
+          employeeConfirmHours: it.employeeConfirmHours !== undefined ? it.employeeConfirmHours : it.hours,
+          employeeConfirmedAt: it.employeeConfirmedAt || new Date().toISOString(),
+          approvalStatus: it.approvalStatus === 'rejected' ? 'rejected' : 'approved',
+          approvedByName: it.approvedByName || currentUser?.name || 'Trưởng bộ phận',
+          approvedAt: it.approvedAt || new Date().toISOString(),
+        })),
+        status: 'approved',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -318,7 +347,15 @@ export function OvertimeView() {
     }[] = [];
 
     registrations.forEach((reg) => {
-      reg.items.forEach((item) => {
+      reg.items?.forEach((rawItem) => {
+        // Cột trạng thái xác nhận và trạng thái duyệt được mặc định đã phê duyệt
+        const item: OvertimeItem = {
+          ...rawItem,
+          employeeConfirmStatus: rawItem.employeeConfirmStatus === 'rejected' ? 'rejected' : 'confirmed',
+          employeeConfirmTime: rawItem.employeeConfirmTime || `${rawItem.fromTime} - ${rawItem.toTime}`,
+          employeeConfirmHours: rawItem.employeeConfirmHours !== undefined ? rawItem.employeeConfirmHours : rawItem.hours,
+          approvalStatus: rawItem.approvalStatus === 'rejected' ? 'rejected' : 'approved',
+        };
         list.push({
           regId: reg.id,
           regDate: reg.registrationDate,
@@ -360,10 +397,11 @@ export function OvertimeView() {
         const q = searchTracking.toLowerCase();
         const matchId = item.employeeId.toLowerCase().includes(q);
         const matchName = item.employeeName.toLowerCase().includes(q);
-        const matchTeam = (item.team || '').toLowerCase().includes(q);
+        const userPos = users.find((u) => u.id === item.employeeId)?.position || '';
+        const matchPos = (item.position || '').toLowerCase().includes(q) || userPos.toLowerCase().includes(q);
         const matchDept = (item.department || '').toLowerCase().includes(q);
         const matchReason = (item.customReason || item.reasonType).toLowerCase().includes(q);
-        if (!matchId && !matchName && !matchTeam && !matchDept && !matchReason) return false;
+        if (!matchId && !matchName && !matchPos && !matchDept && !matchReason) return false;
       }
       return true;
     });
@@ -382,6 +420,7 @@ export function OvertimeView() {
   const pendingConfirmCount = allTrackingItems.filter((e) => e.item.employeeConfirmStatus === 'pending').length;
   const confirmedCount = allTrackingItems.filter((e) => e.item.employeeConfirmStatus === 'confirmed').length;
   const pendingApprovalCount = allTrackingItems.filter((e) => e.item.approvalStatus === 'pending').length;
+  const approvedCount = allTrackingItems.filter((e) => e.item.approvalStatus === 'approved').length;
 
   // Handle employee confirmation from modal
   const handleEmployeeConfirmSubmit = (
@@ -436,7 +475,10 @@ export function OvertimeView() {
       'Ngày Đăng Ký Tăng Ca': formatDate(entry.regDate),
       'Mã Số NV': entry.item.employeeId,
       'Họ Và Tên': entry.item.employeeName,
-      'Chức Vụ': entry.item.position,
+      'Chức Vụ':
+        entry.item.position ||
+        users.find((u) => u.id === entry.item.employeeId)?.position ||
+        'Nhân viên',
       'Tổ / Bộ Phận': entry.item.team || entry.department,
       'Ca Làm Việc': entry.item.shift,
       'Loại Tăng Ca': OVERTIME_CATEGORY_LABELS[entry.item.overtimeType],
@@ -545,9 +587,9 @@ export function OvertimeView() {
           </div>
 
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/10">
-            <div className="text-[11px] text-blue-200 font-medium">Chờ Trưởng BP duyệt</div>
+            <div className="text-[11px] text-blue-200 font-medium">Đã phê duyệt</div>
             <div className="text-lg font-bold text-white mt-0.5">
-              {pendingApprovalCount} <span className="text-xs font-normal text-blue-200">lượt</span>
+              {approvedCount} <span className="text-xs font-normal text-blue-200">lượt</span>
             </div>
           </div>
         </div>
@@ -646,7 +688,20 @@ export function OvertimeView() {
                   type="date"
                   required
                   value={registrationDate}
-                  onChange={(e) => setRegistrationDate(e.target.value)}
+                  onChange={(e) => {
+                    const newDate = e.target.value;
+                    setRegistrationDate(newDate);
+                    setRegistrationItems((prev) =>
+                      prev.map((item) => {
+                        if (item.hours < 2) return item;
+                        const opts = getOvertimeMealOptions(newDate, item.hours);
+                        if (item.mealOption && item.mealOption !== 'Tự túc / Không ăn' && !opts.includes(item.mealOption)) {
+                          return { ...item, mealOption: opts[0] || 'Tự túc / Không ăn' };
+                        }
+                        return item;
+                      })
+                    );
+                  }}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -953,16 +1008,11 @@ export function OvertimeView() {
                               className="w-full text-xs px-2 py-1.5 bg-white dark:bg-slate-800 border border-emerald-400 dark:border-emerald-600 rounded-lg font-bold text-emerald-700 dark:text-emerald-400"
                             >
                               <option value="Tự túc / Không ăn">Tự túc / Không ăn</option>
-                              {availableMealsForDate.map((m) => (
-                                <option key={m.id} value={m.dishName}>
-                                  {m.dishName}
+                              {getOvertimeMealOptions(registrationDate, item.hours).map((dish) => (
+                                <option key={dish} value={dish}>
+                                  {dish}
                                 </option>
                               ))}
-                              {availableMealsForDate.length === 0 && (
-                                <option value="Suất ăn nhà máy theo ca">
-                                  Suất ăn nhà máy theo ca
-                                </option>
-                              )}
                             </select>
                           )}
                         </td>
@@ -1053,7 +1103,7 @@ export function OvertimeView() {
                 type="text"
                 value={searchTracking}
                 onChange={(e) => setSearchTracking(e.target.value)}
-                placeholder="Tìm theo MSNV, tên nhân viên, tổ, lý do..."
+                placeholder="Tìm theo MSNV, tên nhân viên, chức vụ, lý do..."
                 className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs"
               />
             </div>
@@ -1129,7 +1179,7 @@ export function OvertimeView() {
                     <th className="p-3">Ngày đăng ký tăng ca</th>
                     <th className="p-3">Mã số NV</th>
                     <th className="p-3 text-left">Tên nhân viên</th>
-                    <th className="p-3 text-left">Tổ</th>
+                    <th className="p-3 text-left">Chức vụ</th>
                     <th className="p-3">Thời gian thỏa thuận ban đầu</th>
                     <th className="p-3">Số giờ</th>
                     <th className="p-3 text-left">Lý do tăng ca</th>
@@ -1192,9 +1242,9 @@ export function OvertimeView() {
                             )}
                           </td>
 
-                          {/* Tổ */}
+                          {/* Chức vụ */}
                           <td className="p-2.5 text-slate-600 dark:text-slate-300 whitespace-nowrap">
-                            {item.team || item.department}
+                            {users.find((u) => u.id === item.employeeId)?.position || item.position || 'Nhân viên'}
                           </td>
 
                           {/* Thời gian thỏa thuận ban đầu */}
@@ -1277,24 +1327,28 @@ export function OvertimeView() {
                               </button>
 
                               {/* Nút Duyệt cho Trưởng bộ phận / Quản lý */}
-                              {canApprove && item.approvalStatus === 'pending' && (
+                              {canApprove && (
                                 <>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleApprovalAction(regId, item.id, 'approved')}
-                                    className="p-1 rounded-lg text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
-                                    title="Phê duyệt đơn này"
-                                  >
-                                    <Check className="w-3.5 h-3.5" />
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleApprovalAction(regId, item.id, 'rejected')}
-                                    className="p-1 rounded-lg text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40"
-                                    title="Từ chối đơn này"
-                                  >
-                                    <XCircle className="w-3.5 h-3.5" />
-                                  </button>
+                                  {item.approvalStatus !== 'approved' && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleApprovalAction(regId, item.id, 'approved')}
+                                      className="p-1 rounded-lg text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
+                                      title="Phê duyệt đơn này"
+                                    >
+                                      <Check className="w-3.5 h-3.5" />
+                                    </button>
+                                  )}
+                                  {item.approvalStatus !== 'rejected' && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleApprovalAction(regId, item.id, 'rejected')}
+                                      className="p-1 rounded-lg text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40"
+                                      title="Từ chối đơn này"
+                                    >
+                                      <XCircle className="w-3.5 h-3.5" />
+                                    </button>
+                                  )}
                                 </>
                               )}
                             </div>

@@ -15,6 +15,7 @@ import {
   OVERTIME_REASON_LABELS,
   calculateOvertimeTimes,
   OvertimeMealMenu,
+  getOvertimeMealOptions,
 } from '@/types/overtime';
 import { X, Users, Search, CheckCircle2, Clock, Utensils, CheckSquare, Square } from 'lucide-react';
 
@@ -143,19 +144,17 @@ export function OvertimeTeamModal({
     }
   }, [teamMembers]);
 
-  // Available meals for the registered date
-  const availableMeals = useMemo(() => {
-    return mealMenus.filter((m) => m.date === registrationDate);
-  }, [mealMenus, registrationDate]);
-
   // Set default meal if applicable
   useEffect(() => {
     if (hours < 2) {
       setMealOption('Không áp dụng (< 2h)');
-    } else if (availableMeals.length > 0 && (!mealOption || mealOption === 'Không áp dụng (< 2h)')) {
-      setMealOption(availableMeals[0].dishName);
+    } else {
+      const opts = getOvertimeMealOptions(registrationDate, hours);
+      if (!mealOption || mealOption === 'Không áp dụng (< 2h)' || (!opts.includes(mealOption) && mealOption !== 'Tự túc / Không ăn')) {
+        setMealOption(opts[0] || 'Tự túc / Không ăn');
+      }
     }
-  }, [hours, availableMeals, mealOption]);
+  }, [hours, registrationDate, mealOption]);
 
   const toggleMember = (id: string) => {
     const next = new Set(selectedMemberIds);
@@ -207,9 +206,14 @@ export function OvertimeTeamModal({
         hours,
         fromTime,
         toTime,
-        mealOption: hours < 2 ? 'Không áp dụng (< 2h)' : mealOption || 'Tự túc / Không ăn',
-        employeeConfirmStatus: 'pending',
-        approvalStatus: 'pending',
+        mealOption: hours < 2 ? 'Không áp dụng (< 2h)' : mealOption || (getOvertimeMealOptions(registrationDate, hours)[0] || 'Tự túc / Không ăn'),
+        employeeConfirmTime: `${fromTime} - ${toTime}`,
+        employeeConfirmHours: hours,
+        employeeConfirmStatus: 'confirmed',
+        employeeConfirmedAt: new Date().toISOString(),
+        approvalStatus: 'approved',
+        approvedByName: currentUser?.name || 'Trưởng bộ phận',
+        approvedAt: new Date().toISOString(),
       }));
 
     onApplyTeam(items);
@@ -475,19 +479,16 @@ export function OvertimeTeamModal({
                   </div>
                 ) : (
                   <select
-                    value={mealOption}
+                    value={mealOption || 'Tự túc / Không ăn'}
                     onChange={(e) => setMealOption(e.target.value)}
                     className="w-full py-2 px-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium text-emerald-700 dark:text-emerald-400"
                   >
                     <option value="Tự túc / Không ăn">Tự túc / Không ăn</option>
-                    {availableMeals.map((m) => (
-                      <option key={m.id} value={m.dishName}>
-                        {m.dishName}
+                    {getOvertimeMealOptions(registrationDate, hours).map((dish) => (
+                      <option key={dish} value={dish}>
+                        {dish}
                       </option>
                     ))}
-                    {availableMeals.length === 0 && (
-                      <option value="Suất ăn nhà máy theo ca">Suất ăn nhà máy theo ca</option>
-                    )}
                   </select>
                 )}
               </div>

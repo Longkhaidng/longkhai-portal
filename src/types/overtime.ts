@@ -104,6 +104,77 @@ export interface OvertimeMealMenu {
   updatedAt?: string;
 }
 
+export interface DailyOvertimeMealRules {
+  dayName: string;
+  twoHours: string[];
+  threeOrMoreHours: string[];
+}
+
+// Bảng thực đơn tăng ca theo ngày và số giờ tăng ca
+// (Món ăn chỉ được phép chọn 1 trong các dòng)
+export const OVERTIME_WEEKLY_MENU: Record<number, DailyOvertimeMealRules> = {
+  1: {
+    dayName: 'Thứ 2',
+    twoHours: ['Mì Omachi trứng', '1 sữa milk + 1 sữa nành'],
+    threeOrMoreHours: ['Bún giò', 'Mì trứng + 2 sữa milk', '3 sữa milk'],
+  },
+  2: {
+    dayName: 'Thứ 3',
+    twoHours: ['Mì Omachi trứng', '1 sữa milk + 1 sữa nành'],
+    threeOrMoreHours: ['Bánh canh', 'Phở trứng + 2 sữa milk', '1 bò húc + 1 sữa milk'],
+  },
+  3: {
+    dayName: 'Thứ 4',
+    twoHours: ['Mì Omachi trứng', '1 sữa milk + 1 sữa nành'],
+    threeOrMoreHours: ['Mì Quảng', 'Mì trứng + 2 sữa milk', '3 sữa milk'],
+  },
+  4: {
+    dayName: 'Thứ 5',
+    twoHours: ['Mì Omachi trứng', '1 sữa milk + 1 sữa nành'],
+    threeOrMoreHours: ['Bún bò', 'Phở trứng + 2 sữa milk', '1 bò húc + 1 sữa milk'],
+  },
+  5: {
+    dayName: 'Thứ 6',
+    twoHours: ['Mì Omachi trứng', '1 sữa milk + 1 sữa nành'],
+    threeOrMoreHours: ['Bánh mì ốp la + thịt bò', 'Mì trứng + 2 sữa milk', '3 sữa milk'],
+  },
+  6: {
+    dayName: 'Thứ 7',
+    twoHours: ['Mì Omachi trứng', '1 sữa milk + 1 sữa nành'],
+    threeOrMoreHours: ['Bánh canh', 'Phở trứng + 2 sữa milk', '1 bò húc + 1 sữa milk'],
+  },
+  0: {
+    dayName: 'Chủ nhật',
+    twoHours: ['Mì Omachi trứng', '1 sữa milk + 1 sữa nành'],
+    threeOrMoreHours: ['Bún bò', 'Phở trứng + 2 sữa milk', '1 bò húc + 1 sữa milk'],
+  },
+};
+
+/**
+ * Lấy danh sách món ăn tăng ca theo ngày (dateStr: YYYY-MM-DD) và số giờ tăng ca (hours).
+ * - Dưới 2 giờ: Không áp dụng (< 2h)
+ * - 2 giờ (2h đến dưới 3h): danh sách món ăn cột 2 giờ
+ * - 3 giờ trở lên (3h, 4h, ...): danh sách món ăn cột 3 giờ / 4 giờ
+ */
+export function getOvertimeMealOptions(dateStr: string, hours: number): string[] {
+  if (hours < 2) return [];
+
+  let dayOfWeek = 1;
+  if (dateStr) {
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      dayOfWeek = d.getDay();
+    }
+  }
+
+  const rules = OVERTIME_WEEKLY_MENU[dayOfWeek] || OVERTIME_WEEKLY_MENU[1];
+  if (hours < 3) {
+    return rules.twoHours;
+  }
+  return rules.threeOrMoreHours;
+}
+
 export interface OvertimeItem {
   id: string;
   employeeId: string; // MSNV
