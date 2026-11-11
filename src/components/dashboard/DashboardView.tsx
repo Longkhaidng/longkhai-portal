@@ -277,14 +277,25 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
           </div>
 
           <div className="flex items-center gap-2 self-start md:self-auto">
-            <button
-              type="button"
-              onClick={() => onNavigateTab('leave')}
-              className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-600/30 cursor-pointer flex items-center gap-1.5"
-            >
-              <span>+ Tạo đơn mới</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            {isSecurityRole(currentUser) ? (
+              <button
+                type="button"
+                onClick={() => onNavigateTab('gatePass')}
+                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/30 cursor-pointer flex items-center gap-1.5"
+              >
+                <QrCode className="w-3.5 h-3.5" />
+                <span>Kiểm soát ra vào cổng</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => onNavigateTab('leave')}
+                className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-600/30 cursor-pointer flex items-center gap-1.5"
+              >
+                <span>+ Tạo đơn mới</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
         </div>
       </div>

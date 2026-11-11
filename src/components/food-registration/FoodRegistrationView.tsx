@@ -115,7 +115,9 @@ export function FoodRegistrationView() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   // Filter & Tabs
-  const [activeTab, setActiveTab] = useState<'my' | 'approver' | 'all'>('my');
+  const [activeTab, setActiveTab] = useState<'my' | 'approver' | 'all'>(() =>
+    isSecurityRole(currentUser) ? 'all' : 'my'
+  );
   const [filterSearch, setFilterSearch] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterCategory, setFilterCategory] = useState<string>('all');
@@ -161,8 +163,12 @@ export function FoodRegistrationView() {
       setSelectedEmployeeId(currentUser.id);
       setEmployeeName(currentUser.name);
       setDepartment(currentUser.department || 'Phân xưởng sản xuất');
-      if (isAdmin || isGuard || isHR || isManager) {
+      if (isGuard) {
+        setActiveTab('all');
+      } else if (isAdmin || isHR || isManager) {
         setActiveTab('approver');
+      } else {
+        setActiveTab('my');
       }
     }
   }, [currentUser, isAdmin, isGuard, isHR, isManager]);
@@ -529,15 +535,18 @@ export function FoodRegistrationView() {
       const v = checkFoodQrValidity(r);
       return v.isValid && !v.isExpired;
     });
+    const pendingTotal = registrations.filter(
+      (r) => r.status === 'pending_dept' || r.status === 'pending_hr'
+    ).length;
 
     return {
       total: registrations.length,
       myCount: myTickets.length,
-      waitingMeCount: waitingMe.length,
+      waitingMeCount: isGuard ? pendingTotal : waitingMe.length,
       approvedActiveCount: approvedActive.length,
       expiredCount: registrations.filter((r) => checkFoodQrValidity(r).isExpired).length,
     };
-  }, [registrations, currentUser]);
+  }, [registrations, currentUser, isGuard]);
 
   return (
     <div className="space-y-6 pb-12">
@@ -595,9 +604,10 @@ export function FoodRegistrationView() {
         </div>
       </div>
 
-      {/* Main Grid: Form on Left (5 cols) + List/Approval on Right (7 cols) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Form Card */}
+      {/* Main Grid: Form on Left (5 cols) + List/Approval on Right (7 cols) - Khi là bảo vệ chỉ hiển thị Danh sách toàn màn hình */}
+      <div className={isGuard ? 'space-y-6' : 'grid grid-cols-1 lg:grid-cols-12 gap-6 items-start'}>
+        {/* Form Card (Ẩn hoàn toàn đối với nhân viên bảo vệ) */}
+        {!isGuard && (
         <div className="lg:col-span-5 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 shadow-sm">
           <div className="flex items-center gap-3 pb-4 mb-5 border-b border-slate-100 dark:border-slate-800">
             <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
@@ -1102,9 +1112,10 @@ export function FoodRegistrationView() {
             </button>
           </form>
         </div>
+        )}
 
-        {/* List & Approvals Card (7 cols) */}
-        <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 shadow-sm space-y-4">
+        {/* List & Approvals Card (Mở rộng toàn màn hình khi là bảo vệ) */}
+        <div className={`${isGuard ? 'w-full' : 'lg:col-span-7'} bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 shadow-sm space-y-4`}>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
             <div>
               <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -1112,23 +1123,27 @@ export function FoodRegistrationView() {
                 <span>Danh Sách Đăng Ký Thực Phẩm</span>
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Theo dõi tiến trình phê duyệt, xem mã QR và kiểm soát ra vào
+                {isGuard
+                  ? 'Danh sách người lao động đăng ký mang thực phẩm - Bảo vệ kiểm soát và quét QR tại cổng'
+                  : 'Theo dõi tiến trình phê duyệt, xem mã QR và kiểm soát ra vào'}
               </p>
             </div>
 
             {/* Scope Tabs */}
             <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl text-xs font-semibold">
-              <button
-                type="button"
-                onClick={() => setActiveTab('my')}
-                className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-                  activeTab === 'my'
-                    ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-xs font-bold'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
-                }`}
-              >
-                Của tôi ({metrics.myCount})
-              </button>
+              {!isGuard && (
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('my')}
+                  className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
+                    activeTab === 'my'
+                      ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-xs font-bold'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                  }`}
+                >
+                  Của tôi ({metrics.myCount})
+                </button>
+              )}
 
               {(isManager || isHR || isAdmin) && (
                 <button
@@ -1159,7 +1174,7 @@ export function FoodRegistrationView() {
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
                   }`}
                 >
-                  Toàn bộ ({metrics.total})
+                  {isGuard ? 'Danh sách người lao động' : 'Toàn bộ'} ({metrics.total})
                 </button>
               )}
             </div>
