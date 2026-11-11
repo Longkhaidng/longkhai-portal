@@ -1,0 +1,33 @@
+{
+  "id": "OT-20261111-2278",
+  "registrationDate": "2026-11-11",
+  "createdDate": "2026-11-11T01:19:42.278Z",
+  "createdById": "2265",
+  "createdByName": "Trần Lê Hữu Lực",
+  "createdRole": "admin",
+  "department": "Bộ Phận CNTT",
+  "items": [
+    {
+      "id": "OT-ITEM-1794359963756-8mo87",
+      "employeeId": "1139",
+      "employeeName": "Võ Thị Tuyết",
+      "position": "Chuyên viên hành chính nhân sự",
+      "team": "Phòng HCNS",
+      "department": "Phòng HCNS",
+      "shift": "Ca HC (08:00 - 16:30)",
+      "dayType": "ngay_thuong",
+      "overtimeType": "sau_ca",
+      "compensationType": "tinh_luong",
+      "reasonType": "ke_hoach_sx",
+      "hours": 1.5,
+      "fromTime": "16:30",
+      "toTime": "18:00",
+      "mealOption": "Không áp dụng (< 2h)",
+      "employeeConfirmStatus": "pending",
+      "approvalStatus": "pending"
+    }
+  ],
+  "status": "pending",
+  "createdAt": "2026-11-11T01:19:42.278Z",
+  "updatedAt": "2026-11-11T01:19:42.278Z"
+}
