@@ -235,18 +235,18 @@ export function Sidebar({
       {isOpen && (
         <div
           onClick={onClose}
-          className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-40 md:hidden transition-opacity"
+          className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-40 lg:hidden mobile-landscape-backdrop transition-opacity"
         />
       )}
 
-      {/* Responsive Sidebar (Static on desktop, drawer on mobile) */}
+      {/* Responsive Sidebar (Static on desktop, drawer on mobile & landscape mobile) */}
       <aside
-        className={`fixed md:static inset-y-0 left-0 z-50 w-72 md:w-64 lg:w-68 bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800 shrink-0 h-screen md:h-auto md:min-h-screen transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full md:translate-x-0'
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-72 lg:w-64 xl:w-68 bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800 shrink-0 h-screen lg:h-auto lg:min-h-screen transition-transform duration-300 ease-in-out mobile-landscape-sidebar ${
+          isOpen ? 'translate-x-0 shadow-2xl sidebar-open' : '-translate-x-full lg:translate-x-0'
         }`}
       >
         {/* Logo & Brand & Mobile Close Button */}
-        <div className="h-16 px-4 md:px-5 flex items-center justify-between border-b border-slate-800">
+        <div className="h-16 px-4 lg:px-5 flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-white/10 p-1 flex items-center justify-center shadow-md border border-white/10 shrink-0">
               <img
@@ -268,7 +268,7 @@ export function Sidebar({
           {/* Close button on mobile drawer */}
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 md:hidden cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 lg:hidden mobile-landscape-close-btn cursor-pointer"
             title="Đóng menu"
           >
             <X className="w-5 h-5" />

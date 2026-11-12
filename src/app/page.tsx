@@ -59,6 +59,23 @@ function PortalAppContent() {
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
+
+  // Close mobile sidebar drawer upon device orientation change (e.g. rotating horizontal)
+  React.useEffect(() => {
+    const handleOrientationChange = () => {
+      setIsMobileMenuOpen(false);
+    };
+    window.addEventListener('orientationchange', handleOrientationChange);
+    if (typeof window !== 'undefined' && window.screen?.orientation) {
+      window.screen.orientation.addEventListener('change', handleOrientationChange);
+    }
+    return () => {
+      window.removeEventListener('orientationchange', handleOrientationChange);
+      if (typeof window !== 'undefined' && window.screen?.orientation) {
+        window.screen.orientation.removeEventListener('change', handleOrientationChange);
+      }
+    };
+  }, []);
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
