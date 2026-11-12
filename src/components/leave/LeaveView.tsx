@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
-import { LeaveRequest, LeaveType, LEAVE_TYPE_LABELS, ApprovalStep } from '@/types/leave';
+import { LeaveRequest, LeaveType, LEAVE_TYPE_LABELS, LEAVE_SHIFTS, ApprovalStep } from '@/types/leave';
 import {
   CalendarDays,
   Plus,
@@ -19,10 +19,35 @@ import {
   AlertCircle,
   MinusCircle,
 } from 'lucide-react';
-import { formatDate, generateDocId } from '@/lib/utils';
+import { formatDate, generateDocId, calculateLeaveDays, capitalizeFirstLetter, capitalizeWords } from '@/lib/utils';
 import { dispatchApprovalEmail } from '@/lib/email';
 import { ToastContainer, useToast } from '@/components/common/Toast';
 import { filterUserLeaves, isApproverRole, isSuperAdminOrBOD, isSameDepartment, isEconomicStaff, isAssignedEconomicStaff, DocumentScope } from '@/lib/permissions';
+
+const SHIFT_DEFAULT_TIMES: Record<string, { from: string; to: string }> = {
+  'Ca HC (08:00 - 16:30)': { from: '08:00', to: '16:30' },
+  'Ca 1 (06:00 - 14:00)': { from: '06:00', to: '14:00' },
+  'Ca 2 (14:00 - 22:00)': { from: '14:00', to: '22:00' },
+  'Ca 3 (22:00 - 06:00)': { from: '22:00', to: '06:00' },
+  'Ca HC_V (07:00 - 15:30)': { from: '07:00', to: '15:30' },
+  'Ca HC_KT (07:30 - 16:00)': { from: '07:30', to: '16:00' },
+  'Ca khác': { from: '08:00', to: '16:30' },
+};
+
+function getTimePeriodBadge(timeStr: string) {
+  if (!timeStr) return null;
+  const hour = parseInt(timeStr.split(':')[0], 10);
+  const isMorning = !isNaN(hour) && hour < 12;
+  return isMorning ? (
+    <span className="ml-1.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+      SA (Sáng)
+    </span>
+  ) : (
+    <span className="ml-1.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300">
+      CH (Chiều)
+    </span>
+  );
+}
 
 export function LeaveView() {
   const { currentUser } = useAuth();
@@ -109,23 +134,45 @@ export function LeaveView() {
   }, [leaves]);
 
   // Form states for new Leave Request
+  const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
   const [leaveType, setLeaveType] = useState<LeaveType>('phep_nam');
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
+  const [shift, setShift] = useState<string>(LEAVE_SHIFTS[0]);
+  const [fromDate, setFromDate] = useState(todayStr);
+  const [toDate, setToDate] = useState(todayStr);
+  const [fromTime, setFromTime] = useState('08:00');
+  const [toTime, setToTime] = useState('16:30');
   const [reason, setReason] = useState('');
   const [handoverPerson, setHandoverPerson] = useState('');
   const [emergencyContact, setEmergencyContact] = useState('');
+  const [cutMeal, setCutMeal] = useState(true);
+
+  const handleShiftChange = (newShift: string) => {
+    setShift(newShift);
+    const defaults = SHIFT_DEFAULT_TIMES[newShift];
+    if (defaults) {
+      setFromTime(defaults.from);
+      setToTime(defaults.to);
+    }
+  };
 
   // Auto calculate days
   const calculatedDays = useMemo(() => {
-    if (!fromDate || !toDate) return 1;
-    const start = new Date(fromDate);
-    const end = new Date(toDate);
-    const diffTime = end.getTime() - start.getTime();
-    if (diffTime < 0) return 0;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-    return diffDays;
-  }, [fromDate, toDate]);
+    return calculateLeaveDays(fromDate, toDate, fromTime, toTime);
+  }, [fromDate, toDate, fromTime, toTime]);
+
+  const openCreateModal = () => {
+    const today = new Date().toISOString().split('T')[0];
+    setFromDate(today);
+    setToDate(today);
+    setShift(LEAVE_SHIFTS[0]);
+    setFromTime('08:00');
+    setToTime('16:30');
+    setReason('');
+    setHandoverPerson('');
+    setEmergencyContact('');
+    setCutMeal(true);
+    setShowCreateModal(true);
+  };
 
   // Handle Create Request
   const handleCreateLeave = (e: React.FormEvent) => {
@@ -135,14 +182,13 @@ export function LeaveView() {
     if (calculatedDays <= 0) {
       showToast({
         type: 'warning',
-        title: 'Ngày nghỉ không hợp lệ',
-        message: 'Ngày bắt đầu không được lớn hơn ngày kết thúc!',
+        title: 'Thời gian nghỉ không hợp lệ',
+        message: 'Thời gian bắt đầu không được lớn hơn hoặc bằng thời gian kết thúc!',
       });
       return;
     }
 
     const docId = generateDocId('LR', leaves);
-    const allUsers = storage.getUsers();
     const freshUser = allUsers.find((u) => u.id.toLowerCase() === currentUser.id.toLowerCase()) || currentUser;
 
     // Check if employee has a Team Leader (Tổ trưởng)
@@ -180,12 +226,14 @@ export function LeaveView() {
     });
 
     // Check if employee has assigned Economic Staff (Nhân viên kinh tế / Phụ trách cắt cơm)
+    // Quy tắc: Mục cắt cơm sẽ hiển thị nếu người lao động xin nghỉ từ 1 ngày trở lên và luồng phê duyệt sẽ giữ nguyên như cũ.
+    // Nếu người lao động xin nghỉ phép nửa ngày thì mục cắt cơm sẽ không hiển thị và luồng phê duyệt sẽ vẫn như cũ nhưng bỏ qua bước gởi đến nhân viên kinh tế.
     const economicStaffId = freshUser.economicStaffId || currentUser.economicStaffId;
     const economicUser = economicStaffId
       ? allUsers.find((u) => u.id.toLowerCase() === economicStaffId.toLowerCase())
       : null;
 
-    if (economicStaffId) {
+    if (calculatedDays >= 1 && cutMeal && economicStaffId) {
       steps.push({
         stepName: 'Nhân viên kinh tế xác nhận cắt cơm',
         roleRequired: 'economic',
@@ -201,12 +249,16 @@ export function LeaveView() {
       employeeName: currentUser.name,
       department: currentUser.department,
       leaveType,
+      shift,
       fromDate,
       toDate,
+      fromTime,
+      toTime,
       totalDays: calculatedDays,
-      reason,
-      handoverPerson: handoverPerson || undefined,
+      reason: capitalizeFirstLetter(reason.trim()),
+      handoverPerson: handoverPerson ? capitalizeWords(handoverPerson.trim()) : undefined,
       emergencyContact: emergencyContact || currentUser.phone || undefined,
+      cutMeal: calculatedDays >= 1 ? cutMeal : false,
       status: 'pending',
       currentStepIndex: 0,
       steps,
@@ -235,11 +287,13 @@ export function LeaveView() {
           title: 'Chi tiết Đơn Xin Nghỉ Phép',
           items: [
             { label: 'Loại nghỉ phép', value: LEAVE_TYPE_LABELS[leaveType] || leaveType },
+            { label: 'Ca làm việc', value: shift },
             {
               label: 'Thời gian nghỉ',
-              value: `${formatDate(fromDate)} đến ${formatDate(toDate)} (${calculatedDays} ngày)`,
+              value: `${formatDate(fromDate)} đến ${formatDate(toDate)} (${fromTime} - ${toTime}, ${calculatedDays} ngày)`,
             },
-            { label: 'Lý do xin nghỉ', value: reason },
+            { label: 'Cắt cơm', value: calculatedDays >= 1 && cutMeal ? 'Có' : 'Không' },
+            { label: 'Lý do xin nghỉ', value: capitalizeFirstLetter(reason.trim()) },
             { label: 'Người bàn giao công việc', value: handoverPerson || 'Không có' },
             { label: 'SĐT liên hệ khẩn cấp', value: emergencyContact || currentUser.phone || 'Không có' },
           ],
@@ -278,8 +332,16 @@ export function LeaveView() {
     }
 
     // Reset fields
+    const today = new Date().toISOString().split('T')[0];
+    setFromDate(today);
+    setToDate(today);
+    setShift(LEAVE_SHIFTS[0]);
+    setFromTime('08:00');
+    setToTime('16:30');
     setReason('');
     setHandoverPerson('');
+    setEmergencyContact('');
+    setCutMeal(true);
   };
 
   // Check if current user can approve the current step of this leave request
@@ -547,7 +609,7 @@ export function LeaveView() {
         </div>
 
         <button
-          onClick={() => setShowCreateModal(true)}
+          onClick={openCreateModal}
           className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-md flex items-center gap-2 self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
@@ -902,100 +964,174 @@ export function LeaveView() {
             </div>
 
             <form onSubmit={handleCreateLeave} className="space-y-3.5 text-xs">
-              <div>
-                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Loại nghỉ phép:
-                </label>
-                <select
-                  value={leaveType}
-                  onChange={(e) => setLeaveType(e.target.value as LeaveType)}
-                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                >
-                  {Object.entries(LEAVE_TYPE_LABELS).map(([k, v]) => (
-                    <option key={k} value={k}>
-                      {v}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
+              {/* Row: Loại nghỉ phép & Ca làm việc */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Từ ngày:
+                    Loại nghỉ phép:
                   </label>
-                  <input
-                    type="date"
-                    required
-                    value={fromDate}
-                    onChange={(e) => setFromDate(e.target.value)}
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
+                  <select
+                    value={leaveType}
+                    onChange={(e) => setLeaveType(e.target.value as LeaveType)}
+                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                  >
+                    {Object.entries(LEAVE_TYPE_LABELS).map(([k, v]) => (
+                      <option key={k} value={k}>
+                        {v}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Đến ngày:
+                    Ca làm việc:
                   </label>
-                  <input
-                    type="date"
-                    required
-                    value={toDate}
-                    onChange={(e) => setToDate(e.target.value)}
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
+                  <select
+                    value={shift}
+                    onChange={(e) => handleShiftChange(e.target.value)}
+                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                  >
+                    {LEAVE_SHIFTS.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
-              <div className="p-3 bg-blue-50 dark:bg-blue-950/40 rounded-xl border border-blue-100 dark:border-blue-900/40 flex items-center justify-between">
-                <span className="font-semibold text-blue-900 dark:text-blue-300">
-                  Tổng số ngày nghỉ tính toán:
-                </span>
-                <span className="text-sm font-extrabold text-blue-700 dark:text-blue-300">
-                  {calculatedDays > 0 ? `${calculatedDays} ngày` : 'Ngày không hợp lệ'}
-                </span>
+              {/* Section: Thời gian nghỉ phép */}
+              <div className="pt-1">
+                <div className="flex items-center gap-1.5 font-bold text-blue-600 dark:text-blue-400 mb-2.5">
+                  <CalendarDays className="w-4 h-4" />
+                  <span>Thời gian nghỉ phép</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Row 1: Ngày bắt đầu nghỉ & Giờ bắt đầu nghỉ */}
+                  <div>
+                    <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      Ngày bắt đầu nghỉ <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      required
+                      value={fromDate}
+                      onChange={(e) => setFromDate(e.target.value)}
+                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      <span>Giờ bắt đầu nghỉ<span className="text-red-500">*</span></span>
+                      {getTimePeriodBadge(fromTime)}
+                    </label>
+                    <input
+                      type="time"
+                      required
+                      value={fromTime}
+                      onChange={(e) => setFromTime(e.target.value)}
+                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                    />
+                  </div>
+
+                  {/* Row 2: Ngày kết thúc nghỉ & Giờ kết thúc nghỉ */}
+                  <div>
+                    <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      Ngày kết thúc nghỉ <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      required
+                      value={toDate}
+                      onChange={(e) => setToDate(e.target.value)}
+                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      <span>Giờ kết thúc nghỉ<span className="text-red-500">*</span></span>
+                      {getTimePeriodBadge(toTime)}
+                    </label>
+                    <input
+                      type="time"
+                      required
+                      value={toTime}
+                      onChange={(e) => setToTime(e.target.value)}
+                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                    />
+                  </div>
+
+                  {/* Row 3: Tổng số ngày nghỉ & Người nhận bàn giao công việc */}
+                  <div>
+                    <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      Tổng số ngày nghỉ
+                    </label>
+                    <input
+                      type="text"
+                      readOnly
+                      disabled
+                      value={calculatedDays > 0 ? calculatedDays : 'Thời gian không hợp lệ'}
+                      className="w-full p-2.5 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-blue-600 dark:text-blue-400 cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      Người nhận bàn giao công việc
+                    </label>
+                    <input
+                      type="text"
+                      value={handoverPerson}
+                      onChange={(e) => setHandoverPerson(capitalizeWords(e.target.value))}
+                      placeholder="Nhập họ tên người nhận bàn giao..."
+                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                    />
+                  </div>
+                </div>
               </div>
 
+              {/* Row 4: Lý do nghỉ phép chi tiết * */}
               <div>
                 <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Lý do xin nghỉ phép:
+                  Lý do nghỉ phép chi tiết <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   rows={2}
                   required
                   value={reason}
-                  onChange={(e) => setReason(e.target.value)}
+                  onChange={(e) => setReason(capitalizeFirstLetter(e.target.value))}
                   placeholder="Ghi rõ lý do xin nghỉ..."
                   className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Người bàn giao công việc:
+              {/* Row 5: Cắt cơm (chỉ hiển thị nếu nghỉ >= 1 ngày) */}
+              {calculatedDays >= 1 && (
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <input
+                      type="checkbox"
+                      checked={cutMeal}
+                      onChange={(e) => setCutMeal(e.target.checked)}
+                      className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-slate-300 cursor-pointer"
+                    />
+                    <span className="font-semibold text-xs text-slate-800 dark:text-slate-200">
+                      Cắt cơm (không dùng cơm công ty trong thời gian nghỉ)
+                    </span>
                   </label>
-                  <input
-                    type="text"
-                    value={handoverPerson}
-                    onChange={(e) => setHandoverPerson(e.target.value)}
-                    placeholder="Họ tên người thay thế..."
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
+                  <div className="flex items-start gap-1.5 text-[11px] text-red-500 font-medium px-1">
+                    <AlertCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+                    <span>Những ai gửi đơn xin phép sau 15 giờ chiều phải tự liên hệ nhân viên kế hoạch để báo cắt cơm.</span>
+                  </div>
                 </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Số điện thoại liên lạc:
-                  </label>
-                  <input
-                    type="text"
-                    value={emergencyContact}
-                    onChange={(e) => setEmergencyContact(e.target.value)}
-                    placeholder="SĐT khẩn cấp khi nghỉ..."
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                  />
-                </div>
+              )}
+
+              {/* Row 6: Đề nghị text */}
+              <div className="italic text-xs text-slate-500 dark:text-slate-400 pt-0.5">
+                Kính đề nghị ban lãnh đạo công ty giải quyết cho tôi được nghỉ theo thời gian nêu trên.
               </div>
 
+              {/* Luồng phê duyệt tự động */}
               <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-[11px] text-slate-600 dark:text-slate-400 space-y-1">
                 <div className="font-bold text-slate-800 dark:text-slate-200">
                   Luồng phê duyệt tự động của đơn này:
@@ -1003,11 +1139,11 @@ export function LeaveView() {
                 <div>
                   {currentUser?.teamLeaderId ? (
                     <span>
-                      1. Tổ trưởng (Mã: <b>{currentUser.teamLeaderId}</b>) &rarr; 2. Trưởng bộ phận {currentUser?.economicStaffId ? `→ 3. Nhân viên kinh tế (${currentUser.economicStaffId}) cắt cơm` : ''} &rarr; Hoàn thành.
+                      1. Tổ trưởng (Mã: <b>{currentUser.teamLeaderId}</b>) &rarr; 2. Trưởng bộ phận {calculatedDays >= 1 && cutMeal && currentUser?.economicStaffId ? `→ 3. Nhân viên kinh tế (${currentUser.economicStaffId}) cắt cơm` : ''} &rarr; Hoàn thành.
                     </span>
                   ) : (
                     <span>
-                      1. Trưởng bộ phận {currentUser?.economicStaffId ? `→ 2. Nhân viên kinh tế (${currentUser.economicStaffId}) cắt cơm` : ''} &rarr; Hoàn thành.
+                      1. Trưởng bộ phận {calculatedDays >= 1 && cutMeal && currentUser?.economicStaffId ? `→ 2. Nhân viên kinh tế (${currentUser.economicStaffId}) cắt cơm` : ''} &rarr; Hoàn thành.
                     </span>
                   )}
                 </div>
@@ -1078,15 +1214,30 @@ export function LeaveView() {
                 </span>
               </div>
               <div>
+                <span className="text-slate-400 block text-[11px]">Ca làm việc:</span>
+                <span className="font-bold text-slate-800 dark:text-white">
+                  {selectedLeave.shift || 'Ca HC (08:00 - 16:30)'}
+                </span>
+              </div>
+              <div>
                 <span className="text-slate-400 block text-[11px]">Thời gian nghỉ:</span>
                 <span className="font-bold text-slate-800 dark:text-white">
-                  {selectedLeave.totalDays} ngày (Từ {formatDate(selectedLeave.fromDate)} đến {formatDate(selectedLeave.toDate)})
+                  {selectedLeave.totalDays} ngày {selectedLeave.fromTime && selectedLeave.toTime ? `(${selectedLeave.fromTime} - ${selectedLeave.toTime})` : ''}
+                </span>
+                <span className="text-slate-500 dark:text-slate-400 text-[11px] block">
+                  Từ {formatDate(selectedLeave.fromDate)} đến {formatDate(selectedLeave.toDate)}
                 </span>
               </div>
               <div>
                 <span className="text-slate-400 block text-[11px]">Người nhận bàn giao:</span>
                 <span className="font-bold text-slate-800 dark:text-white">
                   {selectedLeave.handoverPerson || 'Không có'}
+                </span>
+              </div>
+              <div>
+                <span className="text-slate-400 block text-[11px]">Cắt cơm công ty:</span>
+                <span className={`font-bold ${selectedLeave.cutMeal ? 'text-amber-600 dark:text-amber-400' : 'text-slate-600 dark:text-slate-400'}`}>
+                  {selectedLeave.cutMeal ? 'Có (Cắt cơm)' : 'Không cắt cơm'}
                 </span>
               </div>
               <div className="col-span-2">

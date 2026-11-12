@@ -130,6 +130,51 @@ export function sortNewestFirst<T extends { id: string; createdAt?: string; date
 }
 
 /**
+ * Tự động tính số ngày nghỉ phép dựa vào ngày và giờ xin nghỉ
+ */
+export function calculateLeaveDays(
+  fromDate: string,
+  toDate: string,
+  fromTime?: string,
+  toTime?: string
+): number {
+  if (!fromDate || !toDate) return 1;
+
+  const start = new Date(fromDate);
+  const end = new Date(toDate);
+  const diffTime = end.getTime() - start.getTime();
+  if (diffTime < 0) return 0;
+
+  const calendarDays = Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+  const parseHour = (t?: string, defaultH = 8) => {
+    if (!t) return defaultH;
+    const parts = t.split(':');
+    return parseInt(parts[0], 10) + (parseInt(parts[1] || '0', 10) / 60);
+  };
+
+  const startH = parseHour(fromTime, 8);
+  const endH = parseHour(toTime, 16.5);
+
+  if (calendarDays === 1) {
+    const durationHours = endH - startH;
+    if (durationHours <= 0) return 0;
+    if (durationHours <= 5) return 0.5;
+    return 1;
+  }
+
+  let total = calendarDays;
+  if (startH >= 11.5) {
+    total -= 0.5;
+  }
+  if (endH <= 13) {
+    total -= 0.5;
+  }
+
+  return Math.max(0.5, total);
+}
+
+/**
  * Tính ngày kết thúc = Ngày bắt đầu + Số ngày (YYYY-MM-DD)
  */
 export function calculateEndDate(startDateStr: string, days: number): string {
