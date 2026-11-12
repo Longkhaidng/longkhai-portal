@@ -27,9 +27,10 @@
       "employeeConfirmHours": 2,
       "employeeConfirmStatus": "confirmed",
       "employeeConfirmedAt": "2026-11-12T04:20:16.768Z",
-      "approvalStatus": "approved",
+      "approvalStatus": "rejected",
       "approvedByName": "Trần Lê Hữu Lực",
-      "approvedAt": "2026-11-12T04:20:16.768Z"
+      "approvedAt": "2026-11-12T04:28:08.353Z",
+      "approvedBy": "2265"
     },
     {
       "id": "OT-ITEM-1794457216768-ahx23",
@@ -201,7 +202,7 @@
       "approvedAt": "2026-11-12T04:20:16.768Z"
     }
   ],
-  "status": "approved",
+  "status": "rejected",
   "createdAt": "2026-11-12T04:20:46.584Z",
-  "updatedAt": "2026-11-12T04:22:43.332Z"
+  "updatedAt": "2026-11-12T04:28:08.353Z"
 }
