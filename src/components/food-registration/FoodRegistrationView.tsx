@@ -1330,7 +1330,7 @@ export function FoodRegistrationView() {
                                 type="button"
                                 onClick={() => setApprovingItem({ item, level: 'hr' })}
                                 className="px-2.5 py-1 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1 shadow-xs cursor-pointer"
-                                title="Trưởng phòng HCNS duyệt cấp mã QR"
+                                title="Trưởng phòng HCNS duyệt"
                               >
                                 <ShieldCheck className="w-3.5 h-3.5" />
                                 <span>HCNS duyệt</span>
@@ -1501,7 +1501,7 @@ export function FoodRegistrationView() {
                 <span>
                   {approvingItem.level === 'dept'
                     ? 'Xác nhận duyệt (Chuyển HCNS)'
-                    : 'Duyệt hoàn tất & Cấp mã QR'}
+                    : 'Duyệt hoàn tất'}
                 </span>
               </button>
               <button
