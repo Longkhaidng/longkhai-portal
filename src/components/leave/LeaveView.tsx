@@ -1023,8 +1023,8 @@ export function LeaveView() {
                   </div>
                   <div className="min-w-0">
                     <label className="flex items-center justify-between sm:justify-start gap-1 flex-wrap text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      <span className="truncate">Giờ bắt đầu nghỉ<span className="text-red-500">*</span></span>
-                      {getTimePeriodBadge(fromTime)}
+                      <span className="truncate">Giờ bắt đầu nghỉ<span className="text-red-500">*{getTimePeriodBadge(fromTime)}</span></span>
+                      
                     </label>
                     <input
                       type="time"
@@ -1050,8 +1050,8 @@ export function LeaveView() {
                   </div>
                   <div className="min-w-0">
                     <label className="flex items-center justify-between sm:justify-start gap-1 flex-wrap text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      <span className="truncate">Giờ kết thúc nghỉ<span className="text-red-500">*</span></span>
-                      {getTimePeriodBadge(toTime)}
+                      <span className="truncate">Giờ kết thúc nghỉ<span className="text-red-500">*{getTimePeriodBadge(toTime)}</span></span>
+                      
                     </label>
                     <input
                       type="time"
