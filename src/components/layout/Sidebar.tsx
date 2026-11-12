@@ -72,6 +72,7 @@ interface SidebarProps {
     repair?: number;
     proposals?: number;
     foodRegistration?: number;
+    camera?: number;
   };
   onSelectIntegratedWeb?: (site: WebIntegration) => void;
 }
@@ -155,6 +156,14 @@ export function Sidebar({
       icon: UtensilsCrossed,
       badgeCount: pendingCounts.foodRegistration,
       badgeColor: 'bg-emerald-500 text-white',
+    },
+    {
+      id: 'camera',
+      permission: 'camera',
+      label: 'Đăng ký xem Camera',
+      icon: Camera,
+      badgeCount: pendingCounts.camera,
+      badgeColor: 'bg-indigo-600 text-white',
     },
     {
       id: 'proposals',

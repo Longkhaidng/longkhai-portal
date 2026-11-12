@@ -38,6 +38,7 @@ import {
 import { OvertimeRegistration, OvertimeMealMenu, OvertimeItem, OvertimeApprovalStatus, OvertimeConfirmStatus } from '@/types/overtime';
 import { INITIAL_OVERTIME_MENUS, INITIAL_OVERTIME_REGISTRATIONS } from './overtime-data';
 import { FoodRegistration, INITIAL_FOOD_REGISTRATIONS, compareFoodRegistrationsNewestFirst } from '@/types/food-registration';
+import { CameraItem, CameraRequest, DEFAULT_CAMERAS, INITIAL_CAMERA_REQUESTS } from '@/types/camera';
 import { GitHubService } from './github-api';
 import { formatDocId, sortNewestFirst } from './utils';
 
@@ -69,6 +70,8 @@ const STORAGE_KEYS = {
   OVERTIME_REGISTRATIONS: 'lk_portal_overtime_registrations',
   OVERTIME_MEAL_MENUS: 'lk_portal_overtime_meal_menus',
   FOOD_REGISTRATIONS: 'lk_portal_food_registrations',
+  CAMERAS: 'lk_portal_cameras',
+  CAMERA_REQUESTS: 'lk_portal_camera_requests',
   AUDIT_LOGS: 'lk_portal_audit_logs',
   CURRENT_USER_SESSION: 'lk_portal_current_user_session',
   LAST_BACKUP_DATE: 'lk_portal_last_backup_date',
@@ -1106,6 +1109,8 @@ class StorageService {
         foodRegistrations,
         overtimeRegistrations,
         overtimeMealMenus,
+        cameras,
+        cameraRequests,
       } = json.data;
 
       const mergeWithRecentLocal = <T extends { id: string; createdAt?: string; updatedAt?: string }>(
@@ -1188,6 +1193,20 @@ class StorageService {
       }
       if (Array.isArray(overtimeMealMenus) && overtimeMealMenus.length > 0) {
         localStorage.setItem(STORAGE_KEYS.OVERTIME_MEAL_MENUS, JSON.stringify(overtimeMealMenus));
+      }
+      if (Array.isArray(cameras) && cameras.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.CAMERAS, JSON.stringify(cameras));
+        try {
+          window.dispatchEvent(new Event('cameras_updated'));
+        } catch {}
+      }
+      if (Array.isArray(cameraRequests)) {
+        const local = this.getCameraRequests();
+        const merged = mergeWithRecentLocal(cameraRequests, local);
+        localStorage.setItem(STORAGE_KEYS.CAMERA_REQUESTS, JSON.stringify(merged));
+        try {
+          window.dispatchEvent(new Event('camera_requests_updated'));
+        } catch {}
       }
       if (Array.isArray(stationeryItems) && stationeryItems.length > 0) {
         localStorage.setItem(STORAGE_KEYS.STATIONERY_ITEMS, JSON.stringify(stationeryItems));
@@ -1315,6 +1334,8 @@ class StorageService {
     const emailConfig = this.getEmailConfig();
     const githubConfig = this.getGitHubConfig();
     const foodRegistrations = this.getFoodRegistrations();
+    const cameras = this.getCameras();
+    const cameraRequests = this.getCameraRequests();
 
     this.setLastBackupDate();
 
@@ -1335,6 +1356,8 @@ class StorageService {
         dynamicForms: dynamicForms.length,
         formSubmissions: formSubmissions.length,
         foodRegistrations: foodRegistrations.length,
+        cameras: cameras.length,
+        cameraRequests: cameraRequests.length,
       },
       data: {
         leaveRequests,
@@ -1351,10 +1374,9 @@ class StorageService {
         plugins,
         emailConfig,
         githubConfig,
-      foodRegistrations,
-
-
-  
+        foodRegistrations,
+        cameras,
+        cameraRequests,
       },
     };
   }
@@ -1384,7 +1406,8 @@ class StorageService {
       emailConfig,
       githubConfig,
       foodRegistrations,
-
+      cameras,
+      cameraRequests,
     } = backup.data;
 
     let restoredCount = 0;
@@ -1420,6 +1443,17 @@ class StorageService {
     }
     if (Array.isArray(webIntegrations)) {
       localStorage.setItem(STORAGE_KEYS.WEB_INTEGRATIONS, JSON.stringify(webIntegrations));
+    }
+    if (Array.isArray(foodRegistrations)) {
+      localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(foodRegistrations));
+      restoredCount += foodRegistrations.length;
+    }
+    if (Array.isArray(cameras)) {
+      localStorage.setItem(STORAGE_KEYS.CAMERAS, JSON.stringify(cameras));
+    }
+    if (Array.isArray(cameraRequests)) {
+      localStorage.setItem(STORAGE_KEYS.CAMERA_REQUESTS, JSON.stringify(cameraRequests));
+      restoredCount += cameraRequests.length;
     }
     if (Array.isArray(announcements)) {
       localStorage.setItem(STORAGE_KEYS.ANNOUNCEMENTS, JSON.stringify(announcements));
@@ -2448,6 +2482,340 @@ class StorageService {
     item.updatedAt = new Date().toISOString();
 
     this.saveFoodRegistration(item, byUser);
+  }
+
+  // --- CAMERA MASTER DATA ---
+  getCameras(): CameraItem[] {
+    if (!this.isClient()) return DEFAULT_CAMERAS;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.CAMERAS);
+      if (data !== null) {
+        const parsed: CameraItem[] = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {}
+    try {
+      localStorage.setItem(STORAGE_KEYS.CAMERAS, JSON.stringify(DEFAULT_CAMERAS));
+    } catch {}
+    return DEFAULT_CAMERAS;
+  }
+
+  saveCamera(item: CameraItem, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getCameras();
+    const existingIdx = list.findIndex((c) => c.id === item.id || c.code === item.code);
+    const isNew = existingIdx < 0;
+
+    if (isNew) {
+      list.push(item);
+    } else {
+      list[existingIdx] = {
+        ...list[existingIdx],
+        ...item,
+        updatedAt: new Date().toISOString(),
+      };
+    }
+    localStorage.setItem(STORAGE_KEYS.CAMERAS, JSON.stringify(list));
+
+    this.addAuditLog(
+      isNew ? 'create' : 'update',
+      'settings',
+      item.id,
+      byUser?.id || 'admin',
+      byUser?.name || 'Admin',
+      `${isNew ? 'Thêm mới camera' : 'Cập nhật thông tin camera'} ${item.code} (${item.name})`
+    );
+
+    this.syncFileToGitHub('settings/cameras.json', JSON.stringify(list, null, 2), `Update cameras list (${list.length} items)`);
+
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'cameras',
+        data: list,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
+
+    try {
+      window.dispatchEvent(new Event('cameras_updated'));
+    } catch {}
+  }
+
+  saveCameras(items: CameraItem[], byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    localStorage.setItem(STORAGE_KEYS.CAMERAS, JSON.stringify(items));
+
+    this.addAuditLog(
+      'update',
+      'settings',
+      'bulk',
+      byUser?.id || 'admin',
+      byUser?.name || 'Admin',
+      `Cập nhật danh sách camera (${items.length} thiết bị)`
+    );
+
+    this.syncFileToGitHub('settings/cameras.json', JSON.stringify(items, null, 2), `Update cameras master list (${items.length} items)`);
+
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'cameras',
+        data: items,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
+
+    try {
+      window.dispatchEvent(new Event('cameras_updated'));
+    } catch {}
+  }
+
+  deleteCamera(id: string, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getCameras().filter((c) => c.id !== id && c.code !== id);
+    localStorage.setItem(STORAGE_KEYS.CAMERAS, JSON.stringify(list));
+
+    this.addAuditLog(
+      'delete',
+      'settings',
+      id,
+      byUser?.id || 'admin',
+      byUser?.name || 'Admin',
+      `Xóa camera ${id} khỏi hệ thống`
+    );
+
+    this.syncFileToGitHub('settings/cameras.json', JSON.stringify(list, null, 2), `Delete camera ${id}`);
+
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'cameras',
+        data: list,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
+
+    try {
+      window.dispatchEvent(new Event('cameras_updated'));
+    } catch {}
+  }
+
+  // --- CAMERA REQUESTS (ĐĂNG KÝ XEM CAMERA) ---
+  getCameraRequests(): CameraRequest[] {
+    if (!this.isClient()) return INITIAL_CAMERA_REQUESTS;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.CAMERA_REQUESTS);
+      if (data !== null) {
+        const parsed: CameraRequest[] = JSON.parse(data);
+        if (Array.isArray(parsed)) {
+          return sortNewestFirst(parsed);
+        }
+      }
+    } catch {}
+    try {
+      localStorage.setItem(STORAGE_KEYS.CAMERA_REQUESTS, JSON.stringify(INITIAL_CAMERA_REQUESTS));
+    } catch {}
+    return sortNewestFirst(INITIAL_CAMERA_REQUESTS);
+  }
+
+  saveCameraRequest(request: CameraRequest, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getCameraRequests();
+    const existingIndex = list.findIndex((r) => r.id === request.id);
+    const isNew = existingIndex < 0;
+
+    if (isNew) {
+      list.unshift(request);
+    } else {
+      list[existingIndex] = {
+        ...list[existingIndex],
+        ...request,
+        updatedAt: new Date().toISOString(),
+      };
+    }
+    localStorage.setItem(STORAGE_KEYS.CAMERA_REQUESTS, JSON.stringify(list));
+
+    this.addAuditLog(
+      isNew ? 'create' : 'update',
+      'camera' as any,
+      request.id,
+      byUser?.id || request.employeeId,
+      byUser?.name || request.employeeName,
+      `${isNew ? 'Tạo phiếu đăng ký xem camera' : 'Cập nhật phiếu xem camera'} - Mã ${request.id} (${request.employeeName})`
+    );
+
+    const year = new Date().getFullYear();
+    const filePath = `camera-request/${year}/${request.id}.json`;
+    this.syncFileToGitHub(filePath, JSON.stringify(request, null, 2), `Update camera request ${request.id}`);
+
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'camera_request',
+        data: request,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
+
+    try {
+      window.dispatchEvent(new Event('camera_requests_updated'));
+    } catch {}
+  }
+
+  approveCameraRequestIT(
+    requestId: string,
+    approver: { id: string; name: string },
+    comment?: string
+  ): CameraRequest | null {
+    if (!this.isClient()) return null;
+    const list = this.getCameraRequests();
+    const item = list.find((r) => r.id === requestId);
+    if (!item) return null;
+
+    const now = new Date().toISOString();
+    if (!item.steps || item.steps.length === 0) {
+      item.steps = [
+        {
+          stepIndex: 0,
+          stepName: 'Bộ phận IT kiểm tra & duyệt',
+          roleRequired: 'it',
+          status: 'approved',
+          approverId: approver.id,
+          approverName: approver.name,
+          comment: comment || 'Đã kiểm tra kỹ thuật',
+          actionAt: now,
+        },
+        {
+          stepIndex: 1,
+          stepName: 'Trưởng phòng HCNS phê duyệt',
+          roleRequired: 'hr',
+          status: 'pending',
+        },
+      ];
+    } else {
+      item.steps[0] = {
+        ...item.steps[0],
+        status: 'approved',
+        approverId: approver.id,
+        approverName: approver.name,
+        comment: comment || 'Đã kiểm tra kỹ thuật',
+        actionAt: now,
+      };
+    }
+
+    item.status = 'pending_hr';
+    item.currentStepIndex = 1;
+    item.updatedAt = now;
+
+    this.saveCameraRequest(item, approver);
+    return item;
+  }
+
+  approveCameraRequestHR(
+    requestId: string,
+    approver: { id: string; name: string },
+    comment?: string
+  ): CameraRequest | null {
+    if (!this.isClient()) return null;
+    const list = this.getCameraRequests();
+    const item = list.find((r) => r.id === requestId);
+    if (!item) return null;
+
+    const now = new Date().toISOString();
+    if (!item.steps || item.steps.length < 2) {
+      item.steps = [
+        item.steps?.[0] || {
+          stepIndex: 0,
+          stepName: 'Bộ phận IT kiểm tra & duyệt',
+          roleRequired: 'it',
+          status: 'approved',
+        },
+        {
+          stepIndex: 1,
+          stepName: 'Trưởng phòng HCNS phê duyệt',
+          roleRequired: 'hr',
+          status: 'approved',
+          approverId: approver.id,
+          approverName: approver.name,
+          comment: comment || 'Đã phê duyệt',
+          actionAt: now,
+        },
+      ];
+    } else {
+      item.steps[1] = {
+        ...item.steps[1],
+        status: 'approved',
+        approverId: approver.id,
+        approverName: approver.name,
+        comment: comment || 'Đã phê duyệt',
+        actionAt: now,
+      };
+    }
+
+    item.status = 'approved';
+    item.currentStepIndex = 2;
+    item.updatedAt = now;
+
+    this.saveCameraRequest(item, approver);
+    return item;
+  }
+
+  rejectCameraRequest(
+    requestId: string,
+    approver: { id: string; name: string; role: string },
+    reason?: string
+  ): CameraRequest | null {
+    if (!this.isClient()) return null;
+    const list = this.getCameraRequests();
+    const item = list.find((r) => r.id === requestId);
+    if (!item) return null;
+
+    const now = new Date().toISOString();
+    const stepIdx = item.currentStepIndex >= 1 ? 1 : 0;
+    item.status = 'rejected';
+    item.rejectionReason = reason || 'Không chấp thuận yêu cầu xem dữ liệu camera';
+    item.rejectedBy = approver;
+    item.updatedAt = now;
+
+    if (item.steps && item.steps[stepIdx]) {
+      item.steps[stepIdx] = {
+        ...item.steps[stepIdx],
+        status: 'rejected',
+        approverId: approver.id,
+        approverName: approver.name,
+        comment: reason,
+        actionAt: now,
+      };
+    }
+
+    this.saveCameraRequest(item, approver);
+    return item;
+  }
+
+  deleteCameraRequest(id: string, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const list = this.getCameraRequests().filter((r) => r.id !== id);
+    localStorage.setItem(STORAGE_KEYS.CAMERA_REQUESTS, JSON.stringify(list));
+
+    this.addAuditLog(
+      'delete',
+      'camera' as any,
+      id,
+      byUser?.id || 'user',
+      byUser?.name || 'User',
+      `Xóa phiếu xem camera ${id}`
+    );
+
+    try {
+      window.dispatchEvent(new Event('camera_requests_updated'));
+    } catch {}
   }
 
 }

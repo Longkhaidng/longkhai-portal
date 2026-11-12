@@ -6,6 +6,7 @@ import { AttendanceConfirm, ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { StationeryProposal, STATIONERY_STATUS_LABELS } from '@/types/proposal';
 import { PCCCDevice, PCCCInspection, PCCC_CATEGORIES, formatPCCCDate } from '@/types/pccc';
 import { FoodRegistration, FoodReportRow, flattenFoodRegistrationsToReportRows, compareFoodReportRowsNewestFirst, FOOD_CATEGORY_LABELS, FOOD_STATUS_LABELS } from '@/types/food-registration';
+import { CameraItem } from '@/types/camera';
 import { formatDate, formatDateTime } from '@/lib/utils';
 
 export interface ParsedEmployeeResult {
@@ -381,6 +382,120 @@ export function exportDataToExcel(data: any[], fileName: string, sheetName: stri
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
   XLSX.writeFile(workbook, `${fileName}.xlsx`);
+}
+
+export function generateCameraTemplateExcel() {
+  const headers = [
+    'STT',
+    'Mã camera',
+    'Tên camera',
+    'Khu vực',
+    'Ghi chú',
+    'Trạng thái',
+  ];
+
+  const sampleData = [
+    {
+      'STT': 1,
+      'Mã camera': 'CAM_KNL_01',
+      'Tên camera': 'Cam Cửa nhập A1',
+      'Khu vực': 'Kho nguyên liệu',
+      'Ghi chú': 'Khu vực cửa bốc dỡ hàng nguyên vật liệu A1',
+      'Trạng thái': 'Đang hoạt động',
+    },
+    {
+      'STT': 2,
+      'Mã camera': 'CAM_KNL_02',
+      'Tên camera': 'Cam Kệ hàng Pallet A',
+      'Khu vực': 'Kho nguyên liệu',
+      'Ghi chú': 'Dãy pallet hàng A1 - A12',
+      'Trạng thái': 'Đang hoạt động',
+    },
+    {
+      'STT': 3,
+      'Mã camera': 'CAM_KTP_01',
+      'Tên camera': 'Cam Cửa xuất hàng B1',
+      'Khu vực': 'Kho thành phẩm',
+      'Ghi chú': 'Cửa bốc dỡ xe container B1',
+      'Trạng thái': 'Đang hoạt động',
+    },
+    {
+      'STT': 4,
+      'Mã camera': 'CAM_SX_01',
+      'Tên camera': 'Cam Xưởng Ép - Line 1',
+      'Khu vực': 'Khu vực sản xuất',
+      'Ghi chú': 'Dây chuyền máy ép hạt số 1',
+      'Trạng thái': 'Đang hoạt động',
+    },
+    {
+      'STT': 5,
+      'Mã camera': 'CAM_AN_01',
+      'Tên camera': 'Cam Bãi giữ xe máy NV',
+      'Khu vực': 'Khu vực an ninh / Nhà xe',
+      'Ghi chú': 'Toàn cảnh bãi xe máy nhân viên',
+      'Trạng thái': 'Đang hoạt động',
+    },
+  ];
+
+  const worksheet = XLSX.utils.json_to_sheet(sampleData, { header: headers });
+  worksheet['!cols'] = [
+    { wch: 6 },
+    { wch: 18 },
+    { wch: 30 },
+    { wch: 25 },
+    { wch: 45 },
+    { wch: 18 },
+  ];
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Danh sách Camera');
+  XLSX.writeFile(workbook, 'LONGKHAI_Mau_Danh_Sach_Camera.xlsx');
+}
+
+export function parseCameraExcel(file: File): Promise<CameraItem[]> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet);
+
+        const now = new Date().toISOString();
+        const cameras: CameraItem[] = [];
+
+        jsonData.forEach((row, idx) => {
+          const code = (row['Mã camera'] || row['Mã Camera'] || row['Ma camera'] || row['code'] || `CAM_${idx + 1}`).toString().trim();
+          const name = (row['Tên camera'] || row['Tên Camera'] || row['Ten camera'] || row['name'] || '').toString().trim();
+          const zone = (row['Khu vực'] || row['Khu Vực'] || row['Khu vuc'] || row['zone'] || 'Khu vực chung').toString().trim();
+          const description = (row['Ghi chú'] || row['Ghi Chu'] || row['Ghi chu'] || row['description'] || '').toString().trim();
+          const statusRaw = (row['Trạng thái'] || row['status'] || 'Đang hoạt động').toString().toLowerCase();
+          const status = statusRaw.includes('tạm') || statusRaw.includes('ngừng') || statusRaw.includes('tắt') || statusRaw === 'inactive' ? 'inactive' : 'active';
+
+          if (code && name) {
+            cameras.push({
+              id: code,
+              code,
+              name,
+              zone,
+              description,
+              status,
+              createdAt: now,
+              updatedAt: now,
+            });
+          }
+        });
+
+        resolve(cameras);
+      } catch (err) {
+        reject(err);
+      }
+    };
+    reader.onerror = () => reject(new Error('Không thể đọc tệp Excel'));
+    reader.readAsArrayBuffer(file);
+  });
 }
 
 export function exportAllUsersToExcel(users: User[]) {

@@ -123,6 +123,8 @@ export async function GET() {
     const overtimeRegistrations = scanJsonFiles<any>('overtime');
     const overtimeMealMenus = readJsonFile<any[]>('settings/overtime_meal_menus.json', []);
     const foodRegistrations = scanJsonFiles<any>('food-registration');
+    const cameraRequests = scanJsonFiles<any>('camera-request');
+    const cameras = readJsonFile<any[]>('settings/cameras.json', []);
 
     return NextResponse.json({
       success: true,
@@ -149,6 +151,8 @@ export async function GET() {
         foodRegistrations,
         overtimeRegistrations,
         overtimeMealMenus,
+        cameras,
+        cameraRequests,
       },
       counts: {
         users: users.length,
@@ -163,6 +167,8 @@ export async function GET() {
         pcccInspections: pcccInspections.length,
         foodRegistrations: foodRegistrations.length,
         overtimeRegistrations: overtimeRegistrations.length,
+        cameras: cameras.length,
+        cameraRequests: cameraRequests.length,
       },
     });
   } catch (err: any) {
@@ -196,7 +202,9 @@ export async function POST(req: NextRequest) {
         | 'periodic_groundwater_soil'
         | 'overtime_registration'
         | 'overtime_meal_menu'
-        | 'food_registration';
+        | 'food_registration'
+        | 'cameras'
+        | 'camera_request';
       data: any;
       githubToken?: string;
     };
@@ -284,6 +292,13 @@ export async function POST(req: NextRequest) {
       const year = data.inspectedAt ? new Date(data.inspectedAt).getFullYear() : new Date().getFullYear();
       relFilePath = `pccc/inspections/${year}/${data.id}.json`;
       commitMessage = `Save PCCC Inspection ${data.id}`;
+    } else if (type === 'cameras') {
+      relFilePath = 'settings/cameras.json';
+      commitMessage = `Update cameras master directory (${Array.isArray(data) ? data.length : 1} devices)`;
+    } else if (type === 'camera_request') {
+      const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
+      relFilePath = `camera-request/${year}/${data.id}.json`;
+      commitMessage = `Update Camera Request ${data.id} (${data.status})`;
     }
 
     const jsonString = JSON.stringify(data, null, 2);

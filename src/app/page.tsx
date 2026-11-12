@@ -15,6 +15,7 @@ import { ProposalHubView } from '@/components/proposals/ProposalHubView';
 import { PCCCInspectionView } from '@/components/pccc/PCCCInspectionView';
 import { PeriodicInspectionView } from '@/components/periodic-inspection/PeriodicInspectionView';
 import { FoodRegistrationView } from '@/components/food-registration/FoodRegistrationView';
+import { CameraSurveillanceView } from '@/components/camera/CameraSurveillanceView';
 import { checkFoodQrValidity } from '@/types/food-registration';
 import { AnnouncementView } from '@/components/announcements/AnnouncementView';
 import { DynamicFormsView } from '@/components/forms/DynamicFormsView';
@@ -38,6 +39,7 @@ import {
   isApproverRole,
   isSecurityRole,
   isMaintenanceStaff,
+  isITStaff,
   isHRHead,
   canApproveFoodDept,
   canApproveFoodHR,
@@ -209,6 +211,24 @@ function PortalAppContent() {
     }
   } catch {}
 
+  let pendingCameras = 0;
+  try {
+    const allCamReqs = storage.getCameraRequests();
+    if (Array.isArray(allCamReqs)) {
+      if (currentUser.role === 'admin') {
+        pendingCameras = allCamReqs.filter((r) => r.status === 'pending_it' || r.status === 'pending_hr').length;
+      } else if (isITStaff(currentUser)) {
+        pendingCameras = allCamReqs.filter((r) => r.status === 'pending_it').length;
+      } else if (isHRHead(currentUser) || currentUser.role === 'hr') {
+        pendingCameras = allCamReqs.filter((r) => r.status === 'pending_hr').length;
+      } else {
+        pendingCameras = allCamReqs.filter(
+          (r) => r.employeeId.toLowerCase() === currentUser.id.toLowerCase() && (r.status === 'pending_it' || r.status === 'pending_hr')
+        ).length;
+      }
+    }
+  } catch {}
+
   // Render view by tab with RBAC Guard
   const renderActiveView = () => {
     // If viewing an integrated website
@@ -307,6 +327,7 @@ function PortalAppContent() {
         'attendance',
         'gate_pass',
         'food_registration',
+        'camera',
         'repair',
         'announcements',
         'forms',
@@ -350,6 +371,8 @@ function PortalAppContent() {
         return <DepartmentManagementView />;
       case 'food_registration':
         return <FoodRegistrationView />;
+      case 'camera':
+        return <CameraSurveillanceView />;
       case 'overtime':
         return <OvertimeView />;
       case 'leave':
@@ -461,6 +484,7 @@ function PortalAppContent() {
           repair: totalPendingProposals,
           proposals: totalPendingProposals,
           foodRegistration: pendingFoods,
+          camera: pendingCameras,
         }}
         onSelectIntegratedWeb={(site) => {
           setViewingWebSite(site);

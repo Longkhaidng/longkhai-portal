@@ -23,6 +23,7 @@ import {
   Wrench,
   Package,
   FileQuestion,
+  Camera,
 } from 'lucide-react';
 import { formatDate, formatDateTime, sortNewestFirst } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
@@ -44,12 +45,14 @@ import {
   GENERAL_STATUS_LABELS,
   GENERAL_STATUS_BADGES,
 } from '@/types/proposal';
-import { filterUserLeaves, filterUserAttendances, filterUserGatePasses, filterUserRepairProposals, filterUserStationeryProposals, filterUserGeneralProposals } from '@/lib/permissions';
+import { filterUserLeaves, filterUserAttendances, filterUserGatePasses, filterUserRepairProposals, filterUserStationeryProposals, filterUserGeneralProposals, canAccessCameraReport } from '@/lib/permissions';
+import { CameraRequest, CAMERA_PURPOSE_LABELS, CAMERA_STATUS_LABELS, CAMERA_STATUS_BADGES } from '@/types/camera';
 import { FoodRegistration, FoodReportRow, flattenFoodRegistrationsToReportRows, compareFoodReportRowsNewestFirst, FoodCategory, FOOD_CATEGORY_LABELS, FOOD_STATUS_LABELS, FOOD_STATUS_BADGES } from '@/types/food-registration';
 
 export function ReportsView() {
   const { currentUser } = useAuth();
-  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'repair' | 'stationery' | 'general' | 'departments' | 'pccc' | 'periodic_inspection' | 'food_registration'>('leave');
+  const canAccessCamera = canAccessCameraReport(currentUser);
+  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'repair' | 'stationery' | 'general' | 'departments' | 'pccc' | 'periodic_inspection' | 'food_registration' | 'camera'>('leave');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('all');
@@ -426,6 +429,35 @@ export function ReportsView() {
       return true;
     });
   }, [departments, departmentFilter, searchTerm]);
+
+  const cameraRequests = useMemo(() => {
+    return storage.getCameraRequests();
+  }, []);
+
+  const filteredCameraRequests = useMemo(() => {
+    if (!canAccessCamera) return [];
+    return cameraRequests.filter((r) => {
+      if (departmentFilter !== 'all' && r.department !== departmentFilter) {
+        return false;
+      }
+      const reqDate = r.targetDate || r.createdAt.slice(0, 10);
+      if (fromDate && reqDate < fromDate) return false;
+      if (toDate && reqDate > toDate) return false;
+      if (statusFilter !== 'all' && r.status !== statusFilter) return false;
+      if (searchTerm.trim()) {
+        const q = searchTerm.toLowerCase().trim();
+        const match =
+          r.id.toLowerCase().includes(q) ||
+          r.employeeName.toLowerCase().includes(q) ||
+          r.employeeId.toLowerCase().includes(q) ||
+          r.department.toLowerCase().includes(q) ||
+          r.cameraNames.some((c) => c.toLowerCase().includes(q)) ||
+          r.reason.toLowerCase().includes(q);
+        if (!match) return false;
+      }
+      return true;
+    });
+  }, [cameraRequests, canAccessCamera, departmentFilter, fromDate, toDate, statusFilter, searchTerm]);
 
 
   // --- Format Helpers for Periodic Inspections ---
@@ -1021,6 +1053,56 @@ export function ReportsView() {
         d.managerName || 'Chưa chỉ định',
         `${users.filter((u) => u.department === d.name).length} người`,
       ]);
+    } else if (reportType === 'camera') {
+      title = 'ĐĂNG KÝ XEM DỮ LIỆU CAMERA AN NINH';
+      fileName = `LONGKHAI_Bao_Cao_XEM_CAMERA_${nowStr}`;
+      headers = [
+        'Mã yêu cầu',
+        'Ngày đăng ký',
+        'Mã NV',
+        'Họ và tên',
+        'Phòng ban',
+        'Chức vụ',
+        'Camera xem',
+        'Mục đích',
+        'Thời gian xem dữ liệu',
+        'Lý do & nội dung kiểm tra',
+        'Trạng thái',
+        'Bộ phận IT kiểm tra',
+        'Trưởng phòng HCNS duyệt',
+      ];
+      rows = filteredCameraRequests.map((r) => {
+        const itStep = r.steps?.find((s) => s.roleRequired === 'it');
+        const hrStep = r.steps?.find((s) => s.roleRequired === 'hr');
+        const itText =
+          itStep?.status === 'approved'
+            ? `Đã duyệt (${itStep.approverName || 'IT'} - ${formatDateTime(itStep.actionAt || '')})`
+            : itStep?.status === 'rejected'
+            ? `Từ chối (${itStep.approverName || 'IT'})`
+            : 'Chờ IT duyệt';
+        const hrText =
+          hrStep?.status === 'approved'
+            ? `Đã duyệt (${hrStep.approverName || 'HCNS'} - ${formatDateTime(hrStep.actionAt || '')})`
+            : hrStep?.status === 'rejected'
+            ? `Từ chối (${hrStep.approverName || 'HCNS'})`
+            : 'Chờ HCNS duyệt';
+
+        return [
+          r.id,
+          formatDate(r.createdAt),
+          r.employeeId,
+          r.employeeName,
+          r.department,
+          r.position,
+          r.cameraNames.join(', '),
+          CAMERA_PURPOSE_LABELS[r.purpose] || r.purpose,
+          `${r.targetDate} (${r.fromTime} - ${r.toTime})`,
+          r.reason,
+          CAMERA_STATUS_LABELS[r.status] || r.status,
+          itText,
+          hrText,
+        ];
+      });
     }
 
     if (rows.length === 0) {
@@ -1089,6 +1171,9 @@ export function ReportsView() {
           { key: 'pccc', label: 'Kiểm tra PCCC', icon: Flame, count: filteredPCCCDevices.length },
           { key: 'periodic_inspection', label: 'Kiểm tra định kỳ', icon: ClipboardCheck, count: filteredPeriodicInspections.length },
           { key: 'food_registration', label: 'Thực phẩm mang vào', icon: UtensilsCrossed, count: filteredFoods.length },
+          ...(canAccessCamera
+            ? [{ key: 'camera', label: 'Xem Camera', icon: Camera, count: filteredCameraRequests.length }]
+            : []),
           { key: 'departments', label: 'Cơ cấu phòng ban', icon: Building2, count: filteredDepartments.length },
         ].map((tab) => {
           const Icon = tab.icon;
@@ -1445,7 +1530,7 @@ export function ReportsView() {
           <div className="text-right text-[11px] text-slate-600 dark:text-slate-400 ml-auto shrink-0 print-header-right">
             <div className="whitespace-nowrap font-medium">Ngày xuất báo cáo: {formatDate(new Date().toISOString())}</div>
             <div className="font-mono font-bold whitespace-nowrap">
-              {reportType === 'pccc' ? 'Mã tài liệu: BC-LK-PCCC/2026' : reportType === 'periodic_inspection' ? 'Mã tài liệu: BC-LK-ĐK/2026' : reportType === 'food_registration' ? 'Mã tài liệu: BC-LK-TP/2026' : 'Mã tài liệu: BC-LK-2026/01'}
+              {reportType === 'pccc' ? 'Mã tài liệu: BC-LK-PCCC/2026' : reportType === 'periodic_inspection' ? 'Mã tài liệu: BC-LK-ĐK/2026' : reportType === 'food_registration' ? 'Mã tài liệu: BC-LK-TP/2026' : reportType === 'camera' ? 'Mã tài liệu: BC-LK-CAM/2026' : 'Mã tài liệu: BC-LK-2026/01'}
             </div>
           </div>
         </div>
@@ -1474,6 +1559,8 @@ export function ReportsView() {
               ? 'KIỂM TRA ĐỊNH KỲ (AN TOÀN & MÔI TRƯỜNG)'
               : reportType === 'food_registration'
               ? 'THỰC PHẨM MANG VÀO NHÀ MÁY'
+              : reportType === 'camera'
+              ? 'ĐĂNG KÝ XEM DỮ LIỆU CAMERA AN NINH'
               : 'CƠ CẤU PHÒNG BAN'}
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -2369,6 +2456,107 @@ export function ReportsView() {
               </tbody>
             </table>
           )}
+
+          {/* CAMERA SURVEILLANCE REPORT TABLE */}
+          {reportType === 'camera' && (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
+                    <th className="p-2 border text-center">STT</th>
+                    <th className="p-2 border text-center">Mã yêu cầu</th>
+                    <th className="p-2 border text-center">Ngày đăng ký</th>
+                    <th className="p-2 border text-center">Mã NV</th>
+                    <th className="p-2 border">Họ và tên</th>
+                    <th className="p-2 border">Phòng ban</th>
+                    <th className="p-2 border">Camera xem</th>
+                    <th className="p-2 border">Mục đích</th>
+                    <th className="p-2 border text-center">Thời gian xem</th>
+                    <th className="p-2 border">Lý do & nội dung</th>
+                    <th className="p-2 border text-center">Trạng thái</th>
+                    <th className="p-2 border">Tiến trình phê duyệt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredCameraRequests.length === 0 ? (
+                    <tr>
+                      <td colSpan={12} className="p-8 text-center text-slate-400">
+                        Không tìm thấy yêu cầu xem camera phù hợp với bộ lọc.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredCameraRequests.map((r, idx) => {
+                      const badge = CAMERA_STATUS_BADGES[r.status] || CAMERA_STATUS_BADGES.pending_it;
+                      const itStep = r.steps?.find((s) => s.roleRequired === 'it');
+                      const hrStep = r.steps?.find((s) => s.roleRequired === 'hr');
+
+                      return (
+                        <tr key={r.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                          <td className="p-2 border text-center font-semibold text-slate-400">{idx + 1}</td>
+                          <td className="p-2 border font-mono font-bold text-indigo-600 dark:text-indigo-400 text-center whitespace-nowrap">
+                            {r.id}
+                          </td>
+                          <td className="p-2 border text-center whitespace-nowrap">{r.createdAt.slice(0, 10)}</td>
+                          <td className="p-2 border font-mono text-center">{r.employeeId}</td>
+                          <td className="p-2 border font-bold text-slate-900 dark:text-white whitespace-nowrap">
+                            {r.employeeName}
+                          </td>
+                          <td className="p-2 border text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                            {r.department}
+                          </td>
+                          <td className="p-2 border font-semibold text-slate-800 dark:text-slate-200">
+                            {r.cameraNames.join(', ')}
+                          </td>
+                          <td className="p-2 border text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                            {CAMERA_PURPOSE_LABELS[r.purpose] || r.purpose}
+                            {r.purpose === 'khac' && r.purposeDetail && ` (${r.purposeDetail})`}
+                          </td>
+                          <td className="p-2 border text-center whitespace-nowrap">
+                            <div className="font-semibold">{r.targetDate}</div>
+                            <div className="text-[10px] text-slate-400">({r.fromTime} - {r.toTime})</div>
+                          </td>
+                          <td className="p-2 border text-slate-800 dark:text-slate-200 max-w-xs">
+                            {r.reason}
+                          </td>
+                          <td className="p-2 border text-center whitespace-nowrap">
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${badge.bg} ${badge.text} ${badge.border}`}>
+                              {CAMERA_STATUS_LABELS[r.status] || r.status}
+                            </span>
+                          </td>
+                          <td className="p-2 border text-[11px] whitespace-nowrap">
+                            <div>
+                              <b>IT:</b>{' '}
+                              {itStep?.status === 'approved' ? (
+                                <span className="text-emerald-600 font-semibold">
+                                  ✓ {itStep.approverName} ({formatDate(itStep.actionAt || '')})
+                                </span>
+                              ) : itStep?.status === 'rejected' ? (
+                                <span className="text-rose-600 font-semibold">✕ Từ chối</span>
+                              ) : (
+                                <span className="text-amber-600">⏳ Chờ duyệt</span>
+                              )}
+                            </div>
+                            <div className="mt-0.5">
+                              <b>HCNS:</b>{' '}
+                              {hrStep?.status === 'approved' ? (
+                                <span className="text-emerald-600 font-semibold">
+                                  ✓ {hrStep.approverName} ({formatDate(hrStep.actionAt || '')})
+                                </span>
+                              ) : hrStep?.status === 'rejected' ? (
+                                <span className="text-rose-600 font-semibold">✕ Từ chối</span>
+                              ) : (
+                                <span className="text-amber-600">⏳ Chờ duyệt</span>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         {/* Factory Signatures block for Food Registration */}
@@ -2411,6 +2599,31 @@ export function ReportsView() {
 
             <div className="space-y-12">
               <div className="font-bold uppercase text-slate-900 dark:text-white">TRƯỞNG PHÒNG CƠ ĐIỆN</div>
+              <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
+            </div>
+
+            <div className="space-y-12">
+              <div className="font-bold uppercase text-slate-900 dark:text-white">BAN GIÁM ĐỐC DUYỆT</div>
+              <div className="text-[11px] text-slate-400 italic">(Ký, đóng dấu)</div>
+            </div>
+          </div>
+        )}
+
+        {/* Factory Signatures block for Camera Requests */}
+        {reportType === 'camera' && (
+          <div className="pt-8 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center text-xs">
+            <div className="space-y-12">
+              <div className="font-bold uppercase text-slate-900 dark:text-white">NGƯỜI LẬP BÁO CÁO</div>
+              <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
+            </div>
+
+            <div className="space-y-12">
+              <div className="font-bold uppercase text-slate-900 dark:text-white">BỘ PHẬN CNTT (IT)</div>
+              <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
+            </div>
+
+            <div className="space-y-12">
+              <div className="font-bold uppercase text-slate-900 dark:text-white">TRƯỞNG PHÒNG HCNS</div>
               <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
             </div>
 

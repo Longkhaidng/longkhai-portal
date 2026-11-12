@@ -37,6 +37,7 @@ export type ClearTargetType =
   | 'leave_request'
   | 'attendance'
   | 'food_registration'
+  | 'camera_request'
   | 'overtime'
   | 'repair'
   | 'stationery'
@@ -48,6 +49,7 @@ const ALL_TARGETS: ClearTargetType[] = [
   'leave_request',
   'attendance',
   'food_registration',
+  'camera_request',
   'overtime',
   'repair',
   'stationery',
@@ -60,6 +62,7 @@ const TARGET_DIR_MAP: Record<ClearTargetType, string> = {
   leave_request: 'leave-request',
   attendance: 'attendance',
   food_registration: 'food-registration',
+  camera_request: 'camera-request',
   overtime: 'overtime',
   repair: 'repair-proposal',
   stationery: 'stationery-proposal',

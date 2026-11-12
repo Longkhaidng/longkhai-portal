@@ -5,6 +5,7 @@ import { AttendanceConfirm } from '@/types/attendance';
 import { RepairProposal } from '@/types/repair';
 import { StationeryProposal, GeneralProposal } from '@/types/proposal';
 import { FoodRegistration } from '@/types/food-registration';
+import { CameraRequest } from '@/types/camera';
 
 export type DocumentScope = 'my' | 'approver' | 'all';
 
@@ -714,4 +715,80 @@ export function isHROrITDepartment(dept?: string): boolean {
     d.includes('(it)') ||
     d === 'it'
   );
+}
+
+/**
+ * Check if the user is allowed to access Camera Surveillance Reports:
+ * ONLY Trưởng phòng HCNS, IT personnel, and Admin/BOD can access.
+ */
+export function canAccessCameraReport(user?: User | null): boolean {
+  if (!user) return false;
+  if (isSuperAdminOrBOD(user)) return true;
+  if (isITStaff(user)) return true;
+  if (isHRHead(user)) return true;
+  if (user.role === 'hr') return true;
+  const dept = (user.department || '').toLowerCase();
+  const isHCNS = dept.includes('hcns') || dept.includes('hành chính') || dept.includes('nhân sự');
+  if (isHCNS && user.role === 'manager') return true;
+  return false;
+}
+
+/**
+ * Check if user can approve Camera Request at Step 1 (Bộ phận IT)
+ */
+export function canApproveCameraIT(user?: User | null, request?: CameraRequest | null): boolean {
+  if (!user || !request) return false;
+  if (request.status !== 'pending_it') return false;
+  return isSuperAdminOrBOD(user) || isITStaff(user);
+}
+
+/**
+ * Check if user can approve Camera Request at Step 2 (Trưởng phòng HCNS)
+ */
+export function canApproveCameraHR(user?: User | null, request?: CameraRequest | null): boolean {
+  if (!user || !request) return false;
+  if (request.status !== 'pending_hr') return false;
+  return isSuperAdminOrBOD(user) || isHRHead(user);
+}
+
+/**
+ * Filter Camera Requests based on user role & scope:
+ * - Regular employee: Strictly can only see their own requests.
+ * - IT staff: Sees pending_it in approver mode, or all in all mode, + own requests.
+ * - HR Head: Sees pending_hr in approver mode, or all in all mode, + own requests.
+ * - Admin/BOD: Full visibility.
+ */
+export function filterUserCameraRequests(
+  requests: CameraRequest[],
+  user?: User | null,
+  scope: DocumentScope = 'all'
+): CameraRequest[] {
+  if (!user) return [];
+  const uid = user.id.toLowerCase();
+  const isAdmin = isSuperAdminOrBOD(user);
+  const isIT = isITStaff(user);
+  const isHR = isHRHead(user) || user.role === 'hr';
+
+  // 1. My requests scope
+  if (scope === 'my') {
+    return requests.filter((r) => r.employeeId.toLowerCase() === uid);
+  }
+
+  // 2. Approver scope
+  if (scope === 'approver') {
+    return requests.filter((r) => {
+      if (r.employeeId.toLowerCase() === uid) return false;
+      if (canApproveCameraIT(user, r)) return true;
+      if (canApproveCameraHR(user, r)) return true;
+      return false;
+    });
+  }
+
+  // 3. All scope
+  if (isAdmin || isIT || isHR) {
+    return requests;
+  }
+
+  // Regular employee can ONLY track their own requests
+  return requests.filter((r) => r.employeeId.toLowerCase() === uid);
 }
