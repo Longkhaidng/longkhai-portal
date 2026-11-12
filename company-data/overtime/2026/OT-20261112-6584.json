@@ -47,13 +47,14 @@
       "fromTime": "16:30",
       "toTime": "18:30",
       "mealOption": "Mì Omachi trứng",
-      "employeeConfirmTime": "16:30 - 18:30",
-      "employeeConfirmHours": 2,
+      "employeeConfirmTime": "16:30 - 17:30",
+      "employeeConfirmHours": 1,
       "employeeConfirmStatus": "confirmed",
-      "employeeConfirmedAt": "2026-11-12T04:20:16.768Z",
+      "employeeConfirmedAt": "2026-11-12T04:22:43.332Z",
       "approvalStatus": "approved",
       "approvedByName": "Trần Lê Hữu Lực",
-      "approvedAt": "2026-11-12T04:20:16.768Z"
+      "approvedAt": "2026-11-12T04:20:16.768Z",
+      "employeeConfirmNote": "Bận đón con"
     },
     {
       "id": "OT-ITEM-1794457216768-id4ir",
@@ -202,5 +203,5 @@
   ],
   "status": "approved",
   "createdAt": "2026-11-12T04:20:46.584Z",
-  "updatedAt": "2026-11-12T04:20:46.584Z"
+  "updatedAt": "2026-11-12T04:22:43.332Z"
 }
