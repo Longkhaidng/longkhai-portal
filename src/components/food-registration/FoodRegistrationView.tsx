@@ -276,15 +276,15 @@ export function FoodRegistrationView() {
     try {
       const currentList = storage.getFoodRegistrations();
       const newId = generateDocId('TP', currentList);
-      const qrUrl = getQrConfirmUrl('food', newId);
-      const qrDataUrl = await generateQrDataUrl(qrUrl);
       const now = new Date().toISOString();
 
       let newRegistration: FoodRegistration;
 
       if (isVeg) {
-        // THỰC PHẨM CHAY: Cấp ngay mã QR có thời hạn 12h, không cần qua Trưởng BP & HCNS duyệt
+        // THỰC PHẨM CHAY: Có hiệu lực trong ngày (12h)
         const expiresAt = new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString();
+        const qrUrl = getQrConfirmUrl('food', newId);
+        const qrDataUrl = await generateQrDataUrl(qrUrl);
         newRegistration = {
           id: newId,
           employeeId: selectedEmployeeId.trim(),
@@ -301,7 +301,7 @@ export function FoodRegistrationView() {
           customUnit: vegUnit === 'Khác' ? customVegUnit.trim() : undefined,
           notes: vegNotes.trim() || undefined,
           complianceCommitment: true,
-          status: 'approved', // Cấp ngay mã QR hợp lệ trong 12h
+          status: 'approved',
           expiresAt,
           qrCodeUrl: qrUrl,
           qrDataUrl,
@@ -315,11 +315,9 @@ export function FoodRegistrationView() {
         });
 
         setRegistrations(storage.getFoodRegistrations());
-        showToast(`Đăng ký thành công! Mã phiếu: ${newId}. Mã QR có hiệu lực trong 12h.`);
+        showToast(`Đăng ký thành công! Mã phiếu: ${newId}.`);
 
-        // Tự động mở modal QR để người lao động lưu ảnh hoặc xuất trình cho bảo vệ
-        setSelectedQrItem(newRegistration);
-        setIsQrModalOpen(true);
+        // Bỏ phát sinh mở modal mã QR khi tạo phiếu xong theo yêu cầu
       } else {
         // MANG THAI / NƯỚC THUỐC: Luồng duyệt 2 cấp: Trưởng BP -> Trưởng phòng HCNS
         // Khởi tạo các bước duyệt
@@ -369,8 +367,9 @@ export function FoodRegistrationView() {
           status: initialStatus,
           steps,
           currentStepIndex: isManagerSender && !isDeptDirectToHR ? 1 : 0,
-          qrCodeUrl: qrUrl,
-          qrDataUrl,
+          // Bỏ phát sinh mã QR khi tạo phiếu xong (chỉ phát sinh khi HCNS duyệt)
+          qrCodeUrl: undefined,
+          qrDataUrl: undefined,
           createdAt: now,
           updatedAt: now,
         };
@@ -387,8 +386,7 @@ export function FoodRegistrationView() {
           showToast(`Gửi đơn thành công (${newId})! Đơn đang chuyển Trưởng bộ phận & Trưởng phòng HCNS duyệt.`);
         }
 
-        setSelectedQrItem(newRegistration);
-        setIsQrModalOpen(true);
+        // Bỏ phát sinh mở modal mã QR khi tạo phiếu xong theo yêu cầu
       }
 
       // Reset form
@@ -410,7 +408,7 @@ export function FoodRegistrationView() {
   };
 
   // Approver Action: Approve
-  const handleApproveSubmit = () => {
+  const handleApproveSubmit = async () => {
     if (!approvingItem) return;
     const { item, level } = approvingItem;
     const approver = {
@@ -422,7 +420,16 @@ export function FoodRegistrationView() {
       storage.approveFoodRegistrationByDept(item.id, approver, approvalComment);
       showToast(`Trưởng BP đã duyệt đơn ${item.id}. Đơn đã chuyển đến Trưởng phòng HCNS!`);
     } else {
+      const qrUrl = getQrConfirmUrl('food', item.id);
+      const qrDataUrl = await generateQrDataUrl(qrUrl);
       storage.approveFoodRegistrationByHR(item.id, approver, approvalComment);
+      const list = storage.getFoodRegistrations();
+      const updated = list.find((r) => r.id === item.id);
+      if (updated) {
+        updated.qrCodeUrl = qrUrl;
+        updated.qrDataUrl = qrDataUrl;
+        storage.saveFoodRegistration(updated, approver);
+      }
       showToast(`Trưởng phòng HCNS đã duyệt đơn ${item.id}! Mã QR đã được cấp phép.`);
     }
 
@@ -568,41 +575,18 @@ export function FoodRegistrationView() {
         </div>
       )}
 
-      {/* Top Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-800 p-6 sm:p-8 text-white shadow-xl">
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-72 h-72 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-bold tracking-wide uppercase text-emerald-100 border border-white/20">
-              <ShieldCheck className="w-4 h-4" />
-              <span>An toàn vệ sinh thực phẩm nhà máy Long Khải</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-3">
-              <UtensilsCrossed className="w-8 h-8 sm:w-9 sm:h-9" />
+      {/* Top Banner - Bỏ hiển thị khi bảo vệ đăng nhập; đối với nhân viên khác bỏ các khung đỏ (chỉ giữ tiêu đề) */}
+      {!isGuard && (
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-800 p-5 sm:p-6 text-white shadow-xl">
+          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-72 h-72 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="relative z-10 flex items-center justify-between">
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-3">
+              <UtensilsCrossed className="w-7 h-7 sm:w-8 sm:h-8" />
               <span>Đăng Ký Mang Thực Phẩm Vào Nhà Máy</span>
             </h1>
-            <p className="text-xs sm:text-sm text-emerald-50 max-w-2xl leading-relaxed">
-              Hệ thống quản lý mang thực phẩm riêng vào nhà máy theo 2 nhóm: Thực phẩm cho người mang thai, Nước thuốc (duyệt 2 cấp) và Thực phẩm chay (cấp mã QR 12h).
-            </p>
-          </div>
-
-          {/* Quick Metrics */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-3 shrink-0">
-            <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/20 text-center min-w-[90px]">
-              <span className="text-[10px] text-emerald-200 block font-semibold">Tổng đăng ký</span>
-              <span className="text-xl sm:text-2xl font-black">{metrics.total}</span>
-            </div>
-            <div className="bg-amber-400/20 backdrop-blur-md p-3 rounded-2xl border border-amber-300/30 text-center min-w-[90px]">
-              <span className="text-[10px] text-amber-200 block font-semibold">Chờ duyệt</span>
-              <span className="text-xl sm:text-2xl font-black text-amber-300">{metrics.waitingMeCount}</span>
-            </div>
-            <div className="bg-emerald-400/20 backdrop-blur-md p-3 rounded-2xl border border-emerald-300/30 text-center min-w-[90px]">
-              <span className="text-[10px] text-emerald-200 block font-semibold">QR có hiệu lực</span>
-              <span className="text-xl sm:text-2xl font-black text-emerald-300">{metrics.approvedActiveCount}</span>
-            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Main Grid: Form on Left (5 cols) + List/Approval on Right (7 cols) - Khi là bảo vệ chỉ hiển thị Danh sách toàn màn hình */}
       <div className={isGuard ? 'space-y-6' : 'grid grid-cols-1 lg:grid-cols-12 gap-6 items-start'}>
@@ -1231,15 +1215,17 @@ export function FoodRegistrationView() {
                 <p>Chưa có dữ liệu đăng ký thực phẩm nào phù hợp bộ lọc.</p>
               </div>
             ) : (
-              <table className="w-full min-w-[720px] text-left text-xs border-collapse">
+              <table className="w-full min-w-[760px] text-left text-xs border-collapse">
                 <thead>
                   <tr className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 font-bold">
                     <th className="p-3 whitespace-nowrap">Mã phiếu</th>
-                    <th className="p-3 whitespace-nowrap">Người mang vào</th>
-                    <th className="p-3 whitespace-nowrap">Thời gian hiệu lực</th>
-                    <th className="p-3 whitespace-nowrap">Phân loại &amp; Món</th>
-                    <th className="p-3 whitespace-nowrap">Trạng thái</th>
-                    <th className="p-3 whitespace-nowrap text-right">Thao tác</th>
+                    <th className="p-3 whitespace-nowrap sticky left-0 z-20 bg-slate-50 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-800 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)]">
+                      Người mang vào
+                    </th>
+                    <th className="p-3 whitespace-nowrap text-center">Thời gian hiệu lực</th>
+                    <th className="p-3 whitespace-nowrap text-center">Phân loại &amp; Món</th>
+                    <th className="p-3 whitespace-nowrap text-center">Trạng thái</th>
+                    <th className="p-3 whitespace-nowrap text-center">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
@@ -1251,26 +1237,15 @@ export function FoodRegistrationView() {
                     return (
                       <tr
                         key={item.id}
-                        className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
+                        className="group hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
                       >
-                        {/* Doc ID & QR Modal trigger */}
+                        {/* Doc ID - Xóa mã QR cột mã phiếu theo yêu cầu */}
                         <td className="p-3 whitespace-nowrap font-mono font-bold text-emerald-600 dark:text-emerald-400">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setSelectedQrItem(item);
-                              setIsQrModalOpen(true);
-                            }}
-                            className="hover:underline flex items-center gap-1.5 cursor-pointer"
-                            title="Nhấn để xem mã QR"
-                          >
-                            <QrCode className="w-3.5 h-3.5 text-slate-400" />
-                            <span>{item.id}</span>
-                          </button>
+                          <span>{item.id}</span>
                         </td>
 
-                        {/* Employee Name & Dept */}
-                        <td className="p-3 whitespace-nowrap">
+                        {/* Employee Name & Dept - Cố định cột người mang vào khi dùng điện thoại để lướt ngang qua kiểm tra và xác nhận */}
+                        <td className="p-3 whitespace-nowrap sticky left-0 z-10 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/80 border-r border-slate-100 dark:border-slate-800 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)]">
                           <span className="font-bold text-slate-900 dark:text-white block">
                             {item.employeeName}
                           </span>
@@ -1279,12 +1254,12 @@ export function FoodRegistrationView() {
                           </span>
                         </td>
 
-                        {/* Validity period */}
-                        <td className="p-3 whitespace-nowrap">
+                        {/* Validity period - Căn giữa, bỏ dòng còn hiệu lực theo khung đỏ */}
+                        <td className="p-3 whitespace-nowrap text-center">
                           {item.toDate ? (
                             <div>
                               <span className="font-semibold text-slate-800 dark:text-slate-200 block text-xs">
-                                {formatDate(item.entryDate)} → {formatDate(item.toDate)}
+                                {formatDate(item.entryDate)} &rarr; {formatDate(item.toDate)}
                               </span>
                               <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-medium block">
                                 Theo đợt duyệt
@@ -1301,45 +1276,41 @@ export function FoodRegistrationView() {
                             </div>
                           )}
 
-                          {validity.isExpired ? (
+                          {validity.isExpired && (
                             <span className="inline-block mt-0.5 px-1.5 py-0.2 rounded text-[10px] font-bold bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300">
                               Hết hiệu lực
                             </span>
-                          ) : validity.remainingText ? (
-                            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold block">
-                              {validity.remainingText}
-                            </span>
-                          ) : null}
+                          )}
                         </td>
 
-                        {/* Category & Dishes */}
-                        <td className="p-3">
-                          <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
+                        {/* Category & Dishes - Căn chỉnh hiển thị đầy đủ dữ liệu khi xem trên điện thoại, máy tính bảng, máy tính */}
+                        <td className="p-3 min-w-[220px] max-w-[340px] whitespace-normal">
+                          <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
                             <span>{FOOD_CATEGORY_ICONS[item.category]}</span>
                             <span>{FOOD_CATEGORY_LABELS[item.category]}</span>
                           </div>
-                          <p className="text-xs text-slate-800 dark:text-slate-200 font-medium mt-0.5 line-clamp-2">
+                          <p className="text-xs text-slate-800 dark:text-slate-200 font-medium mt-1 leading-relaxed break-words">
                             {item.foodDetails}
                           </p>
+                          {item.notes && (
+                            <p className="text-[11px] text-slate-400 italic mt-0.5 break-words">
+                              Ghi chú: {item.notes}
+                            </p>
+                          )}
                         </td>
 
-                        {/* Status */}
-                        <td className="p-3 whitespace-nowrap">
+                        {/* Status - Căn giữa, bỏ dòng đã vào n lần theo khung đỏ */}
+                        <td className="p-3 whitespace-nowrap text-center">
                           <span
                             className={`inline-block px-2.5 py-1 rounded-full text-[11px] font-bold border ${FOOD_STATUS_BADGES[item.status]}`}
                           >
                             {FOOD_STATUS_LABELS[item.status]}
                           </span>
-                          {item.entryLogs && item.entryLogs.length > 0 && (
-                            <span className="text-[10px] text-teal-600 dark:text-teal-400 font-semibold block mt-1">
-                              Đã vào {item.entryLogs.length} lần
-                            </span>
-                          )}
                         </td>
 
-                        {/* Actions */}
-                        <td className="p-3 whitespace-nowrap text-right">
-                          <div className="flex items-center justify-end gap-1.5">
+                        {/* Actions - Căn giữa */}
+                        <td className="p-3 whitespace-nowrap text-center">
+                          <div className="flex items-center justify-center gap-1.5">
                             {/* Button: Phê duyệt Trưởng bộ phận (Step 1) */}
                             {canDeptApprove && (
                               <button
@@ -1418,18 +1389,22 @@ export function FoodRegistrationView() {
                               </span>
                             )}
 
-                            {/* Button: Xem QR */}
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setSelectedQrItem(item);
-                                setIsQrModalOpen(true);
-                              }}
-                              className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 text-emerald-600 dark:text-emerald-400 cursor-pointer"
-                              title="Xem mã QR"
-                            >
-                              <QrCode className="w-4 h-4" />
-                            </button>
+                            {/* Button: Xem QR (CHỈ hiển thị khi đơn đã duyệt/xác nhận và không phải bảo vệ) */}
+                            {!isGuard &&
+                              (item.status === 'approved' || item.status === 'confirmed') &&
+                              (item.qrCodeUrl || item.qrDataUrl) && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedQrItem(item);
+                                    setIsQrModalOpen(true);
+                                  }}
+                                  className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 text-emerald-600 dark:text-emerald-400 cursor-pointer"
+                                  title="Xem mã QR"
+                                >
+                                  <QrCode className="w-4 h-4" />
+                                </button>
+                              )}
 
                             {/* Button: Hủy đơn nếu còn pending */}
                             {(item.status === 'pending_dept' || item.status === 'pending_hr') &&
