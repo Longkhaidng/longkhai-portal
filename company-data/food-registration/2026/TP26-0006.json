@@ -1,0 +1,25 @@
+{
+  "id": "TP26-0006",
+  "employeeId": "1002",
+  "employeeName": "Trần Thị Kim Loan",
+  "department": "Phòng HCNS",
+  "entryDate": "2026-11-12",
+  "toDate": "2026-11-17",
+  "durationDays": 5,
+  "category": "medicine_drink",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Nước thuốc (Lý do: thuốc đau đầu)",
+  "medicineReason": "thuốc đau đầu",
+  "complianceCommitment": true,
+  "status": "pending_hr",
+  "steps": [
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-12T01:35:50.506Z",
+  "updatedAt": "2026-11-12T01:35:50.506Z"
+}
