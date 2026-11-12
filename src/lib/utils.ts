@@ -37,6 +37,22 @@ export function formatDateTime(dateString?: string): string {
   }
 }
 
+/**
+ * Tự động viết hoa chữ cái đầu tiên cho dữ liệu người dùng nhập
+ */
+export function capitalizeFirstLetter(text?: string): string {
+  if (!text) return '';
+  return text.replace(/^(\s*)(\p{L})/u, (_, spaces, char) => spaces + char.toUpperCase());
+}
+
+/**
+ * Viết hoa từng từ (dành cho họ và tên)
+ */
+export function capitalizeWords(text?: string): string {
+  if (!text) return '';
+  return text.replace(/(^|[\s\p{P}])(\p{L})/gu, (_, spaces, char) => spaces + char.toUpperCase());
+}
+
 export function formatTime(timeString?: string): string {
   if (!timeString) return '-';
   return timeString;

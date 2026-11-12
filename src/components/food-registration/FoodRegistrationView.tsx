@@ -20,7 +20,7 @@ import {
 } from '@/types/food-registration';
 import { FoodQrModal } from './FoodQrModal';
 import { getQrConfirmUrl, generateQrDataUrl } from '@/lib/qr';
-import { generateDocId, formatDate, formatDateTime, calculateEndDate } from '@/lib/utils';
+import { generateDocId, formatDate, formatDateTime, calculateEndDate, capitalizeFirstLetter, capitalizeWords } from '@/lib/utils';
 import {
   isSecurityRole,
   isSuperAdminOrBOD,
@@ -213,7 +213,7 @@ export function FoodRegistrationView() {
 
     if (isVeg) {
       finalCategory = 'vegetarian';
-      const dishName = vegOption === 'Khác' ? customVegDish.trim() : vegOption;
+      const dishName = vegOption === 'Khác' ? capitalizeFirstLetter(customVegDish.trim()) : vegOption;
       if (vegOption === 'Khác' && !customVegDish.trim()) {
         showToast('Vui lòng nhập tên món chay bạn muốn mang vào.', 'error');
         return;
@@ -222,8 +222,9 @@ export function FoodRegistrationView() {
         showToast('Vui lòng nhập đơn vị tính khác cho món chay.', 'error');
         return;
       }
-      const unitStr = vegUnit === 'Khác' ? customVegUnit.trim() : vegUnit;
-      finalFoodDetails = `${dishName} (SL: ${vegQuantity} ${unitStr})${vegNotes.trim() ? ` - Ghi chú: ${vegNotes.trim()}` : ''}`;
+      const unitStr = vegUnit === 'Khác' ? capitalizeFirstLetter(customVegUnit.trim()) : vegUnit;
+      const cleanNotes = vegNotes.trim() ? capitalizeFirstLetter(vegNotes.trim()) : '';
+      finalFoodDetails = `${dishName} (SL: ${vegQuantity} ${unitStr})${cleanNotes ? ` - Ghi chú: ${cleanNotes}` : ''}`;
 
       if (!entryDate) {
         showToast('Vui lòng chọn ngày mang thực phẩm vào.', 'error');
@@ -245,7 +246,7 @@ export function FoodRegistrationView() {
           showToast('Vui lòng nhập lý do mang nước thuốc vào nhà máy (bắt buộc).', 'error');
           return;
         }
-        finalFoodDetails = `Nước thuốc (Lý do: ${medicineReason.trim()})`;
+        finalFoodDetails = `Nước thuốc (Lý do: ${capitalizeFirstLetter(medicineReason.trim())})`;
       }
 
       if (!durationDays || durationDays <= 0) {
@@ -288,18 +289,18 @@ export function FoodRegistrationView() {
         newRegistration = {
           id: newId,
           employeeId: selectedEmployeeId.trim(),
-          employeeName: employeeName.trim(),
-          department: department.trim(),
+          employeeName: capitalizeWords(employeeName.trim()),
+          department: capitalizeFirstLetter(department.trim()),
           entryDate,
           shift,
           category: 'vegetarian',
           mainGroup: 'vegetarian',
           foodDetails: finalFoodDetails,
-          customFoodDetails: vegOption === 'Khác' ? customVegDish.trim() : undefined,
+          customFoodDetails: vegOption === 'Khác' ? capitalizeFirstLetter(customVegDish.trim()) : undefined,
           quantity: vegQuantity,
-          unit: vegUnit === 'Khác' ? customVegUnit.trim() : vegUnit,
-          customUnit: vegUnit === 'Khác' ? customVegUnit.trim() : undefined,
-          notes: vegNotes.trim() || undefined,
+          unit: vegUnit === 'Khác' ? capitalizeFirstLetter(customVegUnit.trim()) : vegUnit,
+          customUnit: vegUnit === 'Khác' ? capitalizeFirstLetter(customVegUnit.trim()) : undefined,
+          notes: vegNotes.trim() ? capitalizeFirstLetter(vegNotes.trim()) : undefined,
           complianceCommitment: true,
           status: 'approved',
           expiresAt,
@@ -354,15 +355,15 @@ export function FoodRegistrationView() {
         newRegistration = {
           id: newId,
           employeeId: selectedEmployeeId.trim(),
-          employeeName: employeeName.trim(),
-          department: department.trim(),
+          employeeName: capitalizeWords(employeeName.trim()),
+          department: capitalizeFirstLetter(department.trim()),
           entryDate,
           toDate,
           durationDays,
           category: finalCategory,
           mainGroup: 'pregnant_medicine',
           foodDetails: finalFoodDetails,
-          medicineReason: subCategory === 'medicine_drink' ? medicineReason.trim() : undefined,
+          medicineReason: subCategory === 'medicine_drink' ? capitalizeFirstLetter(medicineReason.trim()) : undefined,
           complianceCommitment: true,
           status: initialStatus,
           steps,
@@ -642,7 +643,8 @@ export function FoodRegistrationView() {
                   required
                   readOnly={!(isAdmin || isManager || isHR)}
                   value={employeeName}
-                  onChange={(e) => setEmployeeName(e.target.value)}
+                  onChange={(e) => setEmployeeName(capitalizeWords(e.target.value))}
+                  autoCapitalize="words"
                   placeholder="Họ và tên nhân viên"
                   className={`w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
                     !(isAdmin || isManager || isHR) ? 'bg-slate-100 dark:bg-slate-800/80 cursor-not-allowed opacity-90' : 'bg-slate-50 dark:bg-slate-800'
@@ -662,7 +664,8 @@ export function FoodRegistrationView() {
                   required
                   readOnly={!(isAdmin || isManager || isHR)}
                   value={department}
-                  onChange={(e) => setDepartment(e.target.value)}
+                  onChange={(e) => setDepartment(capitalizeFirstLetter(e.target.value))}
+                  autoCapitalize="sentences"
                   placeholder="Ví dụ: Phân xưởng may - Chuyền 2"
                   className={`w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
                     !(isAdmin || isManager || isHR) ? 'bg-slate-100 dark:bg-slate-800/80 cursor-not-allowed opacity-90' : 'bg-slate-50 dark:bg-slate-800'
@@ -815,7 +818,8 @@ export function FoodRegistrationView() {
                       required
                       rows={3}
                       value={medicineReason}
-                      onChange={(e) => setMedicineReason(e.target.value)}
+                      onChange={(e) => setMedicineReason(capitalizeFirstLetter(e.target.value))}
+                      autoCapitalize="sentences"
                       placeholder="Nhập lý do bắt buộc (Ví dụ: Uống thuốc bắc/thuốc nam điều trị theo đơn bác sĩ sau bữa ăn, nước thảo dược hỗ trợ sức khỏe...)"
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium leading-relaxed"
                     />
@@ -957,7 +961,8 @@ export function FoodRegistrationView() {
                         type="text"
                         required
                         value={customVegUnit}
-                        onChange={(e) => setCustomVegUnit(e.target.value)}
+                        onChange={(e) => setCustomVegUnit(capitalizeFirstLetter(e.target.value))}
+                        autoCapitalize="sentences"
                         placeholder="Ví dụ: Phần, Suất, Chai, Bát..."
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
                       />
@@ -974,7 +979,8 @@ export function FoodRegistrationView() {
                         type="text"
                         required
                         value={customVegDish}
-                        onChange={(e) => setCustomVegDish(e.target.value)}
+                        onChange={(e) => setCustomVegDish(capitalizeFirstLetter(e.target.value))}
+                        autoCapitalize="sentences"
                         placeholder="Nhập tên món chay mang vào (Ví dụ: Cơm chay sườn non, gỏi cuốn chay...)"
                         className="w-full px-3.5 py-2.5 rounded-xl border border-emerald-300 dark:border-emerald-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
                       />
@@ -989,7 +995,8 @@ export function FoodRegistrationView() {
                     <input
                       type="text"
                       value={vegNotes}
-                      onChange={(e) => setVegNotes(e.target.value)}
+                      onChange={(e) => setVegNotes(capitalizeFirstLetter(e.target.value))}
+                      autoCapitalize="sentences"
                       placeholder="Nhập chi tiết nếu vượt quá 01 đơn vị tính/ người"
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
                     />
@@ -1349,8 +1356,8 @@ export function FoodRegistrationView() {
                               </button>
                             )}
 
-                            {/* Button: Bảo vệ cổng xác nhận hoặc từ chối */}
-                            {isGuard && item.status === 'approved' && !validity.isExpired && (
+                            {/* Button: Bảo vệ cổng xác nhận hoặc từ chối (Vẫn giữ lại 2 nút cho vào và từ chối cho đến khi phiếu hết hiệu lực) */}
+                            {isGuard && !validity.isExpired && (item.status === 'approved' || item.status === 'confirmed' || item.status === 'guard_rejected') && (
                               <>
                                 <button
                                   type="button"
@@ -1373,19 +1380,24 @@ export function FoodRegistrationView() {
                               </>
                             )}
 
-                            {/* Khi bảo vệ đã nhấn xác nhận thì các nút ẩn đi, thay bằng dòng chữ đã xác nhận */}
-                            {isGuard && item.status === 'confirmed' && (
+                            {/* Khi phiếu ĐÃ HẾT HIỆU LỰC thì các nút ẩn đi, thay bằng dòng chữ đã xác nhận hoặc đã từ chối */}
+                            {isGuard && validity.isExpired && item.status === 'confirmed' && (
                               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 dark:bg-teal-950/60 border border-teal-300 dark:border-teal-800 text-teal-700 dark:text-teal-300 font-bold text-xs">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                                 <span>Đã xác nhận</span>
                               </span>
                             )}
 
-                            {/* Khi bảo vệ đã từ chối thì các nút ẩn đi, thay bằng dòng chữ đã từ chối */}
-                            {isGuard && (item.status === 'guard_rejected' || item.status === 'rejected') && (
+                            {isGuard && validity.isExpired && (item.status === 'guard_rejected' || item.status === 'rejected') && (
                               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-300 font-bold text-xs">
                                 <XCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
                                 <span>Đã từ chối</span>
+                              </span>
+                            )}
+
+                            {isGuard && validity.isExpired && item.status === 'approved' && (
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-500 font-bold text-xs">
+                                <span>Hết hiệu lực</span>
                               </span>
                             )}
 
@@ -1485,7 +1497,8 @@ export function FoodRegistrationView() {
               <input
                 type="text"
                 value={approvalComment}
-                onChange={(e) => setApprovalComment(e.target.value)}
+                onChange={(e) => setApprovalComment(capitalizeFirstLetter(e.target.value))}
+                autoCapitalize="sentences"
                 placeholder="Ý kiến ghi chú của người duyệt..."
                 className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500"
               />
@@ -1544,7 +1557,8 @@ export function FoodRegistrationView() {
                 rows={3}
                 required
                 value={rejectReason}
-                onChange={(e) => setRejectReason(e.target.value)}
+                onChange={(e) => setRejectReason(capitalizeFirstLetter(e.target.value))}
+                autoCapitalize="sentences"
                 placeholder="Ví dụ: Đem thực phẩm không đúng danh mục, bao bì rách không đảm bảo vệ sinh..."
                 className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-500 resize-none font-medium"
               />

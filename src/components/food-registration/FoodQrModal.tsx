@@ -297,11 +297,11 @@ export function FoodQrModal({
             {/* Khối bảo vệ cổng kiểm tra & xác nhận trong modal */}
             {isGuard && (
               <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
-                {registration.status === 'approved' && !validity.isExpired ? (
+                {!validity.isExpired && (registration.status === 'approved' || registration.status === 'confirmed' || registration.status === 'guard_rejected') ? (
                   <div className="p-3 rounded-2xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800 space-y-2">
                     <div className="text-xs font-bold text-teal-900 dark:text-teal-200 flex items-center gap-1.5">
                       <ShieldCheck className="w-4 h-4 text-teal-600" />
-                      <span>Bảo vệ cổng kiểm tra &amp; xác nhận tại chỗ:</span>
+                      <span>Bảo vệ cổng kiểm tra &amp; xác nhận tại chỗ (Còn hiệu lực):</span>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <button
@@ -322,15 +322,15 @@ export function FoodQrModal({
                       </button>
                     </div>
                   </div>
-                ) : registration.status === 'confirmed' ? (
+                ) : validity.isExpired && registration.status === 'confirmed' ? (
                   <div className="p-3 rounded-2xl bg-teal-50 dark:bg-teal-950/40 border border-teal-300 dark:border-teal-800 flex items-center justify-center gap-2 text-teal-700 dark:text-teal-300 font-bold text-xs">
                     <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />
-                    <span>Đã xác nhận cho mang vào</span>
+                    <span>Đã xác nhận cho mang vào (Hết hiệu lực)</span>
                   </div>
-                ) : registration.status === 'guard_rejected' || registration.status === 'rejected' ? (
+                ) : validity.isExpired && (registration.status === 'guard_rejected' || registration.status === 'rejected') ? (
                   <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-800 flex items-center justify-center gap-2 text-rose-700 dark:text-rose-300 font-bold text-xs">
                     <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
-                    <span>Đã từ chối tại cổng</span>
+                    <span>Đã từ chối tại cổng (Hết hiệu lực)</span>
                   </div>
                 ) : null}
               </div>

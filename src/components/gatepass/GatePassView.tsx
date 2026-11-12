@@ -35,7 +35,7 @@ import {
   RotateCcw,
   ChevronRight,
 } from 'lucide-react';
-import { formatDate, formatDateTime, generateDocId } from '@/lib/utils';
+import { formatDate, formatDateTime, generateDocId, capitalizeFirstLetter } from '@/lib/utils';
 import { generateQrDataUrl, getQrConfirmUrl } from '@/lib/qr';
 import { dispatchApprovalEmail, dispatchCBNotificationEmail } from '@/lib/email';
 import { ToastContainer, useToast } from '@/components/common/Toast';
@@ -1561,7 +1561,8 @@ export function GatePassView() {
                       rows={2}
                       required
                       value={companyReason}
-                      onChange={(e) => setCompanyReason(e.target.value)}
+                      onChange={(e) => setCompanyReason(capitalizeFirstLetter(e.target.value))}
+                      autoCapitalize="sentences"
                       placeholder="Ghi rõ nội dung công việc công tác hoặc địa điểm..."
                       className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
                     />
@@ -1577,7 +1578,8 @@ export function GatePassView() {
                       rows={2}
                       required
                       value={otherReason}
-                      onChange={(e) => setOtherReason(e.target.value)}
+                      onChange={(e) => setOtherReason(capitalizeFirstLetter(e.target.value))}
+                      autoCapitalize="sentences"
                       placeholder="Ghi rõ lý do ra - vào cổng..."
                       className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
                     />
@@ -1763,7 +1765,8 @@ export function GatePassView() {
                       <input
                         type="text"
                         value={newAssetName}
-                        onChange={(e) => setNewAssetName(e.target.value)}
+                        onChange={(e) => setNewAssetName(capitalizeFirstLetter(e.target.value))}
+                        autoCapitalize="sentences"
                         placeholder="Tên tài sản (VD: Laptop Dell, Bộ dụng cụ kiểm tra...)"
                         className="flex-1 p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs"
                       />
@@ -2168,7 +2171,8 @@ export function GatePassView() {
                       autoFocus
                       required
                       value={passRejectionReason}
-                      onChange={(e) => setPassRejectionReason(e.target.value)}
+                      onChange={(e) => setPassRejectionReason(capitalizeFirstLetter(e.target.value))}
+                      autoCapitalize="sentences"
                       placeholder="Ghi rõ lý do từ chối phiếu ra cổng..."
                       className="w-full p-2 bg-white dark:bg-slate-900 border border-rose-300 dark:border-rose-800 rounded-xl text-xs text-slate-800 dark:text-slate-100"
                     />
