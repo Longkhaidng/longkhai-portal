@@ -723,13 +723,12 @@
     "permissions": [
       "dashboard",
       "food_registration",
-      "announcements",
-      "overtime"
+      "announcements"
     ],
     "isActive": true,
     "password": "1114",
     "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-12T04:24:31.977Z",
+    "updatedAt": "2026-11-12T04:26:55.377Z",
     "allowedWebIntegrations": []
   },
   {
