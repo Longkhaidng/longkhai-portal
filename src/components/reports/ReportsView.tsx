@@ -724,6 +724,7 @@ export function ReportsView() {
       fileName = `LONGKHAI_Bao_Cao_NGHI_PHEP_${nowStr}`;
       headers = [
         'Mã đơn',
+        'Ngày tạo',
         'Mã NV',
         'Họ và tên',
         'Phòng ban',
@@ -733,23 +734,33 @@ export function ReportsView() {
         'Lý do',
         'Trạng thái',
       ];
-      rows = filteredLeaves.map((l) => [
-        l.id,
-        l.employeeId,
-        l.employeeName,
-        l.department,
-        LEAVE_TYPE_LABELS[l.leaveType] || l.leaveType,
-        `${formatDate(l.fromDate)} → ${formatDate(l.toDate)}`,
-        l.totalDays,
-        l.reason || '',
-        l.status === 'approved'
-          ? 'Đã duyệt'
-          : l.status === 'pending'
-          ? 'Chờ duyệt'
-          : l.status === 'rejected'
-          ? 'Từ chối'
-          : 'Đã hủy',
-      ]);
+      rows = filteredLeaves.map((l) => {
+        const approvedStep = (l.steps || []).filter((s) => s.status === 'approved' && s.actionAt).pop();
+        const approvalTime = approvedStep?.actionAt || (l.status === 'approved' ? l.updatedAt : '');
+        const statusText =
+          l.status === 'approved'
+            ? approvalTime
+              ? `Đã duyệt (${formatDateTime(approvalTime)})`
+              : 'Đã duyệt'
+            : l.status === 'pending'
+            ? 'Chờ duyệt'
+            : l.status === 'rejected'
+            ? 'Từ chối'
+            : 'Đã hủy';
+
+        return [
+          l.id,
+          formatDate(l.createdAt),
+          l.employeeId,
+          l.employeeName,
+          l.department,
+          LEAVE_TYPE_LABELS[l.leaveType] || l.leaveType,
+          `${formatDate(l.fromDate)} → ${formatDate(l.toDate)}`,
+          l.totalDays,
+          l.reason || '',
+          statusText,
+        ];
+      });
     } else if (reportType === 'attendance') {
       title = 'XÁC NHẬN CÔNG';
       fileName = `LONGKHAI_Bao_Cao_XAC_NHAN_CONG_${nowStr}`;
@@ -1485,6 +1496,7 @@ export function ReportsView() {
               <thead>
                 <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
                   <th className="p-2 border">Mã đơn</th>
+                  <th className="p-2 border text-center">Ngày tạo</th>
                   <th className="p-2 border">Mã NV</th>
                   <th className="p-2 border">Họ và tên</th>
                   <th className="p-2 border">Phòng ban</th>
@@ -1492,58 +1504,71 @@ export function ReportsView() {
                   <th className="p-2 border">Thời gian nghỉ</th>
                   <th className="p-2 border text-center">Số ngày</th>
                   <th className="p-2 border">Lý do</th>
-                  <th className="p-2 border">Trạng thái</th>
+                  <th className="p-2 border text-center">Trạng thái</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredLeaves.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="p-8 text-center text-slate-400">
+                    <td colSpan={10} className="p-8 text-center text-slate-400">
                       Không tìm thấy dữ liệu nghỉ phép phù hợp với bộ lọc hiện tại.
                     </td>
                   </tr>
                 ) : (
-                  filteredLeaves.map((l) => (
-                    <tr key={l.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                      <td className="p-2 border text-center font-mono font-bold text-blue-600">{l.id}</td>
-                      <td className="p-2 border text-center font-mono">{l.employeeId}</td>
-                      <td className="p-2 border font-semibold text-slate-900 dark:text-white">
-                        {l.employeeName}
-                      </td>
-                      <td className="p-2 border">{l.department}</td>
-                      <td className="p-2 border">{LEAVE_TYPE_LABELS[l.leaveType] || l.leaveType}</td>
-                      <td className="p-2 border text-center font-medium">
-                        {formatDate(l.fromDate)} – {formatDate(l.toDate)}
-                      </td>
-                      <td className="p-2 border text-center font-bold text-rose-600">
-                        {l.totalDays}
-                      </td>
-                      <td className="p-2 border max-w-xs truncate text-slate-700 dark:text-slate-300" title={l.reason}>
-                        {l.reason || ''}
-                      </td>
-                      <td className="p-2 border text-center">
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                            l.status === 'approved'
-                              ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                  filteredLeaves.map((l) => {
+                    const approvedStep = (l.steps || []).filter((s) => s.status === 'approved' && s.actionAt).pop();
+                    const approvalTime = approvedStep?.actionAt || (l.status === 'approved' ? l.updatedAt : '');
+
+                    return (
+                      <tr key={l.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                        <td className="p-2 border text-center font-mono font-bold text-blue-600">{l.id}</td>
+                        <td className="p-2 border text-center font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                          {formatDate(l.createdAt)}
+                        </td>
+                        <td className="p-2 border text-center font-mono">{l.employeeId}</td>
+                        <td className="p-2 border font-semibold text-slate-900 dark:text-white">
+                          {l.employeeName}
+                        </td>
+                        <td className="p-2 border">{l.department}</td>
+                        <td className="p-2 border">{LEAVE_TYPE_LABELS[l.leaveType] || l.leaveType}</td>
+                        <td className="p-2 border text-center font-medium">
+                          {formatDate(l.fromDate)} – {formatDate(l.toDate)}
+                        </td>
+                        <td className="p-2 border text-center font-bold text-rose-600">
+                          {l.totalDays}
+                        </td>
+                        <td className="p-2 border max-w-xs truncate text-slate-700 dark:text-slate-300" title={l.reason}>
+                          {l.reason || ''}
+                        </td>
+                        <td className="p-2 border text-center">
+                          <span
+                            className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                              l.status === 'approved'
+                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                                : l.status === 'pending'
+                                ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                                : l.status === 'rejected'
+                                ? 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
+                                : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300'
+                            }`}
+                          >
+                            {l.status === 'approved'
+                              ? 'Đã duyệt'
                               : l.status === 'pending'
-                              ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                              ? 'Chờ duyệt'
                               : l.status === 'rejected'
-                              ? 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
-                              : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300'
-                          }`}
-                        >
-                          {l.status === 'approved'
-                            ? 'Đã duyệt'
-                            : l.status === 'pending'
-                            ? 'Chờ duyệt'
-                            : l.status === 'rejected'
-                            ? 'Từ chối'
-                            : 'Đã hủy'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
+                              ? 'Từ chối'
+                              : 'Đã hủy'}
+                          </span>
+                          {l.status === 'approved' && approvalTime && (
+                            <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium whitespace-nowrap">
+                              {formatDateTime(approvalTime)}
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
