@@ -39,11 +39,11 @@ function getTimePeriodBadge(timeStr: string) {
   const hour = parseInt(timeStr.split(':')[0], 10);
   const isMorning = !isNaN(hour) && hour < 12;
   return isMorning ? (
-    <span className="ml-1 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 shrink-0">
+    <span className="text-[9.5px] sm:text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 whitespace-nowrap shrink-0 inline-flex items-center">
       SA(Sáng)
     </span>
   ) : (
-    <span className="ml-1 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 shrink-0">
+    <span className="text-[9.5px] sm:text-[10px] font-semibold px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 whitespace-nowrap shrink-0 inline-flex items-center">
       CH(Chiều)
     </span>
   );
@@ -944,8 +944,8 @@ export function LeaveView() {
 
       {/* MODAL: Create Leave Request */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-auto max-h-[92vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-3.5 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 my-auto max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div>
                 <h3 className="font-bold text-base text-slate-900 dark:text-white">
@@ -1007,10 +1007,10 @@ export function LeaveView() {
                   <span>Thời gian nghỉ phép</span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
                   {/* Row 1: Ngày bắt đầu nghỉ & Giờ bắt đầu nghỉ */}
                   <div className="min-w-0">
-                    <label className="block text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 truncate">
+                    <label className="block text-[10.5px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 truncate">
                       Ngày bắt đầu nghỉ <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -1022,9 +1022,9 @@ export function LeaveView() {
                     />
                   </div>
                   <div className="min-w-0">
-                    <label className="flex items-center justify-between sm:justify-start gap-1 flex-wrap text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      <span className="truncate">Giờ bắt đầu nghỉ<span className="text-red-500">*{getTimePeriodBadge(fromTime)}</span></span>
-                      
+                    <label className="flex items-center justify-between gap-1 text-[10.5px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      <span className="min-w-0 truncate">Giờ bắt đầu nghỉ<span className="text-red-500">*</span></span>
+                      {getTimePeriodBadge(fromTime)}
                     </label>
                     <input
                       type="time"
@@ -1037,7 +1037,7 @@ export function LeaveView() {
 
                   {/* Row 2: Ngày kết thúc nghỉ & Giờ kết thúc nghỉ */}
                   <div className="min-w-0">
-                    <label className="block text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 truncate">
+                    <label className="block text-[10.5px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 truncate">
                       Ngày kết thúc nghỉ <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -1049,9 +1049,9 @@ export function LeaveView() {
                     />
                   </div>
                   <div className="min-w-0">
-                    <label className="flex items-center justify-between sm:justify-start gap-1 flex-wrap text-[11px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      <span className="truncate">Giờ kết thúc nghỉ<span className="text-red-500">*{getTimePeriodBadge(toTime)}</span></span>
-                      
+                    <label className="flex items-center justify-between gap-1 text-[10.5px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      <span className="min-w-0 truncate">Giờ kết thúc nghỉ<span className="text-red-500">*</span></span>
+                      {getTimePeriodBadge(toTime)}
                     </label>
                     <input
                       type="time"
