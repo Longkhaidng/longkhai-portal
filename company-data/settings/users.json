@@ -836,12 +836,20 @@
     "permissions": [
       "dashboard",
       "food_registration",
-      "announcements"
+      "announcements",
+      "leave",
+      "gate_pass",
+      "repair",
+      "periodic_inspection",
+      "reports",
+      "attendance",
+      "overtime"
     ],
     "isActive": true,
     "password": "1139",
     "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "updatedAt": "2026-11-12T06:51:10.966Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "1147",
