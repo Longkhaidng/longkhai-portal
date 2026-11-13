@@ -108,5 +108,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:32:46.234Z",
     "updatedAt": "2026-11-13T02:32:46.234Z"
+  },
+  {
+    "id": "CAM_VP_07",
+    "code": "CAM_VP_07",
+    "name": "Hồ cá văn phòng",
+    "zone": "Văn phòng chính",
+    "description": "Khu vực hồ cá văn phòng",
+    "status": "active",
+    "createdAt": "2026-11-13T02:33:20.722Z",
+    "updatedAt": "2026-11-13T02:33:20.722Z"
   }
 ]
