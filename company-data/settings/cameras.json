@@ -188,5 +188,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:43:47.819Z",
     "updatedAt": "2026-11-13T02:43:47.819Z"
+  },
+  {
+    "id": "CAM_VP_14",
+    "code": "CAM_VP_14",
+    "name": "Phòng ăn VIP",
+    "zone": "Văn phòng chính",
+    "description": "Khu vực ăn uống của sếp và khách",
+    "status": "active",
+    "createdAt": "2026-11-13T02:44:56.795Z",
+    "updatedAt": "2026-11-13T02:44:56.795Z"
   }
 ]
