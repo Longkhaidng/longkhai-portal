@@ -1,15 +1,5 @@
 [
   {
-    "id": "CAM_KTP_02",
-    "code": "CAM_KTP_02",
-    "name": "Cam Khu quấn màng Pallet",
-    "zone": "Kho thành phẩm",
-    "description": "Khu máy quấn màng tự động thành phẩm",
-    "status": "active",
-    "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
-  },
-  {
     "id": "CAM_SX_01",
     "code": "CAM_SX_01",
     "name": "Cam Xưởng Ép - Line 1",
