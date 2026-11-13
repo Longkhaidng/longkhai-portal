@@ -530,8 +530,9 @@ export function FoodRegistrationView() {
       list = list.filter((r) => {
         const isExpired = checkFoodQrValidity(r).isExpired;
         return selectedStatuses.some((st) => {
-          if (st === 'pending_approval') return r.status === 'pending_dept' || r.status === 'pending_hr';
           if (st === 'expired') return isExpired;
+          if (isExpired) return false;
+          if (st === 'pending_approval') return r.status === 'pending_dept' || r.status === 'pending_hr';
           if (st === 'rejected') return r.status === 'rejected' || r.status === 'guard_rejected';
           return r.status === st;
         });
@@ -1396,13 +1397,19 @@ export function FoodRegistrationView() {
                           )}
                         </td>
 
-                        {/* Status - Căn giữa, bỏ dòng đã vào n lần theo khung đỏ */}
+                        {/* Status - Căn giữa, phiếu hết hiệu lực hiển thị "Hết hiệu lực" ở cột trạng thái */}
                         <td className="p-3 whitespace-nowrap text-center">
-                          <span
-                            className={`inline-block px-2.5 py-1 rounded-full text-[11px] font-bold border ${FOOD_STATUS_BADGES[item.status]}`}
-                          >
-                            {FOOD_STATUS_LABELS[item.status]}
-                          </span>
+                          {validity.isExpired ? (
+                            <span className="inline-block px-2.5 py-1 rounded-full text-[11px] font-bold border bg-rose-50 text-rose-700 border-rose-300 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-800">
+                              Hết hiệu lực
+                            </span>
+                          ) : (
+                            <span
+                              className={`inline-block px-2.5 py-1 rounded-full text-[11px] font-bold border ${FOOD_STATUS_BADGES[item.status]}`}
+                            >
+                              {FOOD_STATUS_LABELS[item.status]}
+                            </span>
+                          )}
                         </td>
 
                         {/* Actions - Căn giữa */}
