@@ -88,5 +88,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:30:51.730Z",
     "updatedAt": "2026-11-13T02:30:51.730Z"
+  },
+  {
+    "id": "CAM_VP_05",
+    "code": "CAM_VP_05",
+    "name": "Phòng họp_01",
+    "zone": "Văn phòng chính",
+    "description": "Phòng họp bàn gỗ",
+    "status": "active",
+    "createdAt": "2026-11-13T02:32:04.226Z",
+    "updatedAt": "2026-11-13T02:32:04.226Z"
   }
 ]
