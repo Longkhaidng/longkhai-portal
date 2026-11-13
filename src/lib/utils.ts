@@ -175,7 +175,8 @@ export function calculateLeaveDays(
 }
 
 /**
- * Tính ngày kết thúc = Ngày bắt đầu + Số ngày (YYYY-MM-DD)
+ * Tính ngày kết thúc tính từ ngày bắt đầu: Ngày kết thúc = Ngày bắt đầu + (Số ngày - 1) (YYYY-MM-DD)
+ * Ví dụ: 1 ngày -> Ngày kết thúc = Ngày bắt đầu; 2 ngày -> Ngày kết thúc = Ngày bắt đầu + 1
  */
 export function calculateEndDate(startDateStr: string, days: number): string {
   if (!startDateStr || isNaN(days) || days <= 0) return startDateStr;
@@ -183,7 +184,7 @@ export function calculateEndDate(startDateStr: string, days: number): string {
     const [year, month, day] = startDateStr.split('-').map(Number);
     if (!year || !month || !day) return startDateStr;
     const date = new Date(year, month - 1, day);
-    date.setDate(date.getDate() + Number(days));
+    date.setDate(date.getDate() + Math.max(0, Number(days) - 1));
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
     const d = String(date.getDate()).padStart(2, '0');
