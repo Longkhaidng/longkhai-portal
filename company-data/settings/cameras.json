@@ -238,5 +238,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:49:30.113Z",
     "updatedAt": "2026-11-13T02:49:30.113Z"
+  },
+  {
+    "id": "CAM_HT_02",
+    "code": "CAM_HT_02",
+    "name": "Rà kim loại_01",
+    "zone": "PXHT",
+    "description": "Khu vực rà kim loại",
+    "status": "active",
+    "createdAt": "2026-11-13T02:50:48.579Z",
+    "updatedAt": "2026-11-13T02:50:48.579Z"
   }
 ]
