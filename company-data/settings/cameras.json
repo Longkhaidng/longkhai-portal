@@ -1,15 +1,5 @@
 [
   {
-    "id": "CAM_KNL_02",
-    "code": "CAM_KNL_02",
-    "name": "Cam Kệ hàng Pallet A",
-    "zone": "Kho nguyên liệu",
-    "description": "Dãy pallet hàng A1 - A12",
-    "status": "active",
-    "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
-  },
-  {
     "id": "CAM_KNL_03",
     "code": "CAM_KNL_03",
     "name": "Cam Khu vực Cân tải",
