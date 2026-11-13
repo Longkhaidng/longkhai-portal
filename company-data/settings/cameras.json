@@ -288,5 +288,15 @@
     "status": "active",
     "createdAt": "2026-11-13T04:18:39.190Z",
     "updatedAt": "2026-11-13T04:18:39.190Z"
+  },
+  {
+    "id": "CAM_HT_07",
+    "code": "CAM_HT_07",
+    "name": "Mạng",
+    "zone": "PXHT",
+    "description": "Khu vực mạng",
+    "status": "active",
+    "createdAt": "2026-11-13T04:19:59.637Z",
+    "updatedAt": "2026-11-13T04:19:59.637Z"
   }
 ]
