@@ -388,5 +388,15 @@
     "status": "active",
     "createdAt": "2026-11-13T08:31:58.615Z",
     "updatedAt": "2026-11-13T08:31:58.615Z"
+  },
+  {
+    "id": "CAM_DET_02",
+    "code": "CAM_DET_02",
+    "name": "Line_01B",
+    "zone": "Phân xưởng dệt",
+    "description": "Góc cam xoay hướng lò hơi",
+    "status": "active",
+    "createdAt": "2026-11-13T08:40:05.148Z",
+    "updatedAt": "2026-11-13T08:40:05.148Z"
   }
 ]
