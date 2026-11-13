@@ -368,5 +368,15 @@
     "status": "active",
     "createdAt": "2026-11-13T06:49:30.268Z",
     "updatedAt": "2026-11-13T06:49:30.268Z"
+  },
+  {
+    "id": "CAM_PT_02",
+    "code": "CAM_PT_02",
+    "name": "Phòng cơ điện",
+    "zone": "Khu phụ trợ",
+    "description": "Phòng cơ điện",
+    "status": "active",
+    "createdAt": "2026-11-13T06:50:17.754Z",
+    "updatedAt": "2026-11-13T06:50:17.754Z"
   }
 ]
