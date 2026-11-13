@@ -208,5 +208,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:46:09.938Z",
     "updatedAt": "2026-11-13T02:46:09.938Z"
+  },
+  {
+    "id": "CAM_VP_16",
+    "code": "CAM_VP_16",
+    "name": "Hành lang phòng chuyên gia",
+    "zone": "Văn phòng chính",
+    "description": "Hành lang khu chuyên gia",
+    "status": "active",
+    "createdAt": "2026-11-13T02:47:02.585Z",
+    "updatedAt": "2026-11-13T02:47:02.585Z"
   }
 ]
