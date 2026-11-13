@@ -1,15 +1,5 @@
 [
   {
-    "id": "CAM_HC_01",
-    "code": "CAM_HC_01",
-    "name": "Cam Nhà ăn công nhân",
-    "zone": "Hành chính - Đời sống",
-    "description": "Khu vực phòng ăn và phân phát suất ăn",
-    "status": "active",
-    "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
-  },
-  {
     "id": "CAM_KNL_01",
     "code": "CAM_KNL_01",
     "name": "Khu vực nhập hàng",
