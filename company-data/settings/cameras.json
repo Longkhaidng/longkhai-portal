@@ -438,5 +438,15 @@
     "status": "active",
     "createdAt": "2026-11-13T08:51:46.162Z",
     "updatedAt": "2026-11-13T08:51:46.162Z"
+  },
+  {
+    "id": "CAM_DET_07",
+    "code": "CAM_DET_07",
+    "name": "Line_04A",
+    "zone": "Phân xưởng dệt",
+    "description": "Cam xoay hướng kho nguyên liệu",
+    "status": "active",
+    "createdAt": "2026-11-13T08:52:36.224Z",
+    "updatedAt": "2026-11-13T08:52:36.224Z"
   }
 ]
