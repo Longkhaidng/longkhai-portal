@@ -1,0 +1,25 @@
+{
+  "id": "TP26-0007",
+  "employeeId": "1139",
+  "employeeName": "Võ Thị Tuyết",
+  "department": "Phòng HCNS",
+  "entryDate": "2026-11-14",
+  "toDate": "2026-11-15",
+  "durationDays": 2,
+  "category": "medicine_drink",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Nước thuốc (Lý do: Đau đầu)",
+  "medicineReason": "Đau đầu",
+  "complianceCommitment": true,
+  "status": "pending_hr",
+  "steps": [
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-13T04:29:10.102Z",
+  "updatedAt": "2026-11-13T04:29:10.102Z"
+}
