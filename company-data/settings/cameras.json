@@ -318,5 +318,15 @@
     "status": "active",
     "createdAt": "2026-11-13T06:42:38.580Z",
     "updatedAt": "2026-11-13T06:42:38.580Z"
+  },
+  {
+    "id": "CAM_HT_10",
+    "code": "CAM_HT_10",
+    "name": "Hành lang HT_02",
+    "zone": "PXHT",
+    "description": "Khu vực giữa PXHT gần máy sấy số 2",
+    "status": "active",
+    "createdAt": "2026-11-13T06:45:46.209Z",
+    "updatedAt": "2026-11-13T06:45:46.209Z"
   }
 ]
