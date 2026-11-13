@@ -1,15 +1,5 @@
 [
   {
-    "id": "CAM_AN_02",
-    "code": "CAM_AN_02",
-    "name": "Cam Cổng chính & Chốt bảo vệ",
-    "zone": "Khu vực an ninh / Nhà xe",
-    "description": "Cổng ra vào kiểm soát bảo vệ nhà máy",
-    "status": "active",
-    "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
-  },
-  {
     "id": "CAM_HC_01",
     "code": "CAM_HC_01",
     "name": "Cam Nhà ăn công nhân",
