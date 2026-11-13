@@ -178,5 +178,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:42:15.194Z",
     "updatedAt": "2026-11-13T02:42:15.194Z"
+  },
+  {
+    "id": "CAM_VP_13",
+    "code": "CAM_VP_13",
+    "name": "Khu phòng khách",
+    "zone": "Văn phòng chính",
+    "description": "Hành lang phòng khách",
+    "status": "active",
+    "createdAt": "2026-11-13T02:43:47.819Z",
+    "updatedAt": "2026-11-13T02:43:47.819Z"
   }
 ]
