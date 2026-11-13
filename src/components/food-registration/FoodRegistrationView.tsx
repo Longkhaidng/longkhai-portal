@@ -756,7 +756,7 @@ export function FoodRegistrationView() {
                     <span className="text-base">🥗</span>
                     <span className="font-bold">2. Thực phẩm chay</span>
                   </div>
-                  <span className="justify-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400">
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400">
                     Dùng trong ngày
                   </span>
                 </button>
