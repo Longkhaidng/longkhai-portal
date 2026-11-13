@@ -735,7 +735,7 @@ export function FoodRegistrationView() {
                   }`}
                 >
                   <span className="text-base leading-none mt-0.5 shrink-0">🤰🍵</span>
-                  <div className="flex flex-col justify-between h-full gap-1 min-w-0">
+                  <div className="flex flex-col gap-1 min-w-0">
                     <span className="text-xs font-bold leading-snug">1. Mang thai &amp; Nước thuốc</span>
                     <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal leading-snug">
                       Theo đợt (Duyệt Trưởng BP &amp; HCNS)
@@ -753,7 +753,7 @@ export function FoodRegistrationView() {
                   }`}
                 >
                   <span className="text-base leading-none mt-0.5 shrink-0">🥗</span>
-                  <div className="flex flex-col justify-between h-full gap-1 min-w-0">
+                  <div className="flex flex-col gap-1 min-w-0">
                     <span className="text-xs font-bold leading-snug">2. Thực phẩm chay</span>
                     <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal leading-snug">
                       Dùng trong ngày
