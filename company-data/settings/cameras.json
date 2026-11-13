@@ -348,5 +348,15 @@
     "status": "active",
     "createdAt": "2026-11-13T06:47:40.158Z",
     "updatedAt": "2026-11-13T06:47:40.158Z"
+  },
+  {
+    "id": "CAM_HT_13",
+    "code": "CAM_HT_13",
+    "name": "Khíu linking",
+    "zone": "PXHT",
+    "description": "Khu vực khíu linking",
+    "status": "active",
+    "createdAt": "2026-11-13T06:48:27.902Z",
+    "updatedAt": "2026-11-13T06:48:27.902Z"
   }
 ]
