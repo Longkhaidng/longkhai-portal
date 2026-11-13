@@ -29,7 +29,7 @@ export type FoodRegistrationStatus =
 export const FOOD_STATUS_LABELS: Record<FoodRegistrationStatus, string> = {
   pending_dept: 'Chờ Trưởng BP duyệt',
   pending_hr: 'Chờ Trưởng phòng HCNS duyệt',
-  approved: 'Đã duyệt (Có mã QR)',
+  approved: 'Đã duyệt',
   rejected: 'Từ chối phê duyệt',
   confirmed: 'Bảo vệ đã xác nhận',
   guard_rejected: 'Bảo vệ từ chối tại cổng',
