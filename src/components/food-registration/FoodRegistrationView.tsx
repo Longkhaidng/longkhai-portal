@@ -734,9 +734,9 @@ export function FoodRegistrationView() {
                       : 'bg-slate-50/60 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
                   }`}
                 >
-                  <span className="text-base leading-none mt-0.5 shrink-0">🤰🍵</span>
+                  <span className="flex flex-col text-base leading-none mt-0.5 shrink-0">🤰🍵</span>
                   <div className="flex flex-col gap-1 min-w-0">
-                    <span className="text-xs font-bold leading-snug">1. Mang thai &amp; Nước thuốc</span>
+                    <span className="text-xs font-bold leading-snug">1. Thực phẩm mang thai &amp; Nước thuốc</span>
                     <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal leading-snug">
                       Theo đợt (Duyệt Trưởng BP &amp; HCNS)
                     </span>
