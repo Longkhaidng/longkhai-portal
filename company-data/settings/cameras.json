@@ -298,5 +298,15 @@
     "status": "active",
     "createdAt": "2026-11-13T04:19:59.637Z",
     "updatedAt": "2026-11-13T04:19:59.637Z"
+  },
+  {
+    "id": "CAM_HT_08",
+    "code": "CAM_HT_08",
+    "name": "In silicon",
+    "zone": "PXHT",
+    "description": "Khu vực in silicon",
+    "status": "active",
+    "createdAt": "2026-11-13T06:42:06.013Z",
+    "updatedAt": "2026-11-13T06:42:06.013Z"
   }
 ]
