@@ -148,5 +148,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:39:32.426Z",
     "updatedAt": "2026-11-13T02:39:32.426Z"
+  },
+  {
+    "id": "CAM_VP_10",
+    "code": "CAM_VP_10",
+    "name": "Canteen",
+    "zone": "Văn phòng chính",
+    "description": "Khu vực ăn uống của nhân viên",
+    "status": "active",
+    "createdAt": "2026-11-13T02:40:23.827Z",
+    "updatedAt": "2026-11-13T02:40:23.827Z"
   }
 ]
