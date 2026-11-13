@@ -338,5 +338,15 @@
     "status": "active",
     "createdAt": "2026-11-13T06:46:39.711Z",
     "updatedAt": "2026-11-13T06:46:39.711Z"
+  },
+  {
+    "id": "CAM_HT_12",
+    "code": "CAM_HT_12",
+    "name": "Kho sau dệt",
+    "zone": "PXHT",
+    "description": "Kho sau dệt",
+    "status": "active",
+    "createdAt": "2026-11-13T06:47:40.158Z",
+    "updatedAt": "2026-11-13T06:47:40.158Z"
   }
 ]
