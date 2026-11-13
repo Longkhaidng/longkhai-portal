@@ -248,5 +248,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:50:48.579Z",
     "updatedAt": "2026-11-13T02:50:48.579Z"
+  },
+  {
+    "id": "CAM_HT_04",
+    "code": "CAM_HT_04",
+    "name": "Hành lang HT_01",
+    "zone": "PXHT",
+    "description": "Hành lang khu vực giữa xưởng",
+    "status": "active",
+    "createdAt": "2026-11-13T02:52:49.522Z",
+    "updatedAt": "2026-11-13T02:52:49.522Z"
   }
 ]
