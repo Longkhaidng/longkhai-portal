@@ -8,5 +8,15 @@
     "status": "active",
     "createdAt": "2026-01-01T08:00:00.000Z",
     "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "CAM_KNL_01",
+    "code": "CAM_KNL_01",
+    "name": "Khu vực nhập hàng",
+    "zone": "Kho nguyên liệu",
+    "description": "Khu vực tập kết hàng",
+    "status": "active",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-11-13T02:05:39.685Z"
   }
 ]
