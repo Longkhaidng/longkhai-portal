@@ -68,5 +68,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:21:54.403Z",
     "updatedAt": "2026-11-13T02:21:54.403Z"
+  },
+  {
+    "id": "CAM_VP_03",
+    "code": "CAM_VP_03",
+    "name": "Phòng tổng hợp",
+    "zone": "Văn phòng chính",
+    "description": "Phòng tổng hợp",
+    "status": "active",
+    "createdAt": "2026-11-13T02:30:06.674Z",
+    "updatedAt": "2026-11-13T02:30:06.674Z"
   }
 ]
