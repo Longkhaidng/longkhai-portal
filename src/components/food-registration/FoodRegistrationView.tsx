@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
 import { User } from '@/types/user';
@@ -52,6 +52,8 @@ import {
   Loader2,
   UserCheck,
   ChevronRight,
+  ChevronDown,
+  Check,
   Sparkles,
   Info,
 } from 'lucide-react';
@@ -119,8 +121,35 @@ export function FoodRegistrationView() {
     isSecurityRole(currentUser) ? 'all' : 'my'
   );
   const [filterSearch, setFilterSearch] = useState<string>('');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState<boolean>(false);
+  const statusDropdownRef = useRef<HTMLDivElement>(null);
   const [filterCategory, setFilterCategory] = useState<string>('all');
+
+  const STATUS_FILTER_OPTIONS = [
+    { value: 'pending_dept', label: 'Chờ Trưởng BP duyệt' },
+    { value: 'pending_hr', label: 'Chờ Trưởng phòng HCNS duyệt' },
+    { value: 'approved', label: 'Đã duyệt (Có mã QR)' },
+    { value: 'confirmed', label: 'Bảo vệ đã xác nhận' },
+    { value: 'rejected', label: 'Từ chối phê duyệt' },
+    { value: 'expired', label: 'Hết hiệu lực' },
+  ];
+
+  const toggleStatusFilter = (val: string) => {
+    setSelectedStatuses((prev) =>
+      prev.includes(val) ? prev.filter((item) => item !== val) : [...prev, val]
+    );
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (statusDropdownRef.current && !statusDropdownRef.current.contains(event.target as Node)) {
+        setIsStatusDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Approval Modals
   const [approvingItem, setApprovingItem] = useState<{ item: FoodRegistration; level: 'dept' | 'hr' } | null>(null);
@@ -496,15 +525,17 @@ export function FoodRegistrationView() {
     // 1. RBAC filter
     let list = filterUserFoodRegistrations(registrations, currentUser, activeTab);
 
-    // 2. Status filter
-    if (filterStatus !== 'all') {
-      if (filterStatus === 'pending_approval') {
-        list = list.filter((r) => r.status === 'pending_dept' || r.status === 'pending_hr');
-      } else if (filterStatus === 'expired') {
-        list = list.filter((r) => checkFoodQrValidity(r).isExpired);
-      } else {
-        list = list.filter((r) => r.status === filterStatus);
-      }
+    // 2. Status filter (multi-select)
+    if (selectedStatuses.length > 0) {
+      list = list.filter((r) => {
+        const isExpired = checkFoodQrValidity(r).isExpired;
+        return selectedStatuses.some((st) => {
+          if (st === 'pending_approval') return r.status === 'pending_dept' || r.status === 'pending_hr';
+          if (st === 'expired') return isExpired;
+          if (st === 'rejected') return r.status === 'rejected' || r.status === 'guard_rejected';
+          return r.status === st;
+        });
+      });
     }
 
     // 3. Category filter
@@ -527,7 +558,7 @@ export function FoodRegistrationView() {
     }
 
     return list;
-  }, [registrations, currentUser, activeTab, filterStatus, filterCategory, filterSearch]);
+  }, [registrations, currentUser, activeTab, selectedStatuses, filterCategory, filterSearch]);
 
   // Counts for tabs & metric cards
   const metrics = useMemo(() => {
@@ -1184,20 +1215,79 @@ export function FoodRegistrationView() {
               <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
             </div>
 
-            <div>
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className="w-full px-2.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-semibold cursor-pointer"
+            <div className="relative" ref={statusDropdownRef}>
+              <button
+                type="button"
+                onClick={() => setIsStatusDropdownOpen((prev) => !prev)}
+                className="w-full px-2.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-semibold cursor-pointer flex items-center justify-between gap-2 text-left"
               >
-                <option value="all">Tất cả trạng thái</option>
-                <option value="pending_dept">Chờ Trưởng BP duyệt</option>
-                <option value="pending_hr">Chờ Trưởng phòng HCNS duyệt</option>
-                <option value="approved">Đã duyệt (Có mã QR)</option>
-                <option value="confirmed">Bảo vệ đã xác nhận</option>
-                <option value="rejected">Từ chối phê duyệt</option>
-                <option value="expired">Hết hiệu lực</option>
-              </select>
+                <span className="truncate">
+                  {selectedStatuses.length === 0
+                    ? 'Tất cả trạng thái'
+                    : selectedStatuses.length === 1
+                    ? STATUS_FILTER_OPTIONS.find((o) => o.value === selectedStatuses[0])?.label
+                    : `Đã chọn ${selectedStatuses.length} trạng thái`}
+                </span>
+                <ChevronDown
+                  className={`w-3.5 h-3.5 text-slate-500 shrink-0 transition-transform duration-150 ${
+                    isStatusDropdownOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+
+              {isStatusDropdownOpen && (
+                <div className="absolute left-0 right-0 mt-1.5 z-50 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg py-1.5 max-h-72 overflow-y-auto">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedStatuses([])}
+                    className={`w-full px-3 py-2 text-left text-xs flex items-center gap-2.5 transition-colors cursor-pointer ${
+                      selectedStatuses.length === 0
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-bold'
+                        : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium'
+                    }`}
+                  >
+                    <span
+                      className={`w-4 h-4 rounded flex items-center justify-center border shrink-0 transition-colors ${
+                        selectedStatuses.length === 0
+                          ? 'bg-emerald-600 border-emerald-600 text-white'
+                          : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800'
+                      }`}
+                    >
+                      {selectedStatuses.length === 0 && <Check className="w-3 h-3 stroke-[3]" />}
+                    </span>
+                    <span className="truncate">Tất cả trạng thái</span>
+                  </button>
+
+                  <div className="my-1 border-t border-slate-100 dark:border-slate-800" />
+
+                  {STATUS_FILTER_OPTIONS.map((opt) => {
+                    const isChecked = selectedStatuses.includes(opt.value);
+                    return (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => toggleStatusFilter(opt.value)}
+                        className={`w-full px-3 py-2 text-left text-xs flex items-center gap-2.5 transition-colors cursor-pointer ${
+                          isChecked
+                            ? 'bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 font-semibold'
+                            : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium'
+                        }`}
+                      >
+                        <span
+                          className={`w-4 h-4 rounded flex items-center justify-center border shrink-0 transition-colors ${
+                            isChecked
+                              ? 'bg-emerald-600 border-emerald-600 text-white'
+                              : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800'
+                          }`}
+                        >
+                          {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
+                        </span>
+                        <span className="truncate">{opt.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <div>
