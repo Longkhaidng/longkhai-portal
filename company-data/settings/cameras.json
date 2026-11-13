@@ -1,15 +1,5 @@
 [
   {
-    "id": "CAM_KNL_03",
-    "code": "CAM_KNL_03",
-    "name": "Cam Khu vực Cân tải",
-    "zone": "Kho nguyên liệu",
-    "description": "Bàn cân điện tử 5 tấn kho nguyên liệu",
-    "status": "active",
-    "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
-  },
-  {
     "id": "CAM_KTP_01",
     "code": "CAM_KTP_01",
     "name": "Cam Cửa xuất hàng B1",
