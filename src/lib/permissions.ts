@@ -4,7 +4,7 @@ import { GatePass } from '@/types/gatePass';
 import { AttendanceConfirm } from '@/types/attendance';
 import { RepairProposal } from '@/types/repair';
 import { StationeryProposal, GeneralProposal } from '@/types/proposal';
-import { FoodRegistration } from '@/types/food-registration';
+import { FoodRegistration, checkFoodQrValidity } from '@/types/food-registration';
 import { CameraRequest } from '@/types/camera';
 
 export type DocumentScope = 'my' | 'approver' | 'all';
@@ -661,7 +661,15 @@ export function filterUserFoodRegistrations(
   const isSecurity = isSecurityRole(user);
   const isHR = isHRHead(user) || user.role === 'hr' || user.role === 'cb';
 
-  if (isAdmin || isSecurity) {
+  // Bảo vệ đăng nhập: chỉ hiển thị những phiếu còn hiệu lực, đã phê duyệt (approved) và bảo vệ đã xác nhận (confirmed)
+  if (isSecurity && !isAdmin) {
+    return registrations.filter((r) => {
+      const validity = checkFoodQrValidity(r);
+      return !validity.isExpired && (r.status === 'approved' || r.status === 'confirmed');
+    });
+  }
+
+  if (isAdmin) {
     if (scope === 'my') return registrations.filter((r) => r.employeeId.toLowerCase() === uid);
     return registrations;
   }

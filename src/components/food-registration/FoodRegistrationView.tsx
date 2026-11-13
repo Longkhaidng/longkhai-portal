@@ -126,14 +126,28 @@ export function FoodRegistrationView() {
   const statusDropdownRef = useRef<HTMLDivElement>(null);
   const [filterCategory, setFilterCategory] = useState<string>('all');
 
-  const STATUS_FILTER_OPTIONS = [
-    { value: 'pending_dept', label: 'Chờ Trưởng BP duyệt' },
-    { value: 'pending_hr', label: 'Chờ Trưởng phòng HCNS duyệt' },
-    { value: 'approved', label: 'Đã duyệt (Có mã QR)' },
-    { value: 'confirmed', label: 'Bảo vệ đã xác nhận' },
-    { value: 'rejected', label: 'Từ chối phê duyệt' },
-    { value: 'expired', label: 'Hết hiệu lực' },
-  ];
+  const isGuard = isSecurityRole(currentUser);
+  const isAdmin = isSuperAdminOrBOD(currentUser);
+  const isHR = isHRHead(currentUser);
+  const isManager = currentUser?.role === 'manager';
+  const isHRDeptEmployee = isHROrITDepartment(department.trim()) || isHROrITDepartment(currentUser?.department);
+
+  const STATUS_FILTER_OPTIONS = useMemo(() => {
+    if (isGuard && !isAdmin) {
+      return [
+        { value: 'approved', label: 'Đã duyệt (Có mã QR)' },
+        { value: 'confirmed', label: 'Bảo vệ đã xác nhận' },
+      ];
+    }
+    return [
+      { value: 'pending_dept', label: 'Chờ Trưởng BP duyệt' },
+      { value: 'pending_hr', label: 'Chờ Trưởng phòng HCNS duyệt' },
+      { value: 'approved', label: 'Đã duyệt (Có mã QR)' },
+      { value: 'confirmed', label: 'Bảo vệ đã xác nhận' },
+      { value: 'rejected', label: 'Từ chối phê duyệt' },
+      { value: 'expired', label: 'Hết hiệu lực' },
+    ];
+  }, [isGuard, isAdmin]);
 
   const toggleStatusFilter = (val: string) => {
     setSelectedStatuses((prev) =>
@@ -160,12 +174,6 @@ export function FoodRegistrationView() {
   // QR Modal
   const [selectedQrItem, setSelectedQrItem] = useState<FoodRegistration | null>(null);
   const [isQrModalOpen, setIsQrModalOpen] = useState<boolean>(false);
-
-  const isGuard = isSecurityRole(currentUser);
-  const isAdmin = isSuperAdminOrBOD(currentUser);
-  const isHR = isHRHead(currentUser);
-  const isManager = currentUser?.role === 'manager';
-  const isHRDeptEmployee = isHROrITDepartment(department.trim()) || isHROrITDepartment(currentUser?.department);
 
   // Load Initial Data
   const loadData = () => {
@@ -563,6 +571,9 @@ export function FoodRegistrationView() {
 
   // Counts for tabs & metric cards
   const metrics = useMemo(() => {
+    const guardVisible = isGuard && !isAdmin
+      ? filterUserFoodRegistrations(registrations, currentUser, 'all')
+      : registrations;
     const myTickets = registrations.filter(
       (r) => currentUser && r.employeeId.toLowerCase() === currentUser.id.toLowerCase()
     );
@@ -580,13 +591,13 @@ export function FoodRegistrationView() {
     ).length;
 
     return {
-      total: registrations.length,
+      total: guardVisible.length,
       myCount: myTickets.length,
       waitingMeCount: isGuard ? pendingTotal : waitingMe.length,
       approvedActiveCount: approvedActive.length,
       expiredCount: registrations.filter((r) => checkFoodQrValidity(r).isExpired).length,
     };
-  }, [registrations, currentUser, isGuard]);
+  }, [registrations, currentUser, isGuard, isAdmin]);
 
   return (
     <div className="space-y-6 pb-12">
