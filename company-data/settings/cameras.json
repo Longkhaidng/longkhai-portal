@@ -218,5 +218,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:47:02.585Z",
     "updatedAt": "2026-11-13T02:47:02.585Z"
+  },
+  {
+    "id": "CAM_VP_17",
+    "code": "CAM_VP_17",
+    "name": "Văn phòng xưởng",
+    "zone": "Văn phòng xưởng",
+    "description": "Văn phòng xưởng",
+    "status": "active",
+    "createdAt": "2026-11-13T02:48:10.003Z",
+    "updatedAt": "2026-11-13T02:48:10.003Z"
   }
 ]
