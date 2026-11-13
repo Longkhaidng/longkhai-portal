@@ -278,5 +278,15 @@
     "status": "active",
     "createdAt": "2026-11-13T04:17:50.349Z",
     "updatedAt": "2026-11-13T04:17:50.349Z"
+  },
+  {
+    "id": "CAM_HT_06",
+    "code": "CAM_HT_06",
+    "name": "Lộn",
+    "zone": "PXHT",
+    "description": "Khu vực lộn",
+    "status": "active",
+    "createdAt": "2026-11-13T04:18:39.190Z",
+    "updatedAt": "2026-11-13T04:18:39.190Z"
   }
 ]
