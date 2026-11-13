@@ -268,5 +268,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:51:16.986Z",
     "updatedAt": "2026-11-13T02:53:57.426Z"
+  },
+  {
+    "id": "CAM_HT_05",
+    "code": "CAM_HT_05",
+    "name": "Kiểm tra tổng hợp",
+    "zone": "PXHT",
+    "description": "Khu vực kiểm tra tổng hợp",
+    "status": "active",
+    "createdAt": "2026-11-13T04:17:50.349Z",
+    "updatedAt": "2026-11-13T04:17:50.349Z"
   }
 ]
