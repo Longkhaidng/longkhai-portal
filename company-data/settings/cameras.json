@@ -38,5 +38,15 @@
     "status": "active",
     "createdAt": "2026-01-01T08:00:00.000Z",
     "updatedAt": "2026-11-13T02:09:48.771Z"
+  },
+  {
+    "id": "CAM_KNL_05",
+    "code": "CAM_KNL_05",
+    "name": "Kho nguyên liệu",
+    "zone": "Khu vực để sợi",
+    "description": "Khu vực để sợi tầng 2 kho nguyên liệu",
+    "status": "active",
+    "createdAt": "2026-11-13T02:18:42.747Z",
+    "updatedAt": "2026-11-13T02:18:42.747Z"
   }
 ]
