@@ -135,14 +135,14 @@ export function FoodRegistrationView() {
   const STATUS_FILTER_OPTIONS = useMemo(() => {
     if (isGuard && !isAdmin) {
       return [
-        { value: 'approved', label: 'Đã duyệt (Có mã QR)' },
+        { value: 'approved', label: 'Đã duyệt' },
         { value: 'confirmed', label: 'Bảo vệ đã xác nhận' },
       ];
     }
     return [
       { value: 'pending_dept', label: 'Chờ Trưởng BP duyệt' },
       { value: 'pending_hr', label: 'Chờ Trưởng phòng HCNS duyệt' },
-      { value: 'approved', label: 'Đã duyệt (Có mã QR)' },
+      { value: 'approved', label: 'Đã duyệt' },
       { value: 'confirmed', label: 'Bảo vệ đã xác nhận' },
       { value: 'rejected', label: 'Từ chối phê duyệt' },
       { value: 'expired', label: 'Hết hiệu lực' },
