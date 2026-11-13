@@ -1,15 +1,5 @@
 [
   {
-    "id": "CAM_SX_02",
-    "code": "CAM_SX_02",
-    "name": "Cam Xưởng Ép - Line 2",
-    "zone": "Khu vực sản xuất",
-    "description": "Dây chuyền máy ép hạt số 2 xưởng sản xuất",
-    "status": "active",
-    "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
-  },
-  {
     "id": "CAM_AN_01",
     "code": "CAM_AN_01",
     "name": "Cam Bãi giữ xe máy NV",
