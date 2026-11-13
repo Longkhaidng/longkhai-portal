@@ -1,0 +1,102 @@
+[
+  {
+    "id": "CAM_KNL_02",
+    "code": "CAM_KNL_02",
+    "name": "Cam Kệ hàng Pallet A",
+    "zone": "Kho nguyên liệu",
+    "description": "Dãy pallet hàng A1 - A12",
+    "status": "active",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "CAM_KNL_03",
+    "code": "CAM_KNL_03",
+    "name": "Cam Khu vực Cân tải",
+    "zone": "Kho nguyên liệu",
+    "description": "Bàn cân điện tử 5 tấn kho nguyên liệu",
+    "status": "active",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "CAM_KTP_01",
+    "code": "CAM_KTP_01",
+    "name": "Cam Cửa xuất hàng B1",
+    "zone": "Kho thành phẩm",
+    "description": "Cửa bốc dỡ xe container B1 kho thành phẩm",
+    "status": "active",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "CAM_KTP_02",
+    "code": "CAM_KTP_02",
+    "name": "Cam Khu quấn màng Pallet",
+    "zone": "Kho thành phẩm",
+    "description": "Khu máy quấn màng tự động thành phẩm",
+    "status": "active",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "CAM_SX_01",
+    "code": "CAM_SX_01",
+    "name": "Cam Xưởng Ép - Line 1",
+    "zone": "Khu vực sản xuất",
+    "description": "Dây chuyền máy ép hạt số 1 xưởng sản xuất",
+    "status": "active",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "CAM_SX_02",
+    "code": "CAM_SX_02",
+    "name": "Cam Xưởng Ép - Line 2",
+    "zone": "Khu vực sản xuất",
+    "description": "Dây chuyền máy ép hạt số 2 xưởng sản xuất",
+    "status": "active",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "CAM_AN_01",
+    "code": "CAM_AN_01",
+    "name": "Cam Bãi giữ xe máy NV",
+    "zone": "Khu vực an ninh / Nhà xe",
+    "description": "Toàn cảnh bãi xe máy nhân viên",
+    "status": "active",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "CAM_AN_02",
+    "code": "CAM_AN_02",
+    "name": "Cam Cổng chính & Chốt bảo vệ",
+    "zone": "Khu vực an ninh / Nhà xe",
+    "description": "Cổng ra vào kiểm soát bảo vệ nhà máy",
+    "status": "active",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "CAM_HC_01",
+    "code": "CAM_HC_01",
+    "name": "Cam Nhà ăn công nhân",
+    "zone": "Hành chính - Đời sống",
+    "description": "Khu vực phòng ăn và phân phát suất ăn",
+    "status": "active",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  },
+  {
+    "id": "CAM_HC_02",
+    "code": "CAM_HC_02",
+    "name": "Cam Sảnh lễ tân & Văn phòng",
+    "zone": "Hành chính - Đời sống",
+    "description": "Sảnh chính đón tiếp khách và khối văn phòng",
+    "status": "active",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "updatedAt": "2026-01-01T08:00:00.000Z"
+  }
+]
