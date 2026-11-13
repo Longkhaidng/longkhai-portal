@@ -158,5 +158,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:40:23.827Z",
     "updatedAt": "2026-11-13T02:40:23.827Z"
+  },
+  {
+    "id": "CAM_VP_11",
+    "code": "CAM_VP_11",
+    "name": "Khu bếp chính",
+    "zone": "Văn phòng chính",
+    "description": "Khu vực nấu ăn",
+    "status": "active",
+    "createdAt": "2026-11-13T02:41:11.562Z",
+    "updatedAt": "2026-11-13T02:41:11.562Z"
   }
 ]
