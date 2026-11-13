@@ -78,5 +78,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:30:06.674Z",
     "updatedAt": "2026-11-13T02:30:06.674Z"
+  },
+  {
+    "id": "CAM_VP_04",
+    "code": "CAM_VP_04",
+    "name": "Phòng trưng bày",
+    "zone": "Văn phòng chính",
+    "description": "Phòng trưng bày sản phẩm",
+    "status": "active",
+    "createdAt": "2026-11-13T02:30:51.730Z",
+    "updatedAt": "2026-11-13T02:30:51.730Z"
   }
 ]
