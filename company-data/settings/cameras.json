@@ -228,5 +228,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:48:10.003Z",
     "updatedAt": "2026-11-13T02:48:10.003Z"
+  },
+  {
+    "id": "CAM_HT_01",
+    "code": "CAM_HT_01",
+    "name": "Bao gói_01",
+    "zone": "PXHT",
+    "description": "Khu vực bao gói + kho nguyên liệu",
+    "status": "active",
+    "createdAt": "2026-11-13T02:49:30.113Z",
+    "updatedAt": "2026-11-13T02:49:30.113Z"
   }
 ]
