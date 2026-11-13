@@ -72,12 +72,12 @@
   {
     "id": "CAM_VP_03",
     "code": "CAM_VP_03",
-    "name": "Rà kim loại_02",
-    "zone": "PXHT",
-    "description": "Rà kim loại",
+    "name": "Phòng tổng hợp",
+    "zone": "Văn phòng chính",
+    "description": "Phòng tổng hợp",
     "status": "active",
     "createdAt": "2026-11-13T02:51:16.986Z",
-    "updatedAt": "2026-11-13T02:51:16.986Z"
+    "updatedAt": "2026-11-13T02:57:34.449Z"
   },
   {
     "id": "CAM_VP_04",
