@@ -508,5 +508,15 @@
     "status": "active",
     "createdAt": "2026-11-13T09:09:41.374Z",
     "updatedAt": "2026-11-13T09:09:41.374Z"
+  },
+  {
+    "id": "CAM_DET_14",
+    "code": "CAM_DET_14",
+    "name": "Hành lang dệt_02",
+    "zone": "Phân xưởng dệt",
+    "description": "Cam xoay hướng hành lang giữa xưởng dệt",
+    "status": "active",
+    "createdAt": "2026-11-13T09:11:12.309Z",
+    "updatedAt": "2026-11-13T09:11:12.309Z"
   }
 ]
