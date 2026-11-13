@@ -48,5 +48,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:18:42.747Z",
     "updatedAt": "2026-11-13T02:18:42.747Z"
+  },
+  {
+    "id": "CAM_KNL_06",
+    "code": "CAM_KNL_06",
+    "name": "Kho tầng lửng",
+    "zone": "Kho nguyên liệu",
+    "description": "Khu vực tầng lửng",
+    "status": "active",
+    "createdAt": "2026-11-13T02:19:29.986Z",
+    "updatedAt": "2026-11-13T02:19:29.986Z"
   }
 ]
