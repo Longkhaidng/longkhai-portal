@@ -138,5 +138,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:38:26.346Z",
     "updatedAt": "2026-11-13T02:38:26.346Z"
+  },
+  {
+    "id": "CAM_VP_09",
+    "code": "CAM_VP_09",
+    "name": "Phòng họp_02",
+    "zone": "Vawn phòng chính",
+    "description": "Phòng họp 02",
+    "status": "active",
+    "createdAt": "2026-11-13T02:39:32.426Z",
+    "updatedAt": "2026-11-13T02:39:32.426Z"
   }
 ]
