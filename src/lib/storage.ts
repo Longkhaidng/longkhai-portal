@@ -2245,7 +2245,31 @@ class StorageService {
       if (data !== null) {
         const parsed: FoodRegistration[] = JSON.parse(data);
         if (Array.isArray(parsed)) {
-          return [...parsed].sort(compareFoodRegistrationsNewestFirst);
+          const now = new Date();
+          let changed = false;
+          const normalized = parsed.map((r) => {
+            if (r.status === 'confirmed' && r.entryDate) {
+              const startOfDay = new Date(`${r.entryDate}T00:00:00.000`);
+              if (now < startOfDay) {
+                changed = true;
+                return {
+                  ...r,
+                  status: 'approved' as const,
+                  confirmedAt: undefined,
+                  guardName: undefined,
+                  guardNote: undefined,
+                  entryLogs: [],
+                };
+              }
+            }
+            return r;
+          });
+          if (changed) {
+            try {
+              localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(normalized));
+            } catch {}
+          }
+          return [...normalized].sort(compareFoodRegistrationsNewestFirst);
         }
       }
     } catch {}

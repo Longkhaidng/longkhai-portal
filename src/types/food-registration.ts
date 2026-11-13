@@ -159,6 +159,7 @@ export interface FoodRegistration {
 export interface FoodQrValidity {
   isValid: boolean;
   isExpired: boolean;
+  isNotYetValid?: boolean;
   message?: string;
   remainingText?: string;
 }
@@ -230,7 +231,8 @@ export function checkFoodQrValidity(registration: FoodRegistration): FoodQrValid
       return {
         isValid: false,
         isExpired: false,
-        message: `Mã QR chưa đến ngày hiệu lực (Bắt đầu từ ${registration.entryDate}).`,
+        isNotYetValid: true,
+        message: 'Phiếu đăng ký chưa có hiệu lực',
       };
     }
 
@@ -248,6 +250,16 @@ export function checkFoodQrValidity(registration: FoodRegistration): FoodQrValid
         isValid: false,
         isExpired: true,
         message: 'Thời hạn đem thực phẩm vào nhà máy của bạn đã hết hiệu lực.',
+      };
+    }
+
+    const startOfDay = new Date(`${registration.entryDate}T00:00:00.000`);
+    if (now < startOfDay) {
+      return {
+        isValid: false,
+        isExpired: false,
+        isNotYetValid: true,
+        message: 'Phiếu đăng ký chưa có hiệu lực',
       };
     }
 

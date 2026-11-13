@@ -511,6 +511,10 @@ export function FoodRegistrationView() {
       showToast('Thời hạn đem thực phẩm vào nhà máy của bạn đã hết hiệu lực.', 'error');
       return;
     }
+    if (validity.isNotYetValid || !validity.isValid) {
+      showToast(validity.message || 'Phiếu đăng ký chưa có hiệu lực', 'error');
+      return;
+    }
     const guardName = currentUser?.name || 'Bảo vệ cổng';
     storage.confirmFoodRegistration(item.id, guardName, 'Đã kiểm tra đúng danh mục thực phẩm cho phép', currentUser?.id);
     setRegistrations(storage.getFoodRegistrations());
@@ -1690,6 +1694,11 @@ export function FoodRegistrationView() {
         registration={selectedQrItem}
         isGuard={isGuard}
         onGuardConfirm={(item) => {
+          const validity = checkFoodQrValidity(item);
+          if (validity.isExpired || validity.isNotYetValid || !validity.isValid) {
+            handleGuardConfirm(item);
+            return;
+          }
           handleGuardConfirm(item);
           setSelectedQrItem((prev) => (prev ? { ...prev, status: 'confirmed' } : null));
         }}
