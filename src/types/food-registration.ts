@@ -241,8 +241,16 @@ export function checkFoodQrValidity(registration: FoodRegistration): FoodQrValid
     };
   }
 
-  // 2. Chế độ Thực phẩm chay: Hạn trong 12h
+  // 2. Chế độ Thực phẩm chay: Hạn trong 12h, và ngay khi bảo vệ xác nhận cho vào thì chuyển sang trạng thái hết hiệu lực
   if (registration.category === 'vegetarian') {
+    if (registration.status === 'confirmed' || registration.status === 'guard_rejected') {
+      return {
+        isValid: false,
+        isExpired: true,
+        message: 'Thời hạn đem thực phẩm vào nhà máy của bạn đã hết hiệu lực.',
+      };
+    }
+
     const createdTime = new Date(registration.createdAt).getTime();
     const expiresTime = registration.expiresAt
       ? new Date(registration.expiresAt).getTime()

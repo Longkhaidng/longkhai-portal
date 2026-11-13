@@ -86,9 +86,15 @@ export function FoodQrModal({
         <div className="p-5 sm:p-6 flex flex-col items-center space-y-4 text-center overflow-y-auto max-h-[75vh]">
           {/* Status Badge */}
           <div className="flex items-center gap-2">
-            <span className={`px-3 py-1 text-xs font-bold rounded-full border ${FOOD_STATUS_BADGES[registration.status]}`}>
-              {FOOD_STATUS_LABELS[registration.status]}
-            </span>
+            {validity.isExpired ? (
+              <span className="px-3 py-1 text-xs font-bold rounded-full border bg-rose-50 text-rose-700 border-rose-300 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-800">
+                Hết hiệu lực
+              </span>
+            ) : (
+              <span className={`px-3 py-1 text-xs font-bold rounded-full border ${FOOD_STATUS_BADGES[registration.status]}`}>
+                {FOOD_STATUS_LABELS[registration.status]}
+              </span>
+            )}
           </div>
 
           {/* CASE 1: EXPIRED QR CODE */}

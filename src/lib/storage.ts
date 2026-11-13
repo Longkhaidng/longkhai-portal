@@ -2435,6 +2435,9 @@ class StorageService {
     item.guardId = guardId || item.guardId;
     item.guardNote = guardNote || item.guardNote;
     item.confirmedAt = now;
+    if (item.category === 'vegetarian') {
+      item.expiresAt = now;
+    }
     item.entryLogs = [...(item.entryLogs || []), newLog];
     item.updatedAt = now;
 

@@ -468,6 +468,9 @@ export async function POST(req: NextRequest) {
         doc.guardName = finalGuard;
         doc.guardNote = (note || '').trim() || 'Đã kiểm tra thực phẩm đúng danh mục cho phép mang vào';
         doc.confirmedAt = now;
+        if (doc.category === 'vegetarian') {
+          doc.expiresAt = now;
+        }
         doc.updatedAt = now;
 
         const newLog = {
