@@ -391,16 +391,61 @@ export function CameraSurveillanceView() {
     setIsCameraModalOpen(true);
   };
 
+  const normalizedCamCode = camFormCode.trim().toUpperCase();
+  const duplicateCamera = useMemo(() => {
+    if (!normalizedCamCode) return null;
+    return (
+      cameras.find((c) => {
+        const isSameCode =
+          c.code.trim().toUpperCase() === normalizedCamCode ||
+          c.id.trim().toUpperCase() === normalizedCamCode;
+        if (!isSameCode) return false;
+        if (
+          editingCamera &&
+          (c.id.trim().toUpperCase() === editingCamera.id.trim().toUpperCase() ||
+            c.code.trim().toUpperCase() === editingCamera.code.trim().toUpperCase())
+        ) {
+          return false;
+        }
+        return true;
+      }) || null
+    );
+  }, [cameras, normalizedCamCode, editingCamera]);
+
   const handleSaveCamera = (e: React.FormEvent) => {
     e.preventDefault();
     if (!camFormCode.trim() || !camFormName.trim()) {
       alert('Vui lòng nhập Mã camera và Tên camera!');
       return;
     }
+    const normalizedCode = camFormCode.trim().toUpperCase();
+    const currentList = storage.getCameras();
+    const existingDup = currentList.find((c) => {
+      const sameCode =
+        c.code.trim().toUpperCase() === normalizedCode ||
+        c.id.trim().toUpperCase() === normalizedCode;
+      if (!sameCode) return false;
+      if (
+        editingCamera &&
+        (c.id.trim().toUpperCase() === editingCamera.id.trim().toUpperCase() ||
+          c.code.trim().toUpperCase() === editingCamera.code.trim().toUpperCase())
+      ) {
+        return false;
+      }
+      return true;
+    });
+
+    if (existingDup) {
+      alert(
+        `Mã camera "${normalizedCode}" đã tồn tại trên hệ thống (${existingDup.name} - ${existingDup.zone})! Mã camera là duy nhất, vui lòng nhập mã khác.`
+      );
+      return;
+    }
+
     const now = new Date().toISOString();
     const item: CameraItem = {
-      id: camFormCode.trim().toUpperCase(),
-      code: camFormCode.trim().toUpperCase(),
+      id: normalizedCode,
+      code: normalizedCode,
       name: capitalizeFirstLetter(camFormName.trim()),
       zone: capitalizeFirstLetter(camFormZone.trim()) || 'Khu vực chung',
       description: capitalizeFirstLetter(camFormDesc.trim()),
@@ -408,8 +453,16 @@ export function CameraSurveillanceView() {
       createdAt: editingCamera?.createdAt || now,
       updatedAt: now,
     };
-    storage.saveCamera(item, currentUser ? { id: currentUser.id, name: currentUser.name } : undefined);
-    setIsCameraModalOpen(false);
+    try {
+      storage.saveCamera(
+        item,
+        currentUser ? { id: currentUser.id, name: currentUser.name } : undefined,
+        editingCamera?.id
+      );
+      setIsCameraModalOpen(false);
+    } catch (err: any) {
+      alert(err.message || 'Không thể lưu camera!');
+    }
   };
 
   const handleDeleteCamera = (camId: string) => {
@@ -432,15 +485,42 @@ export function CameraSurveillanceView() {
         alert('Không tìm thấy dữ liệu camera hợp lệ trong tệp Excel!');
         return;
       }
-      // Merge with existing
+      // Kiểm tra mã camera duy nhất, không ghi đè hoặc thêm trùng mã đã có
       const currentList = storage.getCameras();
-      const map = new Map<string, CameraItem>();
-      currentList.forEach((c) => map.set(c.code.toUpperCase(), c));
-      parsed.forEach((c) => map.set(c.code.toUpperCase(), c));
-      const merged = Array.from(map.values());
+      const existingCodes = new Set(currentList.map((c) => c.code.trim().toUpperCase()));
+      const newCameras: CameraItem[] = [];
+      const duplicateCodes: string[] = [];
 
+      parsed.forEach((c) => {
+        const codeUpper = c.code.trim().toUpperCase();
+        if (existingCodes.has(codeUpper)) {
+          duplicateCodes.push(codeUpper);
+        } else {
+          existingCodes.add(codeUpper);
+          newCameras.push({
+            ...c,
+            id: codeUpper,
+            code: codeUpper,
+          });
+        }
+      });
+
+      if (newCameras.length === 0) {
+        alert(
+          `Không thể thêm mới: Tất cả ${duplicateCodes.length} mã camera trong file Excel đã tồn tại trên hệ thống (${duplicateCodes.slice(0, 5).join(', ')}${duplicateCodes.length > 5 ? '...' : ''})! Mã camera là duy nhất, không được trùng mã.`
+        );
+        return;
+      }
+
+      const merged = [...currentList, ...newCameras];
       storage.saveCameras(merged, currentUser ? { id: currentUser.id, name: currentUser.name } : undefined);
-      alert(`Đã nhập thành công ${parsed.length} camera từ file Excel!`);
+      if (duplicateCodes.length > 0) {
+        alert(
+          `Đã thêm mới ${newCameras.length} camera từ file Excel!\n(Đã bỏ qua ${duplicateCodes.length} mã camera bị trùng: ${duplicateCodes.slice(0, 5).join(', ')}${duplicateCodes.length > 5 ? '...' : ''})`
+        );
+      } else {
+        alert(`Đã nhập thành công ${newCameras.length} camera mới từ file Excel!`);
+      }
     } catch (err: any) {
       alert('Lỗi khi đọc file Excel: ' + (err.message || 'Không thể xử lý'));
     } finally {
@@ -1465,7 +1545,7 @@ export function CameraSurveillanceView() {
             <form onSubmit={handleSaveCamera} className="p-5 space-y-3.5 text-xs">
               <div>
                 <label className="block text-[11px] font-medium text-slate-500 dark:text-slate-400 mb-1">
-                  Mã camera <span className="text-rose-500">*</span>
+                  Mã camera (Duy nhất) <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -1473,8 +1553,20 @@ export function CameraSurveillanceView() {
                   value={camFormCode}
                   onChange={(e) => setCamFormCode(e.target.value.toUpperCase())}
                   placeholder="Ví dụ: CAM_KNL_05"
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:ring-1 focus:ring-indigo-500 font-mono"
+                  className={`w-full px-3 py-2 text-xs rounded-xl border bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:ring-1 font-mono ${
+                    duplicateCamera
+                      ? 'border-rose-500 focus:ring-rose-500'
+                      : 'border-slate-300 dark:border-slate-600 focus:ring-indigo-500'
+                  }`}
                 />
+                {duplicateCamera && (
+                  <p className="mt-1 text-[11px] font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span>
+                      Mã camera &quot;{normalizedCamCode}&quot; đã tồn tại ({duplicateCamera.name} - {duplicateCamera.zone}). Không được trùng mã!
+                    </span>
+                  </p>
+                )}
               </div>
 
               <div>
@@ -1542,7 +1634,12 @@ export function CameraSurveillanceView() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs"
+                  disabled={!!duplicateCamera}
+                  className={`px-5 py-2 rounded-xl text-white text-xs font-bold shadow-xs transition-colors ${
+                    duplicateCamera
+                      ? 'bg-slate-300 dark:bg-slate-700 text-slate-500 cursor-not-allowed'
+                      : 'bg-indigo-600 hover:bg-indigo-700 cursor-pointer'
+                  }`}
                 >
                   {editingCamera ? 'Lưu thay đổi' : 'Thêm camera'}
                 </button>

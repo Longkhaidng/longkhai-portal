@@ -2502,30 +2502,59 @@ class StorageService {
     return DEFAULT_CAMERAS;
   }
 
-  saveCamera(item: CameraItem, byUser?: { id: string; name: string }): void {
+  saveCamera(item: CameraItem, byUser?: { id: string; name: string }, originalId?: string): void {
     if (!this.isClient()) return;
     const list = this.getCameras();
-    const existingIdx = list.findIndex((c) => c.id === item.id || c.code === item.code);
-    const isNew = existingIdx < 0;
+    const normalizedCode = item.code.trim().toUpperCase();
+    const normalizedItem: CameraItem = {
+      ...item,
+      id: normalizedCode,
+      code: normalizedCode,
+    };
 
-    if (isNew) {
-      list.push(item);
+    if (originalId) {
+      const normOrig = originalId.trim().toUpperCase();
+      const duplicateOther = list.some(
+        (c) =>
+          (c.id.trim().toUpperCase() === normalizedCode || c.code.trim().toUpperCase() === normalizedCode) &&
+          c.id.trim().toUpperCase() !== normOrig &&
+          c.code.trim().toUpperCase() !== normOrig
+      );
+      if (duplicateOther) {
+        throw new Error(`Mã camera "${normalizedCode}" đã tồn tại trên hệ thống!`);
+      }
+      const existingIdx = list.findIndex(
+        (c) => c.id.trim().toUpperCase() === normOrig || c.code.trim().toUpperCase() === normOrig
+      );
+      if (existingIdx >= 0) {
+        list[existingIdx] = {
+          ...list[existingIdx],
+          ...normalizedItem,
+          updatedAt: new Date().toISOString(),
+        };
+      } else {
+        list.push(normalizedItem);
+      }
     } else {
-      list[existingIdx] = {
-        ...list[existingIdx],
-        ...item,
-        updatedAt: new Date().toISOString(),
-      };
+      const isDuplicate = list.some(
+        (c) => c.id.trim().toUpperCase() === normalizedCode || c.code.trim().toUpperCase() === normalizedCode
+      );
+      if (isDuplicate) {
+        throw new Error(`Mã camera "${normalizedCode}" đã tồn tại trên hệ thống!`);
+      }
+      list.push(normalizedItem);
     }
+
+    const isNew = !originalId;
     localStorage.setItem(STORAGE_KEYS.CAMERAS, JSON.stringify(list));
 
     this.addAuditLog(
       isNew ? 'create' : 'update',
       'settings',
-      item.id,
+      normalizedItem.id,
       byUser?.id || 'admin',
       byUser?.name || 'Admin',
-      `${isNew ? 'Thêm mới camera' : 'Cập nhật thông tin camera'} ${item.code} (${item.name})`
+      `${isNew ? 'Thêm mới camera' : 'Cập nhật thông tin camera'} ${normalizedItem.code} (${normalizedItem.name})`
     );
 
     this.syncFileToGitHub('settings/cameras.json', JSON.stringify(list, null, 2), `Update cameras list (${list.length} items)`);
