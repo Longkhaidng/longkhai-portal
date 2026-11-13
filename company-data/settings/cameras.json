@@ -358,5 +358,15 @@
     "status": "active",
     "createdAt": "2026-11-13T06:48:27.902Z",
     "updatedAt": "2026-11-13T06:48:27.902Z"
+  },
+  {
+    "id": "CAM_PT_01",
+    "code": "CAM_PT_01",
+    "name": "Hành lang cơ khí",
+    "zone": "Khu phụ trợ",
+    "description": "Hành lang cơ khí",
+    "status": "active",
+    "createdAt": "2026-11-13T06:49:30.268Z",
+    "updatedAt": "2026-11-13T06:49:30.268Z"
   }
 ]
