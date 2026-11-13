@@ -168,5 +168,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:41:11.562Z",
     "updatedAt": "2026-11-13T02:41:11.562Z"
+  },
+  {
+    "id": "CAM_VP_12",
+    "code": "CAM_VP_12",
+    "name": "Phòng ăn phụ",
+    "zone": "Văn phòng chính",
+    "description": "Khu vực ăn uống phụ",
+    "status": "active",
+    "createdAt": "2026-11-13T02:42:15.194Z",
+    "updatedAt": "2026-11-13T02:42:15.194Z"
   }
 ]
