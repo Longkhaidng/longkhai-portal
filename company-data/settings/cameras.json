@@ -328,5 +328,15 @@
     "status": "active",
     "createdAt": "2026-11-13T06:45:46.209Z",
     "updatedAt": "2026-11-13T06:45:46.209Z"
+  },
+  {
+    "id": "CAM_HT_11",
+    "code": "CAM_HT_11",
+    "name": "Máy sấy_01",
+    "zone": "PXHT",
+    "description": "Khu vực máy sấy số 01",
+    "status": "active",
+    "createdAt": "2026-11-13T06:46:39.711Z",
+    "updatedAt": "2026-11-13T06:46:39.711Z"
   }
 ]
