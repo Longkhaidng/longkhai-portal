@@ -728,37 +728,37 @@ export function FoodRegistrationView() {
                 <button
                   type="button"
                   onClick={() => setMainGroup('pregnant_medicine')}
-                  className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col gap-1 ${
+                  className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex items-start gap-1.5 h-full ${
                     mainGroup === 'pregnant_medicine'
                       ? 'bg-emerald-50/80 dark:bg-emerald-950/60 border-emerald-500 text-emerald-950 dark:text-emerald-200 font-bold shadow-xs'
                       : 'bg-slate-50/60 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
                   }`}
                 >
-                  <div className="flex items-center gap-1.5 text-xs">
-                    <span className="text-base">🤰🍵</span>
-                    <span className="font-bold">1. Mang thai &amp; Nước thuốc</span>
+                  <span className="text-base leading-none mt-0.5 shrink-0">🤰🍵</span>
+                  <div className="flex flex-col justify-between h-full gap-1 min-w-0">
+                    <span className="text-xs font-bold leading-snug">1. Mang thai &amp; Nước thuốc</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal leading-snug">
+                      Theo đợt (Duyệt Trưởng BP &amp; HCNS)
+                    </span>
                   </div>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                    Theo đợt (Duyệt Trưởng BP &amp; HCNS)
-                  </span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setMainGroup('vegetarian')}
-                  className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col gap-1 ${
+                  className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex items-start gap-1.5 h-full ${
                     mainGroup === 'vegetarian'
                       ? 'bg-emerald-50/80 dark:bg-emerald-950/60 border-emerald-500 text-emerald-950 dark:text-emerald-200 font-bold shadow-xs'
                       : 'bg-slate-50/60 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
                   }`}
                 >
-                  <div className="flex items-center gap-1.5 text-xs">
-                    <span className="text-base">🥗</span>
-                    <span className="font-bold">2. Thực phẩm chay</span>
+                  <span className="text-base leading-none mt-0.5 shrink-0">🥗</span>
+                  <div className="flex flex-col justify-between h-full gap-1 min-w-0">
+                    <span className="text-xs font-bold leading-snug">2. Thực phẩm chay</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal leading-snug">
+                      Dùng trong ngày
+                    </span>
                   </div>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                    Dùng trong ngày
-                  </span>
                 </button>
               </div>
             </div>
