@@ -644,10 +644,7 @@ export function FoodRegistrationView() {
             <div>
               <h2 className="text-base font-bold text-slate-900 dark:text-white">
                 Phiếu Đăng Ký Mang Thực Phẩm/ Thuốc Nước
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Chọn danh mục và điền thông tin để cấp mã QR kiểm soát
-              </p>
+              </h2>              
             </div>
           </div>
 
@@ -756,7 +753,7 @@ export function FoodRegistrationView() {
                     <span className="font-bold">2. Thực phẩm chay</span>
                   </div>
                   <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                    Dùng trong ngày (Cấp mã QR 12h)
+                    Dùng trong ngày
                   </span>
                 </button>
               </div>
@@ -931,8 +928,8 @@ export function FoodRegistrationView() {
                   </div>
                   <p className="leading-relaxed">
                     {isHRDeptEmployee
-                      ? 'Nhân viên ➔ Trưởng phòng HCNS. Sau khi Trưởng phòng HCNS duyệt, mã QR có hiệu lực trong khoảng thời gian đã duyệt sẽ được kích hoạt.'
-                      : 'Người lao động ➔ Trưởng bộ phận ➔ Trưởng phòng HCNS. Khi được phê duyệt hoàn tất, mã QR có hiệu lực trong khoảng thời gian đã duyệt sẽ được kích hoạt.'}
+                      ? 'Nhân viên ➔ Trưởng phòng HCNS. Sau khi Trưởng phòng HCNS duyệt, phiếu sẽ có hiệu lực trong khoảng thời gian đã duyệt sẽ được kích hoạt.'
+                      : 'Người lao động ➔ Trưởng bộ phận ➔ Trưởng phòng HCNS. Khi được phê duyệt hoàn tất, phiếu sẽ có hiệu lực trong khoảng thời gian đã duyệt sẽ được kích hoạt.'}
                   </p>
                 </div>
               </div>
@@ -1078,17 +1075,7 @@ export function FoodRegistrationView() {
                     </select>
                   </div>
                 </div>
-
-                {/* Thông báo thời hạn mã QR 12h */}
-                <div className="p-3 rounded-xl bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 text-[11px] text-emerald-800 dark:text-emerald-300 space-y-1">
-                  <div className="flex items-center gap-1.5 font-bold">
-                    <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                    <span>Cấp mã QR ngay (Thời hạn 12h):</span>
-                  </div>
-                  <p className="leading-relaxed">
-                    Sau khi đăng ký, hệ thống cấp ngay mã QR có thời hạn trong vòng 12 giờ để bảo vệ kiểm tra và xác nhận khi đem vào.
-                  </p>
-                </div>
+                              
               </div>
             )}
 
@@ -1136,7 +1123,7 @@ export function FoodRegistrationView() {
                   <Send className="w-4 h-4" />
                   <span>
                     {mainGroup === 'vegetarian'
-                      ? 'Gửi Đăng Ký & Nhận Mã QR 12h'
+                      ? 'Gửi Đăng Ký'
                       : isHRDeptEmployee
                       ? 'Gửi Đăng Ký Trực Tiếp Trưởng Phòng HCNS'
                       : 'Gửi Đăng Ký Trình Duyệt 2 Cấp'}
@@ -1159,7 +1146,7 @@ export function FoodRegistrationView() {
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 {isGuard
                   ? 'Danh sách người lao động đăng ký mang thực phẩm - Bảo vệ kiểm soát và quét QR tại cổng'
-                  : 'Theo dõi tiến trình phê duyệt, xem mã QR và kiểm soát ra vào'}
+                  : 'Theo dõi tiến trình phê duyệt và kiểm soát ra vào'}
               </p>
             </div>
 
