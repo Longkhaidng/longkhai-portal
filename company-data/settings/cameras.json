@@ -518,5 +518,15 @@
     "status": "active",
     "createdAt": "2026-11-13T09:11:12.309Z",
     "updatedAt": "2026-11-13T09:11:12.309Z"
+  },
+  {
+    "id": "CAM_DET_15",
+    "code": "CAM_DET_15",
+    "name": "Hành lang dệt_03",
+    "zone": "Phân xưởng dệt",
+    "description": "Cam xoay hướng cửa thoát hiểm gần VP xưởng",
+    "status": "active",
+    "createdAt": "2026-11-13T09:12:39.405Z",
+    "updatedAt": "2026-11-13T09:12:39.405Z"
   }
 ]
