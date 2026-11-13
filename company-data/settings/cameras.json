@@ -1,15 +1,5 @@
 [
   {
-    "id": "CAM_AN_01",
-    "code": "CAM_AN_01",
-    "name": "Cam Bãi giữ xe máy NV",
-    "zone": "Khu vực an ninh / Nhà xe",
-    "description": "Toàn cảnh bãi xe máy nhân viên",
-    "status": "active",
-    "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
-  },
-  {
     "id": "CAM_AN_02",
     "code": "CAM_AN_02",
     "name": "Cam Cổng chính & Chốt bảo vệ",
