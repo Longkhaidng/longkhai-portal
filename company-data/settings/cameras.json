@@ -58,5 +58,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:19:29.986Z",
     "updatedAt": "2026-11-13T02:19:29.986Z"
+  },
+  {
+    "id": "CAM_VP_01",
+    "code": "CAM_VP_01",
+    "name": "Hành lang văn phòng T1",
+    "zone": "Văn phòng chính",
+    "description": "Hành lang văn phòng",
+    "status": "active",
+    "createdAt": "2026-11-13T02:21:16.484Z",
+    "updatedAt": "2026-11-13T02:21:16.484Z"
   }
 ]
