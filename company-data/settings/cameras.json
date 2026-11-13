@@ -198,5 +198,15 @@
     "status": "active",
     "createdAt": "2026-11-13T02:44:56.795Z",
     "updatedAt": "2026-11-13T02:44:56.795Z"
+  },
+  {
+    "id": "CAM_VP_15",
+    "code": "CAM_VP_15",
+    "name": "Cầu thang tầng 3",
+    "zone": "Văn phòng chính",
+    "description": "Lối lên cầu thang tầng 3",
+    "status": "active",
+    "createdAt": "2026-11-13T02:46:09.938Z",
+    "updatedAt": "2026-11-13T02:46:09.938Z"
   }
 ]
