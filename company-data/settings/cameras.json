@@ -8,15 +8,5 @@
     "status": "active",
     "createdAt": "2026-01-01T08:00:00.000Z",
     "updatedAt": "2026-01-01T08:00:00.000Z"
-  },
-  {
-    "id": "CAM_HC_02",
-    "code": "CAM_HC_02",
-    "name": "Cam Sảnh lễ tân & Văn phòng",
-    "zone": "Hành chính - Đời sống",
-    "description": "Sảnh chính đón tiếp khách và khối văn phòng",
-    "status": "active",
-    "createdAt": "2026-01-01T08:00:00.000Z",
-    "updatedAt": "2026-01-01T08:00:00.000Z"
   }
 ]
