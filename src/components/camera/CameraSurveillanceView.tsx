@@ -172,8 +172,8 @@ export function CameraSurveillanceView() {
       const nextNum = maxNum + 1;
       const nextId = `CAM_${String(nextNum).padStart(3, '0')}`;
 
-      const selectedCams = cameras.filter((c) => selectedCameraIds.includes(c.id));
-      const cameraNames = selectedCams.map((c) => c.name);
+      const selectedCams = cameras.filter((c) => selectedCameraIds.includes(c.id || c.code));
+      const cameraNames = selectedCams.map((c) => `${c.name} (${c.code})`);
 
       const now = new Date().toISOString();
       const newRequest: CameraRequest = {
@@ -800,12 +800,12 @@ export function CameraSurveillanceView() {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {filteredCamerasForSelect.map((cam) => {
-                      const isSelected = selectedCameraIds.includes(cam.id);
+                      const camKey = cam.id || cam.code;
+                      const isSelected = selectedCameraIds.includes(camKey);
                       return (
-                        <div
-                          key={cam.id}
-                          onClick={() => handleToggleCamera(cam.id)}
-                          className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                        <label
+                          key={camKey}
+                          className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer select-none transition-all ${
                             isSelected
                               ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/40 shadow-xs ring-1 ring-indigo-500'
                               : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-slate-300'
@@ -814,8 +814,8 @@ export function CameraSurveillanceView() {
                           <input
                             type="checkbox"
                             checked={isSelected}
-                            onChange={() => handleToggleCamera(cam.id)}
-                            className="mt-0.5 w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
+                            onChange={() => handleToggleCamera(camKey)}
+                            className="mt-0.5 w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500 cursor-pointer"
                           />
                           <div className="flex-1 min-w-0">
                             <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
@@ -825,7 +825,7 @@ export function CameraSurveillanceView() {
                               {cam.code} • {cam.zone}
                             </div>
                           </div>
-                        </div>
+                        </label>
                       );
                     })}
                   </div>
