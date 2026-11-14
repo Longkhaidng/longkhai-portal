@@ -15,8 +15,8 @@
   "fromTime": "10:00",
   "toTime": "11:00",
   "reason": "Kiểm tra mất hàng",
-  "status": "pending_hr",
-  "currentStepIndex": 1,
+  "status": "approved",
+  "currentStepIndex": 2,
   "steps": [
     {
       "stepIndex": 0,
@@ -32,9 +32,13 @@
       "stepIndex": 1,
       "stepName": "Trưởng phòng HCNS phê duyệt",
       "roleRequired": "hr",
-      "status": "pending"
+      "status": "approved",
+      "approverId": "1867",
+      "approverName": "Trương Anh Như Quỳnh",
+      "comment": "Đã phê duyệt xem camera",
+      "actionAt": "2026-11-14T03:36:52.874Z"
     }
   ],
   "createdAt": "2026-11-14T03:35:13.603Z",
-  "updatedAt": "2026-11-14T03:35:41.737Z"
+  "updatedAt": "2026-11-14T03:36:52.874Z"
 }
