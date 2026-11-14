@@ -122,13 +122,12 @@
       "announcements",
       "forms",
       "reports",
-      "users",
       "camera"
     ],
     "isActive": true,
     "password": "1867",
     "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-14T03:36:21.218Z",
+    "updatedAt": "2026-11-14T04:00:19.355Z",
     "allowedWebIntegrations": []
   },
   {
