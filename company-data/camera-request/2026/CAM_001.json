@@ -1,0 +1,36 @@
+{
+  "id": "CAM_001",
+  "employeeId": "1030",
+  "employeeName": "Mai Hồng Hậu",
+  "department": "Phân xưởng dệt",
+  "position": "Phụ trách kỹ thuật - PX Dệt",
+  "purpose": "mat_tai_san",
+  "cameraIds": [
+    "CAM_DET_11"
+  ],
+  "cameraNames": [
+    "Line_06A (CAM_DET_11)"
+  ],
+  "targetDate": "2026-11-13",
+  "fromTime": "10:00",
+  "toTime": "11:00",
+  "reason": "Kiểm tra mất hàng",
+  "status": "pending_it",
+  "currentStepIndex": 0,
+  "steps": [
+    {
+      "stepIndex": 0,
+      "stepName": "Bộ phận IT kiểm tra & duyệt",
+      "roleRequired": "it",
+      "status": "pending"
+    },
+    {
+      "stepIndex": 1,
+      "stepName": "Trưởng phòng HCNS phê duyệt",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "createdAt": "2026-11-14T03:35:13.603Z",
+  "updatedAt": "2026-11-14T03:35:13.603Z"
+}
