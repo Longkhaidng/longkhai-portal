@@ -171,7 +171,7 @@ export function getFreshRowFields(r?: FoodInspectionRecord | null) {
       doc: '',
       vet: '',
       quar: '',
-      sense: 'Đạt',
+      sense: '',
       test: '',
       handle: '',
       inspector: '',
@@ -663,7 +663,7 @@ export function processParsedInspectionRows(
         f_doc = getCellVal(r, 8);
         f_vet = getCellVal(r, 9);
         f_quar = getCellVal(r, 10);
-        f_sense = getCellVal(r, 11) || 'Đạt';
+        f_sense = getCellVal(r, 11);
         f_test = getCellVal(r, 12);
         f_handle = getCellVal(r, 13);
       } else if (r.length >= 13) {
@@ -677,7 +677,7 @@ export function processParsedInspectionRows(
         f_doc = getCellVal(r, 7);
         f_vet = getCellVal(r, 8);
         f_quar = getCellVal(r, 9);
-        f_sense = getCellVal(r, 10) || 'Đạt';
+        f_sense = getCellVal(r, 10);
         f_test = getCellVal(r, 11);
         f_handle = getCellVal(r, 12);
       } else {
@@ -692,7 +692,7 @@ export function processParsedInspectionRows(
         f_doc = getCellVal(r, 6);
         f_vet = getCellVal(r, 7);
         f_quar = getCellVal(r, 8);
-        f_sense = getCellVal(r, 9) || 'Đạt';
+        f_sense = getCellVal(r, 9);
         f_test = getCellVal(r, 10);
         f_handle = getCellVal(r, 11);
       }
@@ -718,7 +718,7 @@ export function processParsedInspectionRows(
         f_exp = getCellVal(r, 9);
         f_storage = getCellVal(r, 10);
         f_doc = getCellVal(r, 11);
-        f_sense = getCellVal(r, 12) || 'Đạt';
+        f_sense = getCellVal(r, 12);
         f_handle = getCellVal(r, 13);
       } else {
         f_name = getCellVal(r, 0);
@@ -735,7 +735,7 @@ export function processParsedInspectionRows(
         f_storage = getCellVal(r, 11);
         f_doc = getCellVal(r, 12);
         f_cert = getCellVal(r, 13);
-        f_sense = getCellVal(r, 14) || 'Đạt';
+        f_sense = getCellVal(r, 14);
         f_handle = getCellVal(r, 15);
       }
       formattedRows.push([
@@ -749,12 +749,12 @@ export function processParsedInspectionRows(
       let ingQty = '';
       let ingCombined = '';
       let servings = '';
-      let prepTime = '08:30';
-      let cookTime = '10:30';
-      let hygP = 'Đạt';
-      let hygE = 'Đạt';
-      let hygA = 'Đạt';
-      let sense = 'Đạt';
+      let prepTime = '';
+      let cookTime = '';
+      let hygP = '';
+      let hygE = '';
+      let hygA = '';
+      let sense = '';
       let handle = '';
 
       const isCol0Num = !isNaN(parseInt(r[0], 10)) && String(r[0]).trim().length <= 4;
@@ -779,7 +779,6 @@ export function processParsedInspectionRows(
         !isMealValue(r[2]);
 
       if (isCol0Num && r.length === 7 && isCol2Meal) {
-        // Template 7 columns: TT, Tên món ăn, Ca/bữa ăn, Tên nguyên liệu, Số lượng, Số suất ăn, Ghi chú
         dishName = getCellVal(r, 1);
         rawMeal = getCellVal(r, 2);
         ingName = getCellVal(r, 3);
@@ -794,12 +793,12 @@ export function processParsedInspectionRows(
         ingName = getCellVal(r, 4);
         ingQty = getCellVal(r, 5);
         servings = getCellVal(r, 6);
-        prepTime = getCellVal(r, 7) || '08:30';
-        cookTime = getCellVal(r, 8) || '10:30';
-        hygP = getCellVal(r, 9) || 'Đạt';
-        hygE = getCellVal(r, 10) || 'Đạt';
-        hygA = getCellVal(r, 11) || 'Đạt';
-        sense = getCellVal(r, 12) || 'Đạt';
+        prepTime = getCellVal(r, 7);
+        cookTime = getCellVal(r, 8);
+        hygP = getCellVal(r, 9);
+        hygE = getCellVal(r, 10);
+        hygA = getCellVal(r, 11);
+        sense = getCellVal(r, 12);
         handle = getCellVal(r, 13);
         lastMealState = { dateVal, rawMeal, dishName };
       } else if (isMergedSubRow14 && (lastLayout === 14 || (!isCol1Meal && hasCol3Or4))) {
@@ -810,12 +809,12 @@ export function processParsedInspectionRows(
         ingName = getCellVal(r, 4);
         ingQty = getCellVal(r, 5);
         servings = getCellVal(r, 6);
-        prepTime = getCellVal(r, 7) || '08:30';
-        cookTime = getCellVal(r, 8) || '10:30';
-        hygP = getCellVal(r, 9) || 'Đạt';
-        hygE = getCellVal(r, 10) || 'Đạt';
-        hygA = getCellVal(r, 11) || 'Đạt';
-        sense = getCellVal(r, 12) || 'Đạt';
+        prepTime = getCellVal(r, 7);
+        cookTime = getCellVal(r, 8);
+        hygP = getCellVal(r, 9);
+        hygE = getCellVal(r, 10);
+        hygA = getCellVal(r, 11);
+        sense = getCellVal(r, 12);
         handle = getCellVal(r, 13);
       } else if (isCol0Date && r.length >= 13) {
         lastLayout = 13;
@@ -825,12 +824,12 @@ export function processParsedInspectionRows(
         ingName = getCellVal(r, 3);
         ingQty = getCellVal(r, 4);
         servings = getCellVal(r, 5);
-        prepTime = getCellVal(r, 6) || '08:30';
-        cookTime = getCellVal(r, 7) || '10:30';
-        hygP = getCellVal(r, 8) || 'Đạt';
-        hygE = getCellVal(r, 9) || 'Đạt';
-        hygA = getCellVal(r, 10) || 'Đạt';
-        sense = getCellVal(r, 11) || 'Đạt';
+        prepTime = getCellVal(r, 6);
+        cookTime = getCellVal(r, 7);
+        hygP = getCellVal(r, 8);
+        hygE = getCellVal(r, 9);
+        hygA = getCellVal(r, 10);
+        sense = getCellVal(r, 11);
         handle = getCellVal(r, 12);
         lastMealState = { dateVal, rawMeal, dishName };
       } else if (isMergedSubRow13NoTT) {
@@ -840,12 +839,12 @@ export function processParsedInspectionRows(
         ingName = getCellVal(r, 3);
         ingQty = getCellVal(r, 4);
         servings = getCellVal(r, 5);
-        prepTime = getCellVal(r, 6) || '08:30';
-        cookTime = getCellVal(r, 7) || '10:30';
-        hygP = getCellVal(r, 8) || 'Đạt';
-        hygE = getCellVal(r, 9) || 'Đạt';
-        hygA = getCellVal(r, 10) || 'Đạt';
-        sense = getCellVal(r, 11) || 'Đạt';
+        prepTime = getCellVal(r, 6);
+        cookTime = getCellVal(r, 7);
+        hygP = getCellVal(r, 8);
+        hygE = getCellVal(r, 9);
+        hygA = getCellVal(r, 10);
+        sense = getCellVal(r, 11);
         handle = getCellVal(r, 12);
       } else if (isCol0Num && r.length >= 13 && isCol1Meal) {
         lastLayout = 13;
@@ -854,12 +853,12 @@ export function processParsedInspectionRows(
         ingName = getCellVal(r, 3);
         ingQty = getCellVal(r, 4);
         servings = getCellVal(r, 5);
-        prepTime = getCellVal(r, 6) || '08:30';
-        cookTime = getCellVal(r, 7) || '10:30';
-        hygP = getCellVal(r, 8) || 'Đạt';
-        hygE = getCellVal(r, 9) || 'Đạt';
-        hygA = getCellVal(r, 10) || 'Đạt';
-        sense = getCellVal(r, 11) || 'Đạt';
+        prepTime = getCellVal(r, 6);
+        cookTime = getCellVal(r, 7);
+        hygP = getCellVal(r, 8);
+        hygE = getCellVal(r, 9);
+        hygA = getCellVal(r, 10);
+        sense = getCellVal(r, 11);
         handle = getCellVal(r, 12);
         lastMealState = { dateVal: targetDate, rawMeal, dishName };
       } else if (r.length >= 12) {
@@ -868,12 +867,12 @@ export function processParsedInspectionRows(
         ingName = getCellVal(r, 2);
         ingQty = getCellVal(r, 3);
         servings = getCellVal(r, 4);
-        prepTime = getCellVal(r, 5) || '08:30';
-        cookTime = getCellVal(r, 6) || '10:30';
-        hygP = getCellVal(r, 7) || 'Đạt';
-        hygE = getCellVal(r, 8) || 'Đạt';
-        hygA = getCellVal(r, 9) || 'Đạt';
-        sense = getCellVal(r, 10) || 'Đạt';
+        prepTime = getCellVal(r, 5);
+        cookTime = getCellVal(r, 6);
+        hygP = getCellVal(r, 7);
+        hygE = getCellVal(r, 8);
+        hygA = getCellVal(r, 9);
+        sense = getCellVal(r, 10);
         handle = getCellVal(r, 11);
         lastMealState = { dateVal: targetDate, rawMeal, dishName };
       } else {
@@ -881,12 +880,12 @@ export function processParsedInspectionRows(
         dishName = getCellVal(r, 1);
         ingCombined = getCellVal(r, 2);
         servings = getCellVal(r, 3);
-        prepTime = getCellVal(r, 4) || '08:30';
-        cookTime = getCellVal(r, 5) || '10:30';
-        hygP = getCellVal(r, 6) || 'Đạt';
-        hygE = getCellVal(r, 7) || 'Đạt';
-        hygA = getCellVal(r, 8) || 'Đạt';
-        sense = getCellVal(r, 9) || 'Đạt';
+        prepTime = getCellVal(r, 4);
+        cookTime = getCellVal(r, 5);
+        hygP = getCellVal(r, 6);
+        hygE = getCellVal(r, 7);
+        hygA = getCellVal(r, 8);
+        sense = getCellVal(r, 9);
         handle = getCellVal(r, 10);
         lastMealState = { dateVal: targetDate, rawMeal, dishName };
       }
@@ -920,7 +919,7 @@ export function processParsedInspectionRows(
         continue;
       }
       const cleanServings = servings ? String(servings).replace(/\s*suất/i, '').trim() : '';
-      const combinedMeal = meal && mealTime ? `${meal} ${mealTime}` : meal || mealTime || 'HC 11h30';
+      const combinedMeal = meal && mealTime ? `${meal} ${mealTime}` : meal || mealTime || '';
       formattedRows.push([
         '',
         dateVal,
@@ -949,7 +948,7 @@ export function processParsedInspectionRows(
         getCellVal(r, 3),
         getCellVal(r, 4),
         getCellVal(r, 5),
-        getCellVal(r, 6) || 'Đạt',
+        getCellVal(r, 6),
         getCellVal(r, 7),
         inspector,
         '',

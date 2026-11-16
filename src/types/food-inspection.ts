@@ -41,7 +41,9 @@ export interface FoodInspectionRecord {
 }
 
 export interface FreshTemplateItem {
+  id?: string;
   stt?: number;
+  importDate?: string;
   name: string;
   time?: string;
   qty?: string;
@@ -59,7 +61,9 @@ export interface FreshTemplateItem {
 }
 
 export interface DryTemplateItem {
+  id?: string;
   stt?: number;
+  importDate?: string;
   name: string;
   producer?: string;
   prod_addr?: string;

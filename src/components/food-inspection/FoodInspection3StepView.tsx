@@ -8,6 +8,8 @@ import {
   FoodInspectionSettings,
   FoodInspectionStepKey,
   FoodInspectionStore,
+  FreshTemplateItem,
+  DryTemplateItem,
   createInitialFoodInspectionStore,
 } from '@/types/food-inspection';
 import {
@@ -21,6 +23,7 @@ import {
   FoodInspectionExcelModal,
   FoodInspectionSettingsModal,
   FoodInspectionSingleEntryModal,
+  FoodImportTemplateModal,
 } from './FoodInspectionModals';
 import {
   ShieldCheck,
@@ -35,6 +38,7 @@ import {
   CheckCircle2,
   XCircle,
   Clock,
+  ClipboardList,
 } from 'lucide-react';
 
 export function FoodInspection3StepView() {
@@ -46,15 +50,40 @@ export function FoodInspection3StepView() {
     new Date().toISOString().slice(0, 10)
   );
   const isViewAll = true;
-  const [mainTab, setMainTab] = useState<'tab1' | 'tab2' | 'tab3' | 'tab4'>('tab1');
+  const [mainTab, setMainTab] = useState<'tab1' | 'tab2' | 'tab3' | 'tab4' | 'import_list'>('tab1');
   const [step1SubTab, setStep1SubTab] = useState<'STEP1_FRESH' | 'STEP1_DRY'>('STEP1_FRESH');
+  const [importSubTab, setImportSubTab] = useState<'FRESH' | 'DRY'>('FRESH');
   const [openTime] = useState<string>(() => getNowTimeString());
+
+  // Permission check: Danh sách nhập thực phẩm chỉ Chuyên viên HCNS và Admin mới có thể thấy và chỉnh sửa, xóa
+  const canManageImportList = useMemo(() => {
+    if (!currentUser) return false;
+    if (currentUser.role === 'admin' || currentUser.role === 'hr' || currentUser.role === 'cb') {
+      return true;
+    }
+    const pos = (currentUser.position || '').toLowerCase();
+    const dept = (currentUser.department || '').toLowerCase();
+    if (
+      pos.includes('hành chính nhân sự') ||
+      pos.includes('hcns') ||
+      dept.includes('hcns') ||
+      dept.includes('hành chính nhân sự')
+    ) {
+      return true;
+    }
+    return false;
+  }, [currentUser]);
 
   // Modals state
   const [batchModalStep, setBatchModalStep] = useState<FoodInspectionStepKey | null>(null);
   const [singleModalState, setSingleModalState] = useState<{
     stepKey: FoodInspectionStepKey;
     editingItem: FoodInspectionRecord | null;
+  } | null>(null);
+  const [importTemplateModalState, setImportTemplateModalState] = useState<{
+    type: 'FRESH' | 'DRY';
+    editingItem: (FreshTemplateItem | DryTemplateItem) | null;
+    editingIndex: number | null;
   } | null>(null);
   const [excelModalStep, setExcelModalStep] = useState<FoodInspectionStepKey | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
@@ -96,6 +125,10 @@ export function FoodInspection3StepView() {
   const sampleRows = useMemo(() => store.STEP4_SAMPLE || [], [store.STEP4_SAMPLE]);
 
   const handleOpenAddModal = (stepKey: FoodInspectionStepKey) => {
+    if (stepKey === 'STEP1_FRESH' || stepKey === 'STEP1_DRY') {
+      setBatchModalStep(stepKey);
+      return;
+    }
     const templateMap: Record<FoodInspectionStepKey, unknown[]> = {
       STEP1_FRESH: store.freshTemplates || [],
       STEP1_DRY: store.dryTemplates || [],
@@ -108,6 +141,78 @@ export function FoodInspection3StepView() {
     } else {
       setBatchModalStep(stepKey);
     }
+  };
+
+  const handleSaveImportTemplate = (
+    type: 'FRESH' | 'DRY',
+    item: FreshTemplateItem | DryTemplateItem,
+    existingId?: string
+  ) => {
+    if (type === 'FRESH') {
+      const list = [...(store.freshTemplates || [])];
+      const editIdx = importTemplateModalState?.editingIndex;
+      if (existingId || (editIdx !== null && editIdx !== undefined && editIdx >= 0)) {
+        const idx =
+          editIdx !== null && editIdx !== undefined && editIdx >= 0
+            ? editIdx
+            : list.findIndex((t) => t.id === existingId);
+        if (idx >= 0) {
+          list[idx] = item as FreshTemplateItem;
+        } else {
+          list.push(item as FreshTemplateItem);
+        }
+      } else {
+        list.push(item as FreshTemplateItem);
+      }
+      persistStore({
+        ...store,
+        freshTemplates: list,
+        updatedAt: new Date().toISOString(),
+      });
+    } else {
+      const list = [...(store.dryTemplates || [])];
+      const editIdx = importTemplateModalState?.editingIndex;
+      if (existingId || (editIdx !== null && editIdx !== undefined && editIdx >= 0)) {
+        const idx =
+          editIdx !== null && editIdx !== undefined && editIdx >= 0
+            ? editIdx
+            : list.findIndex((t) => t.id === existingId);
+        if (idx >= 0) {
+          list[idx] = item as DryTemplateItem;
+        } else {
+          list.push(item as DryTemplateItem);
+        }
+      } else {
+        list.push(item as DryTemplateItem);
+      }
+      persistStore({
+        ...store,
+        dryTemplates: list,
+        updatedAt: new Date().toISOString(),
+      });
+    }
+    setImportTemplateModalState(null);
+    showToast('Đã lưu vào danh sách nhập thực phẩm!');
+  };
+
+  const handleDeleteImportTemplate = (type: 'FRESH' | 'DRY', idx: number) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa mục này khỏi danh sách nhập thực phẩm?')) return;
+    if (type === 'FRESH') {
+      const next = (store.freshTemplates || []).filter((_, i) => i !== idx);
+      persistStore({
+        ...store,
+        freshTemplates: next,
+        updatedAt: new Date().toISOString(),
+      });
+    } else {
+      const next = (store.dryTemplates || []).filter((_, i) => i !== idx);
+      persistStore({
+        ...store,
+        dryTemplates: next,
+        updatedAt: new Date().toISOString(),
+      });
+    }
+    showToast('Đã xóa mục khỏi danh sách nhập thực phẩm!');
   };
 
   // CRUD Handlers
@@ -309,6 +414,9 @@ export function FoodInspection3StepView() {
             { id: 'tab2', label: 'Bước 2: Khi chế biến', icon: Flame },
             { id: 'tab3', label: 'Bước 3: Trước khi ăn', icon: Utensils },
             { id: 'tab4', label: 'Lưu & Hủy mẫu', icon: Thermometer },
+            ...(canManageImportList
+              ? [{ id: 'import_list' as const, label: 'Danh sách nhập thực phẩm', icon: ClipboardList }]
+              : []),
           ] as const
         ).map((t) => {
           const Icon = t.icon;
@@ -674,7 +782,7 @@ export function FoodInspection3StepView() {
                           isFirstMealRow = false;
                           const parsedIng =
                             f.ingName || f.ingQty
-                              ? { names: f.ingName || '-', qtys: f.ingQty || '-' }
+                              ? { names: f.ingName || '', qtys: f.ingQty || '' }
                               : parseIngredient(f.ingCombined);
 
                           return (
@@ -711,8 +819,8 @@ export function FoodInspection3StepView() {
                                   {f.dishName || ''}
                                 </td>
                               )}
-                              <td className="p-2.5 font-semibold align-middle">{parsedIng.names || '-'}</td>
-                              <td className="p-2.5 text-center font-bold text-blue-600 align-middle">{parsedIng.qtys || '-'}</td>
+                              <td className="p-2.5 font-semibold align-middle">{parsedIng.names || ''}</td>
+                              <td className="p-2.5 text-center font-bold text-blue-600 align-middle">{parsedIng.qtys || ''}</td>
                               {isFirstDishRow && (
                                 <>
                                   <td rowSpan={dishRowspan} className="p-2.5 text-center align-middle">
@@ -996,7 +1104,233 @@ export function FoodInspection3StepView() {
         </div>
       )}
 
+      {/* ============================================================= */}
+      {/* TAB DANH SÁCH NHẬP THỰC PHẨM (CHỈ CHUYÊN VIÊN HCNS & ADMIN) */}
+      {/* ============================================================= */}
+      {mainTab === 'import_list' && canManageImportList && (
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2 print:hidden">
+            <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+              <button
+                type="button"
+                onClick={() => setImportSubTab('FRESH')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  importSubTab === 'FRESH'
+                    ? 'bg-emerald-600 text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-300'
+                }`}
+              >
+                1. Thực phẩm tươi sống ({(store.freshTemplates || []).length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setImportSubTab('DRY')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  importSubTab === 'DRY'
+                    ? 'bg-emerald-600 text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-300'
+                }`}
+              >
+                2. Thực phẩm khô ({(store.dryTemplates || []).length})
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() =>
+                  setImportTemplateModalState({
+                    type: importSubTab,
+                    editingItem: null,
+                    editingIndex: null,
+                  })
+                }
+                className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>
+                  {importSubTab === 'FRESH'
+                    ? 'Thêm thực phẩm tươi sống'
+                    : 'Thêm thực phẩm khô'}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {importSubTab === 'FRESH' ? (
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold text-center">
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 w-12">STT</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 w-28">Ngày nhập hàng</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 text-left min-w-[160px]">Tên thực phẩm</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 w-24">Khối lượng</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 w-24">Đơn vị tính</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 text-left min-w-[150px]">Tên cơ sở cung cấp</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 text-left min-w-[160px]">Địa chỉ/điện thoại</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 text-left min-w-[140px]">Tên người giao hàng</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 w-28">Chứng từ/hóa đơn</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 w-28">Giấy ĐK VS thú y</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 w-28">Giấy kiểm dịch</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 w-20 print:hidden">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {(store.freshTemplates || []).length === 0 ? (
+                      <tr>
+                        <td colSpan={12} className="p-6 text-center text-slate-400">
+                          Chưa có thực phẩm tươi sống nào trong danh sách nhập thực phẩm.
+                        </td>
+                      </tr>
+                    ) : (
+                      (store.freshTemplates || []).map((item, i) => (
+                        <tr key={item.id || i} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
+                          <td className="p-2.5 text-center font-bold text-slate-500">{i + 1}</td>
+                          <td className="p-2.5 text-center whitespace-nowrap">
+                            {item.importDate ? (
+                              <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono text-[11px]">
+                                {item.importDate}
+                              </span>
+                            ) : (
+                              ''
+                            )}
+                          </td>
+                          <td className="p-2.5 font-bold text-slate-900 dark:text-white">{item.name || ''}</td>
+                          <td className="p-2.5 text-center font-bold text-blue-600">{item.qty || ''}</td>
+                          <td className="p-2.5 text-center text-slate-500 font-semibold">{item.unit || ''}</td>
+                          <td className="p-2.5">{item.supplier || ''}</td>
+                          <td className="p-2.5 text-slate-500">{item.addr || ''}</td>
+                          <td className="p-2.5">{item.deliverer || ''}</td>
+                          <td className="p-2.5 text-center">{item.doc || ''}</td>
+                          <td className="p-2.5 text-center">{item.vet || ''}</td>
+                          <td className="p-2.5 text-center">{item.quar || ''}</td>
+                          <td className="p-2.5 text-center print:hidden">
+                            <div className="flex items-center justify-center gap-1">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setImportTemplateModalState({
+                                    type: 'FRESH',
+                                    editingItem: item,
+                                    editingIndex: i,
+                                  })
+                                }
+                                className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 cursor-pointer"
+                                title="Sửa"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteImportTemplate('FRESH', i)}
+                                className="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer"
+                                title="Xóa"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold text-center">
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 w-12">STT</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 w-28">Ngày nhập hàng</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 text-left min-w-[160px]">Tên thực phẩm</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 text-left min-w-[150px]">Tên cơ sở sản xuất</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 text-left min-w-[150px]">Địa chỉ sản xuất</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 w-24">Khối lượng</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 w-24">Đơn vị tính</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 text-left min-w-[150px]">Tên cơ sở cung cấp</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 text-left min-w-[140px]">Tên chủ giao hàng</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 text-left min-w-[160px]">Địa chỉ/điện thoại</th>
+                      <th className="border border-slate-300 dark:border-slate-700 p-2 w-20 print:hidden">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {(store.dryTemplates || []).length === 0 ? (
+                      <tr>
+                        <td colSpan={11} className="p-6 text-center text-slate-400">
+                          Chưa có thực phẩm khô nào trong danh sách nhập thực phẩm.
+                        </td>
+                      </tr>
+                    ) : (
+                      (store.dryTemplates || []).map((item, i) => (
+                        <tr key={item.id || i} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
+                          <td className="p-2.5 text-center font-bold text-slate-500">{i + 1}</td>
+                          <td className="p-2.5 text-center whitespace-nowrap">
+                            {item.importDate ? (
+                              <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono text-[11px]">
+                                {item.importDate}
+                              </span>
+                            ) : (
+                              ''
+                            )}
+                          </td>
+                          <td className="p-2.5 font-bold text-slate-900 dark:text-white">{item.name || ''}</td>
+                          <td className="p-2.5 font-semibold">{item.producer || ''}</td>
+                          <td className="p-2.5 text-slate-500">{item.prod_addr || ''}</td>
+                          <td className="p-2.5 text-center font-bold text-blue-600">{item.qty || ''}</td>
+                          <td className="p-2.5 text-center text-slate-500 font-semibold">{item.unit || ''}</td>
+                          <td className="p-2.5">{item.supplier || ''}</td>
+                          <td className="p-2.5 font-semibold">{item.deliverer || ''}</td>
+                          <td className="p-2.5 text-slate-500">{item.addr || ''}</td>
+                          <td className="p-2.5 text-center print:hidden">
+                            <div className="flex items-center justify-center gap-1">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setImportTemplateModalState({
+                                    type: 'DRY',
+                                    editingItem: item,
+                                    editingIndex: i,
+                                  })
+                                }
+                                className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 cursor-pointer"
+                                title="Sửa"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteImportTemplate('DRY', i)}
+                                className="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer"
+                                title="Xóa"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* MODALS */}
+      <FoodImportTemplateModal
+        isOpen={!!importTemplateModalState}
+        type={importTemplateModalState?.type || 'FRESH'}
+        editingItem={importTemplateModalState?.editingItem || null}
+        onClose={() => setImportTemplateModalState(null)}
+        onSave={handleSaveImportTemplate}
+      />
       <FoodInspectionBatchModal
         isOpen={!!batchModalStep}
         stepKey={batchModalStep || 'STEP1_FRESH'}

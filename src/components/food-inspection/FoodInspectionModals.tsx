@@ -480,13 +480,11 @@ export function FoodInspectionSingleEntryModal({
   onClose,
   onSave,
 }: SingleEntryModalProps) {
-  const nowTime = getNowTimeString();
   const isEdit = !!editingItem;
 
-  // Step 1 Fresh state
-  const freshInit = editingItem ? getFreshRowFields(editingItem) : null;
+  const [fDate, setFDate] = useState('');
   const [fName, setFName] = useState('');
-  const [fTime, setFTime] = useState(nowTime);
+  const [fTime, setFTime] = useState('');
   const [fQty, setFQty] = useState('');
   const [fUnit, setFUnit] = useState('');
   const [fSupplier, setFSupplier] = useState('');
@@ -495,7 +493,7 @@ export function FoodInspectionSingleEntryModal({
   const [fDoc, setFDoc] = useState('');
   const [fVet, setFVet] = useState('');
   const [fQuar, setFQuar] = useState('');
-  const [fSense, setFSense] = useState('Đạt');
+  const [fSense, setFSense] = useState('');
   const [fTest, setFTest] = useState('');
   const [fHandle, setFHandle] = useState('');
 
@@ -508,49 +506,49 @@ export function FoodInspectionSingleEntryModal({
   const [fCert, setFCert] = useState('');
 
   // Cooking / Serving / Sample
-  const [fMeal, setFMeal] = useState('Trưa');
-  const [fMealTime, setFMealTime] = useState('11:30');
+  const [fMeal, setFMeal] = useState('');
+  const [fMealTime, setFMealTime] = useState('');
   const [fIngName, setFIngName] = useState('');
   const [fIngQty, setFIngQty] = useState('');
-  const [fServings, setFServings] = useState('220');
-  const [fPrepTime, setFPrepTime] = useState('08:30');
-  const [fCookTime, setFCookTime] = useState('10:30');
-  const [fHygP, setFHygP] = useState('Đạt');
-  const [fHygE, setFHygE] = useState('Đạt');
-  const [fHygA, setFHygA] = useState('Đạt');
+  const [fServings, setFServings] = useState('');
+  const [fPrepTime, setFPrepTime] = useState('');
+  const [fCookTime, setFCookTime] = useState('');
+  const [fHygP, setFHygP] = useState('');
+  const [fHygE, setFHygE] = useState('');
+  const [fHygA, setFHygA] = useState('');
   const [fNote, setFNote] = useState('');
-  const [fFinishTime, setFFinishTime] = useState('11:00');
-  const [fStartEatTime, setFStartEatTime] = useState('11:30');
+  const [fFinishTime, setFFinishTime] = useState('');
+  const [fStartEatTime, setFStartEatTime] = useState('');
   const [fContainer, setFContainer] = useState('');
-  const [fWeight, setFWeight] = useState('150 gam');
-  const [fBox, setFBox] = useState('Hộp inox chuyên dụng có niêm phong');
-  const [fTemp, setFTemp] = useState('4°C (tủ lưu mẫu)');
+  const [fWeight, setFWeight] = useState('');
+  const [fBox, setFBox] = useState('');
+  const [fTemp, setFTemp] = useState('');
   const [fTimeTake, setFTimeTake] = useState('');
   const [fTimeDestroy, setFTimeDestroy] = useState('');
-  const [fPersonStore, setFPersonStore] = useState(inspector);
-  const [fPersonDestroy, setFPersonDestroy] = useState(inspector);
+  const [fPersonStore, setFPersonStore] = useState('');
+  const [fPersonDestroy, setFPersonDestroy] = useState('');
 
   React.useEffect(() => {
     if (!isOpen) return;
-    const curTime = getNowTimeString();
+    setFDate(editingItem?.col_1 || editingItem?.date || '');
     if (stepKey === 'STEP1_FRESH') {
       const f = editingItem ? getFreshRowFields(editingItem) : null;
       setFName(f?.name || '');
-      setFTime(f?.time || curTime);
+      setFTime(f?.time || '');
       setFQty(f?.qty || '');
-      setFUnit(f?.unit || 'kg');
+      setFUnit(f?.unit || '');
       setFSupplier(f?.supplier || '');
       setFAddr(f?.addr || '');
       setFDeliverer(f?.deliverer || '');
       setFDoc(f?.doc || '');
       setFVet(f?.vet || '');
       setFQuar(f?.quar || '');
-      setFSense(f?.sense || 'Đạt');
+      setFSense(f?.sense || '');
       setFTest(f?.test || '');
       setFHandle(f?.handle || '');
     } else if (stepKey === 'STEP1_DRY') {
       setFName(editingItem?.col_3 || '');
-      setFTime(editingItem?.col_2 || curTime);
+      setFTime(editingItem?.col_2 || '');
       setFProducer(editingItem?.col_4 || '');
       setFProdAddr(editingItem?.col_5 || '');
       setFSupplier(editingItem?.col_6 || '');
@@ -563,30 +561,30 @@ export function FoodInspectionSingleEntryModal({
       setFStorage(editingItem?.col_13 || '');
       setFDoc(editingItem?.col_14 || '');
       setFCert(editingItem?.col_15 || '');
-      setFSense(editingItem?.col_16 || 'Đạt');
+      setFSense(editingItem?.col_16 || '');
       setFHandle(editingItem?.col_17 || '');
     } else if (stepKey === 'STEP2_COOKING') {
       const c = editingItem ? getCookingRowFields(editingItem) : null;
       const parsed = c && (c.ingName || c.ingQty)
         ? { names: c.ingName, qtys: c.ingQty }
         : parseIngredient(c?.ingredients || '');
-      setFMeal(c?.meal || 'HC');
-      setFMealTime(c?.mealTime || '11h30');
+      setFMeal(c?.meal || '');
+      setFMealTime(c?.mealTime || '');
       setFName(c?.dishName || '');
       setFIngName(parsed.names || '');
       setFIngQty(parsed.qtys || '');
-      setFServings(c?.servings || '220');
-      setFPrepTime(c?.prepTime || curTime);
-      setFCookTime(c?.cookTime || addMinutesToTime(curTime, 120));
-      setFHygP(c?.hygienePerson || 'Đạt');
-      setFHygE(c?.hygieneEquipment || 'Đạt');
-      setFHygA(c?.hygieneArea || 'Đạt');
-      setFSense(c?.senseStatus || 'Đạt');
-      setFHandle(c?.handle || 'Cho phép tiếp tục chế biến');
+      setFServings(c?.servings || '');
+      setFPrepTime(c?.prepTime || '');
+      setFCookTime(c?.cookTime || '');
+      setFHygP(c?.hygienePerson || '');
+      setFHygE(c?.hygieneEquipment || '');
+      setFHygA(c?.hygieneArea || '');
+      setFSense(c?.senseStatus || '');
+      setFHandle(c?.handle || '');
       setFNote(c?.note || '');
     } else if (stepKey === 'STEP3_SERVING') {
-      let mName = editingItem?.col_2 || 'Trưa';
-      let mTime = editingItem?.col_6 || '11:30';
+      let mName = editingItem?.col_2 || '';
+      let mTime = editingItem?.col_6 || '';
       if (mName.includes('(') && mName.includes(')')) {
         const m = mName.match(/^(.*?)\s*\((.*?)\)$/);
         if (m) {
@@ -596,26 +594,26 @@ export function FoodInspectionSingleEntryModal({
       }
       setFMeal(mName);
       setFName(editingItem?.col_3 || '');
-      setFServings(editingItem?.col_4 || '220');
-      setFFinishTime(editingItem?.col_5 || curTime);
-      setFStartEatTime(editingItem?.col_6 || mTime || '11:30');
-      setFContainer(editingItem?.col_7 || 'Khay inox chia suất có nắp đậy, nhiệt độ > 60°C');
-      setFSense(editingItem?.col_8 || 'Đạt');
-      setFHandle(editingItem?.col_9 || 'Đưa vào phục vụ suất ăn');
+      setFServings(editingItem?.col_4 || '');
+      setFFinishTime(editingItem?.col_5 || '');
+      setFStartEatTime(editingItem?.col_6 || mTime || '');
+      setFContainer(editingItem?.col_7 || '');
+      setFSense(editingItem?.col_8 || '');
+      setFHandle(editingItem?.col_9 || '');
     } else if (stepKey === 'STEP4_SAMPLE') {
-      const takeDt = parseToDateTimeLocal(editingItem?.col_8, targetDate, curTime);
-      const destDt = parseToDateTimeLocal(editingItem?.col_9, null, null, takeDt);
+      const takeDt = editingItem?.col_8 ? parseToDateTimeLocal(editingItem.col_8, targetDate, '') : '';
+      const destDt = editingItem?.col_9 ? parseToDateTimeLocal(editingItem.col_9, null, null, takeDt) : '';
       setFName(editingItem?.col_3 || '');
-      setFMeal(editingItem?.col_2 || 'Trưa (11:30)');
-      setFServings(editingItem?.col_4 || '220');
-      setFWeight(editingItem?.col_5 || '150 gam');
-      setFBox(editingItem?.col_6 || 'Hộp inox chuyên dụng có niêm phong');
-      setFTemp(editingItem?.col_7 || '4°C (tủ lưu mẫu)');
+      setFMeal(editingItem?.col_2 || '');
+      setFServings(editingItem?.col_4 || '');
+      setFWeight(editingItem?.col_5 || '');
+      setFBox(editingItem?.col_6 || '');
+      setFTemp(editingItem?.col_7 || '');
       setFTimeTake(takeDt);
       setFTimeDestroy(destDt);
-      setFHandle(editingItem?.col_10 || 'Mẫu lưu an toàn');
-      setFPersonStore(editingItem?.col_11 || inspector);
-      setFPersonDestroy(editingItem?.col_12 || inspector);
+      setFHandle(editingItem?.col_10 || '');
+      setFPersonStore(editingItem?.col_11 || '');
+      setFPersonDestroy(editingItem?.col_12 || '');
     }
   }, [isOpen, stepKey, editingItem, targetDate, inspector]);
 
@@ -624,7 +622,7 @@ export function FoodInspectionSingleEntryModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const id = editingItem?.id || '';
-    const recDate = editingItem?.col_1 || editingItem?.date || targetDate;
+    const recDate = fDate.trim();
 
     if (stepKey === 'STEP1_FRESH') {
       onSave(
@@ -761,6 +759,18 @@ export function FoodInspectionSingleEntryModal({
         </div>
 
         <form onSubmit={handleSubmit} className="p-5 overflow-y-auto space-y-3.5 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 pb-2 border-b border-slate-100 dark:border-slate-800">
+            <div className="sm:col-span-6">
+              <label className="block font-bold mb-1">Ngày nhập / Ngày kiểm tra:</label>
+              <input
+                type="date"
+                value={fDate}
+                onChange={(e) => setFDate(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-semibold"
+              />
+            </div>
+          </div>
+
           {stepKey === 'STEP1_FRESH' && (
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
               <div className="sm:col-span-7">
@@ -783,10 +793,9 @@ export function FoodInspectionSingleEntryModal({
                 />
               </div>
               <div className="sm:col-span-6">
-                <label className="block font-bold mb-1">Khối lượng (KL) *:</label>
+                <label className="block font-bold mb-1">Khối lượng (KL):</label>
                 <input
                   type="text"
-                  required
                   value={fQty}
                   onChange={(e) => setFQty(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
@@ -862,6 +871,7 @@ export function FoodInspectionSingleEntryModal({
                   onChange={(e) => setFSense(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold"
                 >
+                  <option value="">-- Để trống --</option>
                   <option value="Đạt">✅ ĐẠT</option>
                   <option value="Không đạt">❌ KHÔNG ĐẠT</option>
                 </select>
@@ -927,10 +937,9 @@ export function FoodInspectionSingleEntryModal({
                 />
               </div>
               <div className="sm:col-span-6">
-                <label className="block font-bold mb-1">Khối lượng (KL) *:</label>
+                <label className="block font-bold mb-1">Khối lượng (KL):</label>
                 <input
                   type="text"
-                  required
                   value={fQty}
                   onChange={(e) => setFQty(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
@@ -946,7 +955,7 @@ export function FoodInspectionSingleEntryModal({
                 />
               </div>
               <div className="sm:col-span-4">
-                <label className="block font-bold mb-1">Nơi cung cấp:</label>
+                <label className="block font-bold mb-1">Tên cơ sở cung cấp:</label>
                 <input
                   type="text"
                   value={fSupplier}
@@ -987,7 +996,6 @@ export function FoodInspectionSingleEntryModal({
                   type="text"
                   value={fStorage}
                   onChange={(e) => setFStorage(e.target.value)}
-                  placeholder="Nhiệt độ thường / Lạnh"
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
                 />
               </div>
@@ -1007,6 +1015,7 @@ export function FoodInspectionSingleEntryModal({
                   onChange={(e) => setFSense(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold"
                 >
+                  <option value="">-- Để trống --</option>
                   <option value="Đạt">✅ ĐẠT</option>
                   <option value="Không đạt">❌ KHÔNG ĐẠT</option>
                 </select>
@@ -1104,6 +1113,7 @@ export function FoodInspectionSingleEntryModal({
                   onChange={(e) => setFHygP(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold"
                 >
+                  <option value="">-- Để trống --</option>
                   <option value="Đạt">✅ Đạt</option>
                   <option value="Không đạt">❌ Không đạt</option>
                 </select>
@@ -1115,6 +1125,7 @@ export function FoodInspectionSingleEntryModal({
                   onChange={(e) => setFHygE(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold"
                 >
+                  <option value="">-- Để trống --</option>
                   <option value="Đạt">✅ Đạt</option>
                   <option value="Không đạt">❌ Không đạt</option>
                 </select>
@@ -1126,6 +1137,7 @@ export function FoodInspectionSingleEntryModal({
                   onChange={(e) => setFHygA(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold"
                 >
+                  <option value="">-- Để trống --</option>
                   <option value="Đạt">✅ Đạt</option>
                   <option value="Không đạt">❌ Không đạt</option>
                 </select>
@@ -1137,6 +1149,7 @@ export function FoodInspectionSingleEntryModal({
                   onChange={(e) => setFSense(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold"
                 >
+                  <option value="">-- Để trống --</option>
                   <option value="Đạt">✅ ĐẠT</option>
                   <option value="Không đạt">❌ KHÔNG ĐẠT</option>
                 </select>
@@ -1217,6 +1230,7 @@ export function FoodInspectionSingleEntryModal({
                   onChange={(e) => setFSense(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold"
                 >
+                  <option value="">-- Để trống --</option>
                   <option value="Đạt">✅ ĐẠT</option>
                   <option value="Không đạt">❌ KHÔNG ĐẠT</option>
                 </select>
@@ -1397,29 +1411,35 @@ export function FoodInspectionBatchModal({
   onOpenSingleAdd,
   onSubmitBatch,
 }: BatchEntryModalProps) {
-  const [batchDate, setBatchDate] = useState(defaultDate);
+  const [batchDate, setBatchDate] = useState('');
   const [batchInspector, setBatchInspector] = useState(inspector);
   const [items, setItems] = useState<any[]>([]);
   const [globalDestroyDt, setGlobalDestroyDt] = useState('');
 
   React.useEffect(() => {
     if (!isOpen) return;
-    setBatchDate(defaultDate);
+    setBatchDate('');
     setBatchInspector(inspector);
-    const actualTime = openTime || getNowTimeString();
-    const cookTime = addMinutesToTime(actualTime, 120);
-    const takeDtLocal = `${defaultDate}T${actualTime}`;
-    const destroyDtLocal = add24Hours(takeDtLocal);
-    const takeDisplay = `${actualTime} ${formatVNDate(defaultDate)}`;
-    setGlobalDestroyDt(destroyDtLocal);
+    setGlobalDestroyDt('');
 
     if (stepKey === 'STEP1_FRESH') {
       setItems(
         freshTemplates.map((t, i) => ({
           ...t,
           stt: t.stt || i + 1,
-          time: actualTime,
-          sense: 'Đạt',
+          importDate: t.importDate || '',
+          name: t.name || '',
+          time: t.time || '',
+          qty: t.qty || '',
+          unit: t.unit || '',
+          supplier: t.supplier || '',
+          addr: t.addr || '',
+          deliverer: t.deliverer || '',
+          doc: t.doc || '',
+          vet: t.vet || '',
+          quar: t.quar || '',
+          sense: t.sense || '',
+          test: t.test || '',
           originalHandle: t.handle || '',
           handle: t.handle || '',
         }))
@@ -1429,8 +1449,22 @@ export function FoodInspectionBatchModal({
         dryTemplates.map((t, i) => ({
           ...t,
           stt: t.stt || i + 1,
-          time: actualTime,
-          sense: 'Đạt',
+          importDate: t.importDate || '',
+          name: t.name || '',
+          producer: t.producer || '',
+          prod_addr: t.prod_addr || '',
+          time: t.time || '',
+          qty: t.qty || '',
+          unit: t.unit || '',
+          supplier: t.supplier || '',
+          deliverer: t.deliverer || '',
+          addr: t.addr || '',
+          phone: t.phone || '',
+          exp: t.exp || '',
+          storage: t.storage || '',
+          doc: t.doc || '',
+          cert: t.cert || '',
+          sense: t.sense || '',
           originalHandle: t.handle || '',
           handle: t.handle || '',
         }))
@@ -1440,12 +1474,12 @@ export function FoodInspectionBatchModal({
         cookingTemplates.map((t, i) => ({
           ...t,
           stt: t.stt || i + 1,
-          prepTime: actualTime,
-          cookTime,
-          hygienePerson: 'Đạt',
-          hygieneEquipment: 'Đạt',
-          hygieneArea: 'Đạt',
-          sense: 'Đạt',
+          prepTime: t.prepTime || '',
+          cookTime: t.cookTime || '',
+          hygienePerson: t.hygienePerson || '',
+          hygieneEquipment: t.hygieneEquipment || '',
+          hygieneArea: t.hygieneArea || '',
+          sense: t.sense || '',
           originalHandle: t.handle || '',
           handle: t.handle || '',
         }))
@@ -1455,9 +1489,9 @@ export function FoodInspectionBatchModal({
         servingTemplates.map((t, i) => ({
           ...t,
           stt: t.stt || i + 1,
-          finishTime: actualTime,
-          startEatTime: t.startEatTime || '11:30',
-          sense: 'Đạt',
+          finishTime: t.finishTime || '',
+          startEatTime: t.startEatTime || '',
+          sense: t.sense || '',
           originalHandle: t.handle || '',
           handle: t.handle || '',
         }))
@@ -1467,9 +1501,9 @@ export function FoodInspectionBatchModal({
         sampleFoodTemplates.map((t, i) => ({
           ...t,
           stt: t.stt || i + 1,
-          takeTime: takeDisplay,
-          destroyDtLocal,
-          destroyTime: formatDateTimeDisplay(destroyDtLocal),
+          takeTime: t.takeTime || '',
+          destroyDtLocal: '',
+          destroyTime: t.destroyTime || '',
         }))
       );
     }
@@ -1488,29 +1522,40 @@ export function FoodInspectionBatchModal({
 
   if (!isOpen) return null;
 
-  const actualTime = openTime || getNowTimeString();
-  const cookTime = addMinutesToTime(actualTime, 120);
+  const visibleItems = items
+    .map((item, originalIndex) => ({ item, originalIndex }))
+    .filter(({ item }) => {
+      if (!batchDate) return true;
+      if (stepKey === 'STEP1_FRESH' || stepKey === 'STEP1_DRY') {
+        return !item.importDate || item.importDate === batchDate;
+      }
+      return true;
+    });
 
   const handleSetAllOk = () => {
     setItems((prev) =>
       prev.map((it) => ({
         ...it,
-        hygienePerson: 'Đạt',
-        hygieneEquipment: 'Đạt',
-        hygieneArea: 'Đạt',
+        hygienePerson: stepKey === 'STEP2_COOKING' ? 'Đạt' : it.hygienePerson,
+        hygieneEquipment: stepKey === 'STEP2_COOKING' ? 'Đạt' : it.hygieneEquipment,
+        hygieneArea: stepKey === 'STEP2_COOKING' ? 'Đạt' : it.hygieneArea,
         sense: 'Đạt',
-        handle: it.originalHandle || '',
       }))
     );
   };
 
   const handleSaveBatch = () => {
+    const sourceList = visibleItems.map((v) => v.item);
+    if (sourceList.length === 0) {
+      onOpenSingleAdd();
+      return;
+    }
     if (stepKey === 'STEP1_FRESH') {
-      const rows = items.map((item) => [
+      const rows = sourceList.map((item) => [
         '',
-        batchDate,
+        String(item.importDate || batchDate || '').trim(),
         String(item.name || '').trim(),
-        actualTime,
+        String(item.time || '').trim(),
         String(item.qty ?? '').trim(),
         String(item.unit ?? '').trim(),
         String(item.supplier || '').trim(),
@@ -1519,20 +1564,18 @@ export function FoodInspectionBatchModal({
         String(item.doc || '').trim(),
         String(item.vet || '').trim(),
         String(item.quar || '').trim(),
-        item.sense || 'Đạt',
+        String(item.sense || '').trim(),
         String(item.test || '').trim(),
-        item.sense === 'Không đạt'
-          ? 'Không đạt - Lập biên bản, trả lại NCC'
-          : String(item.handle || '').trim(),
+        String(item.handle || '').trim(),
         batchInspector,
         String(item.note || '').trim(),
       ]);
-      onSubmitBatch(stepKey, batchDate, rows);
+      onSubmitBatch(stepKey, batchDate || sourceList[0]?.importDate || defaultDate, rows);
     } else if (stepKey === 'STEP1_DRY') {
-      const rows = items.map((item) => [
+      const rows = sourceList.map((item) => [
         '',
-        batchDate,
-        actualTime,
+        String(item.importDate || batchDate || '').trim(),
+        String(item.time || '').trim(),
         String(item.name || '').trim(),
         String(item.producer || '').trim(),
         String(item.prod_addr || '').trim(),
@@ -1546,63 +1589,50 @@ export function FoodInspectionBatchModal({
         String(item.storage || '').trim(),
         String(item.doc || '').trim(),
         String(item.cert || '').trim(),
-        item.sense || 'Đạt',
-        item.sense === 'Không đạt'
-          ? 'Không đạt - Lập biên bản, trả lại NCC'
-          : String(item.handle || '').trim(),
+        String(item.sense || '').trim(),
+        String(item.handle || '').trim(),
+        batchInspector,
+        String(item.note || '').trim(),
+      ]);
+      onSubmitBatch(stepKey, batchDate || sourceList[0]?.importDate || defaultDate, rows);
+    } else if (stepKey === 'STEP2_COOKING') {
+      const rows = sourceList.map((item) => [
+        '',
+        batchDate,
+        String(item.meal || '').trim(),
+        String(item.dishName || item.name || '').trim(),
+        String(item.ingName || '').trim(),
+        String(item.ingQty || '').trim(),
+        String(item.servings || '').trim(),
+        String(item.prepTime || '').trim(),
+        String(item.cookTime || '').trim(),
+        String(item.hygienePerson || '').trim(),
+        String(item.hygieneEquipment || '').trim(),
+        String(item.hygieneArea || '').trim(),
+        String(item.sense || '').trim(),
+        String(item.handle || '').trim(),
         batchInspector,
         String(item.note || '').trim(),
       ]);
       onSubmitBatch(stepKey, batchDate, rows);
-    } else if (stepKey === 'STEP2_COOKING') {
-      const rows = items.map((item) => {
-        const isNotOk =
-          item.sense === 'Không đạt' ||
-          item.hygienePerson === 'Không đạt' ||
-          item.hygieneEquipment === 'Không đạt' ||
-          item.hygieneArea === 'Không đạt';
-        return [
-          '',
-          batchDate,
-          String(item.meal || '').trim(),
-          String(item.dishName || item.name || '').trim(),
-          String(item.ingName || '').trim(),
-          String(item.ingQty || '').trim(),
-          String(item.servings || '').trim(),
-          actualTime,
-          cookTime,
-          item.hygienePerson || 'Đạt',
-          item.hygieneEquipment || 'Đạt',
-          item.hygieneArea || 'Đạt',
-          item.sense || 'Đạt',
-          isNotOk
-            ? 'Không đạt - Tạm dừng chế biến, khắc phục vệ sinh/thực phẩm'
-            : String(item.handle || '').trim(),
-          batchInspector,
-          String(item.note || '').trim(),
-        ];
-      });
-      onSubmitBatch(stepKey, batchDate, rows);
     } else if (stepKey === 'STEP3_SERVING') {
-      const rows = items.map((item) => [
+      const rows = sourceList.map((item) => [
         '',
         batchDate,
         String(item.meal || '').trim(),
         String(item.dishName || item.name || '').trim(),
         String(item.servings || '').trim(),
-        actualTime,
-        String(item.startEatTime || '11:30').trim(),
+        String(item.finishTime || '').trim(),
+        String(item.startEatTime || '').trim(),
         String(item.container || '').trim(),
-        item.sense || 'Đạt',
-        item.sense === 'Không đạt'
-          ? 'Không đạt - Tạm dừng phục vụ / Kiểm tra lại'
-          : String(item.handle || '').trim(),
+        String(item.sense || '').trim(),
+        String(item.handle || '').trim(),
         batchInspector,
         String(item.note || '').trim(),
       ]);
       onSubmitBatch(stepKey, batchDate, rows);
     } else if (stepKey === 'STEP4_SAMPLE') {
-      const rows = items.map((item) => [
+      const rows = sourceList.map((item) => [
         '',
         batchDate,
         String(item.meal || '').trim(),
@@ -1629,21 +1659,21 @@ export function FoodInspectionBatchModal({
       : 'bg-emerald-700 text-white';
 
   const titleMap: Record<FoodInspectionStepKey, string> = {
-    STEP1_FRESH: 'Nhập Thực Phẩm Tươi Sống (Theo Danh Sách Mẫu)',
-    STEP1_DRY: 'Nhập Thực Phẩm Khô & Gia Vị (Theo Danh Sách Mẫu)',
-    STEP2_COOKING: 'Kiểm Tra Khi Chế Biến Thức Ăn (Theo Danh Sách Mẫu)',
-    STEP3_SERVING: 'Kiểm Tra Trước Khi Ăn (Theo Danh Sách Mẫu)',
-    STEP4_SAMPLE: 'Theo Dõi Lưu & Hủy Mẫu Thức Ăn (Theo Danh Sách Mẫu)',
+    STEP1_FRESH: 'Nhập Thực Phẩm Tươi Sống (Từ Danh Sách Nhập Thực Phẩm)',
+    STEP1_DRY: 'Nhập Thực Phẩm Khô & Gia Vị (Từ Danh Sách Nhập Thực Phẩm)',
+    STEP2_COOKING: 'Kiểm Tra Khi Chế Biến Thức Ăn',
+    STEP3_SERVING: 'Kiểm Tra Trước Khi Ăn',
+    STEP4_SAMPLE: 'Theo Dõi Lưu & Hủy Mẫu Thức Ăn',
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-xs">
-      <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-6xl w-full border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-[95vw] w-full border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         <div className={`${headerColor} px-5 py-3.5 flex items-center justify-between`}>
           <div>
             <h4 className="font-bold text-sm">{titleMap[stepKey]}</h4>
             <p className="text-[11px] opacity-85">
-              Tự động điền thông tin từ danh sách mẫu &amp; đánh giá nhanh Đạt / Không đạt
+              Hiển thị đầy đủ thông tin thực phẩm và ngày nhập tương ứng từ danh sách nhập thực phẩm đã tạo
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -1670,53 +1700,30 @@ export function FoodInspectionBatchModal({
 
         <div className="p-4 overflow-y-auto space-y-3 text-xs">
           {/* Top metadata bar */}
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
             <div>
               <label className="block text-[11px] font-bold text-slate-500 mb-1">
-                Ngày kiểm tra / lưu mẫu:
+                Lọc theo ngày nhập hàng (để trống = hiển thị tất cả):
               </label>
-              <input
-                type="date"
-                value={batchDate}
-                onChange={(e) => {
-                  const newDate = e.target.value;
-                  setBatchDate(newDate);
-                  if (stepKey === 'STEP4_SAMPLE') {
-                    const takeDt = `${newDate}T${actualTime}`;
-                    const destDt = add24Hours(takeDt);
-                    const takeDisp = `${actualTime} ${formatVNDate(newDate)}`;
-                    setGlobalDestroyDt(destDt);
-                    setItems((prev) =>
-                      prev.map((it) => ({
-                        ...it,
-                        takeTime: takeDisp,
-                        destroyDtLocal: destDt,
-                        destroyTime: formatDateTimeDisplay(destDt),
-                      }))
-                    );
-                  }
-                }}
-                className="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-bold text-slate-500 mb-1">
-                {stepKey === 'STEP2_COOKING'
-                  ? 'TG sơ chế → TG nấu xong (+120p):'
-                  : stepKey === 'STEP3_SERVING'
-                  ? 'TG chia xong → TG ăn (11:30):'
-                  : 'Thời gian thực tế (Mở app):'}
-              </label>
-              <div className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
-                <span>
-                  {stepKey === 'STEP2_COOKING'
-                    ? `${actualTime} → ${cookTime}`
-                    : stepKey === 'STEP3_SERVING'
-                    ? `${actualTime} → 11:30`
-                    : actualTime}
-                </span>
-                <Lock className="w-3.5 h-3.5 text-slate-400" />
+              <div className="flex items-center gap-1.5">
+                <input
+                  type="date"
+                  value={batchDate}
+                  onChange={(e) => {
+                    const newDate = e.target.value;
+                    setBatchDate(newDate);
+                  }}
+                  className="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold"
+                />
+                {batchDate && (
+                  <button
+                    type="button"
+                    onClick={() => setBatchDate('')}
+                    className="px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-[11px] font-semibold whitespace-nowrap cursor-pointer"
+                  >
+                    Tất cả
+                  </button>
+                )}
               </div>
             </div>
 
@@ -1769,10 +1776,47 @@ export function FoodInspectionBatchModal({
           </div>
 
           {/* Batch Table */}
-          <div className="max-h-[420px] overflow-auto rounded-xl border border-slate-200 dark:border-slate-700">
+          <div className="max-h-[460px] overflow-auto rounded-xl border border-slate-200 dark:border-slate-700">
             <table className="w-full text-left border-collapse text-xs">
               <thead className="bg-slate-100 dark:bg-slate-800 sticky top-0 z-10 font-bold text-center">
-                {stepKey === 'STEP2_COOKING' ? (
+                {stepKey === 'STEP1_FRESH' ? (
+                  <tr>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-10">STT</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Ngày nhập hàng</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[150px]">Tên thực phẩm</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-24">Ngày giờ nhập</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-20">Khối lượng</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-20">Đơn vị tính</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[140px]">Tên cơ sở cung cấp</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[150px]">Địa chỉ/điện thoại</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[130px]">Tên người giao hàng</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Chứng từ/hóa đơn</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Giấy ĐK VS thú y</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Giấy kiểm dịch</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-32">Kiểm tra cảm quan</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-32">Xét nghiệm nhanh</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[140px]">Biện pháp xử lý/ghi chú</th>
+                  </tr>
+                ) : stepKey === 'STEP1_DRY' ? (
+                  <tr>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-10">STT</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Ngày nhập hàng</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[150px]">Tên thực phẩm</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[140px]">Tên cơ sở sản xuất</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[140px]">Địa chỉ sản xuất</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-24">Thời gian nhập</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-20">Khối lượng</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-20">Đơn vị tính</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[140px]">Tên cơ sở cung cấp</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[130px]">Tên chủ giao hàng</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[140px]">Địa chỉ/điện thoại</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Hạn sử dụng</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Điều kiện bảo quản</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Chứng từ/hóa đơn</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-32">Kiểm tra cảm quan</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[140px]">Biện pháp xử lý/ghi chú</th>
+                  </tr>
+                ) : stepKey === 'STEP2_COOKING' ? (
                   <tr>
                     <th className="p-2 border-b border-slate-200 dark:border-slate-700 w-10">TT</th>
                     <th className="p-2 border-b border-slate-200 dark:border-slate-700">Ca/ bữa ăn</th>
@@ -1801,157 +1845,353 @@ export function FoodInspectionBatchModal({
                 ) : (
                   <tr>
                     <th className="p-2 border-b border-slate-200 dark:border-slate-700 w-10">TT</th>
-                    <th className="p-2 border-b border-slate-200 dark:border-slate-700 text-left">
-                      {stepKey === 'STEP3_SERVING' ? 'Tên món ăn' : 'Tên thực phẩm'}
-                    </th>
-                    <th className="p-2 border-b border-slate-200 dark:border-slate-700">
-                      {stepKey === 'STEP3_SERVING' ? 'Ca/ Bữa ăn' : 'Khối lượng'}
-                    </th>
-                    <th className="p-2 border-b border-slate-200 dark:border-slate-700">
-                      {stepKey === 'STEP3_SERVING' ? 'Số suất' : 'ĐVT'}
-                    </th>
+                    <th className="p-2 border-b border-slate-200 dark:border-slate-700 text-left">Tên món ăn</th>
+                    <th className="p-2 border-b border-slate-200 dark:border-slate-700">Ca/ Bữa ăn</th>
+                    <th className="p-2 border-b border-slate-200 dark:border-slate-700">Số suất</th>
                     <th className="p-2 border-b border-slate-200 dark:border-slate-700 w-36">Kiểm tra cảm quan</th>
                     <th className="p-2 border-b border-slate-200 dark:border-slate-700 text-left">Biện pháp xử lý</th>
                   </tr>
                 )}
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {items.map((item, idx) => {
-                  if (stepKey === 'STEP2_COOKING') {
-                    const hasFail =
-                      item.sense === 'Không đạt' ||
-                      item.hygienePerson === 'Không đạt' ||
-                      item.hygieneEquipment === 'Không đạt' ||
-                      item.hygieneArea === 'Không đạt';
-                    return (
-                      <tr key={idx} className={hasFail ? 'bg-rose-50/70 dark:bg-rose-950/30' : ''}>
-                        <td className="p-2 text-center font-bold">{idx + 1}</td>
-                        <td className="p-2 text-center">{item.meal}</td>
-                        <td className="p-2 font-bold">{item.dishName}</td>
-                        <td className="p-2">{item.ingName}</td>
-                        <td className="p-2 text-center font-semibold text-blue-600">{item.ingQty}</td>
-                        <td className="p-2 text-center">{item.servings}</td>
-                        {(['hygienePerson', 'hygieneEquipment', 'hygieneArea', 'sense'] as const).map((field) => (
-                          <td key={field} className="p-1.5 text-center">
-                            <select
-                              value={item[field]}
+                {visibleItems.length === 0 ? (
+                  <tr>
+                    <td colSpan={16} className="p-6 text-center text-slate-400">
+                      Chưa có thực phẩm nào trong Danh sách nhập thực phẩm. Bạn có thể nhấn &quot;Thêm dòng lẻ&quot; ở góc trên bên phải để nhập trực tiếp.
+                    </td>
+                  </tr>
+                ) : (
+                  visibleItems.map(({ item, originalIndex }, idx) => {
+                    if (stepKey === 'STEP1_FRESH') {
+                      return (
+                        <tr key={originalIndex} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center font-bold">{idx + 1}</td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center font-mono">
+                            {item.importDate || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 font-bold text-slate-900 dark:text-white">
+                            {item.name || ''}
+                          </td>
+                          <td className="p-1.5 border border-slate-200 dark:border-slate-700">
+                            <input
+                              type="text"
+                              value={item.time || ''}
                               onChange={(e) => {
                                 const val = e.target.value;
                                 setItems((prev) =>
                                   prev.map((row, rIdx) =>
-                                    rIdx === idx ? { ...row, [field]: val } : row
+                                    rIdx === originalIndex ? { ...row, time: val } : row
                                   )
                                 );
                               }}
-                              className={`px-2 py-1 rounded-lg border text-xs font-bold ${
-                                item[field] === 'Không đạt'
-                                  ? 'border-rose-400 text-rose-700 bg-rose-50'
-                                  : 'border-emerald-400 text-emerald-700 bg-emerald-50'
-                              }`}
+                              className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-center"
+                            />
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center font-bold text-blue-600">
+                            {item.qty || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center">
+                            {item.unit || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700">
+                            {item.supplier || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-slate-500">
+                            {item.addr || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700">
+                            {item.deliverer || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center">
+                            {item.doc || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center">
+                            {item.vet || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center">
+                            {item.quar || ''}
+                          </td>
+                          <td className="p-1.5 border border-slate-200 dark:border-slate-700 text-center">
+                            <select
+                              value={item.sense || ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setItems((prev) =>
+                                  prev.map((row, rIdx) =>
+                                    rIdx === originalIndex ? { ...row, sense: val } : row
+                                  )
+                                );
+                              }}
+                              className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold"
                             >
+                              <option value=""></option>
                               <option value="Đạt">✅ Đạt</option>
-                              <option value="Không đạt">❌ K.Đạt</option>
+                              <option value="Không đạt">❌ Không đạt</option>
                             </select>
                           </td>
-                        ))}
-                        <td className="p-2 text-xs">
-                          {hasFail
-                            ? 'Không đạt - Tạm dừng chế biến, khắc phục vệ sinh/thực phẩm'
-                            : item.handle || '--'}
-                        </td>
-                      </tr>
-                    );
-                  }
+                          <td className="p-1.5 border border-slate-200 dark:border-slate-700">
+                            <input
+                              type="text"
+                              value={item.test || ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setItems((prev) =>
+                                  prev.map((row, rIdx) =>
+                                    rIdx === originalIndex ? { ...row, test: val } : row
+                                  )
+                                );
+                              }}
+                              className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                            />
+                          </td>
+                          <td className="p-1.5 border border-slate-200 dark:border-slate-700">
+                            <input
+                              type="text"
+                              value={item.handle || ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setItems((prev) =>
+                                  prev.map((row, rIdx) =>
+                                    rIdx === originalIndex ? { ...row, handle: val } : row
+                                  )
+                                );
+                              }}
+                              className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                            />
+                          </td>
+                        </tr>
+                      );
+                    }
 
-                  if (stepKey === 'STEP4_SAMPLE') {
+                    if (stepKey === 'STEP1_DRY') {
+                      return (
+                        <tr key={originalIndex} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center font-bold">{idx + 1}</td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center font-mono">
+                            {item.importDate || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 font-bold text-slate-900 dark:text-white">
+                            {item.name || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700">
+                            {item.producer || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-slate-500">
+                            {item.prod_addr || ''}
+                          </td>
+                          <td className="p-1.5 border border-slate-200 dark:border-slate-700">
+                            <input
+                              type="text"
+                              value={item.time || ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setItems((prev) =>
+                                  prev.map((row, rIdx) =>
+                                    rIdx === originalIndex ? { ...row, time: val } : row
+                                  )
+                                );
+                              }}
+                              className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-center"
+                            />
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center font-bold text-blue-600">
+                            {item.qty || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center">
+                            {item.unit || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700">
+                            {item.supplier || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700">
+                            {item.deliverer || ''}
+                          </td>
+                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-slate-500">
+                            {item.addr || ''}
+                          </td>
+                          <td className="p-1.5 border border-slate-200 dark:border-slate-700">
+                            <input
+                              type="text"
+                              value={item.exp || ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setItems((prev) =>
+                                  prev.map((row, rIdx) =>
+                                    rIdx === originalIndex ? { ...row, exp: val } : row
+                                  )
+                                );
+                              }}
+                              className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                            />
+                          </td>
+                          <td className="p-1.5 border border-slate-200 dark:border-slate-700">
+                            <input
+                              type="text"
+                              value={item.storage || ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setItems((prev) =>
+                                  prev.map((row, rIdx) =>
+                                    rIdx === originalIndex ? { ...row, storage: val } : row
+                                  )
+                                );
+                              }}
+                              className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                            />
+                          </td>
+                          <td className="p-1.5 border border-slate-200 dark:border-slate-700">
+                            <input
+                              type="text"
+                              value={item.doc || ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setItems((prev) =>
+                                  prev.map((row, rIdx) =>
+                                    rIdx === originalIndex ? { ...row, doc: val } : row
+                                  )
+                                );
+                              }}
+                              className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                            />
+                          </td>
+                          <td className="p-1.5 border border-slate-200 dark:border-slate-700 text-center">
+                            <select
+                              value={item.sense || ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setItems((prev) =>
+                                  prev.map((row, rIdx) =>
+                                    rIdx === originalIndex ? { ...row, sense: val } : row
+                                  )
+                                );
+                              }}
+                              className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold"
+                            >
+                              <option value=""></option>
+                              <option value="Đạt">✅ Đạt</option>
+                              <option value="Không đạt">❌ Không đạt</option>
+                            </select>
+                          </td>
+                          <td className="p-1.5 border border-slate-200 dark:border-slate-700">
+                            <input
+                              type="text"
+                              value={item.handle || ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setItems((prev) =>
+                                  prev.map((row, rIdx) =>
+                                    rIdx === originalIndex ? { ...row, handle: val } : row
+                                  )
+                                );
+                              }}
+                              className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                            />
+                          </td>
+                        </tr>
+                      );
+                    }
+
+                    if (stepKey === 'STEP2_COOKING') {
+                      return (
+                        <tr key={originalIndex}>
+                          <td className="p-2 text-center font-bold">{idx + 1}</td>
+                          <td className="p-2 text-center">{item.meal || ''}</td>
+                          <td className="p-2 font-bold">{item.dishName || ''}</td>
+                          <td className="p-2">{item.ingName || ''}</td>
+                          <td className="p-2 text-center font-semibold text-blue-600">{item.ingQty || ''}</td>
+                          <td className="p-2 text-center">{item.servings || ''}</td>
+                          {(['hygienePerson', 'hygieneEquipment', 'hygieneArea', 'sense'] as const).map((field) => (
+                            <td key={field} className="p-1.5 text-center">
+                              <select
+                                value={item[field] || ''}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  setItems((prev) =>
+                                    prev.map((row, rIdx) =>
+                                      rIdx === originalIndex ? { ...row, [field]: val } : row
+                                    )
+                                  );
+                                }}
+                                className="px-2 py-1 rounded-lg border border-slate-300 dark:border-slate-700 text-xs font-bold"
+                              >
+                                <option value=""></option>
+                                <option value="Đạt">✅ Đạt</option>
+                                <option value="Không đạt">❌ K.Đạt</option>
+                              </select>
+                            </td>
+                          ))}
+                          <td className="p-2 text-xs">{item.handle || ''}</td>
+                        </tr>
+                      );
+                    }
+
+                    if (stepKey === 'STEP4_SAMPLE') {
+                      return (
+                        <tr key={originalIndex}>
+                          <td className="p-2 text-center font-bold">{idx + 1}</td>
+                          <td className="p-2 font-bold">{item.dishName || item.name || ''}</td>
+                          <td className="p-2 text-center">{item.meal || ''}</td>
+                          <td className="p-2 text-center">{item.servings || ''}</td>
+                          <td className="p-2 text-center font-bold text-rose-600">{item.weight || ''}</td>
+                          <td className="p-2">{item.box || ''}</td>
+                          <td className="p-2 text-center">{item.temp || ''}</td>
+                          <td className="p-2 text-center">{item.takeTime || ''}</td>
+                          <td className="p-2 text-center">
+                            <input
+                              type="datetime-local"
+                              value={item.destroyDtLocal || ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setItems((prev) =>
+                                  prev.map((row, rIdx) =>
+                                    rIdx === originalIndex
+                                      ? {
+                                          ...row,
+                                          destroyDtLocal: val,
+                                          destroyTime: formatDateTimeDisplay(val),
+                                        }
+                                      : row
+                                  )
+                                );
+                              }}
+                              className="px-2 py-1 rounded-lg border border-rose-300 text-rose-600 font-bold text-xs"
+                            />
+                          </td>
+                        </tr>
+                      );
+                    }
+
                     return (
-                      <tr key={idx}>
+                      <tr key={originalIndex}>
                         <td className="p-2 text-center font-bold">{idx + 1}</td>
-                        <td className="p-2 font-bold">{item.dishName || item.name}</td>
-                        <td className="p-2 text-center">{item.meal}</td>
-                        <td className="p-2 text-center">{item.servings}</td>
-                        <td className="p-2 text-center font-bold text-rose-600">{item.weight}</td>
-                        <td className="p-2">{item.box}</td>
-                        <td className="p-2 text-center">{item.temp}</td>
-                        <td className="p-2 text-center">{item.takeTime}</td>
+                        <td className="p-2 font-bold text-slate-900 dark:text-white">
+                          {item.name || item.dishName || ''}
+                        </td>
+                        <td className="p-2 text-center font-bold">{item.meal || ''}</td>
+                        <td className="p-2 text-center">{item.servings || ''}</td>
                         <td className="p-2 text-center">
-                          <input
-                            type="datetime-local"
-                            value={item.destroyDtLocal || ''}
+                          <select
+                            value={item.sense || ''}
                             onChange={(e) => {
                               const val = e.target.value;
                               setItems((prev) =>
                                 prev.map((row, rIdx) =>
-                                  rIdx === idx
-                                    ? {
-                                        ...row,
-                                        destroyDtLocal: val,
-                                        destroyTime: formatDateTimeDisplay(val),
-                                      }
-                                    : row
+                                  rIdx === originalIndex ? { ...row, sense: val } : row
                                 )
                               );
                             }}
-                            className="px-2 py-1 rounded-lg border border-rose-300 text-rose-600 font-bold text-xs"
-                          />
+                            className="px-2.5 py-1 rounded-lg border border-slate-300 dark:border-slate-700 text-xs font-bold"
+                          >
+                            <option value=""></option>
+                            <option value="Đạt">✅ ĐẠT</option>
+                            <option value="Không đạt">❌ KHÔNG ĐẠT</option>
+                          </select>
                         </td>
+                        <td className="p-2">{item.handle || ''}</td>
                       </tr>
                     );
-                  }
-
-                  const isNotOk = item.sense === 'Không đạt';
-                  return (
-                    <tr key={idx} className={isNotOk ? 'bg-rose-50/70 dark:bg-rose-950/30' : ''}>
-                      <td className="p-2 text-center font-bold">{idx + 1}</td>
-                      <td className="p-2">
-                        <div className="font-bold text-slate-900 dark:text-white">
-                          {item.name || item.dishName}
-                        </div>
-                        {(item.supplier || item.producer || item.container) && (
-                          <div className="text-[11px] text-slate-500">
-                            {item.supplier || item.producer || item.container}
-                          </div>
-                        )}
-                      </td>
-                      <td className="p-2 text-center font-bold">
-                        {stepKey === 'STEP3_SERVING' ? item.meal : item.qty}
-                      </td>
-                      <td className="p-2 text-center">
-                        {stepKey === 'STEP3_SERVING' ? item.servings : item.unit}
-                      </td>
-                      <td className="p-2 text-center">
-                        <select
-                          value={item.sense}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            setItems((prev) =>
-                              prev.map((row, rIdx) =>
-                                rIdx === idx ? { ...row, sense: val } : row
-                              )
-                            );
-                          }}
-                          className={`px-2.5 py-1 rounded-lg border text-xs font-bold ${
-                            isNotOk
-                              ? 'border-rose-400 text-rose-700 bg-rose-50'
-                              : 'border-emerald-400 text-emerald-700 bg-emerald-50'
-                          }`}
-                        >
-                          <option value="Đạt">✅ ĐẠT</option>
-                          <option value="Không đạt">❌ KHÔNG ĐẠT</option>
-                        </select>
-                      </td>
-                      <td className="p-2">
-                        <span className={isNotOk ? 'text-rose-600 font-bold' : ''}>
-                          {isNotOk
-                            ? stepKey === 'STEP3_SERVING'
-                              ? 'Không đạt - Tạm dừng phục vụ / Kiểm tra lại'
-                              : 'Không đạt - Lập biên bản, trả lại NCC'
-                            : item.handle || '--'}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
+                  })
+                )}
               </tbody>
             </table>
           </div>
@@ -1959,7 +2199,7 @@ export function FoodInspectionBatchModal({
 
         <div className="px-5 py-3 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
           <div className="text-slate-500">
-            Tổng cộng: <b className="text-emerald-600">{items.length}</b> dòng dữ liệu
+            Tổng cộng: <b className="text-emerald-600">{visibleItems.length}</b> dòng dữ liệu
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -1979,6 +2219,286 @@ export function FoodInspectionBatchModal({
             </button>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// =====================================================================
+// 5. FOOD IMPORT TEMPLATE MODAL (DANH SÁCH NHẬP THỰC PHẨM - HCNS & ADMIN)
+// =====================================================================
+export interface FoodImportTemplateModalProps {
+  isOpen: boolean;
+  type: 'FRESH' | 'DRY';
+  editingItem: (FreshTemplateItem | DryTemplateItem) | null;
+  onClose: () => void;
+  onSave: (
+    type: 'FRESH' | 'DRY',
+    item: FreshTemplateItem | DryTemplateItem,
+    existingId?: string
+  ) => void;
+}
+
+export function FoodImportTemplateModal({
+  isOpen,
+  type,
+  editingItem,
+  onClose,
+  onSave,
+}: FoodImportTemplateModalProps) {
+  const isEdit = !!editingItem;
+  const [importDate, setImportDate] = useState('');
+  const [name, setName] = useState('');
+  const [qty, setQty] = useState('');
+  const [unit, setUnit] = useState('');
+  const [supplier, setSupplier] = useState('');
+  const [addr, setAddr] = useState('');
+  const [deliverer, setDeliverer] = useState('');
+  // Fresh specific
+  const [doc, setDoc] = useState('');
+  const [vet, setVet] = useState('');
+  const [quar, setQuar] = useState('');
+  // Dry specific
+  const [producer, setProducer] = useState('');
+  const [prodAddr, setProdAddr] = useState('');
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+    setImportDate(editingItem?.importDate || '');
+    setName(editingItem?.name || '');
+    setQty(editingItem?.qty || '');
+    setUnit(editingItem?.unit || '');
+    setSupplier(editingItem?.supplier || '');
+    setAddr(editingItem?.addr || '');
+    setDeliverer(editingItem?.deliverer || '');
+    if (type === 'FRESH') {
+      const f = editingItem as FreshTemplateItem | null;
+      setDoc(f?.doc || '');
+      setVet(f?.vet || '');
+      setQuar(f?.quar || '');
+    } else {
+      const d = editingItem as DryTemplateItem | null;
+      setProducer(d?.producer || '');
+      setProdAddr(d?.prod_addr || '');
+    }
+  }, [isOpen, type, editingItem]);
+
+  if (!isOpen) return null;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const existingId = editingItem?.id;
+    if (type === 'FRESH') {
+      const item: FreshTemplateItem = {
+        id: existingId || `FT_${Date.now()}`,
+        importDate: importDate.trim(),
+        name: name.trim(),
+        qty: qty.trim(),
+        unit: unit.trim(),
+        supplier: supplier.trim(),
+        addr: addr.trim(),
+        deliverer: deliverer.trim(),
+        doc: doc.trim(),
+        vet: vet.trim(),
+        quar: quar.trim(),
+      };
+      onSave('FRESH', item, existingId);
+    } else {
+      const item: DryTemplateItem = {
+        id: existingId || `DT_${Date.now()}`,
+        importDate: importDate.trim(),
+        name: name.trim(),
+        producer: producer.trim(),
+        prod_addr: prodAddr.trim(),
+        qty: qty.trim(),
+        unit: unit.trim(),
+        supplier: supplier.trim(),
+        deliverer: deliverer.trim(),
+        addr: addr.trim(),
+      };
+      onSave('DRY', item, existingId);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-xs">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="bg-emerald-700 px-5 py-3.5 text-white flex items-center justify-between">
+          <h4 className="font-bold text-sm">
+            {isEdit ? 'Chỉnh sửa' : 'Thêm mới'} {type === 'FRESH' ? 'Thực phẩm tươi sống' : 'Thực phẩm khô'} (Danh sách nhập thực phẩm)
+          </h4>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1 rounded-lg hover:bg-white/10 text-white cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-5 overflow-y-auto space-y-3.5 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+            <div className="sm:col-span-5">
+              <label className="block font-bold mb-1">Ngày nhập hàng:</label>
+              <input
+                type="date"
+                value={importDate}
+                onChange={(e) => setImportDate(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-semibold"
+              />
+            </div>
+            <div className="sm:col-span-7">
+              <label className="block font-bold mb-1">Tên thực phẩm *:</label>
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+              />
+            </div>
+
+            {type === 'DRY' && (
+              <>
+                <div className="sm:col-span-6">
+                  <label className="block font-bold mb-1">Tên cơ sở sản xuất:</label>
+                  <input
+                    type="text"
+                    value={producer}
+                    onChange={(e) => setProducer(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                  />
+                </div>
+                <div className="sm:col-span-6">
+                  <label className="block font-bold mb-1">Địa chỉ sản xuất:</label>
+                  <input
+                    type="text"
+                    value={prodAddr}
+                    onChange={(e) => setProdAddr(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                  />
+                </div>
+              </>
+            )}
+
+            <div className="sm:col-span-6">
+              <label className="block font-bold mb-1">Khối lượng:</label>
+              <input
+                type="text"
+                value={qty}
+                onChange={(e) => setQty(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+              />
+            </div>
+            <div className="sm:col-span-6">
+              <label className="block font-bold mb-1">Đơn vị tính:</label>
+              <input
+                type="text"
+                value={unit}
+                onChange={(e) => setUnit(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+              />
+            </div>
+
+            <div className="sm:col-span-4">
+              <label className="block font-bold mb-1">Tên cơ sở cung cấp:</label>
+              <input
+                type="text"
+                value={supplier}
+                onChange={(e) => setSupplier(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+              />
+            </div>
+
+            {type === 'FRESH' ? (
+              <>
+                <div className="sm:col-span-4">
+                  <label className="block font-bold mb-1">Địa chỉ/điện thoại:</label>
+                  <input
+                    type="text"
+                    value={addr}
+                    onChange={(e) => setAddr(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                  />
+                </div>
+                <div className="sm:col-span-4">
+                  <label className="block font-bold mb-1">Tên người giao hàng:</label>
+                  <input
+                    type="text"
+                    value={deliverer}
+                    onChange={(e) => setDeliverer(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                  />
+                </div>
+                <div className="sm:col-span-4">
+                  <label className="block font-bold mb-1">Chứng từ/hóa đơn:</label>
+                  <input
+                    type="text"
+                    value={doc}
+                    onChange={(e) => setDoc(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                  />
+                </div>
+                <div className="sm:col-span-4">
+                  <label className="block font-bold mb-1">Giấy ĐK VS thú y:</label>
+                  <input
+                    type="text"
+                    value={vet}
+                    onChange={(e) => setVet(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                  />
+                </div>
+                <div className="sm:col-span-4">
+                  <label className="block font-bold mb-1">Giấy kiểm dịch:</label>
+                  <input
+                    type="text"
+                    value={quar}
+                    onChange={(e) => setQuar(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="sm:col-span-4">
+                  <label className="block font-bold mb-1">Tên chủ giao hàng:</label>
+                  <input
+                    type="text"
+                    value={deliverer}
+                    onChange={(e) => setDeliverer(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                  />
+                </div>
+                <div className="sm:col-span-4">
+                  <label className="block font-bold mb-1">Địa chỉ/điện thoại:</label>
+                  <input
+                    type="text"
+                    value={addr}
+                    onChange={(e) => setAddr(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
+                  />
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="flex justify-end gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 font-semibold cursor-pointer"
+            >
+              Đóng
+            </button>
+            <button
+              type="submit"
+              className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold flex items-center gap-1.5 cursor-pointer"
+            >
+              <Check className="w-4 h-4" />
+              <span>Lưu vào danh sách</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
