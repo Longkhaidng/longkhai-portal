@@ -50,20 +50,17 @@
       "quar": ""
     },
     {
-      "stt": 4,
+      "id": "FT_1794812848330",
+      "importDate": "",
       "name": "Rau muống",
-      "time": "06:35",
       "qty": "8.0",
       "unit": "kg",
       "supplier": "HTX Rau an toàn Hòa Vang",
       "addr": "Xã Hòa Vang, Đà Nẵng",
       "deliverer": "Lê Văn Tuấn (0905666777)",
-      "doc": "HĐ 332",
-      "vet": "Đầy đủ",
-      "quar": "Có xác nhận",
-      "sense": "Đạt",
-      "test": "Âm tính (Thuốc BVTV)",
-      "handle": "Ngâm rửa theo quy trình"
+      "doc": "",
+      "vet": "",
+      "quar": ""
     },
     {
       "id": "FT_1794812832427",
@@ -367,5 +364,5 @@
       "note": "Mẫu lưu an toàn"
     }
   ],
-  "updatedAt": "2026-11-16T07:07:12.427Z"
+  "updatedAt": "2026-11-16T07:07:28.330Z"
 }
