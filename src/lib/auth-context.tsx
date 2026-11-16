@@ -247,6 +247,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Administrator always has access to everything
     if (currentUser.role === 'admin') return true;
 
+    // Kiểm tra thực phẩm 3 bước: cho phép nhân sự được phân quyền trực tiếp, hoặc phụ trách kiểm thực / HCNS / EHS / WEB-001
+    if (category === 'food_inspection') {
+      if (Array.isArray(currentUser.permissions) && currentUser.permissions.includes('food_inspection')) {
+        return true;
+      }
+      if (
+        currentUser.id === '1139' ||
+        currentUser.id === '1867' ||
+        currentUser.role === 'hr' ||
+        currentUser.role === 'ehs' ||
+        currentUser.allowedWebIntegrations?.includes('WEB-001')
+      ) {
+        return true;
+      }
+    }
+
     // Strict role-based & category-based permissions configured by Admin
     if (Array.isArray(currentUser.permissions)) {
       return currentUser.permissions.includes(category);

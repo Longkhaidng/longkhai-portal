@@ -123,6 +123,7 @@ export async function GET() {
     const overtimeRegistrations = scanJsonFiles<any>('overtime');
     const overtimeMealMenus = readJsonFile<any[]>('settings/overtime_meal_menus.json', []);
     const foodRegistrations = scanJsonFiles<any>('food-registration');
+    const foodInspection3Step = readJsonFile<any>('settings/food-inspection-3step.json', null);
     const cameraRequests = scanJsonFiles<any>('camera-request');
     const cameras = readJsonFile<any[]>('settings/cameras.json', []);
 
@@ -149,6 +150,7 @@ export async function GET() {
         emailConfig,
         githubConfig,
         foodRegistrations,
+        foodInspection3Step,
         overtimeRegistrations,
         overtimeMealMenus,
         cameras,
@@ -203,6 +205,7 @@ export async function POST(req: NextRequest) {
         | 'overtime_registration'
         | 'overtime_meal_menu'
         | 'food_registration'
+        | 'food_inspection_3step'
         | 'cameras'
         | 'camera_request';
       data: any;
@@ -299,6 +302,9 @@ export async function POST(req: NextRequest) {
       const year = data.createdAt ? new Date(data.createdAt).getFullYear() : new Date().getFullYear();
       relFilePath = `camera-request/${year}/${data.id}.json`;
       commitMessage = `Update Camera Request ${data.id} (${data.status})`;
+    } else if (type === 'food_inspection_3step') {
+      relFilePath = 'settings/food-inspection-3step.json';
+      commitMessage = 'Update Food Inspection 3-Step data';
     }
 
     const jsonString = JSON.stringify(data, null, 2);

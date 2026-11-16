@@ -30,6 +30,7 @@ import {
   Flame,
   ClipboardCheck,
   UtensilsCrossed,
+  ShieldCheck,
   ChevronDown,
 } from 'lucide-react';
 
@@ -96,7 +97,10 @@ export function Sidebar({
     }));
   };
 
-  const allWebIntegrations = storage.getWebIntegrations().filter((w) => w.isActive);
+  // Hide WEB-001 from external links section since it is now integrated natively as 'food_inspection'
+  const allWebIntegrations = storage
+    .getWebIntegrations()
+    .filter((w) => w.isActive && w.id !== 'WEB-001' && !w.title.toLowerCase().includes('kiểm tra thực phẩm 3 bước'));
 
   // Filter integrated websites based on employee individual permissions
   const accessibleWebIntegrations = allWebIntegrations.filter((site) => {
@@ -156,6 +160,12 @@ export function Sidebar({
       icon: UtensilsCrossed,
       badgeCount: pendingCounts.foodRegistration,
       badgeColor: 'bg-emerald-500 text-white',
+    },
+    {
+      id: 'food_inspection',
+      permission: 'food_inspection',
+      label: 'Kiểm tra thực phẩm 3 bước',
+      icon: ShieldCheck,
     },
     {
       id: 'camera',

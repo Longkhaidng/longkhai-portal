@@ -15,6 +15,7 @@ import { ProposalHubView } from '@/components/proposals/ProposalHubView';
 import { PCCCInspectionView } from '@/components/pccc/PCCCInspectionView';
 import { PeriodicInspectionView } from '@/components/periodic-inspection/PeriodicInspectionView';
 import { FoodRegistrationView } from '@/components/food-registration/FoodRegistrationView';
+import { FoodInspection3StepView } from '@/components/food-inspection/FoodInspection3StepView';
 import { CameraSurveillanceView } from '@/components/camera/CameraSurveillanceView';
 import { checkFoodQrValidity } from '@/types/food-registration';
 import { AnnouncementView } from '@/components/announcements/AnnouncementView';
@@ -344,6 +345,7 @@ function PortalAppContent() {
         'attendance',
         'gate_pass',
         'food_registration',
+        'food_inspection',
         'camera',
         'repair',
         'announcements',
@@ -388,6 +390,8 @@ function PortalAppContent() {
         return <DepartmentManagementView />;
       case 'food_registration':
         return <FoodRegistrationView />;
+      case 'food_inspection':
+        return <FoodInspection3StepView />;
       case 'camera':
         return <CameraSurveillanceView />;
       case 'overtime':

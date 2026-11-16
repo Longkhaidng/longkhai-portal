@@ -38,6 +38,7 @@ import {
 import { OvertimeRegistration, OvertimeMealMenu, OvertimeItem, OvertimeApprovalStatus, OvertimeConfirmStatus } from '@/types/overtime';
 import { INITIAL_OVERTIME_MENUS, INITIAL_OVERTIME_REGISTRATIONS } from './overtime-data';
 import { FoodRegistration, INITIAL_FOOD_REGISTRATIONS, compareFoodRegistrationsNewestFirst } from '@/types/food-registration';
+import { FoodInspectionStore, createInitialFoodInspectionStore } from '@/types/food-inspection';
 import { CameraItem, CameraRequest, DEFAULT_CAMERAS, INITIAL_CAMERA_REQUESTS } from '@/types/camera';
 import { GitHubService } from './github-api';
 import { formatDocId, sortNewestFirst } from './utils';
@@ -70,6 +71,7 @@ const STORAGE_KEYS = {
   OVERTIME_REGISTRATIONS: 'lk_portal_overtime_registrations',
   OVERTIME_MEAL_MENUS: 'lk_portal_overtime_meal_menus',
   FOOD_REGISTRATIONS: 'lk_portal_food_registrations',
+  FOOD_INSPECTION_3STEP: 'lk_portal_food_inspection_3step_v1',
   CAMERAS: 'lk_portal_cameras',
   CAMERA_REQUESTS: 'lk_portal_camera_requests',
   AUDIT_LOGS: 'lk_portal_audit_logs',
@@ -1107,6 +1109,7 @@ class StorageService {
         emailConfig,
         githubConfig,
         foodRegistrations,
+        foodInspection3Step,
         overtimeRegistrations,
         overtimeMealMenus,
         cameras,
@@ -1198,6 +1201,12 @@ class StorageService {
         localStorage.setItem(STORAGE_KEYS.CAMERAS, JSON.stringify(cameras));
         try {
           window.dispatchEvent(new Event('cameras_updated'));
+        } catch {}
+      }
+      if (foodInspection3Step && typeof foodInspection3Step === 'object' && foodInspection3Step.settings) {
+        localStorage.setItem(STORAGE_KEYS.FOOD_INSPECTION_3STEP, JSON.stringify(foodInspection3Step));
+        try {
+          window.dispatchEvent(new Event('food_inspection_updated'));
         } catch {}
       }
       if (Array.isArray(cameraRequests)) {
@@ -2871,6 +2880,67 @@ class StorageService {
 
     try {
       window.dispatchEvent(new Event('camera_requests_updated'));
+    } catch {}
+  }
+
+  // --- KIỂM THỰC 3 BƯỚC & LƯU MẪU THỨC ĂN (QĐ 1246/QĐ-BYT) ---
+  getFoodInspectionStore(): FoodInspectionStore {
+    const initial = createInitialFoodInspectionStore();
+    if (!this.isClient()) return initial;
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.FOOD_INSPECTION_3STEP);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          return {
+            ...initial,
+            ...parsed,
+            settings: { ...initial.settings, ...(parsed.settings || {}) },
+          };
+        }
+      }
+    } catch {}
+    try {
+      localStorage.setItem(STORAGE_KEYS.FOOD_INSPECTION_3STEP, JSON.stringify(initial));
+    } catch {}
+    return initial;
+  }
+
+  saveFoodInspectionStore(storeData: FoodInspectionStore, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const payload: FoodInspectionStore = {
+      ...storeData,
+      updatedAt: new Date().toISOString(),
+    };
+    localStorage.setItem(STORAGE_KEYS.FOOD_INSPECTION_3STEP, JSON.stringify(payload));
+
+    this.addAuditLog(
+      'update',
+      'food_inspection',
+      'settings/food-inspection-3step.json',
+      byUser?.id || '1139',
+      byUser?.name || payload.settings.inspector || 'Kiểm thực',
+      'Cập nhật dữ liệu Kiểm thực 3 bước & Lưu mẫu thức ăn'
+    );
+
+    this.syncFileToGitHub(
+      'settings/food-inspection-3step.json',
+      JSON.stringify(payload, null, 2),
+      'Update Food Inspection 3-Step data'
+    );
+
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'food_inspection_3step',
+        data: payload,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
+
+    try {
+      window.dispatchEvent(new Event('food_inspection_updated'));
     } catch {}
   }
 
