@@ -37,20 +37,17 @@
       "quar": ""
     },
     {
-      "stt": 3,
+      "id": "FT_1794812822978",
+      "importDate": "",
       "name": "Bí đỏ",
-      "time": "06:30",
       "qty": "11.0",
       "unit": "kg",
       "supplier": "HTX Rau an toàn Hòa Vang",
       "addr": "Xã Hòa Vang, Đà Nẵng",
       "deliverer": "Lê Văn Tuấn (0905666777)",
-      "doc": "HĐ 332",
-      "vet": "Đầy đủ",
-      "quar": "Có xác nhận",
-      "sense": "Đạt",
-      "test": "Âm tính (Dư lượng BVTV)",
-      "handle": "Chuyển khu sơ chế rau"
+      "doc": "",
+      "vet": "",
+      "quar": ""
     },
     {
       "stt": 4,
@@ -373,5 +370,5 @@
       "note": "Mẫu lưu an toàn"
     }
   ],
-  "updatedAt": "2026-11-16T07:06:58.602Z"
+  "updatedAt": "2026-11-16T07:07:02.978Z"
 }
