@@ -24,6 +24,7 @@ import {
   Package,
   FileQuestion,
   Camera,
+  ShieldCheck,
 } from 'lucide-react';
 import { formatDate, formatDateTime, sortNewestFirst } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
@@ -48,11 +49,13 @@ import {
 import { filterUserLeaves, filterUserAttendances, filterUserGatePasses, filterUserRepairProposals, filterUserStationeryProposals, filterUserGeneralProposals, canAccessCameraReport } from '@/lib/permissions';
 import { CameraRequest, CAMERA_PURPOSE_LABELS, CAMERA_STATUS_LABELS, CAMERA_STATUS_BADGES } from '@/types/camera';
 import { FoodRegistration, FoodReportRow, flattenFoodRegistrationsToReportRows, compareFoodReportRowsNewestFirst, FoodCategory, FOOD_CATEGORY_LABELS, FOOD_STATUS_LABELS, FOOD_STATUS_BADGES } from '@/types/food-registration';
+import { FoodInspectionRecord, FoodInspectionStore, FoodReportFormKey, createInitialFoodInspectionStore } from '@/types/food-inspection';
+import { FoodInspectionPrintReport } from '@/components/food-inspection/FoodInspectionPrintReport';
 
 export function ReportsView() {
   const { currentUser } = useAuth();
   const canAccessCamera = canAccessCameraReport(currentUser);
-  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'repair' | 'stationery' | 'general' | 'departments' | 'pccc' | 'periodic_inspection' | 'food_registration' | 'camera'>('leave');
+  const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'repair' | 'stationery' | 'general' | 'departments' | 'pccc' | 'periodic_inspection' | 'food_registration' | 'food_inspection' | 'camera'>('leave');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('all');
@@ -61,6 +64,43 @@ export function ReportsView() {
   const [pcccCategoryFilter, setPcccCategoryFilter] = useState('all');
   const [periodicCategoryFilter, setPeriodicCategoryFilter] = useState<'all' | 'first_aid' | 'eyewash' | 'stormwater' | 'groundwater_soil'>('all');
   const [foodCategoryFilter, setFoodCategoryFilter] = useState<'all' | FoodCategory>('all');
+
+  // 3-Step Food Inspection (Bộ Y Tế QĐ 1246/QĐ-BYT) report state
+  const [foodInspectionStore, setFoodInspectionStore] = useState<FoodInspectionStore>(() =>
+    createInitialFoodInspectionStore()
+  );
+  const [foodInspReportMonth, setFoodInspReportMonth] = useState<string>(() =>
+    new Date().toISOString().slice(0, 7)
+  );
+  const [foodInspReportForm, setFoodInspReportForm] = useState<FoodReportFormKey>('ALL');
+
+  const loadFoodInspectionStore = () => {
+    setFoodInspectionStore(storage.getFoodInspectionStore());
+  };
+
+  useEffect(() => {
+    loadFoodInspectionStore();
+    const handleFoodInspSync = () => setFoodInspectionStore(storage.getFoodInspectionStore());
+    window.addEventListener('storage', handleFoodInspSync);
+    window.addEventListener('food_inspection_updated', handleFoodInspSync);
+    return () => {
+      window.removeEventListener('storage', handleFoodInspSync);
+      window.removeEventListener('food_inspection_updated', handleFoodInspSync);
+    };
+  }, []);
+
+  const filterFoodInspByMonth = (list: FoodInspectionRecord[]) =>
+    (list || []).filter((r) => (r.col_1 || r.date || '').startsWith(foodInspReportMonth));
+
+  const totalFoodInspectionCount = useMemo(() => {
+    return (
+      (foodInspectionStore.STEP1_FRESH?.length || 0) +
+      (foodInspectionStore.STEP1_DRY?.length || 0) +
+      (foodInspectionStore.STEP2_COOKING?.length || 0) +
+      (foodInspectionStore.STEP3_SERVING?.length || 0) +
+      (foodInspectionStore.STEP4_SAMPLE?.length || 0)
+    );
+  }, [foodInspectionStore]);
 
   const handleSelectReportType = (type: typeof reportType) => {
     setReportType(type);
@@ -1141,13 +1181,15 @@ export function ReportsView() {
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          <button
-            onClick={handleExportExcel}
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-2 transition-colors"
-          >
-            <Download className="w-4 h-4" />
-            <span>Xuất file Excel (.xlsx)</span>
-          </button>
+          {reportType !== 'food_inspection' && (
+            <button
+              onClick={handleExportExcel}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-2 transition-colors"
+            >
+              <Download className="w-4 h-4" />
+              <span>Xuất file Excel (.xlsx)</span>
+            </button>
+          )}
           <button
             onClick={() => window.print()}
             className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-2 transition-colors"
@@ -1171,6 +1213,7 @@ export function ReportsView() {
           { key: 'pccc', label: 'Kiểm tra PCCC', icon: Flame, count: filteredPCCCDevices.length },
           { key: 'periodic_inspection', label: 'Kiểm tra định kỳ', icon: ClipboardCheck, count: filteredPeriodicInspections.length },
           { key: 'food_registration', label: 'Thực phẩm mang vào', icon: UtensilsCrossed, count: filteredFoods.length },
+          { key: 'food_inspection', label: 'In & Báo cáo Bộ Y Tế', icon: ShieldCheck, count: totalFoodInspectionCount },
           ...(canAccessCamera
             ? [{ key: 'camera', label: 'Xem Camera', icon: Camera, count: filteredCameraRequests.length }]
             : []),
@@ -1206,6 +1249,7 @@ export function ReportsView() {
       </div>
 
       {/* Filter Toolbar */}
+      {reportType !== 'food_inspection' && (
       <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
         <div className="flex flex-wrap items-center gap-3 text-xs">
           {/* Search Input */}
@@ -1506,9 +1550,40 @@ export function ReportsView() {
           </div>
         </div>
       </div>
+      )}
       </div>
 
-      {/* Printable Paper Document Container */}
+      {reportType === 'food_inspection' ? (
+        <FoodInspectionPrintReport
+          reportMonth={foodInspReportMonth}
+          onChangeReportMonth={(m) => setFoodInspReportMonth(m)}
+          onStepReportMonth={(delta) => {
+            const parts = foodInspReportMonth.split('-');
+            let y = parseInt(parts[0], 10);
+            let m = parseInt(parts[1], 10) + delta;
+            if (m > 12) {
+              m = 1;
+              y++;
+            }
+            if (m < 1) {
+              m = 12;
+              y--;
+            }
+            setFoodInspReportMonth(`${y}-${String(m).padStart(2, '0')}`);
+          }}
+          onSetCurrentMonth={() => setFoodInspReportMonth(new Date().toISOString().slice(0, 7))}
+          onRefresh={loadFoodInspectionStore}
+          selectedForm={foodInspReportForm}
+          onSelectForm={(f) => setFoodInspReportForm(f)}
+          settings={foodInspectionStore.settings}
+          freshData={filterFoodInspByMonth(foodInspectionStore.STEP1_FRESH)}
+          dryData={filterFoodInspByMonth(foodInspectionStore.STEP1_DRY)}
+          cookData={filterFoodInspByMonth(foodInspectionStore.STEP2_COOKING)}
+          eatData={filterFoodInspByMonth(foodInspectionStore.STEP3_SERVING)}
+          sampleData={filterFoodInspByMonth(foodInspectionStore.STEP4_SAMPLE)}
+        />
+      ) : (
+      /* Printable Paper Document Container */
       <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-6 print-document print:p-0 print:border-none print:shadow-none print:m-0">
         {/* Factory Formal Letterhead */}
         <div className="border-b-2 border-slate-800 pb-4 flex flex-row justify-between items-start text-xs gap-4 w-full print-header-letterhead">
@@ -2635,6 +2710,7 @@ export function ReportsView() {
         )}
 
       </div>
+      )}
     </div>
   );
 }

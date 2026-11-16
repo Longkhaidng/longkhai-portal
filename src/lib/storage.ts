@@ -38,7 +38,7 @@ import {
 import { OvertimeRegistration, OvertimeMealMenu, OvertimeItem, OvertimeApprovalStatus, OvertimeConfirmStatus } from '@/types/overtime';
 import { INITIAL_OVERTIME_MENUS, INITIAL_OVERTIME_REGISTRATIONS } from './overtime-data';
 import { FoodRegistration, INITIAL_FOOD_REGISTRATIONS, compareFoodRegistrationsNewestFirst } from '@/types/food-registration';
-import { FoodInspectionStore, createInitialFoodInspectionStore } from '@/types/food-inspection';
+import { FoodInspectionStore, createInitialFoodInspectionStore, stripSampleFoodInspectionRecords } from '@/types/food-inspection';
 import { CameraItem, CameraRequest, DEFAULT_CAMERAS, INITIAL_CAMERA_REQUESTS } from '@/types/camera';
 import { GitHubService } from './github-api';
 import { formatDocId, sortNewestFirst } from './utils';
@@ -71,7 +71,7 @@ const STORAGE_KEYS = {
   OVERTIME_REGISTRATIONS: 'lk_portal_overtime_registrations',
   OVERTIME_MEAL_MENUS: 'lk_portal_overtime_meal_menus',
   FOOD_REGISTRATIONS: 'lk_portal_food_registrations',
-  FOOD_INSPECTION_3STEP: 'lk_portal_food_inspection_3step_v1',
+  FOOD_INSPECTION_3STEP: 'lk_portal_food_inspection_3step_v2',
   CAMERAS: 'lk_portal_cameras',
   CAMERA_REQUESTS: 'lk_portal_camera_requests',
   AUDIT_LOGS: 'lk_portal_audit_logs',
@@ -2896,6 +2896,11 @@ class StorageService {
             ...initial,
             ...parsed,
             settings: { ...initial.settings, ...(parsed.settings || {}) },
+            STEP1_FRESH: stripSampleFoodInspectionRecords(parsed.STEP1_FRESH),
+            STEP1_DRY: stripSampleFoodInspectionRecords(parsed.STEP1_DRY),
+            STEP2_COOKING: stripSampleFoodInspectionRecords(parsed.STEP2_COOKING),
+            STEP3_SERVING: stripSampleFoodInspectionRecords(parsed.STEP3_SERVING),
+            STEP4_SAMPLE: stripSampleFoodInspectionRecords(parsed.STEP4_SAMPLE),
           };
         }
       }

@@ -8,7 +8,6 @@ import {
   FoodInspectionSettings,
   FoodInspectionStepKey,
   FoodInspectionStore,
-  FoodReportFormKey,
   createInitialFoodInspectionStore,
 } from '@/types/food-inspection';
 import {
@@ -17,7 +16,6 @@ import {
   getNowTimeString,
   parseIngredient,
 } from '@/lib/food-inspection-utils';
-import { FoodInspectionPrintReport } from './FoodInspectionPrintReport';
 import {
   FoodInspectionBatchModal,
   FoodInspectionExcelModal,
@@ -26,25 +24,16 @@ import {
 } from './FoodInspectionModals';
 import {
   ShieldCheck,
-  Building2,
-  UserCheck,
-  MapPin,
-  Settings,
-  Calendar,
-  Globe,
-  RotateCw,
   PackageOpen,
   Flame,
   Utensils,
   Thermometer,
-  Printer,
   FileSpreadsheet,
   Plus,
   Edit2,
   Trash2,
   CheckCircle2,
   XCircle,
-  AlertCircle,
   Clock,
 } from 'lucide-react';
 
@@ -53,19 +42,13 @@ export function FoodInspection3StepView() {
   const [store, setStore] = useState<FoodInspectionStore>(() =>
     createInitialFoodInspectionStore()
   );
-  const [currentDate, setCurrentDate] = useState<string>(() =>
+  const [currentDate] = useState<string>(() =>
     new Date().toISOString().slice(0, 10)
   );
-  const [isViewAll, setIsViewAll] = useState<boolean>(false);
-  const [mainTab, setMainTab] = useState<'tab1' | 'tab2' | 'tab3' | 'tab4' | 'tab5'>('tab1');
+  const isViewAll = true;
+  const [mainTab, setMainTab] = useState<'tab1' | 'tab2' | 'tab3' | 'tab4'>('tab1');
   const [step1SubTab, setStep1SubTab] = useState<'STEP1_FRESH' | 'STEP1_DRY'>('STEP1_FRESH');
   const [openTime] = useState<string>(() => getNowTimeString());
-
-  // Report state
-  const [reportMonth, setReportMonth] = useState<string>(() =>
-    new Date().toISOString().slice(0, 7)
-  );
-  const [reportForm, setReportForm] = useState<FoodReportFormKey>('ALL');
 
   // Modals state
   const [batchModalStep, setBatchModalStep] = useState<FoodInspectionStepKey | null>(null);
@@ -106,40 +89,26 @@ export function FoodInspection3StepView() {
     );
   };
 
-  // Filtered records for current view (by date or view all)
-  const filterRecords = (list: FoodInspectionRecord[]) => {
-    if (isViewAll) return list || [];
-    return (list || []).filter((r) => (r.col_1 || r.date) === currentDate);
+  const freshRows = useMemo(() => store.STEP1_FRESH || [], [store.STEP1_FRESH]);
+  const dryRows = useMemo(() => store.STEP1_DRY || [], [store.STEP1_DRY]);
+  const cookRows = useMemo(() => store.STEP2_COOKING || [], [store.STEP2_COOKING]);
+  const eatRows = useMemo(() => store.STEP3_SERVING || [], [store.STEP3_SERVING]);
+  const sampleRows = useMemo(() => store.STEP4_SAMPLE || [], [store.STEP4_SAMPLE]);
+
+  const handleOpenAddModal = (stepKey: FoodInspectionStepKey) => {
+    const templateMap: Record<FoodInspectionStepKey, unknown[]> = {
+      STEP1_FRESH: store.freshTemplates || [],
+      STEP1_DRY: store.dryTemplates || [],
+      STEP2_COOKING: store.cookingTemplates || [],
+      STEP3_SERVING: store.servingTemplates || [],
+      STEP4_SAMPLE: store.sampleFoodTemplates || [],
+    };
+    if ((templateMap[stepKey] || []).length === 0) {
+      setSingleModalState({ stepKey, editingItem: null });
+    } else {
+      setBatchModalStep(stepKey);
+    }
   };
-
-  const freshRows = useMemo(() => filterRecords(store.STEP1_FRESH), [store.STEP1_FRESH, currentDate, isViewAll]);
-  const dryRows = useMemo(() => filterRecords(store.STEP1_DRY), [store.STEP1_DRY, currentDate, isViewAll]);
-  const cookRows = useMemo(() => filterRecords(store.STEP2_COOKING), [store.STEP2_COOKING, currentDate, isViewAll]);
-  const eatRows = useMemo(() => filterRecords(store.STEP3_SERVING), [store.STEP3_SERVING, currentDate, isViewAll]);
-  const sampleRows = useMemo(() => filterRecords(store.STEP4_SAMPLE), [store.STEP4_SAMPLE, currentDate, isViewAll]);
-
-  const totalForCurrentDate =
-    freshRows.length + dryRows.length + cookRows.length + eatRows.length + sampleRows.length;
-
-  const availableDates = useMemo(() => {
-    const set = new Set<string>();
-    const all = [
-      ...(store.STEP1_FRESH || []),
-      ...(store.STEP1_DRY || []),
-      ...(store.STEP2_COOKING || []),
-      ...(store.STEP3_SERVING || []),
-      ...(store.STEP4_SAMPLE || []),
-    ];
-    all.forEach((r) => {
-      const d = r.col_1 || r.date;
-      if (d) set.add(d);
-    });
-    return Array.from(set).sort((a, b) => b.localeCompare(a));
-  }, [store]);
-
-  // Monthly filtered records for Tab 5
-  const filterByMonth = (list: FoodInspectionRecord[]) =>
-    (list || []).filter((r) => (r.col_1 || r.date || '').startsWith(reportMonth));
 
   // CRUD Handlers
   const handleBatchSubmit = (
@@ -176,8 +145,6 @@ export function FoodInspection3StepView() {
     };
     persistStore(nextStore);
     setBatchModalStep(null);
-    setCurrentDate(targetDate);
-    setIsViewAll(false);
     showToast(`Đã lưu thành công ${newRecords.length} bản ghi!`);
   };
 
@@ -319,138 +286,19 @@ export function FoodInspection3StepView() {
 
       {/* Top Banner (Hidden when printing) */}
       <div className="rounded-2xl bg-gradient-to-r from-[#107c41] to-[#0b532c] text-white p-4 sm:p-5 shadow-md print:hidden">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-6 h-6 text-amber-300" />
-            </div>
-            <div>
-              <h1 className="text-base sm:text-lg font-black tracking-wide uppercase">
-                KIỂM THỰC 3 BƯỚC &amp; LƯU MẪU THỨC ĂN
-              </h1>
-              <p className="text-xs text-emerald-100">
-                Theo Quyết định số 1246/QĐ-BYT ngày 31/3/2017 của Bộ Y tế
-              </p>
-            </div>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
+            <ShieldCheck className="w-6 h-6 text-amber-300" />
           </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-slate-800 text-xs font-bold shadow-xs">
-              <Building2 className="w-3.5 h-3.5 text-emerald-600" />
-              <span>{store.settings.companyName}</span>
-            </span>
-            <button
-              type="button"
-              onClick={() => setIsSettingsOpen(true)}
-              className="px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 border border-white/25 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
-              title="Cài đặt thông tin cơ sở"
-            >
-              <Settings className="w-3.5 h-3.5" />
-              <span>Cài đặt cơ sở</span>
-            </button>
+          <div>
+            <h1 className="text-base sm:text-lg font-black tracking-wide uppercase">
+              KIỂM THỰC 3 BƯỚC &amp; LƯU MẪU THỨC ĂN
+            </h1>
+            <p className="text-xs text-emerald-100">
+              Theo Quyết định số 1246/QĐ-BYT ngày 31/3/2017 của Bộ Y tế
+            </p>
           </div>
         </div>
-      </div>
-
-      {/* Date Filter & Facility Info Toolbar (Hidden when printing) */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-3.5 shadow-xs print:hidden space-y-2.5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <label className="text-xs font-bold text-slate-600 dark:text-slate-300 flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Ngày kiểm tra:</span>
-            </label>
-            <input
-              type="date"
-              disabled={isViewAll}
-              value={currentDate}
-              onChange={(e) => {
-                setCurrentDate(e.target.value);
-                setIsViewAll(false);
-              }}
-              className="px-2.5 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold disabled:opacity-50"
-            />
-            <button
-              type="button"
-              onClick={() => {
-                setIsViewAll(false);
-                setCurrentDate(new Date().toISOString().slice(0, 10));
-              }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold border cursor-pointer ${
-                !isViewAll && currentDate === new Date().toISOString().slice(0, 10)
-                  ? 'bg-emerald-600 border-emerald-600 text-white'
-                  : 'border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
-              }`}
-            >
-              Hôm nay
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsViewAll((prev) => !prev)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold border flex items-center gap-1.5 cursor-pointer ${
-                isViewAll
-                  ? 'bg-emerald-600 border-emerald-600 text-white'
-                  : 'border-emerald-600 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40'
-              }`}
-            >
-              <Globe className="w-3.5 h-3.5" />
-              <span>Xem tất cả ngày</span>
-            </button>
-            <button
-              type="button"
-              onClick={loadFromStorage}
-              className="p-1.5 rounded-xl border border-blue-300 dark:border-blue-800 text-blue-600 hover:bg-blue-50 cursor-pointer"
-              title="Tải lại"
-            >
-              <RotateCw className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 dark:text-slate-400">
-            <span className="flex items-center gap-1">
-              <UserCheck className="w-3.5 h-3.5 text-blue-600" />
-              <span>Người kiểm tra:</span>
-              <b className="text-slate-900 dark:text-white">{store.settings.inspector}</b>
-            </span>
-            <span className="flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-rose-600" />
-              <span>Địa điểm:</span>
-              <b className="text-slate-900 dark:text-white">{store.settings.location}</b>
-            </span>
-          </div>
-        </div>
-
-        {!isViewAll && totalForCurrentDate === 0 && (
-          <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200 flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5">
-              <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
-              <span>
-                Ngày <b>{currentDate}</b> chưa có dữ liệu kiểm thực.
-                {availableDates.length > 0 && (
-                  <>
-                    {' '}
-                    (Hệ thống có dữ liệu ngày gần nhất là{' '}
-                    <button
-                      type="button"
-                      onClick={() => setCurrentDate(availableDates[0])}
-                      className="font-bold underline text-emerald-700 dark:text-emerald-400 cursor-pointer"
-                    >
-                      {availableDates[0]}
-                    </button>
-                    ).
-                  </>
-                )}
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setIsViewAll(true)}
-              className="px-2.5 py-1 rounded-lg bg-slate-800 text-white text-[11px] font-bold cursor-pointer"
-            >
-              Xem tất cả các ngày
-            </button>
-          </div>
-        )}
       </div>
 
       {/* Main Navigation Tabs (Hidden when printing) */}
@@ -461,7 +309,6 @@ export function FoodInspection3StepView() {
             { id: 'tab2', label: 'Bước 2: Khi chế biến', icon: Flame },
             { id: 'tab3', label: 'Bước 3: Trước khi ăn', icon: Utensils },
             { id: 'tab4', label: 'Lưu & Hủy mẫu', icon: Thermometer },
-            { id: 'tab5', label: 'In & Báo cáo Bộ Y Tế', icon: Printer },
           ] as const
         ).map((t) => {
           const Icon = t.icon;
@@ -526,7 +373,7 @@ export function FoodInspection3StepView() {
               </button>
               <button
                 type="button"
-                onClick={() => setBatchModalStep(step1SubTab)}
+                onClick={() => handleOpenAddModal(step1SubTab)}
                 className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -751,7 +598,7 @@ export function FoodInspection3StepView() {
               </button>
               <button
                 type="button"
-                onClick={() => setBatchModalStep('STEP2_COOKING')}
+                onClick={() => handleOpenAddModal('STEP2_COOKING')}
                 className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -952,7 +799,7 @@ export function FoodInspection3StepView() {
               </button>
               <button
                 type="button"
-                onClick={() => setBatchModalStep('STEP3_SERVING')}
+                onClick={() => handleOpenAddModal('STEP3_SERVING')}
                 className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -1058,7 +905,7 @@ export function FoodInspection3StepView() {
               </button>
               <button
                 type="button"
-                onClick={() => setBatchModalStep('STEP4_SAMPLE')}
+                onClick={() => handleOpenAddModal('STEP4_SAMPLE')}
                 className="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -1147,40 +994,6 @@ export function FoodInspection3StepView() {
             </div>
           </div>
         </div>
-      )}
-
-      {/* ============================================================= */}
-      {/* TAB 5: IN & BÁO CÁO BỘ Y TẾ (QĐ 1246/QĐ-BYT) */}
-      {/* ============================================================= */}
-      {mainTab === 'tab5' && (
-        <FoodInspectionPrintReport
-          reportMonth={reportMonth}
-          onChangeReportMonth={(m) => setReportMonth(m)}
-          onStepReportMonth={(delta) => {
-            const parts = reportMonth.split('-');
-            let y = parseInt(parts[0], 10);
-            let m = parseInt(parts[1], 10) + delta;
-            if (m > 12) {
-              m = 1;
-              y++;
-            }
-            if (m < 1) {
-              m = 12;
-              y--;
-            }
-            setReportMonth(`${y}-${String(m).padStart(2, '0')}`);
-          }}
-          onSetCurrentMonth={() => setReportMonth(new Date().toISOString().slice(0, 7))}
-          onRefresh={loadFromStorage}
-          selectedForm={reportForm}
-          onSelectForm={(f) => setReportForm(f)}
-          settings={store.settings}
-          freshData={filterByMonth(store.STEP1_FRESH)}
-          dryData={filterByMonth(store.STEP1_DRY)}
-          cookData={filterByMonth(store.STEP2_COOKING)}
-          eatData={filterByMonth(store.STEP3_SERVING)}
-          sampleData={filterByMonth(store.STEP4_SAMPLE)}
-        />
       )}
 
       {/* MODALS */}
