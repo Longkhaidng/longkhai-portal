@@ -1466,12 +1466,14 @@
     "permissions": [
       "dashboard",
       "food_registration",
-      "announcements"
+      "announcements",
+      "food_inspection"
     ],
     "isActive": true,
     "password": "1559",
     "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "updatedAt": "2026-11-16T07:07:46.210Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "1598",
