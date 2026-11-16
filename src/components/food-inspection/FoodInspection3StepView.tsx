@@ -13,6 +13,7 @@ import {
   createInitialFoodInspectionStore,
 } from '@/types/food-inspection';
 import {
+  formatVNDate,
   getCookingRowFields,
   getFreshRowFields,
   getNowTimeString,
@@ -55,23 +56,12 @@ export function FoodInspection3StepView() {
   const [importSubTab, setImportSubTab] = useState<'FRESH' | 'DRY'>('FRESH');
   const [openTime] = useState<string>(() => getNowTimeString());
 
-  // Permission check: Danh sách nhập thực phẩm chỉ Chuyên viên HCNS và Admin mới có thể thấy và chỉnh sửa, xóa
+  const isAdmin = currentUser?.role === 'admin';
+
+  // Permission check: Mục danh sách nhập thực phẩm chỉ hiển thị với admin và nhân viên HCNS (1139)
   const canManageImportList = useMemo(() => {
     if (!currentUser) return false;
-    if (currentUser.role === 'admin' || currentUser.role === 'hr' || currentUser.role === 'cb') {
-      return true;
-    }
-    const pos = (currentUser.position || '').toLowerCase();
-    const dept = (currentUser.department || '').toLowerCase();
-    if (
-      pos.includes('hành chính nhân sự') ||
-      pos.includes('hcns') ||
-      dept.includes('hcns') ||
-      dept.includes('hành chính nhân sự')
-    ) {
-      return true;
-    }
-    return false;
+    return currentUser.role === 'admin' || String(currentUser.id).trim() === '1139';
   }, [currentUser]);
 
   // Modals state
@@ -294,6 +284,10 @@ export function FoodInspection3StepView() {
   };
 
   const handleDeleteRecord = (stepKey: FoodInspectionStepKey, id: string) => {
+    if (!isAdmin) {
+      showToast('Nhân viên không được phép xóa dữ liệu đã nhập!', true);
+      return;
+    }
     if (!confirm('Bạn có chắc chắn muốn xóa bản ghi này khỏi danh sách?')) return;
     const nextList = (store[stepKey] || []).filter((r) => r.id !== id);
     persistStore({
@@ -545,7 +539,16 @@ export function FoodInspection3StepView() {
                               </td>
                             )}
                             <td className="p-2.5 font-bold text-slate-900 dark:text-white">{f.name}</td>
-                            <td className="p-2.5 text-center text-slate-500">{f.time}</td>
+                            <td className="p-2.5 text-center text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                              <div className="font-bold text-emerald-700 dark:text-emerald-400">
+                                {f.time || openTime}
+                              </div>
+                              {(r.col_1 || r.date) && (
+                                <div className="text-[11px] text-slate-500">
+                                  {formatVNDate(r.col_1 || r.date)}
+                                </div>
+                              )}
+                            </td>
                             <td className="p-2.5 text-center font-bold text-blue-600">{f.qty}</td>
                             <td className="p-2.5 text-center text-slate-500 font-semibold">{f.unit}</td>
                             <td className="p-2.5">{f.supplier}</td>
@@ -563,18 +566,20 @@ export function FoodInspection3StepView() {
                                   type="button"
                                   onClick={() => setSingleModalState({ stepKey: 'STEP1_FRESH', editingItem: r })}
                                   className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 cursor-pointer"
-                                  title="Sửa"
+                                  title={isAdmin ? 'Sửa' : 'Ghi chú lại nếu có sai sót'}
                                 >
                                   <Edit2 className="w-3.5 h-3.5" />
                                 </button>
-                                <button
-                                  type="button"
-                                  onClick={() => handleDeleteRecord('STEP1_FRESH', r.id)}
-                                  className="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer"
-                                  title="Xóa"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </button>
+                                {isAdmin && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteRecord('STEP1_FRESH', r.id)}
+                                    className="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer"
+                                    title="Xóa"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
                               </div>
                             </td>
                           </tr>
@@ -637,7 +642,16 @@ export function FoodInspection3StepView() {
                           <td className="p-2.5 font-bold text-slate-900 dark:text-white">{r.col_3 || ''}</td>
                           <td className="p-2.5 font-semibold">{r.col_4 || ''}</td>
                           <td className="p-2.5 text-slate-500">{r.col_5 || ''}</td>
-                          <td className="p-2.5 text-center">{r.col_2 || ''}</td>
+                          <td className="p-2.5 text-center text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                            <div className="font-bold text-emerald-700 dark:text-emerald-400">
+                              {r.col_2 || openTime}
+                            </div>
+                            {(r.col_1 || r.date) && (
+                              <div className="text-[11px] text-slate-500">
+                                {formatVNDate(r.col_1 || r.date)}
+                              </div>
+                            )}
+                          </td>
                           <td className="p-2.5 text-center font-bold text-blue-600">{r.col_11 || ''}</td>
                           <td className="p-2.5 text-center text-slate-500">{r.col_10 || ''}</td>
                           <td className="p-2.5">{r.col_6 || ''}</td>
@@ -660,18 +674,20 @@ export function FoodInspection3StepView() {
                                 type="button"
                                 onClick={() => setSingleModalState({ stepKey: 'STEP1_DRY', editingItem: r })}
                                 className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 cursor-pointer"
-                                title="Sửa"
+                                title={isAdmin ? 'Sửa' : 'Ghi chú lại nếu có sai sót'}
                               >
                                 <Edit2 className="w-3.5 h-3.5" />
                               </button>
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteRecord('STEP1_DRY', r.id)}
-                                className="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer"
-                                title="Xóa"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
+                              {isAdmin && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteRecord('STEP1_DRY', r.id)}
+                                  className="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer"
+                                  title="Xóa"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              )}
                             </div>
                           </td>
                         </tr>
@@ -859,18 +875,20 @@ export function FoodInspection3StepView() {
                                     type="button"
                                     onClick={() => setSingleModalState({ stepKey: 'STEP2_COOKING', editingItem: r })}
                                     className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 text-slate-600 cursor-pointer"
-                                    title="Sửa"
+                                    title={isAdmin ? 'Sửa' : 'Ghi chú lại nếu có sai sót'}
                                   >
                                     <Edit2 className="w-3.5 h-3.5" />
                                   </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleDeleteRecord('STEP2_COOKING', r.id)}
-                                    className="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer"
-                                    title="Xóa"
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                  </button>
+                                  {isAdmin && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDeleteRecord('STEP2_COOKING', r.id)}
+                                      className="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer"
+                                      title="Xóa"
+                                    >
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                  )}
                                 </div>
                               </td>
                             </tr>
@@ -968,18 +986,20 @@ export function FoodInspection3StepView() {
                               type="button"
                               onClick={() => setSingleModalState({ stepKey: 'STEP3_SERVING', editingItem: r })}
                               className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 text-slate-600 cursor-pointer"
-                              title="Sửa"
+                              title={isAdmin ? 'Sửa' : 'Ghi chú lại nếu có sai sót'}
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteRecord('STEP3_SERVING', r.id)}
-                              className="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer"
-                              title="Xóa"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                            {isAdmin && (
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteRecord('STEP3_SERVING', r.id)}
+                                className="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer"
+                                title="Xóa"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
                           </div>
                         </td>
                       </tr>
@@ -1080,18 +1100,20 @@ export function FoodInspection3StepView() {
                               type="button"
                               onClick={() => setSingleModalState({ stepKey: 'STEP4_SAMPLE', editingItem: r })}
                               className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 text-slate-600 cursor-pointer"
-                              title="Sửa"
+                              title={isAdmin ? 'Sửa' : 'Ghi chú lại nếu có sai sót'}
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteRecord('STEP4_SAMPLE', r.id)}
-                              className="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer"
-                              title="Xóa"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                            {isAdmin && (
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteRecord('STEP4_SAMPLE', r.id)}
+                                className="p-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer"
+                                title="Xóa"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
                           </div>
                         </td>
                       </tr>
@@ -1357,6 +1379,7 @@ export function FoodInspection3StepView() {
         editingItem={singleModalState?.editingItem || null}
         targetDate={currentDate}
         inspector={store.settings.inspector}
+        noteOnly={!isAdmin && !!singleModalState?.editingItem}
         onClose={() => setSingleModalState(null)}
         onSave={handleSingleSave}
       />

@@ -467,6 +467,7 @@ interface SingleEntryModalProps {
   editingItem: FoodInspectionRecord | null;
   targetDate: string;
   inspector: string;
+  noteOnly?: boolean;
   onClose: () => void;
   onSave: (stepKey: FoodInspectionStepKey, rowValues: string[], existingId?: string) => void;
 }
@@ -477,6 +478,7 @@ export function FoodInspectionSingleEntryModal({
   editingItem,
   targetDate,
   inspector,
+  noteOnly = false,
   onClose,
   onSave,
 }: SingleEntryModalProps) {
@@ -530,11 +532,13 @@ export function FoodInspectionSingleEntryModal({
 
   React.useEffect(() => {
     if (!isOpen) return;
-    setFDate(editingItem?.col_1 || editingItem?.date || '');
+    const realNowTime = getNowTimeString();
+    const realToday = targetDate || new Date().toISOString().slice(0, 10);
+    setFDate(editingItem?.col_1 || editingItem?.date || realToday);
     if (stepKey === 'STEP1_FRESH') {
       const f = editingItem ? getFreshRowFields(editingItem) : null;
       setFName(f?.name || '');
-      setFTime(f?.time || '');
+      setFTime(f?.time || realNowTime);
       setFQty(f?.qty || '');
       setFUnit(f?.unit || '');
       setFSupplier(f?.supplier || '');
@@ -548,7 +552,7 @@ export function FoodInspectionSingleEntryModal({
       setFHandle(f?.handle || '');
     } else if (stepKey === 'STEP1_DRY') {
       setFName(editingItem?.col_3 || '');
-      setFTime(editingItem?.col_2 || '');
+      setFTime(editingItem?.col_2 || realNowTime);
       setFProducer(editingItem?.col_4 || '');
       setFProdAddr(editingItem?.col_5 || '');
       setFSupplier(editingItem?.col_6 || '');
@@ -574,7 +578,7 @@ export function FoodInspectionSingleEntryModal({
       setFIngName(parsed.names || '');
       setFIngQty(parsed.qtys || '');
       setFServings(c?.servings || '');
-      setFPrepTime(c?.prepTime || '');
+      setFPrepTime(c?.prepTime || (editingItem ? '' : realNowTime));
       setFCookTime(c?.cookTime || '');
       setFHygP(c?.hygienePerson || '');
       setFHygE(c?.hygieneEquipment || '');
@@ -595,14 +599,14 @@ export function FoodInspectionSingleEntryModal({
       setFMeal(mName);
       setFName(editingItem?.col_3 || '');
       setFServings(editingItem?.col_4 || '');
-      setFFinishTime(editingItem?.col_5 || '');
+      setFFinishTime(editingItem?.col_5 || (editingItem ? '' : realNowTime));
       setFStartEatTime(editingItem?.col_6 || mTime || '');
       setFContainer(editingItem?.col_7 || '');
       setFSense(editingItem?.col_8 || '');
       setFHandle(editingItem?.col_9 || '');
     } else if (stepKey === 'STEP4_SAMPLE') {
-      const takeDt = editingItem?.col_8 ? parseToDateTimeLocal(editingItem.col_8, targetDate, '') : '';
-      const destDt = editingItem?.col_9 ? parseToDateTimeLocal(editingItem.col_9, null, null, takeDt) : '';
+      const takeDt = editingItem?.col_8 ? parseToDateTimeLocal(editingItem.col_8, targetDate, '') : `${realToday}T${realNowTime}`;
+      const destDt = editingItem?.col_9 ? parseToDateTimeLocal(editingItem.col_9, null, null, takeDt) : add24Hours(takeDt);
       setFName(editingItem?.col_3 || '');
       setFMeal(editingItem?.col_2 || '');
       setFServings(editingItem?.col_4 || '');
@@ -747,7 +751,11 @@ export function FoodInspectionSingleEntryModal({
       <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         <div className="bg-emerald-700 px-5 py-3.5 text-white flex items-center justify-between">
           <h4 className="font-bold text-sm">
-            {isEdit ? 'Chỉnh sửa bản ghi' : 'Thêm bản ghi mới'}
+            {noteOnly
+              ? 'Ghi chú lại nếu có sai sót'
+              : isEdit
+              ? 'Chỉnh sửa bản ghi'
+              : 'Thêm bản ghi mới'}
           </h4>
           <button
             type="button"
@@ -759,6 +767,46 @@ export function FoodInspectionSingleEntryModal({
         </div>
 
         <form onSubmit={handleSubmit} className="p-5 overflow-y-auto space-y-3.5 text-xs">
+          {noteOnly && (
+            <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200 text-xs font-medium">
+              Nhân viên không được phép xóa hoặc chỉnh sửa dữ liệu gốc đã nhập, chỉ được phép ghi chú lại vào mục <b>Biện pháp xử lý / Ghi chú</b> bên dưới nếu có sai sót.
+            </div>
+          )}
+
+          {noteOnly ? (
+            <div className="space-y-3">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1.5">
+                <div>
+                  <span className="text-slate-500">Ngày nhập / kiểm tra:</span>{' '}
+                  <b className="font-mono">{fDate || '--'}</b>
+                </div>
+                <div>
+                  <span className="text-slate-500">Tên thực phẩm / món ăn:</span>{' '}
+                  <b className="text-slate-900 dark:text-white">{fName || '--'}</b>
+                </div>
+                {fQty && (
+                  <div>
+                    <span className="text-slate-500">Khối lượng:</span>{' '}
+                    <b>{fQty} {fUnit}</b>
+                  </div>
+                )}
+              </div>
+              <div>
+                <label className="block font-bold mb-1 text-emerald-700 dark:text-emerald-400">
+                  Biện pháp xử lý / Ghi chú sai sót *:
+                </label>
+                <textarea
+                  rows={3}
+                  autoFocus
+                  value={fHandle}
+                  onChange={(e) => setFHandle(e.target.value)}
+                  placeholder="Nhập nội dung ghi chú nếu có sai sót..."
+                  className="w-full px-3 py-2 rounded-xl border border-emerald-500 dark:border-emerald-600 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+            </div>
+          ) : (
+          <>
           <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 pb-2 border-b border-slate-100 dark:border-slate-800">
             <div className="sm:col-span-6">
               <label className="block font-bold mb-1">Ngày nhập / Ngày kiểm tra:</label>
@@ -1354,6 +1402,8 @@ export function FoodInspectionSingleEntryModal({
               </div>
             </div>
           )}
+          </>
+          )}
 
           <div className="flex justify-end gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">
             <button
@@ -1421,6 +1471,7 @@ export function FoodInspectionBatchModal({
     setBatchDate('');
     setBatchInspector(inspector);
     setGlobalDestroyDt('');
+    const realNowTime = getNowTimeString();
 
     if (stepKey === 'STEP1_FRESH') {
       setItems(
@@ -1429,7 +1480,7 @@ export function FoodInspectionBatchModal({
           stt: t.stt || i + 1,
           importDate: t.importDate || '',
           name: t.name || '',
-          time: t.time || '',
+          time: t.time || realNowTime,
           qty: t.qty || '',
           unit: t.unit || '',
           supplier: t.supplier || '',
@@ -1453,7 +1504,7 @@ export function FoodInspectionBatchModal({
           name: t.name || '',
           producer: t.producer || '',
           prod_addr: t.prod_addr || '',
-          time: t.time || '',
+          time: t.time || realNowTime,
           qty: t.qty || '',
           unit: t.unit || '',
           supplier: t.supplier || '',
@@ -1550,12 +1601,14 @@ export function FoodInspectionBatchModal({
       onOpenSingleAdd();
       return;
     }
+    const actualTime = getNowTimeString();
+    const todayDate = defaultDate || new Date().toISOString().slice(0, 10);
     if (stepKey === 'STEP1_FRESH') {
       const rows = sourceList.map((item) => [
         '',
-        String(item.importDate || batchDate || '').trim(),
+        String(item.importDate || batchDate || todayDate).trim(),
         String(item.name || '').trim(),
-        String(item.time || '').trim(),
+        String(item.time || actualTime).trim(),
         String(item.qty ?? '').trim(),
         String(item.unit ?? '').trim(),
         String(item.supplier || '').trim(),
@@ -1570,12 +1623,12 @@ export function FoodInspectionBatchModal({
         batchInspector,
         String(item.note || '').trim(),
       ]);
-      onSubmitBatch(stepKey, batchDate || sourceList[0]?.importDate || defaultDate, rows);
+      onSubmitBatch(stepKey, batchDate || sourceList[0]?.importDate || todayDate, rows);
     } else if (stepKey === 'STEP1_DRY') {
       const rows = sourceList.map((item) => [
         '',
-        String(item.importDate || batchDate || '').trim(),
-        String(item.time || '').trim(),
+        String(item.importDate || batchDate || todayDate).trim(),
+        String(item.time || actualTime).trim(),
         String(item.name || '').trim(),
         String(item.producer || '').trim(),
         String(item.prod_addr || '').trim(),
@@ -1594,7 +1647,7 @@ export function FoodInspectionBatchModal({
         batchInspector,
         String(item.note || '').trim(),
       ]);
-      onSubmitBatch(stepKey, batchDate || sourceList[0]?.importDate || defaultDate, rows);
+      onSubmitBatch(stepKey, batchDate || sourceList[0]?.importDate || todayDate, rows);
     } else if (stepKey === 'STEP2_COOKING') {
       const rows = sourceList.map((item) => [
         '',

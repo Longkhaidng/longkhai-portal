@@ -696,6 +696,7 @@ export function processParsedInspectionRows(
         f_test = getCellVal(r, 10);
         f_handle = getCellVal(r, 11);
       }
+      if (!f_time) f_time = getNowTimeString();
       formattedRows.push([
         '', targetDate, f_name, f_time, f_qty, f_unit, f_supplier, f_addr, f_deliverer, f_doc, f_vet, f_quar, f_sense, f_test, f_handle, inspector, '',
       ]);
@@ -738,6 +739,7 @@ export function processParsedInspectionRows(
         f_sense = getCellVal(r, 14);
         f_handle = getCellVal(r, 15);
       }
+      if (!f_time) f_time = getNowTimeString();
       formattedRows.push([
         '', targetDate, f_time, f_name, f_producer, f_prod_addr, f_supplier, f_deliverer, f_addr, f_phone, f_unit, f_qty, f_exp, f_storage, f_doc, f_cert, f_sense, f_handle, inspector, '',
       ]);
