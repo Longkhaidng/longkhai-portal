@@ -6,28 +6,6 @@
   },
   "STEP1_FRESH": [
     {
-      "id": "TS_1794812920171_2",
-      "rowIndex": 3,
-      "date": "2026-11-16",
-      "col_0": "TS_1794812920171_2",
-      "col_1": "",
-      "col_2": "Thịt heo xay tươi",
-      "col_3": "",
-      "col_4": "17.0",
-      "col_5": "kg",
-      "col_6": "DNTN Thực phẩm Sạch An Tâm",
-      "col_7": "25 Lê Duẩn, Hải Châu, Đà Nẵng",
-      "col_8": "Trần Đình Quân (0913888999)",
-      "col_9": "",
-      "col_10": "",
-      "col_11": "",
-      "col_12": "",
-      "col_13": "",
-      "col_14": "",
-      "col_15": "Võ Thị Tuyết",
-      "col_16": ""
-    },
-    {
       "id": "TS_1794812920171_3",
       "rowIndex": 4,
       "date": "2026-11-16",
@@ -563,5 +541,5 @@
       "note": "Mẫu lưu an toàn"
     }
   ],
-  "updatedAt": "2026-11-16T07:09:44.351Z"
+  "updatedAt": "2026-11-16T07:09:46.523Z"
 }
