@@ -1213,7 +1213,7 @@ export function ReportsView() {
           { key: 'pccc', label: 'Kiểm tra PCCC', icon: Flame, count: filteredPCCCDevices.length },
           { key: 'periodic_inspection', label: 'Kiểm tra định kỳ', icon: ClipboardCheck, count: filteredPeriodicInspections.length },
           { key: 'food_registration', label: 'Thực phẩm mang vào', icon: UtensilsCrossed, count: filteredFoods.length },
-          { key: 'food_inspection', label: 'In & Báo cáo Bộ Y Tế', icon: ShieldCheck, count: totalFoodInspectionCount },
+          { key: 'food_inspection', label: 'Kiểm tra thực phẩm 3 bước', icon: ShieldCheck, count: totalFoodInspectionCount },
           ...(canAccessCamera
             ? [{ key: 'camera', label: 'Xem Camera', icon: Camera, count: filteredCameraRequests.length }]
             : []),
