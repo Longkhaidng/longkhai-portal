@@ -6,28 +6,6 @@
   },
   "STEP1_FRESH": [
     {
-      "id": "TS_1794812920171_1",
-      "rowIndex": 2,
-      "date": "2026-11-16",
-      "col_0": "TS_1794812920171_1",
-      "col_1": "",
-      "col_2": "Cá ngừ đông lạnh fillet",
-      "col_3": "",
-      "col_4": "20.5",
-      "col_5": "kg",
-      "col_6": "Công ty TNHH Thủy sản Miền Trung",
-      "col_7": "Lô 12 KCN Thủy sản Sơn Trà, Đà Nẵng",
-      "col_8": "Nguyễn Văn Nam (0905123456)",
-      "col_9": "",
-      "col_10": "",
-      "col_11": "",
-      "col_12": "",
-      "col_13": "",
-      "col_14": "",
-      "col_15": "Võ Thị Tuyết",
-      "col_16": ""
-    },
-    {
       "id": "TS_1794812920171_2",
       "rowIndex": 3,
       "date": "2026-11-16",
@@ -585,5 +563,5 @@
       "note": "Mẫu lưu an toàn"
     }
   ],
-  "updatedAt": "2026-11-16T07:09:33.748Z"
+  "updatedAt": "2026-11-16T07:09:44.351Z"
 }
