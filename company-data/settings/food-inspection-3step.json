@@ -24,20 +24,17 @@
       "quar": ""
     },
     {
-      "stt": 2,
+      "id": "FT_1794812818602",
+      "importDate": "",
       "name": "Thịt heo xay tươi",
-      "time": "06:15",
       "qty": "17.0",
       "unit": "kg",
       "supplier": "DNTN Thực phẩm Sạch An Tâm",
       "addr": "25 Lê Duẩn, Hải Châu, Đà Nẵng",
       "deliverer": "Trần Đình Quân (0913888999)",
-      "doc": "HĐ 4512",
-      "vet": "GCN Thú y số 22/TY",
-      "quar": "GKD số 45/KD",
-      "sense": "Đạt",
-      "test": "Âm tính (Hàn the, tạo nạc)",
-      "handle": "Chuyển sơ chế ngay"
+      "doc": "",
+      "vet": "",
+      "quar": ""
     },
     {
       "stt": 3,
@@ -376,5 +373,5 @@
       "note": "Mẫu lưu an toàn"
     }
   ],
-  "updatedAt": "2026-11-16T07:06:53.331Z"
+  "updatedAt": "2026-11-16T07:06:58.602Z"
 }
