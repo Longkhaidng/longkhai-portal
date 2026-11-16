@@ -6,28 +6,6 @@
   },
   "STEP1_FRESH": [
     {
-      "id": "TS_1794812920171_5",
-      "rowIndex": 6,
-      "date": "2026-11-16",
-      "col_0": "TS_1794812920171_5",
-      "col_1": "",
-      "col_2": "Hành lá, ngò rí",
-      "col_3": "",
-      "col_4": "0.5",
-      "col_5": "kg",
-      "col_6": "HTX Rau an toàn Hòa Vang",
-      "col_7": "Xã Hòa Vang, Đà Nẵng",
-      "col_8": "Lê Văn Tuấn (0905666777)",
-      "col_9": "",
-      "col_10": "",
-      "col_11": "",
-      "col_12": "",
-      "col_13": "",
-      "col_14": "",
-      "col_15": "Võ Thị Tuyết",
-      "col_16": ""
-    },
-    {
       "id": "TS_1794812973748_1",
       "rowIndex": 7,
       "date": "2026-11-16",
@@ -497,5 +475,5 @@
       "note": "Mẫu lưu an toàn"
     }
   ],
-  "updatedAt": "2026-11-16T07:29:25.063Z"
+  "updatedAt": "2026-11-16T07:45:57.633Z"
 }
