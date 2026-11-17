@@ -163,24 +163,16 @@
   ],
   "dryTemplates": [
     {
-      "stt": 1,
+      "id": "DT_1794883016336_m63c",
+      "importDate": "2026-11-17",
       "name": "Nước mắm Nam Ngư Đệ Nhị",
       "producer": "Công ty CP Hàng tiêu dùng Masan",
       "prod_addr": "KCN Tân Đông Hiệp A, Dĩ An, Bình Dương",
-      "time": "07:00",
       "qty": "5",
       "unit": "Chai",
-      "supplier": "Đại lý phân phối Thực phẩm Miền Trung",
-      "deliverer": "Nguyễn Văn Hùng",
-      "addr": "45 Nguyễn Tri Phương, Đà Nẵng",
-      "phone": "0905123456",
-      "exp": "NSX: 01/2026 - HSD: 01/2027",
-      "storage": "Nhiệt độ thường",
-      "doc": "HĐ 8891",
-      "cert": "Đầy đủ công bố",
-      "sense": "Đạt",
-      "handle": "Lưu kho gia vị khô",
-      "note": ""
+      "supplier": "",
+      "deliverer": "",
+      "addr": ""
     },
     {
       "stt": 2,
@@ -449,5 +441,5 @@
       "note": "Mẫu lưu an toàn"
     }
   ],
-  "updatedAt": "2026-11-17T02:10:17.060Z"
+  "updatedAt": "2026-11-17T02:36:56.336Z"
 }
