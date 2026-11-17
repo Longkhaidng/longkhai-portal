@@ -465,7 +465,7 @@ export function UserManagementView() {
               <Users className="w-5 h-5" />
             </div>
             <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-              Quản Lý Nhân Viên & Phân Quyền
+              Quản Lý Nhân Viên
             </h1>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
