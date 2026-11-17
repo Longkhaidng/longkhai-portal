@@ -1717,8 +1717,8 @@ export function FoodInspectionBatchModal({
       : 'bg-emerald-700 text-white';
 
   const titleMap: Record<FoodInspectionStepKey, string> = {
-    STEP1_FRESH: 'Nhập Thực Phẩm Tươi Sống (Từ Danh Sách Nhập Thực Phẩm)',
-    STEP1_DRY: 'Nhập Thực Phẩm Khô & Gia Vị (Từ Danh Sách Nhập Thực Phẩm)',
+    STEP1_FRESH: 'Nhập Thực Phẩm Tươi Sống',
+    STEP1_DRY: 'Nhập Thực Phẩm Khô & Gia Vị',
     STEP2_COOKING: 'Kiểm Tra Khi Chế Biến Thức Ăn',
     STEP3_SERVING: 'Kiểm Tra Trước Khi Ăn',
     STEP4_SAMPLE: 'Theo Dõi Lưu & Hủy Mẫu Thức Ăn',
@@ -1730,10 +1730,7 @@ export function FoodInspectionBatchModal({
         <div className={`${headerColor} px-5 py-3.5 flex items-center justify-between`}>
           <div>
             <h4 className="font-bold text-sm">{titleMap[stepKey]}</h4>
-            <p className="text-[11px] opacity-85">
-              Hiển thị đầy đủ thông tin thực phẩm và ngày nhập tương ứng từ danh sách nhập thực phẩm đã tạo
-            </p>
-          </div>
+            </div>
           <div className="flex items-center gap-2">
             <button
               type="button"
