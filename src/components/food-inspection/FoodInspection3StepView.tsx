@@ -568,7 +568,7 @@ export function FoodInspection3StepView() {
                             {isViewAll && (
                               <td className="p-2.5 text-center whitespace-nowrap">
                                 <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono text-[11px]">
-                                  {r.col_1 || r.date}
+                                  {r.col_1 || r.date || currentDate}
                                 </span>
                               </td>
                             )}
@@ -577,11 +577,9 @@ export function FoodInspection3StepView() {
                               <div className="font-bold text-emerald-700 dark:text-emerald-400">
                                 {f.time || openTime}
                               </div>
-                              {(r.col_1 || r.date) && (
-                                <div className="text-[11px] text-slate-500">
-                                  {formatVNDate(r.col_1 || r.date)}
-                                </div>
-                              )}
+                              <div className="text-[11px] text-slate-500">
+                                {formatVNDate(r.col_1 || r.date || currentDate)}
+                              </div>
                             </td>
                             <td className="p-2.5 text-center font-bold text-blue-600">{f.qty}</td>
                             <td className="p-2.5 text-center text-slate-500 font-semibold">{f.unit}</td>
@@ -669,7 +667,7 @@ export function FoodInspection3StepView() {
                           {isViewAll && (
                             <td className="p-2.5 text-center whitespace-nowrap">
                               <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono text-[11px]">
-                                {r.col_1 || r.date}
+                                {r.col_1 || r.date || currentDate}
                               </span>
                             </td>
                           )}
@@ -680,11 +678,9 @@ export function FoodInspection3StepView() {
                             <div className="font-bold text-emerald-700 dark:text-emerald-400">
                               {r.col_2 || openTime}
                             </div>
-                            {(r.col_1 || r.date) && (
-                              <div className="text-[11px] text-slate-500">
-                                {formatVNDate(r.col_1 || r.date)}
-                              </div>
-                            )}
+                            <div className="text-[11px] text-slate-500">
+                              {formatVNDate(r.col_1 || r.date || currentDate)}
+                            </div>
                           </td>
                           <td className="p-2.5 text-center font-bold text-blue-600">{r.col_11 || ''}</td>
                           <td className="p-2.5 text-center text-slate-500">{r.col_10 || ''}</td>
@@ -1407,7 +1403,7 @@ export function FoodInspection3StepView() {
         stepKey={batchModalStep || 'STEP1_FRESH'}
         defaultDate={currentDate}
         openTime={openTime}
-        inspector={store.settings.inspector}
+        inspector={currentUser?.name || store.settings.inspector}
         freshTemplates={store.freshTemplates}
         dryTemplates={store.dryTemplates}
         cookingTemplates={store.cookingTemplates}
@@ -1427,7 +1423,7 @@ export function FoodInspection3StepView() {
         stepKey={singleModalState?.stepKey || 'STEP1_FRESH'}
         editingItem={singleModalState?.editingItem || null}
         targetDate={currentDate}
-        inspector={store.settings.inspector}
+        inspector={currentUser?.name || store.settings.inspector}
         noteOnly={!isAdmin && !!singleModalState?.editingItem}
         onClose={() => setSingleModalState(null)}
         onSave={handleSingleSave}
@@ -1437,7 +1433,7 @@ export function FoodInspection3StepView() {
         isOpen={!!excelModalStep}
         initialStep={excelModalStep || 'STEP1_FRESH'}
         defaultDate={currentDate}
-        inspector={store.settings.inspector}
+        inspector={currentUser?.name || store.settings.inspector}
         onClose={() => setExcelModalStep(null)}
         onConfirmImport={(step, rows) => {
           handleBatchSubmit(step, rows[0]?.[1] || currentDate, rows);

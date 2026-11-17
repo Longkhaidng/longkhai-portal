@@ -748,7 +748,7 @@ export function CameraSurveillanceView() {
 
             {/* Section 3: Camera cần xem (Cho phép chọn nhiều camera) */}
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5">
                   <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 font-bold text-xs flex items-center justify-center shrink-0">
                     3
@@ -757,8 +757,36 @@ export function CameraSurveillanceView() {
                     CAMERA CẦN XEM (CHO PHÉP CHỌN NHIỀU CAMERA) <span className="text-rose-500">*</span>
                   </h3>
                 </div>
-                <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 tracking-wider">
-                  ĐÃ CHỌN {selectedCameraIds.length} CAMERA
+                <div className="flex items-center gap-3">
+                  {filteredCamerasForSelect.length > 0 && (
+                    <div className="flex items-center gap-2 text-[11px]">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const visibleKeys = filteredCamerasForSelect.map((c) => c.id || c.code);
+                          setSelectedCameraIds((prev) => Array.from(new Set([...prev, ...visibleKeys])));
+                        }}
+                        className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                      >
+                        Chọn tất cả ({filteredCamerasForSelect.length})
+                      </button>
+                      {selectedCameraIds.length > 0 && (
+                        <>
+                          <span className="text-slate-300 dark:text-slate-600">|</span>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedCameraIds([])}
+                            className="font-semibold text-rose-500 hover:underline cursor-pointer"
+                          >
+                            Bỏ chọn
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  )}
+                  <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 tracking-wider">
+                    ĐÃ CHỌN {selectedCameraIds.length} CAMERA
+                  </div>
                 </div>
               </div>
 
@@ -803,8 +831,18 @@ export function CameraSurveillanceView() {
                       const camKey = cam.id || cam.code;
                       const isSelected = selectedCameraIds.includes(camKey);
                       return (
-                        <label
+                        <div
                           key={camKey}
+                          role="checkbox"
+                          aria-checked={isSelected}
+                          tabIndex={0}
+                          onClick={() => handleToggleCamera(camKey)}
+                          onKeyDown={(e) => {
+                            if (e.key === ' ' || e.key === 'Enter') {
+                              e.preventDefault();
+                              handleToggleCamera(camKey);
+                            }
+                          }}
                           className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer select-none transition-all ${
                             isSelected
                               ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/40 shadow-xs ring-1 ring-indigo-500'
@@ -814,10 +852,11 @@ export function CameraSurveillanceView() {
                           <input
                             type="checkbox"
                             checked={isSelected}
-                            onChange={() => handleToggleCamera(camKey)}
-                            className="mt-0.5 w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500 cursor-pointer"
+                            readOnly
+                            tabIndex={-1}
+                            className="pointer-events-none mt-0.5 w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
                           />
-                          <div className="flex-1 min-w-0">
+                          <div className="flex-1 min-w-0 pointer-events-none">
                             <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
                               {cam.name}
                             </div>
@@ -825,7 +864,7 @@ export function CameraSurveillanceView() {
                               {cam.code} • {cam.zone}
                             </div>
                           </div>
-                        </label>
+                        </div>
                       );
                     })}
                   </div>

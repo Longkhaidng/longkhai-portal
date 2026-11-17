@@ -1463,14 +1463,17 @@ export function FoodInspectionBatchModal({
   onOpenSingleAdd,
   onSubmitBatch,
 }: BatchEntryModalProps) {
-  const [batchDate, setBatchDate] = useState('');
+  const [batchDate, setBatchDate] = useState(
+    () => defaultDate || new Date().toISOString().slice(0, 10)
+  );
   const [batchInspector, setBatchInspector] = useState(inspector);
   const [items, setItems] = useState<any[]>([]);
   const [globalDestroyDt, setGlobalDestroyDt] = useState('');
 
   React.useEffect(() => {
     if (!isOpen) return;
-    setBatchDate('');
+    const today = defaultDate || new Date().toISOString().slice(0, 10);
+    setBatchDate(today);
     setBatchInspector(inspector);
     setGlobalDestroyDt('');
     const realNowTime = getNowTimeString();
@@ -1480,7 +1483,7 @@ export function FoodInspectionBatchModal({
         freshTemplates.map((t, i) => ({
           ...t,
           stt: t.stt || i + 1,
-          importDate: t.importDate || '',
+          importDate: t.importDate || today,
           name: t.name || '',
           time: t.time || realNowTime,
           qty: t.qty || '',
@@ -1502,7 +1505,7 @@ export function FoodInspectionBatchModal({
         dryTemplates.map((t, i) => ({
           ...t,
           stt: t.stt || i + 1,
-          importDate: t.importDate || '',
+          importDate: t.importDate || today,
           name: t.name || '',
           producer: t.producer || '',
           prod_addr: t.prod_addr || '',
@@ -1837,39 +1840,24 @@ export function FoodInspectionBatchModal({
                 {stepKey === 'STEP1_FRESH' ? (
                   <tr>
                     <th className="p-2 border border-slate-200 dark:border-slate-700 w-10">STT</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Ngày nhập hàng</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[150px]">Tên thực phẩm</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-24">Ngày giờ nhập</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-20">Khối lượng</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-20">Đơn vị tính</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[140px]">Tên cơ sở cung cấp</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[150px]">Địa chỉ/điện thoại</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[130px]">Tên người giao hàng</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Chứng từ/hóa đơn</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Giấy ĐK VS thú y</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Giấy kiểm dịch</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-32">Kiểm tra cảm quan</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-32">Xét nghiệm nhanh</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[140px]">Biện pháp xử lý/ghi chú</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[180px]">Tên thực phẩm</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-24">Khối lượng</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-24">Đơn vị tính</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-36">Kiểm tra cảm quan</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-40">Xét nghiệm nhanh</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[160px]">Biện pháp xử lý/ghi chú</th>
                   </tr>
                 ) : stepKey === 'STEP1_DRY' ? (
                   <tr>
                     <th className="p-2 border border-slate-200 dark:border-slate-700 w-10">STT</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Ngày nhập hàng</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[150px]">Tên thực phẩm</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[140px]">Tên cơ sở sản xuất</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[140px]">Địa chỉ sản xuất</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-24">Thời gian nhập</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-20">Khối lượng</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-20">Đơn vị tính</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[140px]">Tên cơ sở cung cấp</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[130px]">Tên chủ giao hàng</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[140px]">Địa chỉ/điện thoại</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Hạn sử dụng</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Điều kiện bảo quản</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-28">Chứng từ/hóa đơn</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-32">Kiểm tra cảm quan</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[140px]">Biện pháp xử lý/ghi chú</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[180px]">Tên thực phẩm</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-24">Khối lượng</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-24">Đơn vị tính</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-32">Hạn sử dụng</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-32">Điều kiện bảo quản</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-32">Chứng từ/hóa đơn</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-36">Kiểm tra cảm quan</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[160px]">Biện pháp xử lý/ghi chú</th>
                   </tr>
                 ) : stepKey === 'STEP2_COOKING' ? (
                   <tr>
@@ -1921,50 +1909,14 @@ export function FoodInspectionBatchModal({
                       return (
                         <tr key={originalIndex} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
                           <td className="p-2 border border-slate-200 dark:border-slate-700 text-center font-bold">{idx + 1}</td>
-                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center font-mono">
-                            {item.importDate || ''}
-                          </td>
                           <td className="p-2 border border-slate-200 dark:border-slate-700 font-bold text-slate-900 dark:text-white">
                             {item.name || ''}
-                          </td>
-                          <td className="p-1.5 border border-slate-200 dark:border-slate-700">
-                            <input
-                              type="text"
-                              value={item.time || ''}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                setItems((prev) =>
-                                  prev.map((row, rIdx) =>
-                                    rIdx === originalIndex ? { ...row, time: val } : row
-                                  )
-                                );
-                              }}
-                              className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-center"
-                            />
                           </td>
                           <td className="p-2 border border-slate-200 dark:border-slate-700 text-center font-bold text-blue-600">
                             {item.qty || ''}
                           </td>
                           <td className="p-2 border border-slate-200 dark:border-slate-700 text-center">
                             {item.unit || ''}
-                          </td>
-                          <td className="p-2 border border-slate-200 dark:border-slate-700">
-                            {item.supplier || ''}
-                          </td>
-                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-slate-500">
-                            {item.addr || ''}
-                          </td>
-                          <td className="p-2 border border-slate-200 dark:border-slate-700">
-                            {item.deliverer || ''}
-                          </td>
-                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center">
-                            {item.doc || ''}
-                          </td>
-                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center">
-                            {item.vet || ''}
-                          </td>
-                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center">
-                            {item.quar || ''}
                           </td>
                           <td className="p-1.5 border border-slate-200 dark:border-slate-700 text-center">
                             <select
@@ -2022,47 +1974,14 @@ export function FoodInspectionBatchModal({
                       return (
                         <tr key={originalIndex} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
                           <td className="p-2 border border-slate-200 dark:border-slate-700 text-center font-bold">{idx + 1}</td>
-                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-center font-mono">
-                            {item.importDate || ''}
-                          </td>
                           <td className="p-2 border border-slate-200 dark:border-slate-700 font-bold text-slate-900 dark:text-white">
                             {item.name || ''}
-                          </td>
-                          <td className="p-2 border border-slate-200 dark:border-slate-700">
-                            {item.producer || ''}
-                          </td>
-                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-slate-500">
-                            {item.prod_addr || ''}
-                          </td>
-                          <td className="p-1.5 border border-slate-200 dark:border-slate-700">
-                            <input
-                              type="text"
-                              value={item.time || ''}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                setItems((prev) =>
-                                  prev.map((row, rIdx) =>
-                                    rIdx === originalIndex ? { ...row, time: val } : row
-                                  )
-                                );
-                              }}
-                              className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-center"
-                            />
                           </td>
                           <td className="p-2 border border-slate-200 dark:border-slate-700 text-center font-bold text-blue-600">
                             {item.qty || ''}
                           </td>
                           <td className="p-2 border border-slate-200 dark:border-slate-700 text-center">
                             {item.unit || ''}
-                          </td>
-                          <td className="p-2 border border-slate-200 dark:border-slate-700">
-                            {item.supplier || ''}
-                          </td>
-                          <td className="p-2 border border-slate-200 dark:border-slate-700">
-                            {item.deliverer || ''}
-                          </td>
-                          <td className="p-2 border border-slate-200 dark:border-slate-700 text-slate-500">
-                            {item.addr || ''}
                           </td>
                           <td className="p-1.5 border border-slate-200 dark:border-slate-700">
                             <input
