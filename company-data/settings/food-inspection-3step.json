@@ -175,24 +175,16 @@
       "addr": ""
     },
     {
-      "stt": 2,
+      "id": "DT_1794883025816_454j",
+      "importDate": "2026-11-17",
       "name": "Dầu ăn Neptune Gold",
       "producer": "Công ty TNHH Dầu thực vật Cái Lân",
       "prod_addr": "KCN Cái Lân, TP. Hạ Long, Quảng Ninh",
-      "time": "07:05",
       "qty": "10",
       "unit": "Lít",
-      "supplier": "Công ty TNHH Phân Phối An Bình",
-      "deliverer": "Lê Quốc Trọng",
-      "addr": "120 Điện Biên Phủ, Đà Nẵng",
-      "phone": "0914222333",
-      "exp": "NSX: 01/2026 - HSD: 01/2028",
-      "storage": "Nhiệt độ thường",
-      "doc": "HĐ 8891",
-      "cert": "Đầy đủ công bố",
-      "sense": "Đạt",
-      "handle": "Lưu kho khô",
-      "note": ""
+      "supplier": "",
+      "deliverer": "",
+      "addr": ""
     },
     {
       "stt": 3,
@@ -441,5 +433,5 @@
       "note": "Mẫu lưu an toàn"
     }
   ],
-  "updatedAt": "2026-11-17T02:36:56.336Z"
+  "updatedAt": "2026-11-17T02:37:05.816Z"
 }
