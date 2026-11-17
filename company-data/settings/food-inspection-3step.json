@@ -245,48 +245,6 @@
   ],
   "STEP2_COOKING": [
     {
-      "id": "CB_1794905103833_2",
-      "rowIndex": 3,
-      "date": "2026-11-17",
-      "col_0": "CB_1794905103833_2",
-      "col_1": "2026-11-17",
-      "col_2": "2",
-      "col_3": "Khoai tây xào",
-      "col_4": "",
-      "col_5": "",
-      "col_6": "Đậu phộng sống",
-      "col_7": "4 kg",
-      "col_8": "",
-      "col_9": "",
-      "col_10": "",
-      "col_11": "",
-      "col_12": "",
-      "col_13": "",
-      "col_14": "Trần Lê Hữu Lực",
-      "col_15": ""
-    },
-    {
-      "id": "CB_1794905103833_3",
-      "rowIndex": 4,
-      "date": "2026-11-17",
-      "col_0": "CB_1794905103833_3",
-      "col_1": "2026-11-17",
-      "col_2": "3",
-      "col_3": "Canh rau má nấu tôm",
-      "col_4": "",
-      "col_5": "",
-      "col_6": "Khoai tây",
-      "col_7": "25 kg",
-      "col_8": "",
-      "col_9": "",
-      "col_10": "",
-      "col_11": "",
-      "col_12": "",
-      "col_13": "",
-      "col_14": "Trần Lê Hữu Lực",
-      "col_15": ""
-    },
-    {
       "id": "CB_1794905103833_4",
       "rowIndex": 5,
       "date": "2026-11-17",
@@ -458,5 +416,5 @@
   "cookingTemplates": [],
   "servingTemplates": [],
   "sampleFoodTemplates": [],
-  "updatedAt": "2026-11-17T08:45:19.329Z"
+  "updatedAt": "2026-11-17T08:45:20.713Z"
 }
