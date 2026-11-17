@@ -172,19 +172,6 @@
       "doc": "",
       "vet": "",
       "quar": ""
-    },
-    {
-      "id": "FT_1794812832427",
-      "importDate": "2026-11-17",
-      "name": "Hành lá, ngò rí",
-      "qty": "0.5",
-      "unit": "kg",
-      "supplier": "HTX Rau an toàn Hòa Vang",
-      "addr": "Xã Hòa Vang, Đà Nẵng",
-      "deliverer": "Lê Văn Tuấn (0905666777)",
-      "doc": "",
-      "vet": "",
-      "quar": ""
     }
   ],
   "dryTemplates": [
@@ -475,5 +462,5 @@
       "note": "Mẫu lưu an toàn"
     }
   ],
-  "updatedAt": "2026-11-17T02:09:23.692Z"
+  "updatedAt": "2026-11-17T02:09:29.287Z"
 }
