@@ -211,24 +211,16 @@
       "addr": ""
     },
     {
-      "stt": 5,
+      "id": "DT_1794883043448_dr4i",
+      "importDate": "2026-11-17",
       "name": "Muối ăn I-ốt",
       "producer": "Công ty Muối Miền Trung",
       "prod_addr": "Quảng Nam",
-      "time": "07:00",
       "qty": "10",
       "unit": "Kg",
-      "supplier": "Đại lý An Hòa",
-      "deliverer": "Nguyễn Văn A",
-      "addr": "Đà Nẵng",
-      "phone": "0905111222",
-      "exp": "NSX: 01/2026 - HSD: 01/2028",
-      "storage": "Nhiệt độ thường",
-      "doc": "HĐ 204",
-      "cert": "Đầy đủ công bố",
-      "sense": "Đạt",
-      "handle": "Lưu kho khô",
-      "note": ""
+      "supplier": "",
+      "deliverer": "",
+      "addr": ""
     }
   ],
   "cookingTemplates": [
@@ -417,5 +409,5 @@
       "note": "Mẫu lưu an toàn"
     }
   ],
-  "updatedAt": "2026-11-17T02:37:17.544Z"
+  "updatedAt": "2026-11-17T02:37:23.448Z"
 }
