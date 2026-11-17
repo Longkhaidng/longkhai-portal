@@ -1758,8 +1758,8 @@ export function FoodInspectionBatchModal({
 
         <div className="p-4 overflow-y-auto space-y-3 text-xs">
           {/* Top metadata bar */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-            <div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <div className="flex-1 max-w-sm">
               <label className="block text-[11px] font-bold text-slate-500 mb-1">
                 Lọc theo ngày nhập hàng (để trống = hiển thị tất cả):
               </label>
@@ -1785,21 +1785,9 @@ export function FoodInspectionBatchModal({
               </div>
             </div>
 
-            <div>
-              <label className="block text-[11px] font-bold text-slate-500 mb-1">
-                Người kiểm tra:
-              </label>
-              <input
-                type="text"
-                value={batchInspector}
-                onChange={(e) => setBatchInspector(e.target.value)}
-                className="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-semibold"
-              />
-            </div>
-
             <div className="flex items-end justify-end">
               {stepKey === 'STEP4_SAMPLE' ? (
-                <div className="w-full">
+                <div className="w-full sm:w-auto">
                   <label className="block text-[11px] font-bold text-rose-600 mb-1">
                     TG hủy mẫu (áp dụng tất cả):
                   </label>
@@ -1824,7 +1812,7 @@ export function FoodInspectionBatchModal({
                 <button
                   type="button"
                   onClick={handleSetAllOk}
-                  className="px-3.5 py-2 rounded-xl border border-emerald-600 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 font-bold flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2 rounded-xl border border-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
                 >
                   <CheckCheck className="w-4 h-4" />
                   <span>Tất cả ĐẠT</span>
@@ -1834,29 +1822,29 @@ export function FoodInspectionBatchModal({
           </div>
 
           {/* Batch Table */}
-          <div className="max-h-[460px] overflow-auto rounded-xl border border-slate-200 dark:border-slate-700">
-            <table className="w-full text-left border-collapse text-xs">
+          <div className="max-h-[460px] overflow-x-auto overflow-y-auto rounded-xl border border-slate-200 dark:border-slate-700">
+            <table className="min-w-full text-left border-collapse text-xs">
               <thead className="bg-slate-100 dark:bg-slate-800 sticky top-0 z-10 font-bold text-center">
                 {stepKey === 'STEP1_FRESH' ? (
                   <tr>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-10">STT</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-10 min-w-[40px]">STT</th>
                     <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[180px]">Tên thực phẩm</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-24">Khối lượng</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-24">Đơn vị tính</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-36">Kiểm tra cảm quan</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-40">Xét nghiệm nhanh</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-24 min-w-[85px]">Khối lượng</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-20 min-w-[70px]">Đơn vị tính</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 min-w-[150px] whitespace-nowrap">Kiểm tra cảm quan</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 min-w-[140px]">Xét nghiệm nhanh</th>
                     <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[160px]">Biện pháp xử lý/ghi chú</th>
                   </tr>
                 ) : stepKey === 'STEP1_DRY' ? (
                   <tr>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-10">STT</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-10 min-w-[40px]">STT</th>
                     <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[180px]">Tên thực phẩm</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-24">Khối lượng</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-24">Đơn vị tính</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-32">Hạn sử dụng</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-32">Điều kiện bảo quản</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-32">Chứng từ/hóa đơn</th>
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-36">Kiểm tra cảm quan</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-24 min-w-[85px]">Khối lượng</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 w-20 min-w-[70px]">Đơn vị tính</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 min-w-[120px]">Hạn sử dụng</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 min-w-[140px]">Điều kiện bảo quản</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 min-w-[130px]">Chứng từ/hóa đơn</th>
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 min-w-[150px] whitespace-nowrap">Kiểm tra cảm quan</th>
                     <th className="p-2 border border-slate-200 dark:border-slate-700 text-left min-w-[160px]">Biện pháp xử lý/ghi chú</th>
                   </tr>
                 ) : stepKey === 'STEP2_COOKING' ? (
@@ -1891,7 +1879,7 @@ export function FoodInspectionBatchModal({
                     <th className="p-2 border-b border-slate-200 dark:border-slate-700 text-left">Tên món ăn</th>
                     <th className="p-2 border-b border-slate-200 dark:border-slate-700">Ca/ Bữa ăn</th>
                     <th className="p-2 border-b border-slate-200 dark:border-slate-700">Số suất</th>
-                    <th className="p-2 border-b border-slate-200 dark:border-slate-700 w-36">Kiểm tra cảm quan</th>
+                    <th className="p-2 border-b border-slate-200 dark:border-slate-700 min-w-[150px] whitespace-nowrap">Kiểm tra cảm quan</th>
                     <th className="p-2 border-b border-slate-200 dark:border-slate-700 text-left">Biện pháp xử lý</th>
                   </tr>
                 )}
@@ -1918,7 +1906,7 @@ export function FoodInspectionBatchModal({
                           <td className="p-2 border border-slate-200 dark:border-slate-700 text-center">
                             {item.unit || ''}
                           </td>
-                          <td className="p-1.5 border border-slate-200 dark:border-slate-700 text-center">
+                          <td className="p-1.5 border border-slate-200 dark:border-slate-700 text-center min-w-[150px]">
                             <select
                               value={item.sense || ''}
                               onChange={(e) => {
@@ -1929,7 +1917,7 @@ export function FoodInspectionBatchModal({
                                   )
                                 );
                               }}
-                              className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold"
+                              className="w-full min-w-[130px] px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold"
                             >
                               <option value=""></option>
                               <option value="Đạt">✅ Đạt</option>
@@ -2028,7 +2016,7 @@ export function FoodInspectionBatchModal({
                               className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
                             />
                           </td>
-                          <td className="p-1.5 border border-slate-200 dark:border-slate-700 text-center">
+                          <td className="p-1.5 border border-slate-200 dark:border-slate-700 text-center min-w-[150px]">
                             <select
                               value={item.sense || ''}
                               onChange={(e) => {
@@ -2039,7 +2027,7 @@ export function FoodInspectionBatchModal({
                                   )
                                 );
                               }}
-                              className="w-full px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold"
+                              className="w-full min-w-[130px] px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold"
                             >
                               <option value=""></option>
                               <option value="Đạt">✅ Đạt</option>
@@ -2143,7 +2131,7 @@ export function FoodInspectionBatchModal({
                         </td>
                         <td className="p-2 text-center font-bold">{item.meal || ''}</td>
                         <td className="p-2 text-center">{item.servings || ''}</td>
-                        <td className="p-2 text-center">
+                        <td className="p-2 text-center min-w-[150px]">
                           <select
                             value={item.sense || ''}
                             onChange={(e) => {
@@ -2154,11 +2142,11 @@ export function FoodInspectionBatchModal({
                                 )
                               );
                             }}
-                            className="px-2.5 py-1 rounded-lg border border-slate-300 dark:border-slate-700 text-xs font-bold"
+                            className="w-full min-w-[130px] px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold"
                           >
                             <option value=""></option>
-                            <option value="Đạt">✅ ĐẠT</option>
-                            <option value="Không đạt">❌ KHÔNG ĐẠT</option>
+                            <option value="Đạt">✅ Đạt</option>
+                            <option value="Không đạt">❌ Không đạt</option>
                           </select>
                         </td>
                         <td className="p-2">{item.handle || ''}</td>
