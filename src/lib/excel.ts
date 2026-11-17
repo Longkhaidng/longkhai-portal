@@ -365,7 +365,7 @@ export function generateEmployeeTemplateExcel() {
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '   - announcements: Thông báo nội bộ & Tin tức' },
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '   - forms: Biểu mẫu động không cần sửa code' },
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '   - reports: Báo cáo & Thống kê' },
-    { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '   - users: Quản lý nhân viên & Phân quyền' },
+    { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '   - users: Quản lý nhân viên' },
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '   - web_integrations: Tích hợp website ngoài vào menu' },
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '   - plugins: Mở rộng (5S, ISO, An toàn, Kaizen...)' },
     { 'HƯỚNG DẪN ĐIỀN DỮ LIỆU NHÂN VIÊN': '   - settings: Cài đặt hệ thống & GitHub' },

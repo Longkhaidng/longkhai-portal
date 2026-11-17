@@ -216,7 +216,7 @@ export function Sidebar({
     {
       id: 'users',
       permission: 'users',
-      label: 'Quản lý NV & Phân quyền',
+      label: 'Quản lý nhân viên',
       icon: Users,
     },
     {

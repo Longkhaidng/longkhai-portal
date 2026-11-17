@@ -469,7 +469,7 @@ export function UserManagementView() {
             </h1>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Thêm nhân viên mới, nạp danh sách Excel và phân quyền truy cập chi tiết từng danh mục
+            Thêm nhân viên mới, nạp danh sách Excel và quản lý thông tin nhân sự
           </p>
         </div>
 

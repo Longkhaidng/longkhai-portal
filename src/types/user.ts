@@ -54,7 +54,7 @@ export const CATEGORY_DEFINITIONS: CategoryInfo[] = [
   { id: 'announcements', name: 'Thông báo & Nội quy', description: 'Thông báo, nội quy và chính sách nhà máy', iconName: 'Bell' },
   { id: 'forms', name: 'Quản lý biểu mẫu động', description: 'Biểu mẫu điện tử và khảo sát nội bộ', iconName: 'FileSpreadsheet' },
   { id: 'reports', name: 'Báo cáo & Thống kê', description: 'Tra cứu dữ liệu và xuất báo cáo Excel/PDF', iconName: 'BarChart3' },
-  { id: 'users', name: 'Quản lý NV & Phân quyền', description: 'Quản lý danh sách nhân sự và phân quyền sử dụng', iconName: 'Users' },
+  { id: 'users', name: 'Quản lý nhân viên', description: 'Quản lý danh sách nhân sự và hồ sơ nhân viên', iconName: 'Users' },
   { id: 'web_integrations', name: 'Tích hợp Website (Cài đặt)', description: 'Cài đặt liên kết website nội bộ nhà máy', iconName: 'Globe' },
   { id: 'settings', name: 'Cài đặt hệ thống', description: 'Cấu hình hệ thống, sao lưu dữ liệu', iconName: 'Settings' },
 ];
