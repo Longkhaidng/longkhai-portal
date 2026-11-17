@@ -32,6 +32,7 @@ import {
   exportAllUsersToExcel,
   ParsedEmployeeResult,
 } from '@/lib/excel';
+import { isSuperAdminOrBOD } from '@/lib/permissions';
 
 
 const ROLE_LABELS: Record<UserRole, { label: string; badge: string }> = {
@@ -49,6 +50,7 @@ const ROLE_LABELS: Record<UserRole, { label: string; badge: string }> = {
 
 export function UserManagementView() {
   const { currentUser, reloadCurrentUser } = useAuth();
+  const isAdmin = currentUser?.role === 'admin' || isSuperAdminOrBOD(currentUser) || currentUser?.id === '2265' || currentUser?.id === 'ADMIN01';
   const [users, setUsers] = useState<User[]>(() => storage.getUsers());
   const [departments, setDepartments] = useState<Department[]>(() => storage.getDepartments());
   const [allWebsites, setAllWebsites] = useState(() => storage.getWebIntegrations());
@@ -251,6 +253,10 @@ export function UserManagementView() {
   // Handle Delete User
   const handleDeleteUser = (target: User) => {
     if (!currentUser) return;
+    if (!isAdmin) {
+      alert('Chỉ Quản trị viên (Admin) mới có quyền xóa nhân viên!');
+      return;
+    }
     if (target.id === '2265' || target.id === 'ADMIN01') {
       alert('Không thể xóa tài khoản Quản trị viên khởi tạo (Root Admin 2265)!');
       return;
@@ -355,6 +361,10 @@ export function UserManagementView() {
 
   // Open Permission Matrix for a User
   const handleOpenPermissions = (target: User) => {
+    if (!isAdmin) {
+      alert('Chỉ Quản trị viên (Admin) mới có quyền phân quyền danh mục!');
+      return;
+    }
     setPermissionTargetUser(target);
     setSelectedPermissions(target.permissions || []);
     setSelectedWebIntegrations(target.allowedWebIntegrations || []);
@@ -381,7 +391,7 @@ export function UserManagementView() {
 
   // Save updated permissions
   const handleSavePermissions = () => {
-    if (!permissionTargetUser || !currentUser) return;
+    if (!isAdmin || !permissionTargetUser || !currentUser) return;
 
     const updatedUsers = users.map((u) => {
       if (u.id === permissionTargetUser.id) {
@@ -404,6 +414,10 @@ export function UserManagementView() {
   // Toggle User Active / Inactive Status
   const handleToggleStatus = (target: User) => {
     if (!currentUser) return;
+    if (!isAdmin) {
+      alert('Chỉ Quản trị viên (Admin) mới có quyền khóa hoặc mở khóa tài khoản!');
+      return;
+    }
     if (target.id === '2265' || target.id === 'ADMIN01') {
       alert('Không thể khóa tài khoản Root Admin 2265!');
       return;
@@ -422,6 +436,10 @@ export function UserManagementView() {
 
   // Reset User Password
   const handleResetPassword = (target: User) => {
+    if (!isAdmin) {
+      alert('Chỉ Quản trị viên (Admin) mới có quyền đặt lại mật khẩu nhân viên!');
+      return;
+    }
     const newPass = prompt(`Nhập mật khẩu mới cho nhân viên ${target.name} (${target.id}):`, 'LK@123456');
     if (!newPass || !currentUser) return;
 
@@ -732,47 +750,51 @@ export function UserManagementView() {
                       <td className="py-3 px-4 text-right space-x-1 whitespace-nowrap">
                         <button
                           onClick={() => handleOpenEditUser(u)}
-                          className="px-2.5 py-1 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 text-amber-700 dark:text-amber-300 rounded-lg text-xs font-semibold border border-amber-200 dark:border-amber-800/60 transition-colors inline-flex items-center gap-1"
+                          className="px-2.5 py-1 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 text-amber-700 dark:text-amber-300 rounded-lg text-xs font-semibold border border-amber-200 dark:border-amber-800/60 transition-colors inline-flex items-center gap-1 cursor-pointer"
                           title="Chỉnh sửa thông tin nhân viên"
                         >
                           <Pencil className="w-3 h-3" />
                           <span>Sửa</span>
                         </button>
-                        <button
-                          onClick={() => handleOpenPermissions(u)}
-                          className="px-2.5 py-1 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-semibold border border-blue-200 dark:border-blue-800/60 transition-colors inline-flex items-center gap-1"
-                          title="Cấu hình danh mục được phép vào"
-                        >
-                          <ShieldCheck className="w-3 h-3" />
-                          <span>Phân quyền</span>
-                        </button>
-                        <button
-                          onClick={() => handleResetPassword(u)}
-                          className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500"
-                          title="Đặt lại mật khẩu"
-                        >
-                          <KeyRound className="w-3.5 h-3.5" />
-                        </button>
-                        {!isRoot && (
+                        {isAdmin && (
                           <>
                             <button
-                              onClick={() => handleToggleStatus(u)}
-                              className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500"
-                              title={u.isActive ? 'Khóa tài khoản' : 'Kích hoạt lại'}
+                              onClick={() => handleOpenPermissions(u)}
+                              className="px-2.5 py-1 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-semibold border border-blue-200 dark:border-blue-800/60 transition-colors inline-flex items-center gap-1 cursor-pointer"
+                              title="Cấu hình danh mục được phép vào"
                             >
-                              {u.isActive ? (
-                                <Lock className="w-3.5 h-3.5 text-rose-500" />
-                              ) : (
-                                <Unlock className="w-3.5 h-3.5 text-emerald-500" />
-                              )}
+                              <ShieldCheck className="w-3 h-3" />
+                              <span>Phân quyền</span>
                             </button>
                             <button
-                              onClick={() => handleDeleteUser(u)}
-                              className="p-1 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/60 text-slate-400 hover:text-rose-600 transition-colors"
-                              title="Xóa nhân viên"
+                              onClick={() => handleResetPassword(u)}
+                              className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 cursor-pointer"
+                              title="Đặt lại mật khẩu"
                             >
-                              <Trash2 className="w-3.5 h-3.5" />
+                              <KeyRound className="w-3.5 h-3.5" />
                             </button>
+                            {!isRoot && (
+                              <>
+                                <button
+                                  onClick={() => handleToggleStatus(u)}
+                                  className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 cursor-pointer"
+                                  title={u.isActive ? 'Khóa tài khoản' : 'Kích hoạt lại'}
+                                >
+                                  {u.isActive ? (
+                                    <Lock className="w-3.5 h-3.5 text-rose-500" />
+                                  ) : (
+                                    <Unlock className="w-3.5 h-3.5 text-emerald-500" />
+                                  )}
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteUser(u)}
+                                  className="p-1 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/60 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
+                                  title="Xóa nhân viên"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </>
+                            )}
                           </>
                         )}
                       </td>
@@ -983,93 +1005,97 @@ export function UserManagementView() {
               </div>
 
               {/* Category Permissions checkbox */}
-              <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-                <label className="block font-bold text-slate-800 dark:text-white mb-2">
-                  Phân quyền danh mục cho nhân viên này:
-                </label>
-                <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-1">
-                  {CATEGORY_DEFINITIONS.map((cat) => {
-                    const isChecked = newEmpPerms.includes(cat.id);
-                    return (
-                      <label
-                        key={cat.id}
-                        className={`flex items-center gap-2 p-2 rounded-xl border text-xs cursor-pointer ${
-                          isChecked
-                            ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-800 text-blue-950 dark:text-blue-200'
-                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={() => {
-                            if (isChecked) {
-                              setNewEmpPerms(newEmpPerms.filter((p) => p !== cat.id));
+              {isAdmin && (
+                <>
+                  <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+                    <label className="block font-bold text-slate-800 dark:text-white mb-2">
+                      Phân quyền danh mục cho nhân viên này:
+                    </label>
+                    <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-1">
+                      {CATEGORY_DEFINITIONS.map((cat) => {
+                        const isChecked = newEmpPerms.includes(cat.id);
+                        return (
+                          <label
+                            key={cat.id}
+                            className={`flex items-center gap-2 p-2 rounded-xl border text-xs cursor-pointer ${
+                              isChecked
+                                ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-800 text-blue-950 dark:text-blue-200'
+                                : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => {
+                                if (isChecked) {
+                                  setNewEmpPerms(newEmpPerms.filter((p) => p !== cat.id));
+                                } else {
+                                  setNewEmpPerms([...newEmpPerms, cat.id]);
+                                }
+                              }}
+                              className="rounded text-blue-600"
+                            />
+                            <span className="font-semibold">{cat.name}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Web Integrations permissions checkbox */}
+                  {allWebsites.length > 0 && (
+                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="font-bold text-slate-800 dark:text-white flex items-center gap-1.5 text-xs">
+                          <Globe className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                          <span>Phân quyền Website Tích Hợp (Menu con):</span>
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (newEmpWebIntegrations.length === allWebsites.length) {
+                              setNewEmpWebIntegrations([]);
                             } else {
-                              setNewEmpPerms([...newEmpPerms, cat.id]);
+                              setNewEmpWebIntegrations(allWebsites.map((w) => w.id));
                             }
                           }}
-                          className="rounded text-blue-600"
-                        />
-                        <span className="font-semibold">{cat.name}</span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Web Integrations permissions checkbox */}
-              {allWebsites.length > 0 && (
-                <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="font-bold text-slate-800 dark:text-white flex items-center gap-1.5 text-xs">
-                      <Globe className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                      <span>Phân quyền Website Tích Hợp (Menu con):</span>
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (newEmpWebIntegrations.length === allWebsites.length) {
-                          setNewEmpWebIntegrations([]);
-                        } else {
-                          setNewEmpWebIntegrations(allWebsites.map((w) => w.id));
-                        }
-                      }}
-                      className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-semibold"
-                    >
-                      {newEmpWebIntegrations.length === allWebsites.length ? 'Bỏ chọn' : 'Chọn tất cả'}
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-36 overflow-y-auto p-1">
-                    {allWebsites.map((site) => {
-                      const isChecked = newEmpWebIntegrations.includes(site.id);
-                      return (
-                        <label
-                          key={site.id}
-                          className={`flex items-center gap-2 p-2 rounded-xl border text-xs cursor-pointer ${
-                            isChecked
-                              ? 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-300 dark:border-indigo-800 text-indigo-950 dark:text-indigo-200'
-                              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
-                          }`}
+                          className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-semibold cursor-pointer"
                         >
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => {
-                              if (isChecked) {
-                                setNewEmpWebIntegrations(newEmpWebIntegrations.filter((id) => id !== site.id));
-                              } else {
-                                setNewEmpWebIntegrations([...newEmpWebIntegrations, site.id]);
-                              }
-                            }}
-                            className="rounded text-indigo-600"
-                          />
-                          <span className="font-semibold truncate">{site.title}</span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                </div>
+                          {newEmpWebIntegrations.length === allWebsites.length ? 'Bỏ chọn' : 'Chọn tất cả'}
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-36 overflow-y-auto p-1">
+                        {allWebsites.map((site) => {
+                          const isChecked = newEmpWebIntegrations.includes(site.id);
+                          return (
+                            <label
+                              key={site.id}
+                              className={`flex items-center gap-2 p-2 rounded-xl border text-xs cursor-pointer ${
+                                isChecked
+                                  ? 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-300 dark:border-indigo-800 text-indigo-950 dark:text-indigo-200'
+                                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => {
+                                  if (isChecked) {
+                                    setNewEmpWebIntegrations(newEmpWebIntegrations.filter((id) => id !== site.id));
+                                  } else {
+                                    setNewEmpWebIntegrations([...newEmpWebIntegrations, site.id]);
+                                  }
+                                }}
+                                className="rounded text-indigo-600"
+                              />
+                              <span className="font-semibold truncate">{site.title}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
 
               <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
@@ -1620,7 +1646,7 @@ export function UserManagementView() {
                   <select
                     value={editRole}
                     onChange={(e) => setEditRole(e.target.value as UserRole)}
-                    disabled={editingUser.id === '2265' || editingUser.id === 'ADMIN01'}
+                    disabled={!isAdmin || editingUser.id === '2265' || editingUser.id === 'ADMIN01'}
                     className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl disabled:opacity-60"
                   >
                     <option value="employee">Nhân viên / Công nhân</option>
@@ -1729,7 +1755,7 @@ export function UserManagementView() {
                 <select
                   value={editIsActive ? 'active' : 'inactive'}
                   onChange={(e) => setEditIsActive(e.target.value === 'active')}
-                  disabled={editingUser.id === '2265' || editingUser.id === 'ADMIN01'}
+                  disabled={!isAdmin || editingUser.id === '2265' || editingUser.id === 'ADMIN01'}
                   className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold disabled:opacity-60"
                 >
                   <option value="active">🟢 Đang hoạt động (Active)</option>
@@ -1739,11 +1765,11 @@ export function UserManagementView() {
 
               <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
                 <div>
-                  {(editingUser.id !== '2265' && editingUser.id !== 'ADMIN01') && (
+                  {isAdmin && (editingUser.id !== '2265' && editingUser.id !== 'ADMIN01') && (
                     <button
                       type="button"
                       onClick={() => handleDeleteUser(editingUser)}
-                      className="px-3 py-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                      className="px-3 py-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Xóa nhân viên</span>
