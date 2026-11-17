@@ -122,12 +122,14 @@
       "announcements",
       "forms",
       "reports",
-      "camera"
+      "camera",
+      "food_inspection",
+      "users"
     ],
     "isActive": true,
     "password": "1867",
     "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-14T04:00:19.355Z",
+    "updatedAt": "2026-11-17T06:28:55.659Z",
     "allowedWebIntegrations": []
   },
   {
