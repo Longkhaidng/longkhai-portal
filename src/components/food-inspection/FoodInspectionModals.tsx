@@ -1758,7 +1758,9 @@ export function FoodInspectionBatchModal({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
             <div className="flex-1 max-w-sm">
               <label className="block text-[11px] font-bold text-slate-500 mb-1">
-                Lọc theo ngày nhập hàng (để trống = hiển thị tất cả):
+                {stepKey === 'STEP1_FRESH' || stepKey === 'STEP1_DRY'
+                  ? 'Lọc theo ngày nhập hàng (để trống = hiển thị tất cả):'
+                  : 'Ngày kiểm tra (để trống = hiển thị tất cả):'}
               </label>
               <div className="flex items-center gap-1.5">
                 <input
@@ -1885,7 +1887,9 @@ export function FoodInspectionBatchModal({
                 {visibleItems.length === 0 ? (
                   <tr>
                     <td colSpan={16} className="p-6 text-center text-slate-400">
-                      Chưa có thực phẩm nào trong Danh sách nhập thực phẩm. Bạn có thể nhấn &quot;Thêm dòng lẻ&quot; ở góc trên bên phải để nhập trực tiếp.
+                      {stepKey === 'STEP1_FRESH' || stepKey === 'STEP1_DRY'
+                        ? 'Chưa có thực phẩm nào trong Danh sách nhập thực phẩm. Bạn có thể nhấn "Thêm dòng lẻ" ở góc trên bên phải để nhập trực tiếp.'
+                        : 'Chưa có món ăn nào trong danh sách. Bạn có thể nhấn "Thêm dòng lẻ" ở góc trên bên phải để nhập món mới.'}
                     </td>
                   </tr>
                 ) : (

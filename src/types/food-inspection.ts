@@ -166,6 +166,51 @@ export function stripSampleFoodInspectionRecords(
   return list.filter((r) => r && !SAMPLE_RECORD_IDS.has(r.id));
 }
 
+const SAMPLE_DISH_NAMES = new Set([
+  'Thịt vịt kho đậu',
+  'Khoai tây xào',
+  'Canh rau má nấu tôm',
+  'Cơm trắng',
+  'Cá ngừ kho thơm',
+  'Cải thìa xào tỏi',
+  'Canh bí đỏ nấu tôm',
+]);
+
+const SAMPLE_INGREDIENT_NAMES = new Set([
+  'Thịt vịt',
+  'Đậu phộng sống',
+  'Khoai tây',
+  'Tôm bạc',
+  'Rau má',
+  'Gạo',
+]);
+
+export function stripSampleCookingTemplates(
+  list?: CookingTemplateItem[]
+): CookingTemplateItem[] {
+  if (!Array.isArray(list)) return [];
+  return list.filter(
+    (t) =>
+      t &&
+      !SAMPLE_DISH_NAMES.has(t.dishName?.trim() || '') &&
+      !SAMPLE_INGREDIENT_NAMES.has(t.ingName?.trim() || '')
+  );
+}
+
+export function stripSampleServingTemplates(
+  list?: ServingTemplateItem[]
+): ServingTemplateItem[] {
+  if (!Array.isArray(list)) return [];
+  return list.filter((t) => t && !SAMPLE_DISH_NAMES.has(t.dishName?.trim() || ''));
+}
+
+export function stripSampleSampleFoodTemplates(
+  list?: SampleFoodTemplateItem[]
+): SampleFoodTemplateItem[] {
+  if (!Array.isArray(list)) return [];
+  return list.filter((t) => t && !SAMPLE_DISH_NAMES.has(t.dishName?.trim() || ''));
+}
+
 export function createInitialFoodInspectionStore(): FoodInspectionStore {
   return {
     settings: {

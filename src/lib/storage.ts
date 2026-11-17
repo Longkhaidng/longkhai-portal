@@ -38,7 +38,14 @@ import {
 import { OvertimeRegistration, OvertimeMealMenu, OvertimeItem, OvertimeApprovalStatus, OvertimeConfirmStatus } from '@/types/overtime';
 import { INITIAL_OVERTIME_MENUS, INITIAL_OVERTIME_REGISTRATIONS } from './overtime-data';
 import { FoodRegistration, INITIAL_FOOD_REGISTRATIONS, compareFoodRegistrationsNewestFirst } from '@/types/food-registration';
-import { FoodInspectionStore, createInitialFoodInspectionStore, stripSampleFoodInspectionRecords } from '@/types/food-inspection';
+import {
+  FoodInspectionStore,
+  createInitialFoodInspectionStore,
+  stripSampleFoodInspectionRecords,
+  stripSampleCookingTemplates,
+  stripSampleServingTemplates,
+  stripSampleSampleFoodTemplates,
+} from '@/types/food-inspection';
 import { CameraItem, CameraRequest, DEFAULT_CAMERAS, INITIAL_CAMERA_REQUESTS } from '@/types/camera';
 import { GitHubService } from './github-api';
 import { formatDocId, sortNewestFirst } from './utils';
@@ -2906,7 +2913,7 @@ class StorageService {
       if (raw) {
         const parsed = JSON.parse(raw);
         if (parsed && typeof parsed === 'object') {
-          return {
+          const store: FoodInspectionStore = {
             ...initial,
             ...parsed,
             settings: { ...initial.settings, ...(parsed.settings || {}) },
@@ -2915,7 +2922,20 @@ class StorageService {
             STEP2_COOKING: stripSampleFoodInspectionRecords(parsed.STEP2_COOKING),
             STEP3_SERVING: stripSampleFoodInspectionRecords(parsed.STEP3_SERVING),
             STEP4_SAMPLE: stripSampleFoodInspectionRecords(parsed.STEP4_SAMPLE),
+            cookingTemplates: stripSampleCookingTemplates(parsed.cookingTemplates),
+            servingTemplates: stripSampleServingTemplates(parsed.servingTemplates),
+            sampleFoodTemplates: stripSampleSampleFoodTemplates(parsed.sampleFoodTemplates),
           };
+          if (
+            (parsed.cookingTemplates && parsed.cookingTemplates.length !== store.cookingTemplates.length) ||
+            (parsed.servingTemplates && parsed.servingTemplates.length !== store.servingTemplates.length) ||
+            (parsed.sampleFoodTemplates && parsed.sampleFoodTemplates.length !== store.sampleFoodTemplates.length)
+          ) {
+            try {
+              localStorage.setItem(STORAGE_KEYS.FOOD_INSPECTION_3STEP, JSON.stringify(store));
+            } catch {}
+          }
+          return store;
         }
       }
     } catch {}
