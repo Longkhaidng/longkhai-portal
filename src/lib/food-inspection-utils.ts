@@ -2,6 +2,8 @@ import * as XLSX from 'xlsx';
 import {
   FoodInspectionRecord,
   FoodInspectionStepKey,
+  FreshTemplateItem,
+  DryTemplateItem,
 } from '@/types/food-inspection';
 
 export function getNowTimeString(): string {
@@ -974,4 +976,335 @@ export function processParsedInspectionRows(
     }
   }
   return formattedRows;
+}
+
+export function downloadFoodImportTemplateSampleExcel(
+  type: 'FRESH' | 'DRY',
+  defaultDate?: string
+): void {
+  const today = defaultDate || new Date().toISOString().slice(0, 10);
+  if (type === 'FRESH') {
+    const fileName = 'Mau_Danh_Sach_Nhap_Thuc_Pham_Tuoi_Song.xlsx';
+    const headers = [
+      'STT',
+      'Ngày nhập hàng',
+      'Tên thực phẩm',
+      'Khối lượng',
+      'Đơn vị tính',
+      'Tên cơ sở cung cấp',
+      'Địa chỉ/điện thoại',
+      'Tên người giao hàng',
+      'Chứng từ/hóa đơn',
+      'Giấy ĐK VS thú y',
+      'Giấy kiểm dịch',
+    ];
+    const sampleData = [
+      [
+        1,
+        today,
+        'Cá ngừ đông lạnh fillet',
+        '20.5',
+        'kg',
+        'Công ty TNHH Thủy sản Miền Trung',
+        'Lô 12 KCN Thủy sản Sơn Trà, Đà Nẵng',
+        'Nguyễn Văn Nam (0905123456)',
+        '',
+        '',
+        '',
+      ],
+      [
+        2,
+        today,
+        'Thịt heo xay tươi',
+        '17.0',
+        'kg',
+        'DNTN Thực phẩm Sạch An Tâm',
+        '25 Lê Duẩn, Hải Châu, Đà Nẵng',
+        'Trần Đình Quân (0913888999)',
+        '',
+        '',
+        '',
+      ],
+    ];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...sampleData]);
+    ws['!cols'] = [
+      { wch: 6 },
+      { wch: 15 },
+      { wch: 26 },
+      { wch: 12 },
+      { wch: 12 },
+      { wch: 28 },
+      { wch: 30 },
+      { wch: 24 },
+      { wch: 18 },
+      { wch: 18 },
+      { wch: 18 },
+    ];
+    XLSX.utils.book_append_sheet(wb, ws, 'DS_ThucPhamTuoiSong');
+    XLSX.writeFile(wb, fileName);
+  } else {
+    const fileName = 'Mau_Danh_Sach_Nhap_Thuc_Pham_Kho.xlsx';
+    const headers = [
+      'STT',
+      'Ngày nhập hàng',
+      'Tên thực phẩm',
+      'Tên cơ sở sản xuất',
+      'Địa chỉ sản xuất',
+      'Khối lượng',
+      'Đơn vị tính',
+      'Tên cơ sở cung cấp',
+      'Tên chủ giao hàng',
+      'Địa chỉ/điện thoại',
+    ];
+    const sampleData = [
+      [
+        1,
+        today,
+        'Nước mắm Nam Ngư Đệ Nhị',
+        'Công ty CP Hàng tiêu dùng Masan',
+        'KCN Tân Đông Hiệp A, Dĩ An, Bình Dương',
+        '5',
+        'Chai',
+        'Đại lý Phân Phối Miền Trung',
+        'Nguyễn Văn Hùng',
+        '45 Nguyễn Tri Phương, Đà Nẵng (0905123789)',
+      ],
+      [
+        2,
+        today,
+        'Dầu ăn Neptune Gold',
+        'Công ty TNHH Dầu thực vật Cái Lân',
+        'KCN Cái Lân, TP. Hạ Long, Quảng Ninh',
+        '10',
+        'Lít',
+        'Công ty TNHH Phân Phối An Bình',
+        'Lê Quốc Trọng',
+        '120 Điện Biên Phủ, Đà Nẵng (0914222333)',
+      ],
+    ];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...sampleData]);
+    ws['!cols'] = [
+      { wch: 6 },
+      { wch: 15 },
+      { wch: 26 },
+      { wch: 28 },
+      { wch: 30 },
+      { wch: 12 },
+      { wch: 12 },
+      { wch: 28 },
+      { wch: 22 },
+      { wch: 30 },
+    ];
+    XLSX.utils.book_append_sheet(wb, ws, 'DS_ThucPhamKho');
+    XLSX.writeFile(wb, fileName);
+  }
+}
+
+export function parseFoodImportTemplateRows(
+  rawRows: any[][],
+  type: 'FRESH' | 'DRY',
+  defaultDate: string
+): (FreshTemplateItem | DryTemplateItem)[] {
+  const result: (FreshTemplateItem | DryTemplateItem)[] = [];
+  const timeBase = Date.now();
+
+  for (let i = 0; i < rawRows.length; i++) {
+    const r = rawRows[i];
+    if (!r || !r.length) continue;
+    const rowStr = r.join(' ').toLowerCase();
+    if (
+      rowStr.includes('tên thực phẩm') ||
+      rowStr.includes('nơi cung cấp') ||
+      rowStr.includes('tên cơ sở') ||
+      rowStr.includes('khối lượng') ||
+      r[3] === 'KL' ||
+      r[4] === 'ĐVT' ||
+      String(r[0]).trim().toLowerCase() === 'tt' ||
+      String(r[0]).trim().toLowerCase() === 'stt'
+    ) {
+      continue;
+    }
+    if (!r.some((cell: any) => cell !== undefined && cell !== null && String(cell).trim() !== '')) {
+      continue;
+    }
+
+    if (type === 'FRESH') {
+      const isCol0Stt = !isNaN(parseInt(r[0], 10)) && String(r[0]).trim().length <= 4;
+      const isCol1Date = isDateValue(r[1]);
+      const isCol0Date = isDateValue(r[0]);
+
+      let importDate = defaultDate;
+      let name = '';
+      let qty = '';
+      let unit = '';
+      let supplier = '';
+      let addr = '';
+      let deliverer = '';
+      let doc = '';
+      let vet = '';
+      let quar = '';
+
+      if (isCol0Stt && isCol1Date) {
+        // Standard 11-column template: STT, Ngày nhập hàng, Tên thực phẩm, Khối lượng, Đơn vị tính, Tên cơ sở cung cấp, Địa chỉ/điện thoại, Tên người giao hàng, Chứng từ/hóa đơn, Giấy ĐK VS thú y, Giấy kiểm dịch
+        importDate = normalizeExcelDate(r[1], defaultDate);
+        name = getCellVal(r, 2);
+        qty = getCellVal(r, 3);
+        unit = getCellVal(r, 4);
+        supplier = getCellVal(r, 5);
+        addr = getCellVal(r, 6);
+        deliverer = getCellVal(r, 7);
+        doc = getCellVal(r, 8);
+        vet = getCellVal(r, 9);
+        quar = getCellVal(r, 10);
+      } else if (isCol0Date) {
+        importDate = normalizeExcelDate(r[0], defaultDate);
+        name = getCellVal(r, 1);
+        qty = getCellVal(r, 2);
+        unit = getCellVal(r, 3);
+        supplier = getCellVal(r, 4);
+        addr = getCellVal(r, 5);
+        deliverer = getCellVal(r, 6);
+        doc = getCellVal(r, 7);
+        vet = getCellVal(r, 8);
+        quar = getCellVal(r, 9);
+      } else if (isCol0Stt) {
+        // Check if col 2 is time (Step 1 Excel format: TT, Tên TP, Giờ, KL, ĐVT, Tên CS, Địa chỉ, Người giao, Chứng từ, Thú y, Kiểm dịch)
+        const col2 = getCellVal(r, 2);
+        const isCol2Time = col2.includes(':') || /^\d{1,2}h\d{2}/i.test(col2);
+        if (isCol2Time) {
+          name = getCellVal(r, 1);
+          qty = getCellVal(r, 3);
+          unit = getCellVal(r, 4);
+          supplier = getCellVal(r, 5);
+          addr = getCellVal(r, 6);
+          deliverer = getCellVal(r, 7);
+          doc = getCellVal(r, 8);
+          vet = getCellVal(r, 9);
+          quar = getCellVal(r, 10);
+        } else {
+          name = getCellVal(r, 1);
+          qty = getCellVal(r, 2);
+          unit = getCellVal(r, 3);
+          supplier = getCellVal(r, 4);
+          addr = getCellVal(r, 5);
+          deliverer = getCellVal(r, 6);
+          doc = getCellVal(r, 7);
+          vet = getCellVal(r, 8);
+          quar = getCellVal(r, 9);
+        }
+      } else {
+        name = getCellVal(r, 0);
+        qty = getCellVal(r, 1);
+        unit = getCellVal(r, 2);
+        supplier = getCellVal(r, 3);
+        addr = getCellVal(r, 4);
+        deliverer = getCellVal(r, 5);
+        doc = getCellVal(r, 6);
+        vet = getCellVal(r, 7);
+        quar = getCellVal(r, 8);
+      }
+
+      if (!name) continue;
+      result.push({
+        id: `FT_${timeBase}_${result.length + 1}`,
+        importDate,
+        name,
+        qty,
+        unit,
+        supplier,
+        addr,
+        deliverer,
+        doc,
+        vet,
+        quar,
+      });
+    } else {
+      const isCol0Stt = !isNaN(parseInt(r[0], 10)) && String(r[0]).trim().length <= 4;
+      const isCol1Date = isDateValue(r[1]);
+      const isCol0Date = isDateValue(r[0]);
+
+      let importDate = defaultDate;
+      let name = '';
+      let producer = '';
+      let prod_addr = '';
+      let qty = '';
+      let unit = '';
+      let supplier = '';
+      let deliverer = '';
+      let addr = '';
+
+      if (isCol0Stt && isCol1Date) {
+        // Standard 10-column template: STT, Ngày nhập hàng, Tên thực phẩm, Tên cơ sở sản xuất, Địa chỉ sản xuất, Khối lượng, Đơn vị tính, Tên cơ sở cung cấp, Tên chủ giao hàng, Địa chỉ/điện thoại
+        importDate = normalizeExcelDate(r[1], defaultDate);
+        name = getCellVal(r, 2);
+        producer = getCellVal(r, 3);
+        prod_addr = getCellVal(r, 4);
+        qty = getCellVal(r, 5);
+        unit = getCellVal(r, 6);
+        supplier = getCellVal(r, 7);
+        deliverer = getCellVal(r, 8);
+        addr = getCellVal(r, 9);
+      } else if (isCol0Date) {
+        importDate = normalizeExcelDate(r[0], defaultDate);
+        name = getCellVal(r, 1);
+        producer = getCellVal(r, 2);
+        prod_addr = getCellVal(r, 3);
+        qty = getCellVal(r, 4);
+        unit = getCellVal(r, 5);
+        supplier = getCellVal(r, 6);
+        deliverer = getCellVal(r, 7);
+        addr = getCellVal(r, 8);
+      } else if (isCol0Stt) {
+        name = getCellVal(r, 1);
+        producer = getCellVal(r, 2);
+        prod_addr = getCellVal(r, 3);
+        qty = getCellVal(r, 4);
+        unit = getCellVal(r, 5);
+        supplier = getCellVal(r, 6);
+        deliverer = getCellVal(r, 7);
+        addr = getCellVal(r, 8);
+      } else {
+        // Check if col 3 is time (Step 1 Dry Excel format: Tên TP, Tên CS SX, Địa chỉ SX, Thời gian nhập, KL, ĐVT, Tên CS CC, Tên chủ giao, Địa chỉ)
+        const col3 = getCellVal(r, 3);
+        const isCol3Time = col3.includes(':') || /^\d{1,2}h\d{2}/i.test(col3);
+        if (isCol3Time) {
+          name = getCellVal(r, 0);
+          producer = getCellVal(r, 1);
+          prod_addr = getCellVal(r, 2);
+          qty = getCellVal(r, 4);
+          unit = getCellVal(r, 5);
+          supplier = getCellVal(r, 6);
+          deliverer = getCellVal(r, 7);
+          addr = getCellVal(r, 8);
+        } else {
+          name = getCellVal(r, 0);
+          producer = getCellVal(r, 1);
+          prod_addr = getCellVal(r, 2);
+          qty = getCellVal(r, 3);
+          unit = getCellVal(r, 4);
+          supplier = getCellVal(r, 5);
+          deliverer = getCellVal(r, 6);
+          addr = getCellVal(r, 7);
+        }
+      }
+
+      if (!name) continue;
+      result.push({
+        id: `DT_${timeBase}_${result.length + 1}`,
+        importDate,
+        name,
+        producer,
+        prod_addr,
+        qty,
+        unit,
+        supplier,
+        deliverer,
+        addr,
+      });
+    }
+  }
+
+  return result;
 }

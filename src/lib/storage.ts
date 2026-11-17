@@ -1204,10 +1204,24 @@ class StorageService {
         } catch {}
       }
       if (foodInspection3Step && typeof foodInspection3Step === 'object' && foodInspection3Step.settings) {
-        localStorage.setItem(STORAGE_KEYS.FOOD_INSPECTION_3STEP, JSON.stringify(foodInspection3Step));
-        try {
-          window.dispatchEvent(new Event('food_inspection_updated'));
-        } catch {}
+        const localRaw = localStorage.getItem(STORAGE_KEYS.FOOD_INSPECTION_3STEP);
+        let shouldOverwrite = true;
+        if (localRaw) {
+          try {
+            const localParsed = JSON.parse(localRaw);
+            const localTime = new Date(localParsed?.updatedAt || 0).getTime();
+            const serverTime = new Date(foodInspection3Step?.updatedAt || 0).getTime();
+            if (localTime > 0 && (localTime >= serverTime || Date.now() - localTime < 60000)) {
+              shouldOverwrite = false;
+            }
+          } catch {}
+        }
+        if (shouldOverwrite) {
+          localStorage.setItem(STORAGE_KEYS.FOOD_INSPECTION_3STEP, JSON.stringify(foodInspection3Step));
+          try {
+            window.dispatchEvent(new Event('food_inspection_updated'));
+          } catch {}
+        }
       }
       if (Array.isArray(cameraRequests)) {
         const local = this.getCameraRequests();

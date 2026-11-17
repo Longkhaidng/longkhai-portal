@@ -15,12 +15,14 @@ import {
 import {
   add24Hours,
   addMinutesToTime,
+  downloadFoodImportTemplateSampleExcel,
   downloadFoodInspectionSampleExcel,
   formatDateTimeDisplay,
   formatVNDate,
   getCookingRowFields,
   getFreshRowFields,
   getNowTimeString,
+  parseFoodImportTemplateRows,
   parseIngredient,
   parseToDateTimeLocal,
   processParsedInspectionRows,
@@ -2288,7 +2290,8 @@ export interface FoodImportTemplateModalProps {
   onSave: (
     type: 'FRESH' | 'DRY',
     item: FreshTemplateItem | DryTemplateItem,
-    existingId?: string
+    existingId?: string,
+    keepOpen?: boolean
   ) => void;
 }
 
@@ -2300,7 +2303,8 @@ export function FoodImportTemplateModal({
   onSave,
 }: FoodImportTemplateModalProps) {
   const isEdit = !!editingItem;
-  const [importDate, setImportDate] = useState('');
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const [importDate, setImportDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [name, setName] = useState('');
   const [qty, setQty] = useState('');
   const [unit, setUnit] = useState('');
@@ -2317,7 +2321,8 @@ export function FoodImportTemplateModal({
 
   React.useEffect(() => {
     if (!isOpen) return;
-    setImportDate(editingItem?.importDate || '');
+    const today = new Date().toISOString().slice(0, 10);
+    setImportDate(editingItem?.importDate || today);
     setName(editingItem?.name || '');
     setQty(editingItem?.qty || '');
     setUnit(editingItem?.unit || '');
@@ -2338,13 +2343,13 @@ export function FoodImportTemplateModal({
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const buildItem = () => {
     const existingId = editingItem?.id;
+    const today = new Date().toISOString().slice(0, 10);
     if (type === 'FRESH') {
       const item: FreshTemplateItem = {
-        id: existingId || `FT_${Date.now()}`,
-        importDate: importDate.trim(),
+        id: existingId || `FT_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+        importDate: importDate.trim() || today,
         name: name.trim(),
         qty: qty.trim(),
         unit: unit.trim(),
@@ -2355,11 +2360,11 @@ export function FoodImportTemplateModal({
         vet: vet.trim(),
         quar: quar.trim(),
       };
-      onSave('FRESH', item, existingId);
+      return { item, existingId };
     } else {
       const item: DryTemplateItem = {
-        id: existingId || `DT_${Date.now()}`,
-        importDate: importDate.trim(),
+        id: existingId || `DT_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+        importDate: importDate.trim() || today,
         name: name.trim(),
         producer: producer.trim(),
         prod_addr: prodAddr.trim(),
@@ -2369,8 +2374,43 @@ export function FoodImportTemplateModal({
         deliverer: deliverer.trim(),
         addr: addr.trim(),
       };
-      onSave('DRY', item, existingId);
+      return { item, existingId };
     }
+  };
+
+  const resetFieldsForNext = () => {
+    setName('');
+    setQty('');
+    setUnit('');
+    setSupplier('');
+    setAddr('');
+    setDeliverer('');
+    setDoc('');
+    setVet('');
+    setQuar('');
+    setProducer('');
+    setProdAddr('');
+    setTimeout(() => {
+      nameInputRef.current?.focus();
+    }, 50);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) return;
+    const { item, existingId } = buildItem();
+    onSave(type, item, existingId, false);
+  };
+
+  const handleSaveAndAddNew = () => {
+    if (!name.trim()) {
+      nameInputRef.current?.reportValidity();
+      nameInputRef.current?.focus();
+      return;
+    }
+    const { item, existingId } = buildItem();
+    onSave(type, item, existingId, true);
+    resetFieldsForNext();
   };
 
   return (
@@ -2403,6 +2443,7 @@ export function FoodImportTemplateModal({
             <div className="sm:col-span-7">
               <label className="block font-bold mb-1">Tên thực phẩm *:</label>
               <input
+                ref={nameInputRef}
                 type="text"
                 required
                 value={name}
@@ -2535,7 +2576,7 @@ export function FoodImportTemplateModal({
             )}
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">
+          <div className="flex flex-wrap justify-end gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">
             <button
               type="button"
               onClick={onClose}
@@ -2543,6 +2584,16 @@ export function FoodImportTemplateModal({
             >
               Đóng
             </button>
+            {!isEdit && (
+              <button
+                type="button"
+                onClick={handleSaveAndAddNew}
+                className="px-4 py-2 rounded-xl border border-emerald-600 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 font-bold flex items-center gap-1.5 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Lưu và thêm mới</span>
+              </button>
+            )}
             <button
               type="submit"
               className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold flex items-center gap-1.5 cursor-pointer"
@@ -2552,6 +2603,287 @@ export function FoodImportTemplateModal({
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  );
+}
+
+// =====================================================================
+// 6. EXCEL IMPORT MODAL FOR DANH SÁCH NHẬP THỰC PHẨM (FRESH / DRY)
+// =====================================================================
+export interface FoodImportTemplateExcelModalProps {
+  isOpen: boolean;
+  initialType: 'FRESH' | 'DRY';
+  defaultDate: string;
+  onClose: () => void;
+  onConfirmImport: (
+    type: 'FRESH' | 'DRY',
+    items: (FreshTemplateItem | DryTemplateItem)[]
+  ) => void;
+}
+
+export function FoodImportTemplateExcelModal({
+  isOpen,
+  initialType,
+  defaultDate,
+  onClose,
+  onConfirmImport,
+}: FoodImportTemplateExcelModalProps) {
+  const [type, setType] = useState<'FRESH' | 'DRY'>(initialType);
+  const [targetDate, setTargetDate] = useState<string>(defaultDate);
+  const [mode, setMode] = useState<'upload' | 'paste'>('upload');
+  const [pasteText, setPasteText] = useState<string>('');
+  const [parsedItems, setParsedItems] = useState<(FreshTemplateItem | DryTemplateItem)[]>([]);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setType(initialType);
+      setTargetDate(defaultDate || new Date().toISOString().slice(0, 10));
+      setParsedItems([]);
+      setPasteText('');
+    }
+  }, [isOpen, initialType, defaultDate]);
+
+  if (!isOpen) return null;
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = new Uint8Array(ev.target?.result as ArrayBuffer);
+        const wb = XLSX.read(data, { type: 'array', cellDates: true });
+        const sheetName = wb.SheetNames[0];
+        const ws = wb.Sheets[sheetName];
+        const jsonRows: any[][] = XLSX.utils.sheet_to_json(ws, {
+          header: 1,
+          raw: false,
+          dateNF: 'yyyy-mm-dd',
+        });
+        if (!jsonRows || jsonRows.length <= 1) {
+          alert('File Excel không có dữ liệu hoặc chỉ có dòng tiêu đề!');
+          return;
+        }
+        const formatted = parseFoodImportTemplateRows(
+          jsonRows.slice(1),
+          type,
+          targetDate
+        );
+        if (!formatted.length) {
+          alert('Không có dữ liệu thực phẩm hợp lệ nào được tìm thấy trong file!');
+          return;
+        }
+        setParsedItems(formatted);
+      } catch (err: any) {
+        alert('Lỗi khi đọc file Excel: ' + (err.message || err));
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
+  const handleParsePaste = () => {
+    if (!pasteText.trim()) {
+      alert('Vui lòng dán nội dung từ Excel vào ô trước!');
+      return;
+    }
+    const rawRows = pasteText
+      .trim()
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => line.split('\t'));
+    const formatted = parseFoodImportTemplateRows(rawRows, type, targetDate);
+    if (!formatted.length) {
+      alert('Không tìm thấy dòng dữ liệu hợp lệ nào!');
+      return;
+    }
+    setParsedItems(formatted);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-xs">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="bg-emerald-700 px-5 py-3.5 text-white flex items-center justify-between">
+          <div className="flex items-center gap-2 font-bold text-sm">
+            <FileSpreadsheet className="w-5 h-5" />
+            <span>Nhập Danh Sách Thực Phẩm Từ File Excel Mẫu</span>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1 rounded-lg hover:bg-white/10 text-white cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="p-5 overflow-y-auto space-y-4 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <div className="sm:col-span-5">
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                1. Chọn danh sách cần nhập:
+              </label>
+              <select
+                value={type}
+                onChange={(e) => {
+                  setType(e.target.value as 'FRESH' | 'DRY');
+                  setParsedItems([]);
+                }}
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-semibold"
+              >
+                <option value="FRESH">1. Thực phẩm tươi sống</option>
+                <option value="DRY">2. Thực phẩm khô</option>
+              </select>
+            </div>
+
+            <div className="sm:col-span-3">
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                2. Ngày nhập hàng mặc định:
+              </label>
+              <input
+                type="date"
+                value={targetDate}
+                onChange={(e) => setTargetDate(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-semibold"
+              />
+            </div>
+
+            <div className="sm:col-span-4 flex items-end">
+              <button
+                type="button"
+                onClick={() => downloadFoodImportTemplateSampleExcel(type, targetDate)}
+                className="w-full px-3 py-2 rounded-xl border border-emerald-600 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Download className="w-4 h-4" />
+                <span>Tải file Excel mẫu (.xlsx)</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="flex gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <button
+              type="button"
+              onClick={() => setMode('upload')}
+              className={`px-3.5 py-1.5 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer ${
+                mode === 'upload'
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+              }`}
+            >
+              <Upload className="w-3.5 h-3.5" />
+              <span>Tải lên file Excel (.xlsx, .xls, .csv)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('paste')}
+              className={`px-3.5 py-1.5 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer ${
+                mode === 'paste'
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+              }`}
+            >
+              <ClipboardPaste className="w-3.5 h-3.5" />
+              <span>Copy &amp; Dán trực tiếp từ Excel</span>
+            </button>
+          </div>
+
+          {mode === 'upload' ? (
+            <div
+              onClick={() => fileRef.current?.click()}
+              className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-emerald-500 rounded-2xl p-6 text-center bg-slate-50 dark:bg-slate-800/40 cursor-pointer transition-colors"
+            >
+              <FileSpreadsheet className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
+              <div className="font-bold text-slate-800 dark:text-slate-200">
+                Nhấp vào đây để chọn tệp Excel từ máy tính của bạn
+              </div>
+              <div className="text-slate-500 mt-0.5">Hỗ trợ định dạng: .xlsx, .xls, .csv</div>
+              <input
+                ref={fileRef}
+                type="file"
+                accept=".xlsx,.xls,.csv"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <p className="text-slate-500">
+                Mở Excel, quét chọn vùng dữ liệu rồi nhấn <b>Ctrl + C</b>, sau đó nhấp vào ô bên dưới và nhấn <b>Ctrl + V</b>:
+              </p>
+              <textarea
+                rows={4}
+                value={pasteText}
+                onChange={(e) => setPasteText(e.target.value)}
+                placeholder="Dán nội dung sao chép từ Excel vào đây..."
+                className="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono text-xs"
+              />
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleParsePaste}
+                  className="px-3.5 py-1.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold cursor-pointer"
+                >
+                  Phân tích dữ liệu đã dán
+                </button>
+              </div>
+            </div>
+          )}
+
+          {parsedItems.length > 0 && (
+            <div className="space-y-2">
+              <div className="font-bold text-emerald-700 dark:text-emerald-400">
+                Xem trước dữ liệu đọc được ({parsedItems.length} thực phẩm):
+              </div>
+              <div className="max-h-56 overflow-auto rounded-xl border border-slate-200 dark:border-slate-700">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead className="bg-slate-100 dark:bg-slate-800 sticky top-0 font-bold">
+                    <tr>
+                      <th className="p-2 border-b border-slate-200 dark:border-slate-700 text-center">STT</th>
+                      <th className="p-2 border-b border-slate-200 dark:border-slate-700">Ngày nhập hàng</th>
+                      <th className="p-2 border-b border-slate-200 dark:border-slate-700">Tên thực phẩm</th>
+                      <th className="p-2 border-b border-slate-200 dark:border-slate-700">Khối lượng / ĐVT</th>
+                      <th className="p-2 border-b border-slate-200 dark:border-slate-700">Cơ sở cung cấp</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {parsedItems.map((it, idx) => (
+                      <tr key={idx}>
+                        <td className="p-2 text-center font-bold">{idx + 1}</td>
+                        <td className="p-2 font-mono">{it.importDate || ''}</td>
+                        <td className="p-2 font-bold">{it.name || ''}</td>
+                        <td className="p-2">
+                          {it.qty || ''} {it.unit || ''}
+                        </td>
+                        <td className="p-2">{it.supplier || ''}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="px-5 py-3 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-semibold cursor-pointer"
+          >
+            Hủy bỏ
+          </button>
+          <button
+            type="button"
+            disabled={parsedItems.length === 0}
+            onClick={() => onConfirmImport(type, parsedItems)}
+            className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+          >
+            <Check className="w-4 h-4" />
+            <span>Xác nhận thêm vào danh sách</span>
+          </button>
+        </div>
       </div>
     </div>
   );

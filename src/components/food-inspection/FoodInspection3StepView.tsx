@@ -25,6 +25,7 @@ import {
   FoodInspectionSettingsModal,
   FoodInspectionSingleEntryModal,
   FoodImportTemplateModal,
+  FoodImportTemplateExcelModal,
 } from './FoodInspectionModals';
 import {
   ShieldCheck,
@@ -75,6 +76,7 @@ export function FoodInspection3StepView() {
     editingItem: (FreshTemplateItem | DryTemplateItem) | null;
     editingIndex: number | null;
   } | null>(null);
+  const [importTemplateExcelType, setImportTemplateExcelType] = useState<'FRESH' | 'DRY' | null>(null);
   const [excelModalStep, setExcelModalStep] = useState<FoodInspectionStepKey | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [toastMsg, setToastMsg] = useState<{ text: string; isError?: boolean } | null>(null);
@@ -136,11 +138,13 @@ export function FoodInspection3StepView() {
   const handleSaveImportTemplate = (
     type: 'FRESH' | 'DRY',
     item: FreshTemplateItem | DryTemplateItem,
-    existingId?: string
+    existingId?: string,
+    keepOpen?: boolean
   ) => {
+    const editIdx = importTemplateModalState?.editingIndex;
+    const currentStore = storage.getFoodInspectionStore();
     if (type === 'FRESH') {
-      const list = [...(store.freshTemplates || [])];
-      const editIdx = importTemplateModalState?.editingIndex;
+      const list = [...(currentStore.freshTemplates || [])];
       if (existingId || (editIdx !== null && editIdx !== undefined && editIdx >= 0)) {
         const idx =
           editIdx !== null && editIdx !== undefined && editIdx >= 0
@@ -155,13 +159,12 @@ export function FoodInspection3StepView() {
         list.push(item as FreshTemplateItem);
       }
       persistStore({
-        ...store,
+        ...currentStore,
         freshTemplates: list,
         updatedAt: new Date().toISOString(),
       });
     } else {
-      const list = [...(store.dryTemplates || [])];
-      const editIdx = importTemplateModalState?.editingIndex;
+      const list = [...(currentStore.dryTemplates || [])];
       if (existingId || (editIdx !== null && editIdx !== undefined && editIdx >= 0)) {
         const idx =
           editIdx !== null && editIdx !== undefined && editIdx >= 0
@@ -176,28 +179,59 @@ export function FoodInspection3StepView() {
         list.push(item as DryTemplateItem);
       }
       persistStore({
-        ...store,
+        ...currentStore,
         dryTemplates: list,
         updatedAt: new Date().toISOString(),
       });
     }
-    setImportTemplateModalState(null);
-    showToast('Đã lưu vào danh sách nhập thực phẩm!');
+    if (!keepOpen) {
+      setImportTemplateModalState(null);
+    }
+    showToast(keepOpen ? 'Đã lưu! Bạn có thể nhập tiếp thực phẩm mới.' : 'Đã lưu vào danh sách nhập thực phẩm!');
+  };
+
+  const handleImportTemplateExcelConfirm = (
+    type: 'FRESH' | 'DRY',
+    items: (FreshTemplateItem | DryTemplateItem)[]
+  ) => {
+    const currentStore = storage.getFoodInspectionStore();
+    if (type === 'FRESH') {
+      persistStore({
+        ...currentStore,
+        freshTemplates: [
+          ...(currentStore.freshTemplates || []),
+          ...(items as FreshTemplateItem[]),
+        ],
+        updatedAt: new Date().toISOString(),
+      });
+    } else {
+      persistStore({
+        ...currentStore,
+        dryTemplates: [
+          ...(currentStore.dryTemplates || []),
+          ...(items as DryTemplateItem[]),
+        ],
+        updatedAt: new Date().toISOString(),
+      });
+    }
+    setImportTemplateExcelType(null);
+    setImportSubTab(type);
+    showToast(`Đã thêm thành công ${items.length} thực phẩm từ Excel vào danh sách!`);
   };
 
   const handleDeleteImportTemplate = (type: 'FRESH' | 'DRY', idx: number) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa mục này khỏi danh sách nhập thực phẩm?')) return;
+    const currentStore = storage.getFoodInspectionStore();
     if (type === 'FRESH') {
-      const next = (store.freshTemplates || []).filter((_, i) => i !== idx);
+      const next = (currentStore.freshTemplates || []).filter((_, i) => i !== idx);
       persistStore({
-        ...store,
+        ...currentStore,
         freshTemplates: next,
         updatedAt: new Date().toISOString(),
       });
     } else {
-      const next = (store.dryTemplates || []).filter((_, i) => i !== idx);
+      const next = (currentStore.dryTemplates || []).filter((_, i) => i !== idx);
       persistStore({
-        ...store,
+        ...currentStore,
         dryTemplates: next,
         updatedAt: new Date().toISOString(),
       });
@@ -288,10 +322,10 @@ export function FoodInspection3StepView() {
       showToast('Nhân viên không được phép xóa dữ liệu đã nhập!', true);
       return;
     }
-    if (!confirm('Bạn có chắc chắn muốn xóa bản ghi này khỏi danh sách?')) return;
-    const nextList = (store[stepKey] || []).filter((r) => r.id !== id);
+    const currentStore = storage.getFoodInspectionStore();
+    const nextList = (currentStore[stepKey] || []).filter((r) => r.id !== id);
     persistStore({
-      ...store,
+      ...currentStore,
       [stepKey]: nextList,
       updatedAt: new Date().toISOString(),
     });
@@ -1160,6 +1194,14 @@ export function FoodInspection3StepView() {
             <div className="flex items-center gap-2">
               <button
                 type="button"
+                onClick={() => setImportTemplateExcelType(importSubTab)}
+                className="px-3 py-1.5 rounded-xl border border-emerald-600 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+              >
+                <FileSpreadsheet className="w-3.5 h-3.5" />
+                <span>Nhập từ Excel</span>
+              </button>
+              <button
+                type="button"
                 onClick={() =>
                   setImportTemplateModalState({
                     type: importSubTab,
@@ -1352,6 +1394,13 @@ export function FoodInspection3StepView() {
         editingItem={importTemplateModalState?.editingItem || null}
         onClose={() => setImportTemplateModalState(null)}
         onSave={handleSaveImportTemplate}
+      />
+      <FoodImportTemplateExcelModal
+        isOpen={!!importTemplateExcelType}
+        initialType={importTemplateExcelType || 'FRESH'}
+        defaultDate={currentDate}
+        onClose={() => setImportTemplateExcelType(null)}
+        onConfirmImport={handleImportTemplateExcelConfirm}
       />
       <FoodInspectionBatchModal
         isOpen={!!batchModalStep}
