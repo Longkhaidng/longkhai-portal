@@ -199,24 +199,16 @@
       "addr": ""
     },
     {
-      "stt": 4,
+      "id": "DT_1794883037544_4d9k",
+      "importDate": "2026-11-17",
       "name": "Bơ lạt Anchor",
       "producer": "Fonterra Co-operative Group",
       "prod_addr": "New Zealand",
-      "time": "07:20",
       "qty": "5",
       "unit": "Khối (kg)",
-      "supplier": "Cty TNHH TM Thực phẩm Đại Phát",
-      "deliverer": "Đặng Hoàng Nam",
-      "addr": "34 Hùng Vương, Đà Nẵng",
-      "phone": "0905777888",
-      "exp": "NSX: 03/2026 - HSD: 03/2027",
-      "storage": "Lạnh",
-      "doc": "HĐ 9021",
-      "cert": "Giấy kiểm dịch NK",
-      "sense": "Đạt",
-      "handle": "Lưu tủ đông/mát chuyên dụng",
-      "note": ""
+      "supplier": "",
+      "deliverer": "",
+      "addr": ""
     },
     {
       "stt": 5,
@@ -425,5 +417,5 @@
       "note": "Mẫu lưu an toàn"
     }
   ],
-  "updatedAt": "2026-11-17T02:37:12.000Z"
+  "updatedAt": "2026-11-17T02:37:17.544Z"
 }
