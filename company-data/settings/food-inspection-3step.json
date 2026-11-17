@@ -161,19 +161,6 @@
       "quar": ""
     },
     {
-      "id": "FT_1794812848330",
-      "importDate": "",
-      "name": "Rau muống",
-      "qty": "8.0",
-      "unit": "kg",
-      "supplier": "HTX Rau an toàn Hòa Vang",
-      "addr": "Xã Hòa Vang, Đà Nẵng",
-      "deliverer": "Lê Văn Tuấn (0905666777)",
-      "doc": "",
-      "vet": "",
-      "quar": ""
-    },
-    {
       "id": "FT_1794812832427",
       "importDate": "",
       "name": "Hành lá, ngò rí",
@@ -475,5 +462,5 @@
       "note": "Mẫu lưu an toàn"
     }
   ],
-  "updatedAt": "2026-11-17T02:10:01.382Z"
+  "updatedAt": "2026-11-17T02:10:05.700Z"
 }
