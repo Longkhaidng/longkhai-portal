@@ -245,27 +245,6 @@
   ],
   "STEP2_COOKING": [
     {
-      "id": "CB_1794905103833_1",
-      "rowIndex": 2,
-      "date": "2026-11-17",
-      "col_0": "CB_1794905103833_1",
-      "col_1": "2026-11-17",
-      "col_2": "HC 11:30",
-      "col_3": "Thịt vịt kho đậu",
-      "col_4": "Thịt vịt",
-      "col_5": "25 kg",
-      "col_6": "220",
-      "col_7": "",
-      "col_8": "",
-      "col_9": "",
-      "col_10": "",
-      "col_11": "",
-      "col_12": "",
-      "col_13": "",
-      "col_14": "Trần Lê Hữu Lực",
-      "col_15": ""
-    },
-    {
       "id": "CB_1794905103833_2",
       "rowIndex": 3,
       "date": "2026-11-17",
@@ -479,5 +458,5 @@
   "cookingTemplates": [],
   "servingTemplates": [],
   "sampleFoodTemplates": [],
-  "updatedAt": "2026-11-17T08:45:03.833Z"
+  "updatedAt": "2026-11-17T08:45:19.329Z"
 }
