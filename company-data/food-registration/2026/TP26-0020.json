@@ -13,7 +13,7 @@
   "foodDetails": "Nước thuốc (Lý do: Nước thuốc đau đầu)",
   "medicineReason": "Nước thuốc đau đầu",
   "complianceCommitment": true,
-  "status": "pending_hr",
+  "status": "rejected",
   "steps": [
     {
       "stepName": "Trưởng phòng HCNS",
@@ -23,5 +23,8 @@
   ],
   "currentStepIndex": 0,
   "createdAt": "2026-11-19T07:36:05.042Z",
-  "updatedAt": "2026-11-19T07:36:05.042Z"
+  "updatedAt": "2026-11-19T08:15:30.146Z",
+  "rejectedReason": "Không thống nhất đề nghị",
+  "rejectedBy": "Trương Anh Như Quỳnh",
+  "rejectedAt": "2026-11-19T08:15:30.146Z"
 }
