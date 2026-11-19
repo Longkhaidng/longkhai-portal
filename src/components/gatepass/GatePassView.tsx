@@ -1015,8 +1015,8 @@ export function GatePassView() {
 
           {/* Table - Dual Responsive View */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
-            {/* Mobile Card View (md:hidden) */}
-            <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800 max-h-[640px] overflow-y-auto">
+            {/* Mobile Card View (md:hidden landscape:hidden) */}
+            <div className="md:hidden landscape:hidden divide-y divide-slate-100 dark:divide-slate-800 max-h-[640px] overflow-y-auto">
               {filtered.length === 0 ? (
                 <div className="py-10 px-4 text-center text-slate-400 text-xs">
                   <QrCode className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2 opacity-60" />
@@ -1154,26 +1154,26 @@ export function GatePassView() {
               )}
             </div>
 
-            {/* Desktop Table View (hidden md:block) */}
-            <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-[600px] rounded-2xl scrollbar-thin">
-              <table className="w-full text-left border-collapse text-xs min-w-[960px]">
+            {/* Desktop & Landscape Table View */}
+            <div className="hidden md:block landscape:block overflow-x-auto overflow-y-auto max-h-[600px] rounded-2xl scrollbar-thin">
+              <table className="w-full text-left border-separate border-spacing-0 text-xs min-w-[960px]">
                 <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider">
                   <tr>
-                    <th className="py-3.5 px-4">Mã phiếu</th>
-                    <th className="py-3.5 px-4">Người yêu cầu</th>
-                    <th className="py-3.5 px-4">Lý do ra - vào cổng</th>
-                    <th className="py-3.5 px-4">Tài sản mang theo</th>
-                    <th className="py-3.5 px-4">Thời gian dự kiến</th>
-                    <th className="py-3.5 px-4">Thời gian ra thực tế</th>
-                    <th className="py-3.5 px-4">Thời gian vào thực tế</th>
-                    <th className="py-3.5 px-4">Trạng thái</th>
-                    <th className="py-3.5 px-4 text-right">Mã QR</th>
+                    <th className="sticky top-0 left-0 z-30 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 whitespace-nowrap w-[95px] min-w-[95px] border-b border-slate-200 dark:border-slate-700">Mã phiếu</th>
+                    <th className="sticky top-0 left-[95px] z-30 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 whitespace-nowrap w-[170px] min-w-[170px] border-b border-r border-slate-200 dark:border-slate-700 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.06)] dark:shadow-[4px_0_8px_-2px_rgba(0,0,0,0.3)]">Người yêu cầu</th>
+                    <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Lý do ra - vào cổng</th>
+                    <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Tài sản mang theo</th>
+                    <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Thời gian dự kiến</th>
+                    <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Thời gian ra thực tế</th>
+                    <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Thời gian vào thực tế</th>
+                    <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Trạng thái</th>
+                    <th className="py-3.5 px-4 text-right border-b border-slate-200 dark:border-slate-700">Mã QR</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                <tbody>
                   {filtered.length === 0 ? (
                     <tr>
-                      <td colSpan={9} className="py-8 text-center text-slate-400">
+                      <td colSpan={9} className="py-8 text-center text-slate-400 border-b border-slate-100 dark:border-slate-800">
                         Không có phiếu ra vào cổng nào.
                       </td>
                     </tr>
@@ -1181,13 +1181,13 @@ export function GatePassView() {
                     filtered.map((item, idx) => (
                       <tr
                         key={`${item.id}-${idx}`}
-                        className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 cursor-pointer transition-colors"
+                        className="group hover:bg-slate-50/80 dark:hover:bg-slate-800/40 cursor-pointer transition-colors"
                         onClick={() => setSelectedPass(item)}
                       >
-                        <td className="py-3 px-4 font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                        <td className="sticky left-0 z-20 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/80 transition-colors py-3 px-4 font-mono font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap w-[95px] min-w-[95px] border-b border-slate-100 dark:border-slate-800">
                           {item.id}
                         </td>
-                        <td className="py-3 px-4">
+                        <td className="sticky left-[95px] z-20 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/80 transition-colors py-3 px-4 whitespace-nowrap w-[170px] min-w-[170px] border-b border-r border-slate-100 dark:border-slate-800 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.06)] dark:shadow-[4px_0_8px_-2px_rgba(0,0,0,0.3)]">
                           <div className="font-bold text-slate-900 dark:text-white">
                             {item.employeeName}
                           </div>
@@ -1195,7 +1195,7 @@ export function GatePassView() {
                             {item.employeeId} &bull; {item.department}
                           </div>
                         </td>
-                        <td className="py-3 px-4">
+                        <td className="py-3 px-4 border-b border-slate-100 dark:border-slate-800">
                           <div className="font-medium text-slate-800 dark:text-slate-200 line-clamp-2 max-w-[260px]">
                             {item.purpose}
                           </div>

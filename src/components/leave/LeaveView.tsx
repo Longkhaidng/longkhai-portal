@@ -728,8 +728,8 @@ export function LeaveView() {
 
       {/* Leave Requests - Dual Responsive View */}
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
-        {/* Mobile Card View (md:hidden) */}
-        <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800 max-h-[640px] overflow-y-auto">
+        {/* Mobile Card View (md:hidden landscape:hidden) */}
+        <div className="md:hidden landscape:hidden divide-y divide-slate-100 dark:divide-slate-800 max-h-[640px] overflow-y-auto">
           {filteredLeaves.length === 0 ? (
             <div className="py-10 px-4 text-center text-slate-400 text-xs">
               <CalendarDays className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2 opacity-60" />
@@ -826,24 +826,24 @@ export function LeaveView() {
           )}
         </div>
 
-        {/* Desktop Table View (hidden md:block) */}
-        <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-[600px] rounded-2xl scrollbar-thin">
-          <table className="w-full text-left border-collapse text-xs min-w-[900px]">
+        {/* Desktop & Landscape Table View */}
+        <div className="hidden md:block landscape:block overflow-x-auto overflow-y-auto max-h-[600px] rounded-2xl scrollbar-thin">
+          <table className="w-full text-left border-separate border-spacing-0 text-xs min-w-[900px]">
             <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider">
               <tr>
-                <th className="py-3.5 px-4">Mã đơn</th>
-                <th className="py-3.5 px-4">Nhân viên</th>
-                <th className="py-3.5 px-4">Loại phép</th>
-                <th className="py-3.5 px-4">Thời gian nghỉ</th>
-                <th className="py-3.5 px-4">Tiến trình duyệt</th>
-                <th className="py-3.5 px-4">Trạng thái</th>
-                <th className="py-3.5 px-4 text-right">Chi tiết</th>
+                <th className="sticky top-0 left-0 z-30 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 whitespace-nowrap w-[95px] min-w-[95px] border-b border-slate-200 dark:border-slate-700">Mã đơn</th>
+                <th className="sticky top-0 left-[95px] z-30 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 whitespace-nowrap w-[170px] min-w-[170px] border-b border-r border-slate-200 dark:border-slate-700 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.06)] dark:shadow-[4px_0_8px_-2px_rgba(0,0,0,0.3)]">Nhân viên</th>
+                <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Loại phép</th>
+                <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Thời gian nghỉ</th>
+                <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Tiến trình duyệt</th>
+                <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Trạng thái</th>
+                <th className="py-3.5 px-4 text-right border-b border-slate-200 dark:border-slate-700">Chi tiết</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+            <tbody>
               {filteredLeaves.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-slate-400">
+                  <td colSpan={7} className="py-8 text-center text-slate-400 border-b border-slate-100 dark:border-slate-800">
                     Không tìm thấy đơn nghỉ phép nào.
                   </td>
                 </tr>
@@ -852,12 +852,12 @@ export function LeaveView() {
                   <tr
                     key={`${l.id}-${idx}`}
                     onClick={() => setSelectedLeave(l)}
-                    className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 cursor-pointer transition-colors"
+                    className="group hover:bg-slate-50/80 dark:hover:bg-slate-800/40 cursor-pointer transition-colors"
                   >
-                    <td className="py-3 px-4 font-mono font-bold text-blue-600 dark:text-blue-400">
+                    <td className="sticky left-0 z-20 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/80 transition-colors py-3 px-4 font-mono font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap w-[95px] min-w-[95px] border-b border-slate-100 dark:border-slate-800">
                       {l.id}
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="sticky left-[95px] z-20 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/80 transition-colors py-3 px-4 whitespace-nowrap w-[170px] min-w-[170px] border-b border-r border-slate-100 dark:border-slate-800 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.06)] dark:shadow-[4px_0_8px_-2px_rgba(0,0,0,0.3)]">
                       <div className="font-bold text-slate-900 dark:text-white">
                         {l.employeeName}
                       </div>
@@ -865,7 +865,7 @@ export function LeaveView() {
                         {l.employeeId} &bull; {l.department}
                       </div>
                     </td>
-                    <td className="py-3 px-4 font-medium text-slate-700 dark:text-slate-300">
+                    <td className="py-3 px-4 font-medium text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800">
                       {LEAVE_TYPE_LABELS[l.leaveType]}
                     </td>
                     <td className="py-3 px-4">
