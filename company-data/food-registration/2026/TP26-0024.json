@@ -1,0 +1,31 @@
+{
+  "id": "TP26-0024",
+  "employeeId": "2864",
+  "employeeName": "Nguyễn Đình Linh",
+  "createdById": "2864",
+  "createdByName": "Nguyễn Đình Linh",
+  "department": "Phòng quản lý sản xuất",
+  "entryDate": "2026-11-19",
+  "toDate": "2026-12-02",
+  "durationDays": 14,
+  "category": "pregnant",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Bánh + Sữa hoặc Trái cây + Sữa",
+  "complianceCommitment": true,
+  "status": "pending_dept",
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận",
+      "roleRequired": "manager",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-19T15:31:52.143Z",
+  "updatedAt": "2026-11-19T15:31:52.143Z"
+}
