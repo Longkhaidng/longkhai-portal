@@ -1,0 +1,25 @@
+{
+  "id": "TP26-0012",
+  "employeeId": "2265",
+  "employeeName": "Trần Lê Hữu Lực",
+  "department": "Bộ Phận CNTT",
+  "entryDate": "2026-11-20",
+  "toDate": "2026-11-22",
+  "durationDays": 3,
+  "category": "medicine_drink",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Nước thuốc (Lý do: Thuốc đau dạ dày)",
+  "medicineReason": "Thuốc đau dạ dày",
+  "complianceCommitment": true,
+  "status": "pending_hr",
+  "steps": [
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-19T02:14:26.151Z",
+  "updatedAt": "2026-11-19T02:14:26.151Z"
+}
