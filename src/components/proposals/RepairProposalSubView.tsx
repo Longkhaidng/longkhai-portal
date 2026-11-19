@@ -786,7 +786,7 @@ export function RepairProposalSubView({ defaultTab = 'create' }: RepairProposalS
           {/* Proposals Table - Dual Responsive View */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
             {/* Mobile Card View (md:hidden) */}
-            <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
+            <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800 max-h-[640px] overflow-y-auto">
               {filteredProposals.length === 0 ? (
                 <div className="px-4 py-12 text-center text-slate-400">
                   <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-slate-300 opacity-60" />
@@ -868,9 +868,9 @@ export function RepairProposalSubView({ defaultTab = 'create' }: RepairProposalS
             </div>
 
             {/* Desktop Table View (hidden md:block) */}
-            <div className="hidden md:block overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50/80 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
+            <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-[600px] rounded-2xl scrollbar-thin">
+              <table className="w-full text-left text-xs min-w-[850px]">
+                <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider">
                   <tr>
                     <th className="px-4 py-3">Mã phiếu</th>
                     <th className="px-4 py-3">Người đề xuất</th>

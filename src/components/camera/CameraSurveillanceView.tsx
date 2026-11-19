@@ -1083,11 +1083,10 @@ export function CameraSurveillanceView() {
 
           {/* TABLE - MATCHES camera_list.png */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/75 dark:bg-slate-800/40 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    <th className="py-3.5 px-4">Mã yêu cầu</th>
+            <div className="overflow-x-auto overflow-y-auto max-h-[600px] rounded-2xl scrollbar-thin">
+              <table className="w-full text-left border-collapse min-w-[850px]">
+                <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs border-b border-slate-200 dark:border-slate-700 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  <tr>
                     <th className="py-3.5 px-4">Ngày đăng ký</th>
                     <th className="py-3.5 px-4">Camera</th>
                     <th className="py-3.5 px-4">Mục đích</th>

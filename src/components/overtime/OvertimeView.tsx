@@ -377,11 +377,18 @@ export function OvertimeView() {
   }, [registrations]);
 
   // Filtered tracking items
+  const isRegularEmployee = !canApprove && !canAddTeam;
+
   const filteredTrackingItems = useMemo(() => {
     return allTrackingItems.filter((entry) => {
       const { item, regDate } = entry;
 
-      if (myOvertimeOnly && currentUser && item.employeeId !== currentUser.id) {
+      // Nhân viên chỉ được phép thấy đơn tăng ca của chính mình
+      if (isRegularEmployee && currentUser && item.employeeId.toLowerCase() !== currentUser.id.toLowerCase()) {
+        return false;
+      }
+
+      if (myOvertimeOnly && currentUser && item.employeeId.toLowerCase() !== currentUser.id.toLowerCase()) {
         return false;
       }
       if (trackingDateFilter && regDate !== trackingDateFilter) {
@@ -407,6 +414,7 @@ export function OvertimeView() {
     });
   }, [
     allTrackingItems,
+    isRegularEmployee,
     myOvertimeOnly,
     currentUser,
     trackingDateFilter,
@@ -415,12 +423,19 @@ export function OvertimeView() {
     searchTracking,
   ]);
 
-  // KPI counts
-  const totalOvertimeEntries = allTrackingItems.length;
-  const pendingConfirmCount = allTrackingItems.filter((e) => e.item.employeeConfirmStatus === 'pending').length;
-  const confirmedCount = allTrackingItems.filter((e) => e.item.employeeConfirmStatus === 'confirmed').length;
-  const pendingApprovalCount = allTrackingItems.filter((e) => e.item.approvalStatus === 'pending').length;
-  const approvedCount = allTrackingItems.filter((e) => e.item.approvalStatus === 'approved').length;
+  // KPI counts based on user permissions
+  const userVisibleTrackingItems = useMemo(() => {
+    if (isRegularEmployee && currentUser) {
+      return allTrackingItems.filter((e) => e.item.employeeId.toLowerCase() === currentUser.id.toLowerCase());
+    }
+    return allTrackingItems;
+  }, [allTrackingItems, isRegularEmployee, currentUser]);
+
+  const totalOvertimeEntries = userVisibleTrackingItems.length;
+  const pendingConfirmCount = userVisibleTrackingItems.filter((e) => e.item.employeeConfirmStatus === 'pending').length;
+  const confirmedCount = userVisibleTrackingItems.filter((e) => e.item.employeeConfirmStatus === 'confirmed').length;
+  const pendingApprovalCount = userVisibleTrackingItems.filter((e) => e.item.approvalStatus === 'pending').length;
+  const approvedCount = userVisibleTrackingItems.filter((e) => e.item.approvalStatus === 'approved').length;
 
   // Handle employee confirmation from modal
   const handleEmployeeConfirmSubmit = (
@@ -1155,7 +1170,7 @@ export function OvertimeView() {
               </select>
             </div>
 
-            {currentUser && (
+            {currentUser && !isRegularEmployee && (
               <label className="flex items-center gap-1.5 cursor-pointer font-bold text-blue-600 ml-auto">
                 <input
                   type="checkbox"
@@ -1170,9 +1185,9 @@ export function OvertimeView() {
 
           {/* Tracking Table matching User Image 2 */}
           <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
+            <div className="overflow-x-auto overflow-y-auto max-h-[600px] rounded-2xl scrollbar-thin">
+              <table className="w-full text-left border-collapse text-xs min-w-[1100px]">
+                <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs border-b border-slate-200 dark:border-slate-700 font-bold text-slate-700 dark:text-slate-300 text-center whitespace-nowrap">
                   <tr className="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 font-bold text-slate-700 dark:text-slate-300 text-center whitespace-nowrap">
                     <th className="p-3 w-10">STT</th>
                     <th className="p-3">Ngày gửi đơn</th>

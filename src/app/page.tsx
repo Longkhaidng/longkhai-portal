@@ -92,10 +92,13 @@ function PortalAppContent() {
           else if (targetType === 'stationery') setCurrentTab('proposals_stationery');
           else if (targetType === 'general') setCurrentTab('proposals_general');
           else if (targetType === 'food' || targetType === 'food_registration') setCurrentTab('food_registration');
+        } else {
+          // Mặc định khi người lao động đăng nhập vào hệ thống luôn chuyển đến trang chủ dashboard
+          setCurrentTab('dashboard');
         }
       }
     }
-  }, [currentUser]);
+  }, [currentUser?.id]);
 
   // Loading state
   if (isLoading) {

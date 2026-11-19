@@ -31,11 +31,13 @@ import {
   filterUserGatePasses,
   filterUserAttendances,
   filterUserFoodRegistrations,
+  filterUserRepairProposals,
   canApproveFoodDept,
   canApproveFoodHR,
   isApproverRole,
   isSuperAdminOrBOD,
   isSecurityRole,
+  isMaintenanceStaff,
 } from '@/lib/permissions';
 
 interface DashboardViewProps {
@@ -85,22 +87,33 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
   const rawOvertime = useMemo(() => storage.getOvertimeRegistrations(), [dataVersion]);
   const announcementsList = useMemo(() => storage.getAnnouncements(), [dataVersion]);
 
+  const isSuperAdmin = isSuperAdminOrBOD(currentUser);
+  const isApprover = isApproverRole(currentUser);
+  const isMaintenance = isMaintenanceStaff(currentUser);
+  const isManager = currentUser?.role === 'manager' || currentUser?.role === 'team_leader';
+  const isSecurity = isSecurityRole(currentUser);
+  const uid = currentUser?.id.toLowerCase() || '';
+
   // Filtered collections
   const leaves = useMemo(() => {
-    return filterUserLeaves(rawLeaves, currentUser, isApproverRole(currentUser) ? 'all' : 'my');
-  }, [rawLeaves, currentUser]);
+    return filterUserLeaves(rawLeaves, currentUser, isApprover ? 'all' : 'my');
+  }, [rawLeaves, currentUser, isApprover]);
 
   const attendances = useMemo(() => {
-    return filterUserAttendances(rawAttendances, currentUser, canManageOthers ? 'all' : 'my');
-  }, [rawAttendances, currentUser, canManageOthers]);
+    return filterUserAttendances(rawAttendances, currentUser, isApprover ? 'all' : 'my');
+  }, [rawAttendances, currentUser, isApprover]);
 
   const gatePasses = useMemo(() => {
-    return filterUserGatePasses(rawGatePasses, currentUser, canManageOthers ? 'all' : 'my');
-  }, [rawGatePasses, currentUser, canManageOthers]);
+    return filterUserGatePasses(rawGatePasses, currentUser, (isApprover || isSecurity) ? 'all' : 'my');
+  }, [rawGatePasses, currentUser, isApprover, isSecurity]);
 
   const foodRegistrations = useMemo(() => {
-    return filterUserFoodRegistrations(rawFoods, currentUser, canManageOthers ? 'all' : 'my');
-  }, [rawFoods, currentUser, canManageOthers]);
+    return filterUserFoodRegistrations(rawFoods, currentUser, (isApprover || isSecurity) ? 'all' : 'my');
+  }, [rawFoods, currentUser, isApprover, isSecurity]);
+
+  const proposals = useMemo(() => {
+    return filterUserRepairProposals(rawProposals, currentUser, (isSuperAdmin || isMaintenance || isManager) ? 'all' : 'my');
+  }, [rawProposals, currentUser, isSuperAdmin, isMaintenance, isManager]);
 
   // Announcements list (pinned first, then newest)
   const announcements = useMemo(() => {
@@ -111,36 +124,83 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
     });
   }, [announcementsList]);
 
-  // Pending counts
-  const pendingLeaves = useMemo(() => leaves.filter((l) => l.status === 'pending'), [leaves]);
-  const pendingAttendances = useMemo(() => attendances.filter((a) => a.status === 'pending'), [attendances]);
-  const activeGatePasses = useMemo(
-    () => gatePasses.filter((g) => g.status === 'approved' || g.status === 'departed'),
-    [gatePasses]
-  );
+  // Pending counts & queues (Nhân viên thông thường CHỈ thấy đơn của chính mình)
+  const pendingLeaves = useMemo(() => {
+    if (!currentUser) return [];
+    if (!isApprover) {
+      return leaves.filter((l) => l.employeeId.toLowerCase() === uid && l.status === 'pending');
+    }
+    return leaves.filter((l) => l.status === 'pending');
+  }, [leaves, currentUser, isApprover, uid]);
+
+  const pendingAttendances = useMemo(() => {
+    if (!currentUser) return [];
+    if (!isApprover) {
+      return attendances.filter((a) => a.employeeId.toLowerCase() === uid && a.status === 'pending');
+    }
+    return attendances.filter((a) => a.status === 'pending');
+  }, [attendances, currentUser, isApprover, uid]);
+
+  const activeGatePasses = useMemo(() => {
+    if (!currentUser) return [];
+    if (!isApprover && !isSecurity) {
+      return gatePasses.filter((g) => g.employeeId.toLowerCase() === uid && (g.status === 'approved' || g.status === 'departed'));
+    }
+    return gatePasses.filter((g) => g.status === 'approved' || g.status === 'departed');
+  }, [gatePasses, currentUser, isApprover, isSecurity, uid]);
+
   const activeFoodRegistrations = useMemo(() => {
+    if (!currentUser) return [];
     return foodRegistrations.filter((f) => {
+      const isMy = f.employeeId.toLowerCase() === uid || f.createdById?.toLowerCase() === uid;
+      if (!isApprover && !isSecurity && !isMy) return false;
       const v = checkFoodQrValidity(f);
       return v.isValid && !v.isExpired;
     });
-  }, [foodRegistrations]);
+  }, [foodRegistrations, currentUser, isApprover, isSecurity, uid]);
 
   const pendingFoods = useMemo(() => {
     if (!currentUser) return [];
+    if (!isApprover) {
+      return foodRegistrations.filter((f) => {
+        const isMy = f.employeeId.toLowerCase() === uid || f.createdById?.toLowerCase() === uid;
+        return isMy && (f.status === 'pending_dept' || f.status === 'pending_hr');
+      });
+    }
     return foodRegistrations.filter((f) => {
-      if (f.status === 'pending_dept') return canApproveFoodDept(currentUser, f);
-      if (f.status === 'pending_hr') return canApproveFoodHR(currentUser, f);
-      return false;
+      const isMy = f.employeeId.toLowerCase() === uid || f.createdById?.toLowerCase() === uid;
+      const canDept = canApproveFoodDept(currentUser, f);
+      const canHR = canApproveFoodHR(currentUser, f);
+      return canDept || canHR || (isMy && (f.status === 'pending_dept' || f.status === 'pending_hr'));
     });
-  }, [foodRegistrations, currentUser]);
+  }, [foodRegistrations, currentUser, isApprover, uid]);
 
   const pendingProposals = useMemo(() => {
-    return rawProposals.filter((p) => p.status === 'pending_manager' || p.status === 'maintenance_pending' || p.status === 'pending_confirmation');
-  }, [rawProposals]);
+    if (!currentUser) return [];
+    const canApproveProposals = isSuperAdmin || isMaintenance || isManager;
+    if (!canApproveProposals) {
+      // Nhân viên thông thường: CHỈ thấy đề xuất của chính mình
+      return proposals.filter((p) => p.employeeId.toLowerCase() === uid && p.status !== 'completed' && p.status !== 'rejected');
+    }
+    return proposals.filter((p) => {
+      const isMy = p.employeeId.toLowerCase() === uid;
+      if (isMy) return p.status !== 'completed' && p.status !== 'rejected';
+      if (isSuperAdmin) return p.status === 'pending_manager' || p.status === 'maintenance_pending' || p.status === 'pending_confirmation';
+      if (isMaintenance) return p.status === 'maintenance_pending';
+      if (isManager) return p.status === 'pending_manager';
+      return false;
+    });
+  }, [proposals, currentUser, isSuperAdmin, isMaintenance, isManager, uid]);
 
   const pendingOvertime = useMemo(() => {
+    if (!currentUser) return [];
+    const canApproveOT = isSuperAdmin || isManager;
+    if (!canApproveOT) {
+      // Nhân viên thông thường: CHỈ thấy đơn tăng ca của chính mình
+      return rawOvertime.filter((o) => (o.createdById?.toLowerCase() === uid || o.items?.some((it) => it.employeeId?.toLowerCase() === uid)) && o.status === 'pending');
+    }
     return rawOvertime.filter((o) => o.status === 'pending');
-  }, [rawOvertime]);
+  }, [rawOvertime, currentUser, isSuperAdmin, isManager, uid]);
 
   // Unified Actionable Task Items
   const taskItems: DashboardTaskItem[] = useMemo(() => {
@@ -540,8 +600,8 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
                 <p className="text-[11px] text-slate-400">Mọi hồ sơ đã được phê duyệt và giải quyết kịp thời.</p>
               </div>
             ) : (
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
-                {filteredTasks.slice(0, 6).map((task) => (
+              <div className="divide-y divide-slate-100 dark:divide-slate-800 max-h-[380px] overflow-y-auto pr-1">
+                {filteredTasks.map((task) => (
                   <div
                     key={`${task.type}-${task.id}`}
                     onClick={() => onNavigateTab(task.targetTab)}

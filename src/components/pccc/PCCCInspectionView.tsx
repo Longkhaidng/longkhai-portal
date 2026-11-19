@@ -990,9 +990,9 @@ export function PCCCInspectionView() {
             </div>
 
             {/* Master Devices Table - Co dãn tối ưu trên Desktop */}
-            <div className="hidden md:block overflow-x-auto">
+            <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-[600px] rounded-2xl scrollbar-thin">
               <table className="w-full text-left text-xs border-collapse min-w-[1080px]">
-              <thead className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold uppercase text-[10px] sm:text-[11px]">
+              <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold uppercase text-[10px] sm:text-[11px]">
                 <tr>
                   <th className="py-2.5 px-3 pl-4 w-32 min-w-[120px] whitespace-nowrap">MÃ THIẾT BỊ</th>
                   <th className="py-2.5 px-3 min-w-[220px]">TÊN THIẾT BỊ</th>

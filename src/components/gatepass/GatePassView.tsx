@@ -1016,7 +1016,7 @@ export function GatePassView() {
           {/* Table - Dual Responsive View */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
             {/* Mobile Card View (md:hidden) */}
-            <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
+            <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800 max-h-[640px] overflow-y-auto">
               {filtered.length === 0 ? (
                 <div className="py-10 px-4 text-center text-slate-400 text-xs">
                   <QrCode className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2 opacity-60" />
@@ -1155,10 +1155,10 @@ export function GatePassView() {
             </div>
 
             {/* Desktop Table View (hidden md:block) */}
-            <div className="hidden md:block overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-bold uppercase tracking-wider">
+            <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-[600px] rounded-2xl scrollbar-thin">
+              <table className="w-full text-left border-collapse text-xs min-w-[960px]">
+                <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider">
+                  <tr>
                     <th className="py-3.5 px-4">Mã phiếu</th>
                     <th className="py-3.5 px-4">Người yêu cầu</th>
                     <th className="py-3.5 px-4">Lý do ra - vào cổng</th>
