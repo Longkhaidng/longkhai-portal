@@ -75,8 +75,9 @@
     "isActive": true,
     "password": "BOD",
     "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-19T04:12:48.515Z",
-    "allowedWebIntegrations": []
+    "updatedAt": "2026-11-19T08:46:27.379Z",
+    "allowedWebIntegrations": [],
+    "email": "it@longkhai.com.vn"
   },
   {
     "id": "2864",
