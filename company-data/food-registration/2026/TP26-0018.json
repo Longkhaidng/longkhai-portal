@@ -13,7 +13,7 @@
   "foodDetails": "Nước thuốc (Lý do: Đau đầu)",
   "medicineReason": "Đau đầu",
   "complianceCommitment": true,
-  "status": "pending_hr",
+  "status": "approved",
   "steps": [
     {
       "stepName": "Trưởng bộ phận",
@@ -27,10 +27,14 @@
     {
       "stepName": "Trưởng phòng HCNS",
       "roleRequired": "hr",
-      "status": "pending"
+      "approverId": "1867",
+      "approverName": "Trương Anh Như Quỳnh",
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-11-19T06:49:03.972Z"
     }
   ],
-  "currentStepIndex": 1,
+  "currentStepIndex": 2,
   "createdAt": "2026-11-19T06:45:52.369Z",
-  "updatedAt": "2026-11-19T06:48:06.143Z"
+  "updatedAt": "2026-11-19T06:49:03.972Z"
 }
