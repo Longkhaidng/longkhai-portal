@@ -1227,9 +1227,9 @@ export function FoodRegistrationView() {
                               type="button"
                               onClick={() => setApprovingItem({ item, level: 'hr' })}
                               className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] cursor-pointer"
-                              title="HCNS duyệt"
+                              title="Trưởng phòng HCNS duyệt"
                             >
-                              HCNS duyệt
+                              Trưởng phòng HCNS duyệt
                             </button>
                           )}
                           {(canDeptApprove || canHRApprove) && (
