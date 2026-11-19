@@ -1,0 +1,32 @@
+{
+  "id": "TP26-0019",
+  "employeeId": "1927",
+  "employeeName": "Phan Hải Đăng",
+  "createdById": "1927",
+  "createdByName": "Phan Hải Đăng",
+  "department": "Cơ điện",
+  "entryDate": "2026-11-19",
+  "toDate": "2026-11-23",
+  "durationDays": 5,
+  "category": "medicine_drink",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Nước thuốc (Lý do: Đau dạ dày)",
+  "medicineReason": "Đau dạ dày",
+  "complianceCommitment": true,
+  "status": "pending_dept",
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận",
+      "roleRequired": "manager",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-19T06:52:47.403Z",
+  "updatedAt": "2026-11-19T06:52:47.403Z"
+}
