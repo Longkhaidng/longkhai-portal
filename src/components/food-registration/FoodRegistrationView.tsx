@@ -1264,7 +1264,7 @@ export function FoodRegistrationView() {
                         2. Thực phẩm chay
                       </span>
                       <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
-                        Dùng trong ngày (Kích hoạt nhanh)
+                        Dùng trong ngày
                       </span>
                     </div>
                   </button>
