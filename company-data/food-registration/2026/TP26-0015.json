@@ -1,0 +1,25 @@
+{
+  "id": "TP26-0015",
+  "employeeId": "1005",
+  "employeeName": "Dương Thị Thanh",
+  "department": "Phòng HCNS",
+  "entryDate": "2026-11-19",
+  "toDate": "2026-11-21",
+  "durationDays": 3,
+  "category": "medicine_drink",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Nước thuốc (Lý do: Thuốc dau đầu)",
+  "medicineReason": "Thuốc dau đầu",
+  "complianceCommitment": true,
+  "status": "pending_hr",
+  "steps": [
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-19T04:10:39.937Z",
+  "updatedAt": "2026-11-19T04:10:39.937Z"
+}
