@@ -21,6 +21,7 @@ import {
 import { FoodQrModal } from './FoodQrModal';
 import { getQrConfirmUrl, generateQrDataUrl } from '@/lib/qr';
 import { generateDocId, formatDate, formatDateTime, calculateEndDate, capitalizeFirstLetter, capitalizeWords } from '@/lib/utils';
+import { dispatchFoodRegistrationApprovalEmail } from '@/lib/email';
 import {
   isSecurityRole,
   isSuperAdminOrBOD,
@@ -129,6 +130,7 @@ export function FoodRegistrationView() {
   const isGuard = isSecurityRole(currentUser);
   const isAdmin = isSuperAdminOrBOD(currentUser);
   const isHR = isHRHead(currentUser);
+  const isHRStaff = isHR || currentUser?.role === 'hr' || currentUser?.role === 'cb';
   const isManager = currentUser?.role === 'manager';
   const isHRDeptEmployee = isHROrITDepartment(department.trim()) || isHROrITDepartment(currentUser?.department);
 
@@ -209,6 +211,31 @@ export function FoodRegistrationView() {
       }
     }
   }, [currentUser, isAdmin, isGuard, isHR, isManager]);
+
+  // Check URL params for direct approval link from email (?type=food_registration&id=...&action=approve)
+  useEffect(() => {
+    if (typeof window === 'undefined' || !currentUser) return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlType = urlParams.get('type');
+    const urlId = urlParams.get('id');
+    const urlAction = urlParams.get('action');
+
+    if ((urlType === 'food' || urlType === 'food_registration') && urlId) {
+      const all = storage.getFoodRegistrations();
+      const target = all.find((r) => r.id.toLowerCase() === urlId.toLowerCase());
+      if (target) {
+        setFilterSearch(urlId);
+        setActiveTab('approver');
+        const canDept = canApproveFoodDept(currentUser, target);
+        const canHR = canApproveFoodHR(currentUser, target);
+        if (urlAction === 'approve' && (canDept || canHR)) {
+          setApprovingItem({ item: target, level: canHR ? 'hr' : 'dept' });
+        } else if (urlAction === 'reject' && (canDept || canHR)) {
+          setRejectingItem({ item: target, level: 'approver' });
+        }
+      }
+    }
+  }, [currentUser]);
 
   // Handle Employee ID Change (when manager registers for others)
   const handleEmployeeIdChange = (empId: string) => {
@@ -419,9 +446,21 @@ export function FoodRegistrationView() {
 
         setRegistrations(storage.getFoodRegistrations());
         if (isDeptDirectToHR) {
-          showToast(`Gửi đơn thành công (${newId})! Đơn đã được chuyển trực tiếp đến Trưởng phòng HCNS duyệt.`);
+          dispatchFoodRegistrationApprovalEmail(newRegistration, 'hr').then((res) => {
+            if (res.success) {
+              showToast(`Gửi đơn thành công (${newId})! Đã gửi email thông báo đến Trưởng phòng HCNS (${res.toEmail || 'Quỳnh'}).`);
+            } else {
+              showToast(`Gửi đơn thành công (${newId})! Đơn đã được chuyển trực tiếp đến Trưởng phòng HCNS duyệt.`);
+            }
+          });
         } else {
-          showToast(`Gửi đơn thành công (${newId})! Đơn đang chuyển Trưởng bộ phận & Trưởng phòng HCNS duyệt.`);
+          dispatchFoodRegistrationApprovalEmail(newRegistration, 'dept').then((res) => {
+            if (res.success) {
+              showToast(`Gửi đơn thành công (${newId})! Đã gửi email thông báo đến Trưởng bộ phận (${res.toEmail || 'Quản lý'}).`);
+            } else {
+              showToast(`Gửi đơn thành công (${newId})! Đơn đang chuyển Trưởng bộ phận & Trưởng phòng HCNS duyệt.`);
+            }
+          });
         }
 
         // Bỏ phát sinh mở modal mã QR khi tạo phiếu xong theo yêu cầu
@@ -449,6 +488,16 @@ export function FoodRegistrationView() {
   const handleApproveSubmit = async () => {
     if (!approvingItem) return;
     const { item, level } = approvingItem;
+
+    // Phân quyền bảo mật: Nhân viên không được phép phê duyệt phiếu trừ các trưởng bộ phận và admin
+    const canDept = canApproveFoodDept(currentUser, item);
+    const canHR = canApproveFoodHR(currentUser, item);
+    if (!canDept && !canHR) {
+      showToast('Bạn không có quyền phê duyệt phiếu này!', 'error');
+      setApprovingItem(null);
+      return;
+    }
+
     const approver = {
       id: currentUser?.id || 'admin',
       name: currentUser?.name || 'Người duyệt',
@@ -456,7 +505,19 @@ export function FoodRegistrationView() {
 
     if (level === 'dept') {
       storage.approveFoodRegistrationByDept(item.id, approver, approvalComment);
-      showToast(`Trưởng BP đã duyệt đơn ${item.id}. Đơn đã chuyển đến Trưởng phòng HCNS!`);
+      const list = storage.getFoodRegistrations();
+      const updated = list.find((r) => r.id === item.id);
+      if (updated) {
+        dispatchFoodRegistrationApprovalEmail(updated, 'hr').then((res) => {
+          if (res.success) {
+            showToast(`Trưởng BP đã duyệt đơn ${item.id}. Đã gửi email đến Trưởng phòng HCNS (${res.toEmail || 'Quỳnh'})!`);
+          } else {
+            showToast(`Trưởng BP đã duyệt đơn ${item.id}. Đơn đã chuyển đến Trưởng phòng HCNS!`);
+          }
+        });
+      } else {
+        showToast(`Trưởng BP đã duyệt đơn ${item.id}. Đơn đã chuyển đến Trưởng phòng HCNS!`);
+      }
     } else {
       const qrUrl = getQrConfirmUrl('food', item.id);
       const qrDataUrl = await generateQrDataUrl(qrUrl);
@@ -483,6 +544,14 @@ export function FoodRegistrationView() {
     const reason = rejectReason.trim() || 'Không đảm bảo điều kiện quy định';
 
     if (level === 'approver') {
+      const canDept = canApproveFoodDept(currentUser, item);
+      const canHR = canApproveFoodHR(currentUser, item);
+      if (!canDept && !canHR) {
+        showToast('Bạn không có quyền từ chối phiếu này!', 'error');
+        setRejectingItem(null);
+        return;
+      }
+
       storage.rejectFoodRegistrationByApprover(
         item.id,
         { id: currentUser?.id || 'approver', name: currentUser?.name || 'Người duyệt' },
@@ -658,7 +727,7 @@ export function FoodRegistrationView() {
               <div className="flex flex-col justify-between h-full">
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 leading-snug">
                   Mã số NV (MSNV) *
-                  {!(isAdmin || isManager || isHR) && (
+                  {!(isAdmin || isManager || isHRStaff) && (
                     <span className="text-[10px] text-slate-400 font-normal ml-1">(Tài khoản của bạn)</span>
                   )}
                 </label>
@@ -666,12 +735,12 @@ export function FoodRegistrationView() {
                   <input
                     type="text"
                     required
-                    readOnly={!(isAdmin || isManager || isHR)}
+                    readOnly={!(isAdmin || isManager || isHRStaff)}
                     value={selectedEmployeeId}
                     onChange={(e) => handleEmployeeIdChange(e.target.value)}
                     placeholder="Ví dụ: 1008"
                     className={`w-full h-10 px-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white font-mono font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                      !(isAdmin || isManager || isHR) ? 'bg-slate-100 dark:bg-slate-800/80 cursor-not-allowed opacity-90' : 'bg-slate-50 dark:bg-slate-800'
+                      !(isAdmin || isManager || isHRStaff) ? 'bg-slate-100 dark:bg-slate-800/80 cursor-not-allowed opacity-90' : 'bg-slate-50 dark:bg-slate-800'
                     }`}
                   />
                   <UserIcon className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
@@ -685,13 +754,13 @@ export function FoodRegistrationView() {
                 <input
                   type="text"
                   required
-                  readOnly={!(isAdmin || isManager || isHR)}
+                  readOnly={!(isAdmin || isManager || isHRStaff)}
                   value={employeeName}
                   onChange={(e) => setEmployeeName(capitalizeWords(e.target.value))}
                   autoCapitalize="words"
                   placeholder="Họ và tên nhân viên"
                   className={`w-full h-10 px-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 mt-auto ${
-                    !(isAdmin || isManager || isHR) ? 'bg-slate-100 dark:bg-slate-800/80 cursor-not-allowed opacity-90' : 'bg-slate-50 dark:bg-slate-800'
+                    !(isAdmin || isManager || isHRStaff) ? 'bg-slate-100 dark:bg-slate-800/80 cursor-not-allowed opacity-90' : 'bg-slate-50 dark:bg-slate-800'
                   }`}
                 />
               </div>
@@ -706,13 +775,13 @@ export function FoodRegistrationView() {
                 <input
                   type="text"
                   required
-                  readOnly={!(isAdmin || isManager || isHR)}
+                  readOnly={!(isAdmin || isManager || isHRStaff)}
                   value={department}
                   onChange={(e) => setDepartment(capitalizeFirstLetter(e.target.value))}
                   autoCapitalize="sentences"
                   placeholder="Ví dụ: Phân xưởng may - Chuyền 2"
                   className={`w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                    !(isAdmin || isManager || isHR) ? 'bg-slate-100 dark:bg-slate-800/80 cursor-not-allowed opacity-90' : 'bg-slate-50 dark:bg-slate-800'
+                    !(isAdmin || isManager || isHRStaff) ? 'bg-slate-100 dark:bg-slate-800/80 cursor-not-allowed opacity-90' : 'bg-slate-50 dark:bg-slate-800'
                   }`}
                 />
                 <Building className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
@@ -1189,7 +1258,7 @@ export function FoodRegistrationView() {
                 </button>
               )}
 
-              {(isGuard || isHR || isAdmin) && (
+              {(isGuard || isHRStaff || isAdmin) && (
                 <button
                   type="button"
                   onClick={() => setActiveTab('all')}

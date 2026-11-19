@@ -622,7 +622,7 @@ export function isHRHead(user?: User | null): boolean {
   if (user.id === '1867') return true;
   const dept = (user.department || '').toLowerCase();
   const isHCNS = dept.includes('hcns') || dept.includes('hành chính') || dept.includes('nhân sự');
-  return isHCNS && (user.role === 'manager' || user.role === 'hr');
+  return isHCNS && user.role === 'manager';
 }
 
 /**

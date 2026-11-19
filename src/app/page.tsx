@@ -91,7 +91,7 @@ function PortalAppContent() {
           else if (targetType === 'repair') setCurrentTab('proposals_repair');
           else if (targetType === 'stationery') setCurrentTab('proposals_stationery');
           else if (targetType === 'general') setCurrentTab('proposals_general');
-          else if (targetType === 'food') setCurrentTab('food_registration');
+          else if (targetType === 'food' || targetType === 'food_registration') setCurrentTab('food_registration');
         }
       }
     }

@@ -15,7 +15,7 @@ function ensureDir(dirPath: string) {
   } catch {}
 }
 
-function findAndLoadDoc(type: 'leave' | 'gate_pass' | 'attendance' | 'repair' | 'stationery' | 'general', docId: string): { doc: any; relPath: string } | null {
+function findAndLoadDoc(type: 'leave' | 'gate_pass' | 'attendance' | 'repair' | 'stationery' | 'general' | 'food_registration', docId: string): { doc: any; relPath: string } | null {
   const cleanId = docId.toUpperCase();
   const subDir =
     type === 'leave'
@@ -28,6 +28,8 @@ function findAndLoadDoc(type: 'leave' | 'gate_pass' | 'attendance' | 'repair' | 
       ? 'stationery-proposal'
       : type === 'general'
       ? 'general-proposal'
+      : type === 'food_registration'
+      ? 'food-registration'
       : 'repair-proposal';
 
   // Helper search in a root directory
@@ -356,7 +358,7 @@ Vui lòng truy cập ${baseUrl} để tiếp nhận và cập nhật kết quả
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const type = searchParams.get('type') as 'leave' | 'gate_pass' | 'attendance' | 'repair' | 'stationery' | 'general' | null;
+    const type = searchParams.get('type') as 'leave' | 'gate_pass' | 'attendance' | 'repair' | 'stationery' | 'general' | 'food_registration' | null;
     const id = searchParams.get('id');
 
     if (!type || !id) {
@@ -420,7 +422,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { type, id, action, proposedSolution, comment, emailConfig, githubToken } = body as {
-      type: 'leave' | 'gate_pass' | 'attendance' | 'repair' | 'stationery' | 'general';
+      type: 'leave' | 'gate_pass' | 'attendance' | 'repair' | 'stationery' | 'general' | 'food_registration';
       id: string;
       action: 'approve' | 'reject';
       proposedSolution?: string;
@@ -678,6 +680,31 @@ export async function POST(req: NextRequest) {
         doc.rejectionReason = finalProposal || 'Từ chối qua Email';
       }
       doc.updatedAt = now;
+    } else if (type === 'food_registration') {
+      if (isApprove) {
+        if (doc.status === 'pending_dept') {
+          doc.status = 'pending_hr';
+          doc.currentStepIndex = 1;
+          if (Array.isArray(doc.steps) && doc.steps[0]) {
+            doc.steps[0].status = 'approved';
+            doc.steps[0].actionAt = now;
+            doc.steps[0].comment = comment || 'Trưởng bộ phận phê duyệt qua Email';
+          }
+        } else if (doc.status === 'pending_hr') {
+          doc.status = 'approved';
+          const hrStep = Array.isArray(doc.steps) ? (doc.steps.find((s: any) => s.stepName?.includes('Trưởng phòng HCNS')) || doc.steps[1] || doc.steps[0]) : null;
+          if (hrStep) {
+            hrStep.status = 'approved';
+            hrStep.actionAt = now;
+            hrStep.comment = comment || 'Trưởng phòng HCNS phê duyệt qua Email';
+          }
+        }
+      } else {
+        doc.status = 'rejected_approver';
+        doc.rejectionReason = comment || 'Từ chối qua Email';
+        doc.rejectedAt = now;
+      }
+      doc.updatedAt = now;
     }
 
     // Determine target save path if relPath was not found
@@ -689,6 +716,12 @@ export async function POST(req: NextRequest) {
           ? 'gate-pass'
           : type === 'attendance'
           ? 'attendance'
+          : type === 'stationery'
+          ? 'stationery-proposal'
+          : type === 'general'
+          ? 'general-proposal'
+          : type === 'food_registration'
+          ? 'food-registration'
           : 'repair-proposal';
       const year = new Date().getFullYear();
       relPath = `${subDir}/${year}/${doc.id}.json`;

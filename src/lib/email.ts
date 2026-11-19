@@ -2,6 +2,8 @@ import { storage } from './storage';
 import { SendEmailPayload, EmailConfig } from '@/types/email';
 import { RepairProposal } from '@/types/repair';
 import { StationeryProposal, GeneralProposal } from '@/types/proposal';
+import { FoodRegistration } from '@/types/food-registration';
+import { isHRHead } from './permissions';
 import { formatDateTime } from './utils';
 
 export function generateMailtoUrl(payload: SendEmailPayload, baseUrl: string): string {
@@ -16,6 +18,8 @@ export function generateMailtoUrl(payload: SendEmailPayload, baseUrl: string): s
       ? 'PHIẾU ĐỀ XUẤT VĂN PHÒNG PHẨM'
       : payload.type === 'general'
       ? 'PHIẾU ĐỀ XUẤT KHÁC'
+      : payload.type === 'food_registration'
+      ? 'PHIẾU ĐĂNG KÝ THỰC PHẨM'
       : 'PHIẾU ĐỀ XUẤT SỬA CHỮA';
   const subject = `[Long Khải Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
 
@@ -77,6 +81,8 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
       ? 'PHIẾU ĐỀ XUẤT VĂN PHÒNG PHẨM'
       : payload.type === 'general'
       ? 'PHIẾU ĐỀ XUẤT KHÁC'
+      : payload.type === 'food_registration'
+      ? 'PHIẾU ĐĂNG KÝ THỰC PHẨM'
       : 'PHIẾU ĐỀ XUẤT SỬA CHỮA';
   const subject = `[Long Khải Portal] Yêu cầu duyệt ${typeTitle}: ${payload.employeeName} (${payload.employeeId}) - Mã: ${payload.docId}`;
 
@@ -301,6 +307,7 @@ export interface DispatchEmailResult {
   approveUrl: string;
   rejectUrl: string;
   mailtoUrl: string;
+  toEmail?: string;
 }
 
 /**
@@ -338,6 +345,7 @@ export async function dispatchApprovalEmail(payload: SendEmailPayload): Promise<
       approveUrl,
       rejectUrl,
       mailtoUrl,
+      toEmail: payload.toEmail,
     };
   } catch (err: any) {
     console.error('Lỗi dispatch email:', err);
@@ -348,6 +356,7 @@ export async function dispatchApprovalEmail(payload: SendEmailPayload): Promise<
       approveUrl,
       rejectUrl,
       mailtoUrl,
+      toEmail: payload.toEmail,
     };
   }
 }
@@ -828,6 +837,132 @@ export async function dispatchGeneralApprovalEmail(
         { label: 'Nội dung chi tiết', value: proposal.content },
         { label: 'Thời gian gửi', value: formatDateTime(proposal.createdAt) },
       ],
+    },
+  };
+
+  return dispatchApprovalEmail(payload);
+}
+
+/**
+ * Dispatch Food Registration Approval Email (Mang thai & Nước thuốc)
+ * - Step 'dept': Gửi Trưởng bộ phận của nhân viên
+ * - Step 'hr': Gửi Trưởng phòng HCNS (1867 - Trương Anh Như Quỳnh)
+ */
+export async function dispatchFoodRegistrationApprovalEmail(
+  registration: FoodRegistration,
+  targetStep: 'dept' | 'hr',
+  approverOverride?: { email: string; name?: string }
+): Promise<DispatchEmailResult> {
+  const config = storage.getEmailConfig();
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const baseUrl = config.portalBaseUrl || origin || 'https://longkhai-portal.vercel.app';
+
+  const allUsers = storage.getUsers();
+  const employeeUser = allUsers.find(
+    (u) => u.id.toLowerCase() === registration.employeeId.toLowerCase()
+  );
+
+  let toEmail = (approverOverride?.email || '').trim();
+  let managerName = approverOverride?.name || '';
+
+  if (targetStep === 'dept') {
+    // 1. Cấp Trưởng bộ phận của nhân viên
+    if (!toEmail) {
+      toEmail = (employeeUser?.departmentHeadEmail || '').trim();
+    }
+    if (!toEmail && employeeUser?.departmentHeadId) {
+      const head = allUsers.find(
+        (u) => u.id.toLowerCase() === employeeUser.departmentHeadId!.toLowerCase()
+      );
+      if (head?.email) toEmail = head.email.trim();
+      if (head?.name && !managerName) managerName = head.name;
+    }
+    if (!toEmail) {
+      // Tìm quản lý cùng bộ phận
+      const deptMgr = allUsers.find(
+        (u) =>
+          u.department &&
+          registration.department &&
+          u.department.toLowerCase().trim() === registration.department.toLowerCase().trim() &&
+          u.role === 'manager' &&
+          u.email
+      );
+      if (deptMgr?.email) {
+        toEmail = deptMgr.email.trim();
+        if (!managerName) managerName = deptMgr.name;
+      }
+    }
+    if (!managerName) managerName = 'Trưởng bộ phận';
+  } else {
+    // 2. Cấp Trưởng phòng HCNS (1867 - Trương Anh Như Quỳnh)
+    const hrHead = allUsers.find(
+      (u) => u.id === '1867' || (isHRHead(u) && u.email)
+    );
+    if (!toEmail) {
+      toEmail = (hrHead?.email || 'Quynh.truong@longkhai.com.vn').trim();
+    }
+    if (!managerName) {
+      managerName = hrHead?.name
+        ? `Chị ${hrHead.name} (Trưởng phòng HCNS)`
+        : 'Chị Trương Anh Như Quỳnh (Trưởng phòng HCNS)';
+    }
+  }
+
+  const categoryLabel =
+    registration.category === 'pregnant'
+      ? 'Thực phẩm cho người mang thai'
+      : registration.category === 'medicine_drink'
+      ? 'Nước thuốc uống hỗ trợ sức khỏe'
+      : 'Thực phẩm chay';
+
+  const stepName =
+    targetStep === 'dept'
+      ? 'Bước 1/2: Trưởng bộ phận phê duyệt'
+      : 'Bước 2/2: Trưởng phòng HCNS phê duyệt & Cấp mã QR';
+
+  const timeRangeText = registration.toDate
+    ? `${registration.durationDays || 14} ngày (Từ ${registration.entryDate} đến ${registration.toDate})`
+    : `Ngày ${registration.entryDate}`;
+
+  const detailItems: { label: string; value: string }[] = [
+    { label: 'Cấp phê duyệt', value: stepName },
+    { label: 'Nhóm thực phẩm', value: categoryLabel },
+    { label: 'Chi tiết món ăn / thực phẩm', value: registration.foodDetails || 'Theo quy định' },
+  ];
+
+  if (registration.medicineReason) {
+    detailItems.push({ label: 'Lý do mang nước thuốc vào', value: registration.medicineReason });
+  }
+
+  detailItems.push({ label: 'Thời gian mang vào', value: timeRangeText });
+
+  if (targetStep === 'hr') {
+    const deptStep = registration.steps?.find((s) => s.stepName.includes('Trưởng bộ phận'));
+    if (deptStep?.approverName) {
+      detailItems.push({
+        label: 'Trưởng bộ phận đã duyệt',
+        value: `${deptStep.approverName}${deptStep.comment ? ` (Ghi chú: ${deptStep.comment})` : ''}`,
+      });
+    }
+  }
+
+  detailItems.push({
+    label: 'Quy định kiểm soát',
+    value:
+      'Mỗi người tối đa 02 đơn vị tính/loại thực phẩm. Sau khi Trưởng phòng HCNS phê duyệt hoàn tất, hệ thống sẽ tự động kích hoạt mã QR hiệu lực để bảo vệ cổng kiểm soát.',
+  });
+
+  const payload: SendEmailPayload = {
+    toEmail,
+    managerName,
+    type: 'food_registration',
+    docId: registration.id,
+    employeeId: registration.employeeId,
+    employeeName: registration.employeeName,
+    department: registration.department,
+    details: {
+      title: 'Chi tiết phiếu đăng ký thực phẩm',
+      items: detailItems,
     },
   };
 
