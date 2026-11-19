@@ -644,6 +644,7 @@ export function canApproveFoodDept(user: User | null, item: FoodRegistration): b
 export function canApproveFoodHR(user: User | null, item: FoodRegistration): boolean {
   if (!user) return false;
   if (item.status !== 'pending_hr') return false;
+  if (isSuperAdminOrBOD(user)) return true;
   return isHRHead(user);
 }
 
@@ -674,22 +675,24 @@ export function filterUserFoodRegistrations(
     r.createdById?.toLowerCase() === uid ||
     (r as any).createdBy?.toLowerCase() === uid;
 
-  if (isAdmin) {
-    if (scope === 'my') return registrations.filter(isMyTicket);
-    return registrations;
-  }
-
   if (scope === 'my') {
     return registrations.filter(isMyTicket);
   }
 
   if (scope === 'approver') {
     return registrations.filter((r) => {
+      // Tab cần duyệt chỉ hiển thị các phiếu đang chờ duyệt
+      if (r.status !== 'pending_dept' && r.status !== 'pending_hr') return false;
       if (r.employeeId.toLowerCase() === uid && !isAdmin) return false;
+      if (isAdmin) return true;
       if (canApproveFoodDept(user, r)) return true;
       if (canApproveFoodHR(user, r)) return true;
       return false;
     });
+  }
+
+  if (isAdmin) {
+    return registrations;
   }
 
   // Scope 'all'
