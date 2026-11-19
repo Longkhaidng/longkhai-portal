@@ -1,0 +1,24 @@
+{
+  "id": "TP26-0009",
+  "employeeId": "1867",
+  "employeeName": "Trương Anh Như Quỳnh",
+  "department": "Phòng HCNS",
+  "entryDate": "2026-11-19",
+  "toDate": "2026-12-02",
+  "durationDays": 14,
+  "category": "pregnant",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Bánh + Sữa hoặc Trái cây + Sữa",
+  "complianceCommitment": true,
+  "status": "pending_hr",
+  "steps": [
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-19T01:30:46.553Z",
+  "updatedAt": "2026-11-19T01:30:46.553Z"
+}
