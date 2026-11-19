@@ -69,12 +69,15 @@
     "permissions": [
       "dashboard",
       "announcements",
-      "reports"
+      "reports",
+      "repair",
+      "overtime"
     ],
     "isActive": true,
     "password": "BOD",
     "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "updatedAt": "2026-11-19T02:53:38.361Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "2864",
