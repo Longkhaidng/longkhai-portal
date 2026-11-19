@@ -883,13 +883,23 @@ export async function dispatchFoodRegistrationApprovalEmail(
         (u) =>
           u.department &&
           registration.department &&
-          u.department.toLowerCase().trim() === registration.department.toLowerCase().trim() &&
+          (u.department.toLowerCase().trim() === registration.department.toLowerCase().trim() ||
+            registration.department.toLowerCase().includes(u.department.toLowerCase()) ||
+            u.department.toLowerCase().includes(registration.department.toLowerCase())) &&
           u.role === 'manager' &&
           u.email
       );
       if (deptMgr?.email) {
         toEmail = deptMgr.email.trim();
         if (!managerName) managerName = deptMgr.name;
+      }
+    }
+    if (!toEmail) {
+      // Fallback: Nếu không tìm thấy Trưởng bộ phận riêng, gửi đến Trưởng phòng HCNS
+      const hrHead = allUsers.find((u) => u.id === '1867' || (isHRHead(u) && u.email));
+      if (hrHead?.email) {
+        toEmail = hrHead.email.trim();
+        if (!managerName) managerName = hrHead.name || 'Trưởng bộ phận';
       }
     }
     if (!managerName) managerName = 'Trưởng bộ phận';
