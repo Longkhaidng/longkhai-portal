@@ -3,7 +3,7 @@ import { SendEmailPayload, EmailConfig } from '@/types/email';
 import { RepairProposal } from '@/types/repair';
 import { StationeryProposal, GeneralProposal } from '@/types/proposal';
 import { FoodRegistration } from '@/types/food-registration';
-import { isHRHead } from './permissions';
+import { isHRHead, isHROrITDepartment } from './permissions';
 import { formatDateTime } from './utils';
 
 export function generateMailtoUrl(payload: SendEmailPayload, baseUrl: string): string {
@@ -925,9 +925,12 @@ export async function dispatchFoodRegistrationApprovalEmail(
       ? 'Nước thuốc uống hỗ trợ sức khỏe'
       : 'Thực phẩm chay';
 
+  const isDirect = registration.steps?.length === 1 || isHROrITDepartment(registration.department);
   const stepName =
     targetStep === 'dept'
       ? 'Bước 1/2: Trưởng bộ phận phê duyệt'
+      : isDirect
+      ? 'Trưởng phòng HCNS phê duyệt trực tiếp & Cấp mã QR'
       : 'Bước 2/2: Trưởng phòng HCNS phê duyệt & Cấp mã QR';
 
   const timeRangeText = registration.toDate
@@ -952,6 +955,11 @@ export async function dispatchFoodRegistrationApprovalEmail(
       detailItems.push({
         label: 'Trưởng bộ phận đã duyệt',
         value: `${deptStep.approverName}${deptStep.comment ? ` (Ghi chú: ${deptStep.comment})` : ''}`,
+      });
+    } else if (isDirect) {
+      detailItems.push({
+        label: 'Quy trình',
+        value: 'Duyệt trực tiếp cấp Trưởng phòng HCNS (Nhân sự phòng HCNS / CNTT)',
       });
     }
   }

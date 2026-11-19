@@ -28,6 +28,7 @@ import {
   canApproveFoodDept,
   canApproveFoodHR,
   filterUserFoodRegistrations,
+  isHROrITDepartment,
 } from '@/lib/permissions';
 import {
   UtensilsCrossed,
@@ -110,6 +111,8 @@ export function FoodRegistrationView() {
   const [shift, setShift] = useState<string>(FOOD_ENTRY_SHIFTS[0]);
   const [complianceCommitment, setComplianceCommitment] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const isHRDeptEmployee = isHROrITDepartment(department.trim()) || isHROrITDepartment(currentUser?.department);
 
   const handleDurationDaysChange = (val: number) => {
     setDurationDays(val);
@@ -333,21 +336,32 @@ export function FoodRegistrationView() {
         setRegistrations(storage.getFoodRegistrations());
         showToast(`Đăng ký thành công! Mã phiếu: ${newId}.`);
       } else {
-        // MANG THAI / NƯỚC THUỐC: Luồng duyệt 2 cấp tuần tự: Trưởng BP -> Trưởng phòng HCNS
-        const initialStatus = 'pending_dept';
+        // MANG THAI / NƯỚC THUỐC:
+        // - Nhân viên thuộc phòng HCNS hoặc CNTT: gửi trực tiếp đến mail Trưởng phòng HCNS
+        // - Nhân viên các phòng ban khác: Luồng duyệt 2 cấp tuần tự: Trưởng BP -> Trưởng phòng HCNS
+        const isDirectToHR = isHROrITDepartment(department.trim()) || isHROrITDepartment(currentUser?.department);
+        const initialStatus = isDirectToHR ? 'pending_hr' : 'pending_dept';
 
-        const steps = [
-          {
-            stepName: 'Trưởng bộ phận' as const,
-            roleRequired: 'manager' as const,
-            status: 'pending' as const,
-          },
-          {
-            stepName: 'Trưởng phòng HCNS' as const,
-            roleRequired: 'hr' as const,
-            status: 'pending' as const,
-          },
-        ];
+        const steps = isDirectToHR
+          ? [
+              {
+                stepName: 'Trưởng phòng HCNS' as const,
+                roleRequired: 'hr' as const,
+                status: 'pending' as const,
+              },
+            ]
+          : [
+              {
+                stepName: 'Trưởng bộ phận' as const,
+                roleRequired: 'manager' as const,
+                status: 'pending' as const,
+              },
+              {
+                stepName: 'Trưởng phòng HCNS' as const,
+                roleRequired: 'hr' as const,
+                status: 'pending' as const,
+              },
+            ];
 
         newRegistration = {
           id: newId,
@@ -377,13 +391,23 @@ export function FoodRegistrationView() {
         });
 
         setRegistrations(storage.getFoodRegistrations());
-        dispatchFoodRegistrationApprovalEmail(newRegistration, 'dept').then((res) => {
-          if (res.success) {
-            showToast(`Gửi đơn thành công (${newId})! Đã gửi email thông báo đến Trưởng bộ phận (${res.toEmail || 'Quản lý'}).`);
-          } else {
-            showToast(`Gửi đơn thành công (${newId})! Đơn đã chuyển đến Trưởng bộ phận phê duyệt.`);
-          }
-        });
+        if (isDirectToHR) {
+          dispatchFoodRegistrationApprovalEmail(newRegistration, 'hr').then((res) => {
+            if (res.success) {
+              showToast(`Gửi đơn thành công (${newId})! Đã gửi email thông báo trực tiếp đến Trưởng phòng HCNS (${res.toEmail || 'Quỳnh'}).`);
+            } else {
+              showToast(`Gửi đơn thành công (${newId})! Đơn đã chuyển trực tiếp đến Trưởng phòng HCNS phê duyệt.`);
+            }
+          });
+        } else {
+          dispatchFoodRegistrationApprovalEmail(newRegistration, 'dept').then((res) => {
+            if (res.success) {
+              showToast(`Gửi đơn thành công (${newId})! Đã gửi email thông báo đến Trưởng bộ phận (${res.toEmail || 'Quản lý'}).`);
+            } else {
+              showToast(`Gửi đơn thành công (${newId})! Đơn đã chuyển đến Trưởng bộ phận phê duyệt.`);
+            }
+          });
+        }
       }
 
       // Reset form
@@ -1350,10 +1374,16 @@ export function FoodRegistrationView() {
                   <div className="p-3 rounded-xl bg-amber-100/70 dark:bg-amber-900/30 text-amber-900 dark:text-amber-200 text-[11px] space-y-1">
                     <span className="font-bold flex items-center gap-1.5">
                       <Info className="w-3.5 h-3.5" />
-                      <span>Luồng phê duyệt 2 cấp tuần tự:</span>
+                      <span>
+                        {isHRDeptEmployee
+                          ? 'Luồng duyệt trực tiếp Trưởng phòng HCNS:'
+                          : 'Luồng phê duyệt 2 cấp tuần tự:'}
+                      </span>
                     </span>
                     <p className="leading-relaxed">
-                      Nhân viên ➔ Trưởng bộ phận duyệt (Bước 1) ➔ Trưởng phòng HCNS duyệt (Bước 2). Sau khi Trưởng phòng HCNS duyệt hoàn tất, hệ thống sẽ tự động kích hoạt mã QR hiệu lực để bảo vệ cổng kiểm soát.
+                      {isHRDeptEmployee
+                        ? 'Nhân viên thuộc phòng HCNS / CNTT ➔ Phiếu gửi trực tiếp đến mail Trưởng phòng HCNS phê duyệt. Sau khi Trưởng phòng HCNS duyệt, phiếu sẽ có hiệu lực trong khoảng thời gian đã duyệt.'
+                        : 'Nhân viên ➔ Trưởng bộ phận duyệt (Bước 1) ➔ Trưởng phòng HCNS duyệt (Bước 2). Sau khi Trưởng phòng HCNS duyệt hoàn tất, hệ thống sẽ tự động kích hoạt mã QR hiệu lực để bảo vệ cổng kiểm soát.'}
                     </p>
                   </div>
                 </div>
@@ -1805,6 +1835,8 @@ export function FoodRegistrationView() {
                 <h3 className="text-base font-bold text-slate-900 dark:text-white">
                   {approvingItem.level === 'dept'
                     ? '1. Trưởng Bộ Phận Phê Duyệt'
+                    : isHROrITDepartment(approvingItem.item.department)
+                    ? 'Trưởng Phòng HCNS Phê Duyệt (Duyệt trực tiếp)'
                     : '2. Trưởng Phòng HCNS Phê Duyệt'}
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
