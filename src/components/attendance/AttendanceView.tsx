@@ -1056,17 +1056,17 @@ export function AttendanceView() {
         {/* Desktop & Landscape Table View */}
         <div className="hidden md:block landscape:block overflow-x-auto overflow-y-auto max-h-[600px] rounded-2xl scrollbar-thin">
           <table className="w-full text-left border-separate border-spacing-0 text-xs min-w-[960px]">
-            <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider">
+            <thead className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 shadow-xs border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider">
               <tr>
-                <th className="sticky top-0 left-0 z-30 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 whitespace-nowrap w-[95px] min-w-[95px] border-b border-slate-200 dark:border-slate-700">Mã phiếu</th>
-                <th className="sticky top-0 left-[95px] z-30 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 whitespace-nowrap w-[170px] min-w-[170px] border-b border-r border-slate-200 dark:border-slate-700 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.06)] dark:shadow-[4px_0_8px_-2px_rgba(0,0,0,0.3)]">Nhân viên</th>
-                <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Lý do phát sinh</th>
-                <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Ca làm việc</th>
-                <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Thời gian vào thực tế</th>
-                <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Thời gian ra thực tế</th>
-                <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Tiến trình duyệt</th>
-                <th className="py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Trạng thái</th>
-                <th className="py-3.5 px-4 text-right border-b border-slate-200 dark:border-slate-700">Chi tiết</th>
+                <th className="sticky top-0 left-0 z-50 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 whitespace-nowrap w-[95px] min-w-[95px] border-b border-slate-200 dark:border-slate-700">Mã phiếu</th>
+                <th className="sticky top-0 left-[95px] z-50 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 whitespace-normal w-[170px] min-w-[170px] border-b border-r border-slate-200 dark:border-slate-700 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.06)] dark:shadow-[4px_0_8px_-2px_rgba(0,0,0,0.3)]">Nhân viên</th>
+                <th className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Lý do phát sinh</th>
+                <th className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Ca làm việc</th>
+                <th className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Thời gian vào thực tế</th>
+                <th className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Thời gian ra thực tế</th>
+                <th className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Tiến trình duyệt</th>
+                <th className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 border-b border-slate-200 dark:border-slate-700">Trạng thái</th>
+                <th className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 py-3.5 px-4 text-right border-b border-slate-200 dark:border-slate-700">Chi tiết</th>
               </tr>
             </thead>
             <tbody>
@@ -1086,11 +1086,11 @@ export function AttendanceView() {
                     <td className="sticky left-0 z-20 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/80 transition-colors py-3 px-4 font-mono font-bold text-amber-600 dark:text-amber-400 whitespace-nowrap w-[95px] min-w-[95px] border-b border-slate-100 dark:border-slate-800">
                       {item.id}
                     </td>
-                    <td className="sticky left-[95px] z-20 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/80 transition-colors py-3 px-4 whitespace-nowrap w-[170px] min-w-[170px] border-b border-r border-slate-100 dark:border-slate-800 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.06)] dark:shadow-[4px_0_8px_-2px_rgba(0,0,0,0.3)]">
-                      <div className="font-bold text-slate-900 dark:text-white">
+                    <td className="sticky left-[95px] z-20 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/80 transition-colors py-3 px-4 w-[170px] min-w-[170px] max-w-[170px] border-b border-r border-slate-100 dark:border-slate-800 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.06)] dark:shadow-[4px_0_8px_-2px_rgba(0,0,0,0.3)]">
+                      <div className="font-bold text-slate-900 dark:text-white leading-snug break-words whitespace-normal">
                         {item.employeeName}
                       </div>
-                      <div className="text-[11px] text-slate-400">
+                      <div className="text-[11px] text-slate-400 font-mono mt-0.5 leading-snug break-words whitespace-normal">
                         {item.employeeId} &bull; {item.department}
                       </div>
                     </td>

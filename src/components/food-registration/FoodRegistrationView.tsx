@@ -1031,16 +1031,16 @@ export function FoodRegistrationView() {
         {/* Desktop & Landscape Table View */}
         <div className="hidden md:block landscape:block overflow-x-auto overflow-y-auto max-h-[600px] rounded-2xl scrollbar-thin">
           <table className="w-full text-left border-separate border-spacing-0 text-xs min-w-[1020px]">
-            <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider">
+            <thead className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 shadow-xs border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider">
               <tr>
-                <th className="sticky top-0 left-0 z-30 bg-slate-100 dark:bg-slate-800 py-3 px-3.5 whitespace-nowrap w-[95px] min-w-[95px] border-b border-slate-200 dark:border-slate-700">Mã phiếu</th>
-                <th className="sticky top-0 left-[95px] z-30 bg-slate-100 dark:bg-slate-800 py-3 px-3.5 whitespace-nowrap w-[170px] min-w-[170px] border-b border-r border-slate-200 dark:border-slate-700 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.06)] dark:shadow-[4px_0_8px_-2px_rgba(0,0,0,0.3)]">Nhân viên</th>
-                <th className="py-3 px-3.5 whitespace-normal w-[145px] border-b border-slate-200 dark:border-slate-700">Nhóm thực phẩm</th>
-                <th className="py-3 px-3.5 min-w-[170px] max-w-[220px] border-b border-slate-200 dark:border-slate-700">Chi tiết món / Nước thuốc</th>
-                <th className="py-3 px-3.5 whitespace-nowrap w-[150px] border-b border-slate-200 dark:border-slate-700">Thời gian hiệu lực</th>
-                <th className="py-3 px-3.5 whitespace-nowrap w-[155px] border-b border-slate-200 dark:border-slate-700">Tiến trình duyệt</th>
-                <th className="py-3 px-3.5 whitespace-nowrap w-[135px] border-b border-slate-200 dark:border-slate-700">Trạng thái</th>
-                <th className="py-3 px-3.5 text-right whitespace-nowrap w-[130px] border-b border-slate-200 dark:border-slate-700">Chi tiết / Thao tác</th>
+                <th className="sticky top-0 left-0 z-50 bg-slate-100 dark:bg-slate-800 py-3 px-3.5 whitespace-nowrap w-[95px] min-w-[95px] border-b border-slate-200 dark:border-slate-700">Mã phiếu</th>
+                <th className="sticky top-0 left-[95px] z-50 bg-slate-100 dark:bg-slate-800 py-3 px-3.5 whitespace-normal w-[170px] min-w-[170px] border-b border-r border-slate-200 dark:border-slate-700 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.06)] dark:shadow-[4px_0_8px_-2px_rgba(0,0,0,0.3)]">Nhân viên</th>
+                <th className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 py-3 px-3.5 whitespace-normal w-[145px] min-w-[145px] border-b border-slate-200 dark:border-slate-700">Nhóm thực phẩm</th>
+                <th className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 py-3 px-3.5 w-[180px] min-w-[170px] max-w-[230px] border-b border-slate-200 dark:border-slate-700">Chi tiết món / Nước thuốc</th>
+                <th className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 py-3 px-3.5 whitespace-normal w-[150px] min-w-[140px] border-b border-slate-200 dark:border-slate-700">Thời gian hiệu lực</th>
+                <th className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 py-3 px-3.5 whitespace-normal w-[155px] min-w-[150px] border-b border-slate-200 dark:border-slate-700">Tiến trình duyệt</th>
+                <th className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 py-3 px-3.5 whitespace-normal w-[140px] min-w-[135px] border-b border-slate-200 dark:border-slate-700">Trạng thái</th>
+                <th className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 py-3 px-3.5 text-right whitespace-nowrap w-[130px] min-w-[130px] border-b border-slate-200 dark:border-slate-700">Chi tiết / Thao tác</th>
               </tr>
             </thead>
             <tbody>
@@ -1099,58 +1099,58 @@ export function FoodRegistrationView() {
                       <td className="sticky left-0 z-20 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/80 transition-colors py-3 px-3.5 font-mono font-bold text-amber-600 dark:text-amber-400 whitespace-nowrap w-[95px] min-w-[95px] border-b border-slate-100 dark:border-slate-800">
                         {item.id}
                       </td>
-                      <td className="sticky left-[95px] z-20 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/80 transition-colors py-3 px-3.5 whitespace-nowrap w-[170px] min-w-[170px] border-b border-r border-slate-100 dark:border-slate-800 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.06)] dark:shadow-[4px_0_8px_-2px_rgba(0,0,0,0.3)]">
-                        <div className="font-bold text-slate-900 dark:text-white truncate max-w-[160px]">
+                      <td className="sticky left-[95px] z-20 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/80 transition-colors py-3 px-3.5 w-[170px] min-w-[170px] max-w-[170px] border-b border-r border-slate-100 dark:border-slate-800 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.06)] dark:shadow-[4px_0_8px_-2px_rgba(0,0,0,0.3)]">
+                        <div className="font-bold text-slate-900 dark:text-white leading-snug break-words whitespace-normal">
                           {item.employeeName}
                         </div>
-                        <div className="text-[11px] text-slate-400 font-mono truncate max-w-[160px]">
+                        <div className="text-[11px] text-slate-400 font-mono mt-0.5 leading-snug break-words whitespace-normal">
                           {item.employeeId} &bull; {item.department}
                         </div>
                       </td>
-                      <td className="py-3 px-3.5 whitespace-nowrap w-[145px] border-b border-slate-100 dark:border-slate-800">
-                        <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold inline-flex items-center gap-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                          <span>{FOOD_CATEGORY_ICONS[item.category]}</span>
-                          <span>{FOOD_CATEGORY_LABELS[item.category]}</span>
+                      <td className="py-3 px-3.5 w-[145px] min-w-[145px] max-w-[160px] border-b border-slate-100 dark:border-slate-800">
+                        <span className="text-[10px] px-2 py-1 rounded-lg font-semibold inline-flex items-start gap-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 leading-snug break-words whitespace-normal text-left">
+                          <span className="shrink-0 mt-0.5">{FOOD_CATEGORY_ICONS[item.category]}</span>
+                          <span className="break-words">{FOOD_CATEGORY_LABELS[item.category]}</span>
                         </span>
                       </td>
-                      <td className="py-3 px-3.5 min-w-[170px] max-w-[220px] border-b border-slate-100 dark:border-slate-800">
-                        <div className="font-medium text-slate-800 dark:text-slate-200 line-clamp-2 leading-relaxed">
+                      <td className="py-3 px-3.5 w-[180px] min-w-[170px] max-w-[230px] border-b border-slate-100 dark:border-slate-800">
+                        <div className="font-medium text-slate-800 dark:text-slate-200 leading-snug break-words whitespace-normal">
                           {item.foodDetails}
                         </div>
                         {item.notes && (
-                          <div className="text-[11px] text-slate-400 italic truncate mt-0.5">
+                          <div className="text-[11px] text-slate-400 italic mt-0.5 leading-snug break-words whitespace-normal">
                             Ghi chú: {item.notes}
                           </div>
                         )}
                       </td>
-                      <td className="py-3 px-3.5 whitespace-nowrap w-[150px] border-b border-slate-100 dark:border-slate-800">
+                      <td className="py-3 px-3.5 w-[150px] min-w-[140px] max-w-[160px] border-b border-slate-100 dark:border-slate-800">
                         {item.toDate ? (
-                          <div>
+                          <div className="leading-snug break-words whitespace-normal">
                             <div className="font-semibold text-slate-800 dark:text-slate-200">
                               {formatDate(item.entryDate)} &rarr; {formatDate(item.toDate)}
                             </div>
-                            <div className="text-[11px] text-indigo-600 dark:text-indigo-400 font-medium">
+                            <div className="text-[11px] text-indigo-600 dark:text-indigo-400 font-medium mt-0.5">
                               {item.durationDays || 14} ngày
                             </div>
                           </div>
                         ) : (
-                          <div>
+                          <div className="leading-snug break-words whitespace-normal">
                             <div className="font-semibold text-slate-800 dark:text-slate-200">
                               Ngày {formatDate(item.entryDate)}
                             </div>
-                            <div className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+                            <div className="text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5">
                               {item.shift || 'Ca làm việc'}
                             </div>
                           </div>
                         )}
                         {validity.isExpired && (
-                          <span className="inline-block mt-0.5 px-1.5 py-0.2 rounded text-[10px] font-bold bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300">
+                          <span className="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300">
                             Hết hiệu lực
                           </span>
                         )}
                       </td>
-                      <td className="py-3 px-3.5 whitespace-nowrap w-[155px] border-b border-slate-100 dark:border-slate-800">
-                        <div className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+                      <td className="py-3 px-3.5 w-[155px] min-w-[150px] max-w-[165px] border-b border-slate-100 dark:border-slate-800">
+                        <div className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 leading-snug break-words whitespace-normal">
                           {item.mainGroup === 'vegetarian' ? (
                             <span className="text-emerald-600 font-bold">Tự động kích hoạt (Dùng trong ngày)</span>
                           ) : item.status === 'approved' ? (
@@ -1166,7 +1166,7 @@ export function FoodRegistrationView() {
                           )}
                         </div>
                         {item.mainGroup !== 'vegetarian' && item.steps && item.steps.length > 0 && (
-                          <div className="flex items-center gap-1 mt-1">
+                          <div className="flex items-center gap-1 mt-1.5">
                             {item.steps.map((st, i) => (
                               <div
                                 key={i}
@@ -1185,19 +1185,19 @@ export function FoodRegistrationView() {
                           </div>
                         )}
                       </td>
-                      <td className="py-3 px-3.5 whitespace-nowrap w-[135px] border-b border-slate-100 dark:border-slate-800">
+                      <td className="py-3 px-3.5 w-[140px] min-w-[135px] max-w-[150px] border-b border-slate-100 dark:border-slate-800">
                         {validity.isExpired ? (
-                          <span className="inline-block px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-300 dark:bg-rose-950/40 dark:text-rose-400">
+                          <span className="inline-block px-2 py-1 rounded-lg text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-300 dark:bg-rose-950/40 dark:text-rose-400 leading-snug break-words whitespace-normal text-center">
                             Hết hiệu lực
                           </span>
                         ) : (
-                          <span className={`inline-block px-2.5 py-1 rounded-full text-[11px] font-bold border ${FOOD_STATUS_BADGES[item.status]}`}>
+                          <span className={`inline-block px-2.5 py-1 rounded-lg text-[11px] font-bold border ${FOOD_STATUS_BADGES[item.status]} leading-snug break-words whitespace-normal text-center`}>
                             {FOOD_STATUS_LABELS[item.status]}
                           </span>
                         )}
                       </td>
-                      <td className="py-3 px-3.5 text-right whitespace-nowrap w-[130px] border-b border-slate-100 dark:border-slate-800">
-                        <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
+                      <td className="py-3 px-3.5 text-right w-[130px] min-w-[130px] border-b border-slate-100 dark:border-slate-800">
+                        <div className="flex items-center justify-end flex-wrap gap-1.5" onClick={(e) => e.stopPropagation()}>
                           {!isGuard && (item.status === 'approved' || item.status === 'confirmed') && (item.qrCodeUrl || item.qrDataUrl) && (
                             <button
                               type="button"
