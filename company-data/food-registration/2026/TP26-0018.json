@@ -1,0 +1,32 @@
+{
+  "id": "TP26-0018",
+  "employeeId": "2297",
+  "employeeName": "Lê Văn Tình",
+  "createdById": "2297",
+  "createdByName": "Lê Văn Tình",
+  "department": "Cơ điện",
+  "entryDate": "2026-11-19",
+  "toDate": "2026-11-23",
+  "durationDays": 5,
+  "category": "medicine_drink",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Nước thuốc (Lý do: Đau đầu)",
+  "medicineReason": "Đau đầu",
+  "complianceCommitment": true,
+  "status": "pending_dept",
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận",
+      "roleRequired": "manager",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-19T06:45:52.369Z",
+  "updatedAt": "2026-11-19T06:45:52.369Z"
+}
