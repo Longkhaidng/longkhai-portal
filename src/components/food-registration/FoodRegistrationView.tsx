@@ -1503,7 +1503,7 @@ export function FoodRegistrationView() {
                         onChange={() => setSubCategory('medicine_drink')}
                         className="text-amber-600 focus:ring-amber-500"
                       />
-                      <span>Nước thuốc uống hỗ trợ sức khỏe</span>
+                      <span>Nước thuốc</span>
                     </label>
                   </div>
 
