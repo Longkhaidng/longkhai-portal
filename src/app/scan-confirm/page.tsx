@@ -738,227 +738,219 @@ function ScanConfirmContent() {
                 </div>
               </div>
 
-              {/* Employee Information Card */}
-              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800/90 space-y-2.5">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-300 border-b border-slate-800 pb-2">
-                  <User className="w-4 h-4 text-blue-400" />
-                  <span>THÔNG TIN NGƯỜI LAO ĐỘNG</span>
+              {/* Employee Information Card (Cho các loại phiếu khác, phiếu thực phẩm đã gộp chung bên dưới) */}
+              {docType !== 'food' && (
+                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800/90 space-y-2.5">
+                  <div className="flex items-center gap-2 text-xs font-bold text-slate-300 border-b border-slate-800 pb-2">
+                    <User className="w-4 h-4 text-blue-400" />
+                    <span>THÔNG TIN NGƯỜI LAO ĐỘNG</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2.5 text-xs">
+                    <div>
+                      <span className="text-slate-400 text-[11px] block">Họ và tên:</span>
+                      <span className="font-bold text-white text-sm">
+                        {docData.employeeName}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 text-[11px] block">Mã số nhân viên:</span>
+                      <span className="font-bold font-mono text-blue-400">
+                        {docData.employeeId}
+                      </span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-slate-400 text-[11px] block">Phòng ban / Xưởng:</span>
+                      <span className="font-semibold text-slate-200">
+                        {docData.department}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2.5 text-xs">
-                  <div>
-                    <span className="text-slate-400 text-[11px] block">Họ và tên:</span>
-                    <span className="font-bold text-white text-sm">
-                      {docData.employeeName}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-slate-400 text-[11px] block">Mã số nhân viên:</span>
-                    <span className="font-bold font-mono text-blue-400">
-                      {docData.employeeId}
-                    </span>
-                  </div>
-                  <div className="col-span-2">
-                    <span className="text-slate-400 text-[11px] block">Phòng ban / Xưởng:</span>
-                    <span className="font-semibold text-slate-200">
-                      {docData.department}
-                    </span>
-                  </div>
-                </div>
-              </div>
+              )}
 
-              {/* DETAILS: FOOD REGISTRATION */}
+              {/* DETAILS: FOOD REGISTRATION (GỘP THÔNG TIN NGƯỜI ĐĂNG KÝ VÀ THỰC PHẨM MANG VÀO) */}
               {docType === 'food' && (
-                <div className="space-y-4">
-                  <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800/90 space-y-3">
-                    <div className="flex items-center gap-2 text-xs font-bold text-slate-300 border-b border-slate-800 pb-2">
-                      <UtensilsCrossed className="w-4 h-4 text-emerald-400" />
-                      <span>CHI TIẾT THỰC PHẨM ĐĂNG KÝ MANG VÀO</span>
-                    </div>
-
-                    <div className="space-y-2.5 text-xs">
-                      <div>
-                        <span className="text-slate-400 text-[11px] block mb-1">Phân loại thực phẩm:</span>
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                          {docData.category === 'pregnant'
-                            ? '🤰 Thức ăn cho người mang thai'
-                            : docData.category === 'vegetarian'
-                            ? '🥗 Thực phẩm chay'
-                            : docData.category === 'medicine_drink'
-                            ? '🍵 Nước thuốc'
-                            : docData.customCategory ? `🍱 Khác (${docData.customCategory})` : '🍱 Khác'}
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/60">
-                        <div>
-                          <span className="text-slate-400 text-[11px] block">{docData.toDate ? 'Thời gian mang vào:' : 'Ngày mang vào:'}</span>
-                          <span className="font-bold text-white">
-                            {docData.toDate && docData.toDate !== docData.entryDate ? `${formatDate(docData.entryDate)} → ${formatDate(docData.toDate)}` : formatDate(docData.entryDate)}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-slate-400 text-[11px] block">Ca làm việc:</span>
-                          <span className="font-semibold text-amber-300">
-                            {docData.shift || (docData.toDate ? 'Theo đợt' : 'Ca làm việc tiêu chuẩn')}
-                          </span>
-                        </div>
-                      </div>
-
-                      {docData.timeFrame && (
-                        <div>
-                          <span className="text-slate-400 text-[11px] block">Khung giờ dự kiến mang vào:</span>
-                          <span className="font-semibold text-slate-200">
-                            {docData.timeFrame}
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Chi tiết món ăn hoặc Lý do nước thuốc */}
-                      {docData.category === 'medicine_drink' ? (
-                        <div className="pt-2 border-t border-slate-800/60">
-                          <span className="text-slate-400 text-[11px] block mb-1">Lý do mang nước thuốc vào:</span>
-                          <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-xs font-semibold whitespace-pre-wrap leading-relaxed">
-                            {docData.medicineReason || docData.foodDetails || 'Uống nước thuốc theo nhu cầu y tế'}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="pt-2 border-t border-slate-800/60">
-                          <span className="text-slate-400 text-[11px] block mb-1">Chi tiết món ăn:</span>
-                          <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-xs font-semibold whitespace-pre-wrap leading-relaxed">
-                            {normalizedFoodDetails}
-                          </div>
-                          {docData.category === 'pregnant' && (
-                            <div className="mt-2 text-[11px] text-amber-400 italic font-medium">
-                              * Ghi chú: Mỗi người chỉ được phép mang vào 02 đơn vị cho mỗi loại thực phẩm.
-                            </div>
-                          )}
-                          {docData.notes && (
-                            <div className="mt-2 text-[11px] text-slate-300">
-                              <span className="text-slate-400 font-medium">Ghi chú: </span>
-                              {docData.notes}
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      <div className="p-2.5 rounded-xl bg-blue-950/30 border border-blue-800/50 text-[11px] text-blue-300 flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                        <span>Người lao động đã cam kết ATVSTP, sử dụng trong ngày và không mang vào khu vực sản xuất.</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Validity check */}
+                <div className="space-y-3.5">
+                  {/* Status Banner (nếu hết hạn, chưa cấp phép, hoặc đã xử lý) */}
                   {foodValidity?.isExpired ? (
-                    <div className="p-5 rounded-2xl bg-rose-950/80 border-2 border-rose-500 text-center space-y-2.5 animate-in fade-in">
-                      <AlertTriangle className="w-10 h-10 text-rose-400 mx-auto" />
-                      <h4 className="text-sm sm:text-base font-black text-rose-200 uppercase tracking-wide">
-                        Thời hạn đem thực phẩm vào nhà máy của bạn đã hết hiệu lực.
+                    <div className="p-4 rounded-2xl bg-rose-950/80 border-2 border-rose-500 text-center space-y-1.5 animate-in fade-in">
+                      <AlertTriangle className="w-8 h-8 text-rose-400 mx-auto" />
+                      <h4 className="text-xs sm:text-sm font-black text-rose-200 uppercase tracking-wide">
+                        Thời hạn đem thực phẩm vào nhà máy đã hết hiệu lực
                       </h4>
-                      <p className="text-xs text-rose-300">
-                        Mã QR này không còn giá trị sử dụng qua cổng bảo vệ. Nhân viên bảo vệ không được phép xác nhận cho mang vào.
+                      <p className="text-[11px] text-rose-300">
+                        Mã QR này không còn giá trị sử dụng. Bảo vệ không được phép cho mang vào.
                       </p>
                     </div>
                   ) : !foodValidity?.isValid ? (
-                    <div className="p-5 rounded-2xl bg-amber-950/80 border-2 border-amber-500/80 text-center space-y-2 animate-in fade-in">
-                      <AlertTriangle className="w-9 h-9 text-amber-400 mx-auto" />
+                    <div className="p-4 rounded-2xl bg-amber-950/80 border-2 border-amber-500/80 text-center space-y-1.5 animate-in fade-in">
+                      <AlertTriangle className="w-8 h-8 text-amber-400 mx-auto" />
                       <h4 className="text-xs sm:text-sm font-bold text-amber-200 uppercase">
                         Chưa Được Cấp Phép Mang Vào
                       </h4>
-                      <p className="text-xs text-amber-300 font-medium">
+                      <p className="text-[11px] text-amber-300 font-medium">
                         {foodValidity?.message || 'Đơn đăng ký cần được phê duyệt trước khi được phép mang vào.'}
                       </p>
                     </div>
                   ) : docData.status === 'confirmed' ? (
-                    <div className="p-5 rounded-2xl bg-teal-950/80 border-2 border-teal-500 text-center space-y-2 animate-in fade-in">
-                      <CheckCircle2 className="w-10 h-10 text-teal-400 mx-auto" />
-                      <h4 className="text-sm sm:text-base font-black text-teal-200 uppercase tracking-wide">
+                    <div className="p-4 rounded-2xl bg-teal-950/80 border-2 border-teal-500 text-center space-y-1.5 animate-in fade-in">
+                      <CheckCircle2 className="w-8 h-8 text-teal-400 mx-auto" />
+                      <h4 className="text-xs sm:text-sm font-black text-teal-200 uppercase tracking-wide">
                         ĐÃ XÁC NHẬN CHO MANG VÀO
                       </h4>
-                      <p className="text-xs text-teal-300">
+                      <p className="text-[11px] text-teal-300">
                         Phiếu này đã được bảo vệ xác nhận cho nhân viên mang thực phẩm vào nhà máy.
                       </p>
                     </div>
                   ) : docData.status === 'guard_rejected' || docData.status === 'rejected' ? (
-                    <div className="p-5 rounded-2xl bg-rose-950/80 border-2 border-rose-500 text-center space-y-2 animate-in fade-in">
-                      <XCircle className="w-10 h-10 text-rose-400 mx-auto" />
-                      <h4 className="text-sm sm:text-base font-black text-rose-200 uppercase tracking-wide">
+                    <div className="p-4 rounded-2xl bg-rose-950/80 border-2 border-rose-500 text-center space-y-1.5 animate-in fade-in">
+                      <XCircle className="w-8 h-8 text-rose-400 mx-auto" />
+                      <h4 className="text-xs sm:text-sm font-black text-rose-200 uppercase tracking-wide">
                         ĐÃ TỪ CHỐI TẠI CỔNG
                       </h4>
-                      <p className="text-xs text-rose-300">
+                      <p className="text-[11px] text-rose-300">
                         Phiếu này đã bị bảo vệ ghi nhận từ chối cho mang vào nhà máy.
                       </p>
                     </div>
                   ) : (
-                    /* Valid Food Ticket Action */
-                    <div className="space-y-4">
-                      <div className="p-3 rounded-2xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center justify-between">
-                        <div className="flex items-center gap-1.5">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                          <span>MÃ QR HỢP LỆ</span>
-                        </div>
-                        <span className="text-[11px] font-medium text-emerald-200">{foodValidity.remainingText}</span>
+                    <div className="p-2.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <span>MÃ QR HỢP LỆ</span>
                       </div>
-
-                      {/* Action Box */}
-                      <div className="p-4 rounded-2xl bg-slate-950 border border-emerald-600/60 space-y-3">
-                        <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase">
-                          <ShieldCheck className="w-4 h-4" />
-                          <span>Xác nhận kiểm tra thực phẩm tại cổng</span>
-                        </div>
-
-                        <div className="space-y-3 text-xs">
-                          <div>
-                            <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
-                              Bảo vệ thực hiện xác nhận:
-                            </label>
-                            <div className="p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-emerald-300 font-bold flex items-center justify-between">
-                              <span className="flex items-center gap-1.5">
-                                <User className="w-4 h-4 text-emerald-400" />
-                                {currentUser.name} ({currentUser.id})
-                              </span>
-                              <span className="text-[10px] text-slate-400 font-normal">Thời gian: {getVietnamTimeNow()}</span>
-                            </div>
-                          </div>
-
-                          <div>
-                            <label className="text-slate-400 text-[11px] block mb-1 font-semibold">
-                              Ghi chú kiểm tra (nếu có):
-                            </label>
-                            <input
-                              type="text"
-                              value={guardNote}
-                              onChange={(e) => setGuardNote(e.target.value)}
-                              placeholder="Ví dụ: Đã kiểm tra đúng món, đóng hộp kín đảm bảo ATVSTP"
-                              className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
-                            />
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-2.5 pt-2">
-                            <button
-                              type="button"
-                              disabled={isSubmitting}
-                              onClick={() => handleFoodAction('confirm')}
-                              className="w-full py-3.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer disabled:opacity-50"
-                            >
-                              <CheckCircle2 className="w-4 h-4" />
-                              <span>{isSubmitting ? 'ĐANG LƯU...' : 'Xác nhận cho mang vào'}</span>
-                            </button>
-
-                            <button
-                              type="button"
-                              disabled={isSubmitting}
-                              onClick={() => setRejectPromptOpen(true)}
-                              className="w-full py-3.5 px-3 rounded-xl bg-rose-600/90 hover:bg-rose-600 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
-                            >
-                              <XCircle className="w-4 h-4" />
-                              <span>Từ chối</span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                      <span className="text-[11px] font-medium text-emerald-200">{foodValidity.remainingText}</span>
                     </div>
                   )}
+
+                  {/* THẺ GỘP: THÔNG TIN NGƯỜI ĐĂNG KÝ & CHI TIẾT THỰC PHẨM */}
+                  <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 shadow-lg">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                      <div className="flex items-center gap-2 text-xs font-bold text-slate-200 uppercase tracking-wide">
+                        <UtensilsCrossed className="w-4 h-4 text-emerald-400" />
+                        <span>Chi tiết mang thực phẩm vào</span>
+                      </div>
+                      <span className="text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                        {docData.category === 'pregnant'
+                          ? 'Thức ăn mang thai'
+                          : docData.category === 'vegetarian'
+                          ? 'Món chay'
+                          : docData.category === 'medicine_drink'
+                          ? 'Nước thuốc'
+                          : docData.customCategory ? `Khác (${docData.customCategory})` : 'Khác'}
+                      </span>
+                    </div>
+
+                    <div className="space-y-2.5 text-xs">
+                      {/* 1. TÊN NGƯỜI ĐĂNG KÝ */}
+                      <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
+                        <div>
+                          <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Tên người đăng ký:</span>
+                          <span className="font-bold text-white text-sm block mt-0.5">
+                            {docData.employeeName}
+                          </span>
+                          <span className="text-[11px] text-slate-400 block mt-0.5">
+                            Phòng ban: <b className="text-slate-300 font-medium">{docData.department}</b>
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Mã số nhân viên:</span>
+                          <span className="font-bold font-mono text-blue-400 text-sm block mt-0.5">
+                            {docData.employeeId}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* 2. THỜI GIAN MANG VÀO */}
+                      <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
+                        <div>
+                          <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Thời gian mang vào:</span>
+                          <span className="font-bold text-amber-300 text-xs block mt-0.5">
+                            {docData.toDate && docData.toDate !== docData.entryDate
+                              ? `${formatDate(docData.entryDate)} → ${formatDate(docData.toDate)}`
+                              : `Ngày ${formatDate(docData.entryDate)}`}
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Ca làm việc:</span>
+                          <span className="font-semibold text-slate-200 text-xs block mt-0.5">
+                            {docData.shift || (docData.toDate ? 'Theo đợt' : 'Ca làm việc')}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* 3. CHI TIẾT MÓN ĂN */}
+                      <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
+                        <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">
+                          {docData.category === 'medicine_drink' ? 'Lý do mang nước thuốc:' : 'Chi tiết món ăn:'}
+                        </span>
+                        <div className="text-xs font-bold text-emerald-400 whitespace-pre-wrap leading-relaxed">
+                          {docData.category === 'medicine_drink'
+                            ? (docData.medicineReason || docData.foodDetails || 'Uống nước thuốc theo nhu cầu y tế')
+                            : (normalizedFoodDetails || docData.foodDetails)}
+                        </div>
+                        {docData.category === 'pregnant' && (
+                          <div className="text-[11px] text-amber-400/90 italic font-medium pt-1 border-t border-slate-800/60 mt-1.5">
+                            * Ghi chú: Mỗi người chỉ được phép mang vào 02 đơn vị cho mỗi loại thực phẩm.
+                          </div>
+                        )}
+                        {docData.notes && (
+                          <div className="text-[11px] text-slate-400 pt-1 border-t border-slate-800/60 mt-1">
+                            <span className="text-slate-500 font-semibold">Ghi chú: </span>{docData.notes}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* KHỐI THAO TÁC CỦA BẢO VỆ (CHỈ HIỂN THỊ KHI CHƯA XÁC NHẬN / TỪ CHỐI VÀ QR CÒN HIỆU LỰC) */}
+                    {foodValidity?.isValid && !foodValidity?.isExpired && docData.status !== 'confirmed' && docData.status !== 'guard_rejected' && docData.status !== 'rejected' && (
+                      <div className="pt-2 border-t border-slate-800 space-y-2.5">
+                        <div>
+                          <input
+                            type="text"
+                            value={guardNote}
+                            onChange={(e) => setGuardNote(e.target.value)}
+                            placeholder="Ghi chú kiểm tra (ví dụ: Đã kiểm tra đúng món, đóng hộp kín...)"
+                            className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                          />
+                        </div>
+
+                        {/* 4. NÚT XÁC NHẬN MANG VÀO & NÚT TỪ CHỐI */}
+                        <div className="grid grid-cols-2 gap-2.5">
+                          <button
+                            type="button"
+                            disabled={isSubmitting}
+                            onClick={() => handleFoodAction('confirm')}
+                            className="py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer disabled:opacity-50"
+                          >
+                            <CheckCircle2 className="w-4 h-4" />
+                            <span>{isSubmitting ? 'ĐANG LƯU...' : 'Xác nhận cho mang vào'}</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            disabled={isSubmitting}
+                            onClick={() => setRejectPromptOpen(true)}
+                            className="py-3 px-3 rounded-xl bg-rose-600/90 hover:bg-rose-600 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                          >
+                            <XCircle className="w-4 h-4" />
+                            <span>Từ chối</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 5. NÚT QUAY LẠI MÀN HÌNH QUÉT MÃ QR */}
+                    <div className="pt-1">
+                      <button
+                        type="button"
+                        onClick={handleNextPerson}
+                        className="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-98 text-slate-300 hover:text-white font-semibold text-xs flex items-center justify-center gap-2 border border-slate-700 transition-colors cursor-pointer"
+                      >
+                        <QrCode className="w-4 h-4 text-emerald-400" />
+                        <span>Quay lại màn hình quét mã QR</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -1102,17 +1094,19 @@ function ScanConfirmContent() {
                 </div>
               )}
 
-              {/* Bottom return button to scanner */}
-              <div className="pt-2 text-center">
-                <button
-                  type="button"
-                  onClick={handleNextPerson}
-                  className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white bg-slate-800/60 hover:bg-slate-800 rounded-xl transition-all cursor-pointer inline-flex items-center gap-1.5"
-                >
-                  <QrCode className="w-3.5 h-3.5" />
-                  <span>Quay lại màn hình quét mã QR</span>
-                </button>
-              </div>
+              {/* Bottom return button to scanner (cho các loại phiếu khác) */}
+              {docType !== 'food' && (
+                <div className="pt-2 text-center">
+                  <button
+                    type="button"
+                    onClick={handleNextPerson}
+                    className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white bg-slate-800/60 hover:bg-slate-800 rounded-xl transition-all cursor-pointer inline-flex items-center gap-1.5"
+                  >
+                    <QrCode className="w-3.5 h-3.5" />
+                    <span>Quay lại màn hình quét mã QR</span>
+                  </button>
+                </div>
+              )}
             </>
           )}
 
