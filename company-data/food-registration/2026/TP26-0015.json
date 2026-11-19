@@ -11,15 +11,19 @@
   "foodDetails": "Nước thuốc (Lý do: Thuốc dau đầu)",
   "medicineReason": "Thuốc dau đầu",
   "complianceCommitment": true,
-  "status": "pending_hr",
+  "status": "approved",
   "steps": [
     {
       "stepName": "Trưởng phòng HCNS",
       "roleRequired": "hr",
-      "status": "pending"
+      "approverId": "2265",
+      "approverName": "Trần Lê Hữu Lực",
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-11-19T04:15:11.670Z"
     }
   ],
-  "currentStepIndex": 0,
+  "currentStepIndex": 1,
   "createdAt": "2026-11-19T04:10:39.937Z",
-  "updatedAt": "2026-11-19T04:10:39.937Z"
+  "updatedAt": "2026-11-19T04:15:11.670Z"
 }
