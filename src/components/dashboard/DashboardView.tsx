@@ -64,6 +64,14 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
   const [activeTaskTab, setActiveTaskTab] = useState<TaskTab>('all');
 
+  // Đảm bảo tab được chọn luôn là tab mà người lao động có quyền xem
+  React.useEffect(() => {
+    if (activeTaskTab === 'leave' && !hasPermission('leave')) setActiveTaskTab('all');
+    if (activeTaskTab === 'attendance' && !hasPermission('attendance')) setActiveTaskTab('all');
+    if (activeTaskTab === 'food' && !hasPermission('food_registration')) setActiveTaskTab('all');
+    if (activeTaskTab === 'proposal' && !hasPermission('repair')) setActiveTaskTab('all');
+  }, [activeTaskTab, hasPermission]);
+
   const canManageOthers = isApproverRole(currentUser) || isSecurityRole(currentUser);
 
   const [dataVersion, setDataVersion] = useState(0);
@@ -202,76 +210,84 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
     return rawOvertime.filter((o) => o.status === 'pending');
   }, [rawOvertime, currentUser, isSuperAdmin, isManager, uid]);
 
-  // Unified Actionable Task Items
+  // Unified Actionable Task Items (Chỉ hiển thị các mục mà người lao động được phân quyền)
   const taskItems: DashboardTaskItem[] = useMemo(() => {
     const list: DashboardTaskItem[] = [];
 
     // Leaves
-    pendingLeaves.forEach((item) => {
-      list.push({
-        id: item.id,
-        type: 'leave',
-        typeLabel: 'Nghỉ phép',
-        typeBadgeColor: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800',
-        title: `${item.employeeName} (${item.employeeId})`,
-        subtitle: `${item.department} • ${LEAVE_TYPE_LABELS[item.leaveType] || item.leaveType} (${item.totalDays} ngày: ${formatDate(item.fromDate)} - ${formatDate(item.toDate)})`,
-        dateStr: formatDate(item.createdAt),
-        statusText: 'Chờ duyệt',
-        statusBadgeColor: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800',
-        targetTab: 'leave',
+    if (hasPermission('leave')) {
+      pendingLeaves.forEach((item) => {
+        list.push({
+          id: item.id,
+          type: 'leave',
+          typeLabel: 'Nghỉ phép',
+          typeBadgeColor: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800',
+          title: `${item.employeeName} (${item.employeeId})`,
+          subtitle: `${item.department} • ${LEAVE_TYPE_LABELS[item.leaveType] || item.leaveType} (${item.totalDays} ngày: ${formatDate(item.fromDate)} - ${formatDate(item.toDate)})`,
+          dateStr: formatDate(item.createdAt),
+          statusText: 'Chờ duyệt',
+          statusBadgeColor: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800',
+          targetTab: 'leave',
+        });
       });
-    });
+    }
 
     // Attendance
-    pendingAttendances.forEach((item) => {
-      list.push({
-        id: item.id,
-        type: 'attendance',
-        typeLabel: 'Xác nhận công',
-        typeBadgeColor: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800',
-        title: `${item.employeeName} (${item.employeeId})`,
-        subtitle: `${item.department} • ${ISSUE_TYPE_LABELS[item.issueType]?.text || 'Quên thẻ'} (${formatDate(item.date)} ${item.shift})`,
-        dateStr: formatDate(item.createdAt),
-        statusText: `Bước ${item.currentStepIndex + 1}/${item.steps?.length || 2}`,
-        statusBadgeColor: 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950/40 dark:text-orange-300 dark:border-orange-800',
-        targetTab: 'attendance',
+    if (hasPermission('attendance')) {
+      pendingAttendances.forEach((item) => {
+        list.push({
+          id: item.id,
+          type: 'attendance',
+          typeLabel: 'Xác nhận công',
+          typeBadgeColor: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800',
+          title: `${item.employeeName} (${item.employeeId})`,
+          subtitle: `${item.department} • ${ISSUE_TYPE_LABELS[item.issueType]?.text || 'Quên thẻ'} (${formatDate(item.date)} ${item.shift})`,
+          dateStr: formatDate(item.createdAt),
+          statusText: `Bước ${item.currentStepIndex + 1}/${item.steps?.length || 2}`,
+          statusBadgeColor: 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950/40 dark:text-orange-300 dark:border-orange-800',
+          targetTab: 'attendance',
+        });
       });
-    });
+    }
 
     // Food
-    pendingFoods.forEach((item) => {
-      list.push({
-        id: item.id,
-        type: 'food',
-        typeLabel: 'Thực phẩm',
-        typeBadgeColor: 'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/40 dark:text-teal-300 dark:border-teal-800',
-        title: `${item.employeeName} (${item.employeeId})`,
-        subtitle: `${item.department} • ${FOOD_CATEGORY_LABELS[item.category] || item.category} (${item.foodDetails})`,
-        dateStr: formatDate(item.createdAt),
-        statusText: item.status === 'pending_dept' ? 'Chờ Trưởng BP' : 'Chờ TP HCNS',
-        statusBadgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800',
-        targetTab: 'food_registration',
+    if (hasPermission('food_registration')) {
+      pendingFoods.forEach((item) => {
+        list.push({
+          id: item.id,
+          type: 'food',
+          typeLabel: 'Thực phẩm',
+          typeBadgeColor: 'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/40 dark:text-teal-300 dark:border-teal-800',
+          title: `${item.employeeName} (${item.employeeId})`,
+          subtitle: `${item.department} • ${FOOD_CATEGORY_LABELS[item.category] || item.category} (${item.foodDetails})`,
+          dateStr: formatDate(item.createdAt),
+          statusText: item.status === 'pending_dept' ? 'Chờ Trưởng BP' : 'Chờ TP HCNS',
+          statusBadgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800',
+          targetTab: 'food_registration',
+        });
       });
-    });
+    }
 
     // Proposals
-    pendingProposals.forEach((item) => {
-      list.push({
-        id: item.id,
-        type: 'proposal',
-        typeLabel: 'Đề xuất sửa chữa',
-        typeBadgeColor: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800',
-        title: `${item.employeeName} (${item.employeeId})`,
-        subtitle: `${item.department} • Vị trí: ${item.location} - ${item.issueDescription}`,
-        dateStr: formatDate(item.createdAt),
-        statusText: item.status === 'pending_manager' ? 'Chờ Trưởng BP' : item.status === 'maintenance_pending' ? 'Chờ Cơ điện' : 'Chờ xác nhận',
-        statusBadgeColor: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800',
-        targetTab: 'proposals',
+    if (hasPermission('repair')) {
+      pendingProposals.forEach((item) => {
+        list.push({
+          id: item.id,
+          type: 'proposal',
+          typeLabel: 'Đề xuất sửa chữa',
+          typeBadgeColor: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800',
+          title: `${item.employeeName} (${item.employeeId})`,
+          subtitle: `${item.department} • Vị trí: ${item.location} - ${item.issueDescription}`,
+          dateStr: formatDate(item.createdAt),
+          statusText: item.status === 'pending_manager' ? 'Chờ Trưởng BP' : item.status === 'maintenance_pending' ? 'Chờ Cơ điện' : 'Chờ xác nhận',
+          statusBadgeColor: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800',
+          targetTab: 'proposals',
+        });
       });
-    });
+    }
 
     return list;
-  }, [pendingLeaves, pendingAttendances, pendingFoods, pendingProposals]);
+  }, [hasPermission, pendingLeaves, pendingAttendances, pendingFoods, pendingProposals]);
 
   const filteredTasks = useMemo(() => {
     if (activeTaskTab === 'all') return taskItems;
@@ -288,6 +304,121 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
     const y = now.getFullYear();
     return `${dName}, ngày ${d}/${m}/${y}`;
   }, []);
+
+  // Metric Cards filtered by User Permissions
+  const metricCards = useMemo(() => {
+    const list: Array<{
+      id: string;
+      title: string;
+      count: number;
+      label: string;
+      icon: any;
+      colorBg: string;
+      colorText: string;
+      hoverBorder: string;
+      tab: string;
+    }> = [];
+
+    if (hasPermission('leave')) {
+      list.push({
+        id: 'leave',
+        title: 'Nghỉ phép',
+        count: pendingLeaves.length,
+        label: 'Đang chờ duyệt',
+        icon: CalendarDays,
+        colorBg: 'bg-blue-50 dark:bg-blue-950/60',
+        colorText: 'text-blue-600 dark:text-blue-400',
+        hoverBorder: 'hover:border-blue-400 dark:hover:border-blue-700',
+        tab: 'leave',
+      });
+    }
+
+    if (hasPermission('attendance')) {
+      list.push({
+        id: 'attendance',
+        title: 'Xác nhận công',
+        count: pendingAttendances.length,
+        label: 'Quên / Mất thẻ',
+        icon: Clock,
+        colorBg: 'bg-amber-50 dark:bg-amber-950/60',
+        colorText: 'text-amber-600 dark:text-amber-400',
+        hoverBorder: 'hover:border-amber-400 dark:hover:border-amber-700',
+        tab: 'attendance',
+      });
+    }
+
+    if (hasPermission('gate_pass')) {
+      list.push({
+        id: 'gate_pass',
+        title: 'Ra vào cổng',
+        count: activeGatePasses.length,
+        label: 'Đang lưu hành',
+        icon: QrCode,
+        colorBg: 'bg-emerald-50 dark:bg-emerald-950/60',
+        colorText: 'text-emerald-600 dark:text-emerald-400',
+        hoverBorder: 'hover:border-emerald-400 dark:hover:border-emerald-700',
+        tab: 'gate_pass',
+      });
+    }
+
+    if (hasPermission('food_registration')) {
+      list.push({
+        id: 'food_registration',
+        title: 'Thực phẩm mang vào',
+        count: activeFoodRegistrations.length,
+        label: 'Mã QR hiệu lực',
+        icon: UtensilsCrossed,
+        colorBg: 'bg-teal-50 dark:bg-teal-950/60',
+        colorText: 'text-teal-600 dark:text-teal-400',
+        hoverBorder: 'hover:border-teal-400 dark:hover:border-teal-700',
+        tab: 'food_registration',
+      });
+    }
+
+    const canRepair = hasPermission('repair');
+    const canOT = hasPermission('overtime');
+    if (canRepair || canOT) {
+      const count = (canRepair ? pendingProposals.length : 0) + (canOT ? pendingOvertime.length : 0);
+      const title = canRepair && canOT ? 'Đề xuất & Thêm giờ' : canRepair ? 'Phiếu đề xuất' : 'Làm thêm giờ';
+      const targetTab = canRepair ? 'proposals' : 'overtime';
+      list.push({
+        id: 'proposals_ot',
+        title,
+        count,
+        label: 'Chờ phê duyệt',
+        icon: Timer,
+        colorBg: 'bg-purple-50 dark:bg-purple-950/60',
+        colorText: 'text-purple-600 dark:text-purple-400',
+        hoverBorder: 'hover:border-purple-400 dark:hover:border-purple-700',
+        tab: targetTab,
+      });
+    }
+
+    return list;
+  }, [
+    hasPermission,
+    pendingLeaves.length,
+    pendingAttendances.length,
+    activeGatePasses.length,
+    activeFoodRegistrations.length,
+    pendingProposals.length,
+    pendingOvertime.length,
+  ]);
+
+  const gridColsClass = useMemo(() => {
+    switch (metricCards.length) {
+      case 1:
+        return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
+      case 2:
+        return 'grid-cols-2 lg:grid-cols-4';
+      case 3:
+        return 'grid-cols-1 sm:grid-cols-3';
+      case 4:
+        return 'grid-cols-2 lg:grid-cols-4';
+      default:
+        return 'grid-cols-2 lg:grid-cols-5';
+    }
+  }, [metricCards.length]);
 
   // Quick Action Shortcuts definition
   const quickActions = [
@@ -336,152 +467,54 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 self-start md:self-auto">
-            {isSecurityRole(currentUser) ? (
+          {isSecurityRole(currentUser) && (
+            <div className="flex items-center gap-2 self-start md:self-auto">
               <button
                 type="button"
-                onClick={() => onNavigateTab('gatePass')}
+                onClick={() => onNavigateTab('gate_pass')}
                 className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/30 cursor-pointer flex items-center gap-1.5"
               >
                 <QrCode className="w-3.5 h-3.5" />
                 <span>Kiểm soát ra vào cổng</span>
               </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => onNavigateTab('leave')}
-                className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-600/30 cursor-pointer flex items-center gap-1.5"
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 2. Key Operational Metric Cards (Chỉ hiển thị các mục mà người lao động được phân quyền) */}
+      {metricCards.length > 0 && (
+        <div className={`grid ${gridColsClass} gap-3 sm:gap-4`}>
+          {metricCards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <div
+                key={card.id}
+                onClick={() => onNavigateTab(card.tab)}
+                className={`bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer ${card.hoverBorder} hover:shadow-md transition-all group`}
               >
-                <span>+ Tạo đơn mới</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                    {card.title}
+                  </span>
+                  <div className={`p-2 ${card.colorBg} ${card.colorText} rounded-xl group-hover:scale-110 transition-transform`}>
+                    <Icon className="w-4 h-4" />
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <div className="text-2xl font-black text-slate-900 dark:text-white">
+                    {card.count}
+                  </div>
+                  <p className={`text-[11px] ${card.colorText} font-medium mt-0.5 flex items-center justify-between`}>
+                    <span>{card.label}</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
-      </div>
-
-      {/* 2. Five Key Operational Metric Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
-        {/* Card 1: Leave */}
-        <div
-          onClick={() => onNavigateTab('leave')}
-          className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer hover:border-blue-400 dark:hover:border-blue-700 hover:shadow-md transition-all group"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Nghỉ phép
-            </span>
-            <div className="p-2 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-xl group-hover:scale-110 transition-transform">
-              <CalendarDays className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-2xl font-black text-slate-900 dark:text-white">
-              {pendingLeaves.length}
-            </div>
-            <p className="text-[11px] text-blue-600 dark:text-blue-400 font-medium mt-0.5 flex items-center justify-between">
-              <span>Đang chờ duyệt</span>
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </p>
-          </div>
-        </div>
-
-        {/* Card 2: Attendance */}
-        <div
-          onClick={() => onNavigateTab('attendance')}
-          className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer hover:border-amber-400 dark:hover:border-amber-700 hover:shadow-md transition-all group"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Xác nhận công
-            </span>
-            <div className="p-2 bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 rounded-xl group-hover:scale-110 transition-transform">
-              <Clock className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-2xl font-black text-slate-900 dark:text-white">
-              {pendingAttendances.length}
-            </div>
-            <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-0.5 flex items-center justify-between">
-              <span>Quên / Mất thẻ</span>
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </p>
-          </div>
-        </div>
-
-        {/* Card 3: Gate Pass */}
-        <div
-          onClick={() => onNavigateTab('gate_pass')}
-          className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer hover:border-emerald-400 dark:hover:border-emerald-700 hover:shadow-md transition-all group"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Ra vào cổng
-            </span>
-            <div className="p-2 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-xl group-hover:scale-110 transition-transform">
-              <QrCode className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-2xl font-black text-slate-900 dark:text-white">
-              {activeGatePasses.length}
-            </div>
-            <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5 flex items-center justify-between">
-              <span>Đang lưu hành</span>
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </p>
-          </div>
-        </div>
-
-        {/* Card 4: Food Intake */}
-        <div
-          onClick={() => onNavigateTab('food_registration')}
-          className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer hover:border-teal-400 dark:hover:border-teal-700 hover:shadow-md transition-all group"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Thực phẩm mang vào
-            </span>
-            <div className="p-2 bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 rounded-xl group-hover:scale-110 transition-transform">
-              <UtensilsCrossed className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-2xl font-black text-slate-900 dark:text-white">
-              {activeFoodRegistrations.length}
-            </div>
-            <p className="text-[11px] text-teal-600 dark:text-teal-400 font-medium mt-0.5 flex items-center justify-between">
-              <span>Mã QR hiệu lực</span>
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </p>
-          </div>
-        </div>
-
-        {/* Card 5: Proposals & Overtime */}
-        <div
-          onClick={() => onNavigateTab('proposals')}
-          className="col-span-2 sm:col-span-1 lg:col-span-1 bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer hover:border-purple-400 dark:hover:border-purple-700 hover:shadow-md transition-all group"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Đề xuất & Thêm giờ
-            </span>
-            <div className="p-2 bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 rounded-xl group-hover:scale-110 transition-transform">
-              <Timer className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-2xl font-black text-slate-900 dark:text-white">
-              {pendingProposals.length + pendingOvertime.length}
-            </div>
-            <p className="text-[11px] text-purple-600 dark:text-purple-400 font-medium mt-0.5 flex items-center justify-between">
-              <span>Chờ phê duyệt</span>
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </p>
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* 3. Quick Action Functional Shortcuts */}
       {quickActions.length > 0 && (
@@ -543,50 +576,58 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
                 >
                   Tất cả ({taskItems.length})
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTaskTab('leave')}
-                  className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
-                    activeTaskTab === 'leave'
-                      ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs font-bold'
-                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  Phép ({pendingLeaves.length})
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTaskTab('attendance')}
-                  className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
-                    activeTaskTab === 'attendance'
-                      ? 'bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400 shadow-xs font-bold'
-                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  Công ({pendingAttendances.length})
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTaskTab('food')}
-                  className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
-                    activeTaskTab === 'food'
-                      ? 'bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400 shadow-xs font-bold'
-                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  Thực phẩm ({pendingFoods.length})
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTaskTab('proposal')}
-                  className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
-                    activeTaskTab === 'proposal'
-                      ? 'bg-white dark:bg-slate-900 text-purple-600 dark:text-purple-400 shadow-xs font-bold'
-                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  Đề xuất ({pendingProposals.length})
-                </button>
+                {hasPermission('leave') && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveTaskTab('leave')}
+                    className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+                      activeTaskTab === 'leave'
+                        ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs font-bold'
+                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    Phép ({pendingLeaves.length})
+                  </button>
+                )}
+                {hasPermission('attendance') && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveTaskTab('attendance')}
+                    className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+                      activeTaskTab === 'attendance'
+                        ? 'bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400 shadow-xs font-bold'
+                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    Công ({pendingAttendances.length})
+                  </button>
+                )}
+                {hasPermission('food_registration') && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveTaskTab('food')}
+                    className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+                      activeTaskTab === 'food'
+                        ? 'bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400 shadow-xs font-bold'
+                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    Thực phẩm ({pendingFoods.length})
+                  </button>
+                )}
+                {hasPermission('repair') && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveTaskTab('proposal')}
+                    className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+                      activeTaskTab === 'proposal'
+                        ? 'bg-white dark:bg-slate-900 text-purple-600 dark:text-purple-400 shadow-xs font-bold'
+                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    Đề xuất ({pendingProposals.length})
+                  </button>
+                )}
               </div>
             </div>
 
