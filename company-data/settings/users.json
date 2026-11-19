@@ -2864,12 +2864,14 @@
     "permissions": [
       "dashboard",
       "food_registration",
-      "announcements"
+      "announcements",
+      "overtime"
     ],
     "isActive": true,
     "password": "2415",
     "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "updatedAt": "2026-11-19T07:14:49.389Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "2421",
