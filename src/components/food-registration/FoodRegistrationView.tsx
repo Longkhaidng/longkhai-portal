@@ -654,15 +654,15 @@ export function FoodRegistrationView() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* 1. MSNV & Họ và tên */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch">
+              <div className="flex flex-col justify-between h-full">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 leading-snug">
                   Mã số NV (MSNV) *
                   {!(isAdmin || isManager || isHR) && (
                     <span className="text-[10px] text-slate-400 font-normal ml-1">(Tài khoản của bạn)</span>
                   )}
                 </label>
-                <div className="relative">
+                <div className="relative mt-auto">
                   <input
                     type="text"
                     required
@@ -670,7 +670,7 @@ export function FoodRegistrationView() {
                     value={selectedEmployeeId}
                     onChange={(e) => handleEmployeeIdChange(e.target.value)}
                     placeholder="Ví dụ: 1008"
-                    className={`w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white font-mono font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                    className={`w-full h-10 px-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white font-mono font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
                       !(isAdmin || isManager || isHR) ? 'bg-slate-100 dark:bg-slate-800/80 cursor-not-allowed opacity-90' : 'bg-slate-50 dark:bg-slate-800'
                     }`}
                   />
@@ -678,8 +678,8 @@ export function FoodRegistrationView() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+              <div className="flex flex-col justify-between h-full">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 leading-snug">
                   Họ và tên *
                 </label>
                 <input
@@ -690,7 +690,7 @@ export function FoodRegistrationView() {
                   onChange={(e) => setEmployeeName(capitalizeWords(e.target.value))}
                   autoCapitalize="words"
                   placeholder="Họ và tên nhân viên"
-                  className={`w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                  className={`w-full h-10 px-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 mt-auto ${
                     !(isAdmin || isManager || isHR) ? 'bg-slate-100 dark:bg-slate-800/80 cursor-not-allowed opacity-90' : 'bg-slate-50 dark:bg-slate-800'
                   }`}
                 />
@@ -871,8 +871,8 @@ export function FoodRegistrationView() {
                 )}
 
                 {/* Thời gian: Số ngày cần mang vào -> Ngày bắt đầu -> Ngày kết thúc (Tự động tính, không cho sửa) */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                  <div className="flex flex-col justify-between">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 items-stretch">
+                  <div className="flex flex-col justify-between h-full">
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 sm:min-h-[32px] leading-snug">
                       Số ngày cần mang vào *
                     </label>
@@ -887,11 +887,11 @@ export function FoodRegistrationView() {
                         handleDurationDaysChange(days);
                       }}
                       placeholder="Ví dụ: 14"
-                      className="w-full h-10 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500"
+                      className="w-full h-10 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500 mt-auto"
                     />
                   </div>
 
-                  <div className="flex flex-col justify-between">
+                  <div className="flex flex-col justify-between h-full">
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 sm:min-h-[32px] leading-snug">
                       Ngày bắt đầu *
                     </label>
@@ -900,11 +900,11 @@ export function FoodRegistrationView() {
                       required
                       value={entryDate}
                       onChange={(e) => handleEntryDateChange(e.target.value)}
-                      className="w-full h-10 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500"
+                      className="w-full h-10 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500 mt-auto"
                     />
                   </div>
 
-                  <div className="flex flex-col justify-between">
+                  <div className="flex flex-col justify-between h-full">
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 sm:min-h-[32px] leading-snug">
                       Ngày kết thúc *
                     </label>
@@ -915,7 +915,7 @@ export function FoodRegistrationView() {
                       disabled
                       value={toDate}
                       title="Ngày kết thúc được tự động tính từ Ngày bắt đầu + Số ngày cần mang vào (không cho phép chỉnh sửa)"
-                      className="w-full h-10 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 text-xs text-slate-600 dark:text-slate-300 font-semibold cursor-not-allowed opacity-90"
+                      className="w-full h-10 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 text-xs text-slate-600 dark:text-slate-300 font-semibold cursor-not-allowed opacity-90 mt-auto"
                     />
                   </div>
                 </div>
@@ -944,15 +944,15 @@ export function FoodRegistrationView() {
               <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-4">
                 {/* Hàng gồm: Chọn món chay mang vào, Số lượng, Đơn vị tính */}
                 <div className="space-y-3">
-                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
-                    <div className="sm:col-span-6">
-                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-stretch">
+                    <div className="sm:col-span-5 flex flex-col justify-between h-full">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 leading-snug sm:min-h-[32px]">
                         Chọn món chay mang vào: *
                       </label>
                       <select
                         value={vegOption}
                         onChange={(e) => setVegOption(e.target.value)}
-                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                        className="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer mt-auto"
                       >
                         {VEGETARIAN_FOOD_OPTIONS.map((opt) => (
                           <option key={opt} value={opt}>
@@ -962,8 +962,8 @@ export function FoodRegistrationView() {
                       </select>
                     </div>
 
-                    <div className="sm:col-span-3">
-                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                    <div className="sm:col-span-3 flex flex-col justify-between h-full">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 leading-snug sm:min-h-[32px]">
                         Số lượng: *
                       </label>
                       <input
@@ -973,18 +973,18 @@ export function FoodRegistrationView() {
                         required
                         value={vegQuantity}
                         onChange={(e) => setVegQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-bold text-center focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-bold text-center focus:outline-none focus:ring-2 focus:ring-emerald-500 mt-auto"
                       />
                     </div>
 
-                    <div className="sm:col-span-3">
-                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                    <div className="sm:col-span-4 flex flex-col justify-between h-full">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 leading-snug sm:min-h-[32px]">
                         Đơn vị tính: *
                       </label>
                       <select
                         value={vegUnit}
                         onChange={(e) => setVegUnit(e.target.value)}
-                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                        className="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer mt-auto"
                       >
                         {VEGETARIAN_UNITS.map((u) => (
                           <option key={u} value={u}>
@@ -1048,9 +1048,9 @@ export function FoodRegistrationView() {
                 </div>
 
                 {/* Ngày mang vào & Ca làm việc */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 items-stretch">
+                  <div className="flex flex-col justify-between h-full">
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 leading-snug">
                       Ngày mang vào *
                     </label>
                     <input
@@ -1058,18 +1058,18 @@ export function FoodRegistrationView() {
                       required
                       value={entryDate}
                       onChange={(e) => setEntryDate(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500"
+                      className="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500 mt-auto"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <div className="flex flex-col justify-between h-full">
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 leading-snug">
                       Ca làm việc *
                     </label>
                     <select
                       value={shift}
                       onChange={(e) => setShift(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-semibold focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                      className="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-semibold focus:ring-2 focus:ring-emerald-500 cursor-pointer mt-auto"
                     >
                       {FOOD_ENTRY_SHIFTS.map((s) => (
                         <option key={s} value={s}>
