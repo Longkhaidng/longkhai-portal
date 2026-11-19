@@ -669,18 +669,23 @@ export function filterUserFoodRegistrations(
     });
   }
 
+  const isMyTicket = (r: FoodRegistration) =>
+    r.employeeId.toLowerCase() === uid ||
+    r.createdById?.toLowerCase() === uid ||
+    (r as any).createdBy?.toLowerCase() === uid;
+
   if (isAdmin) {
-    if (scope === 'my') return registrations.filter((r) => r.employeeId.toLowerCase() === uid);
+    if (scope === 'my') return registrations.filter(isMyTicket);
     return registrations;
   }
 
   if (scope === 'my') {
-    return registrations.filter((r) => r.employeeId.toLowerCase() === uid);
+    return registrations.filter(isMyTicket);
   }
 
   if (scope === 'approver') {
     return registrations.filter((r) => {
-      if (r.employeeId.toLowerCase() === uid) return false;
+      if (r.employeeId.toLowerCase() === uid && !isAdmin) return false;
       if (canApproveFoodDept(user, r)) return true;
       if (canApproveFoodHR(user, r)) return true;
       return false;
@@ -694,12 +699,12 @@ export function filterUserFoodRegistrations(
 
   if (user.role === 'manager') {
     return registrations.filter(
-      (r) => r.employeeId.toLowerCase() === uid || isSameDepartment(user.department, r.department)
+      (r) => isMyTicket(r) || isSameDepartment(user.department, r.department)
     );
   }
 
   // Regular employee
-  return registrations.filter((r) => r.employeeId.toLowerCase() === uid);
+  return registrations.filter(isMyTicket);
 }
 
 export function isHRDepartment(dept?: string): boolean {

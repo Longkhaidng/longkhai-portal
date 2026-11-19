@@ -112,6 +112,8 @@ export interface FoodRegistration {
   id: string; // e.g. TP26-0001
   employeeId: string; // MSNV
   employeeName: string; // Họ và tên
+  createdById?: string; // MSNV người tạo đơn (nếu tạo hộ/thay mặt)
+  createdByName?: string; // Tên người tạo đơn
   department: string; // Bộ phận / Phân xưởng / Chuyền sản xuất
   entryDate: string; // Ngày mang vào (YYYY-MM-DD) hoặc Từ ngày
   toDate?: string; // Đến ngày (YYYY-MM-DD) hoặc Ngày kết thúc cho mang thai / nước thuốc

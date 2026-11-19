@@ -55,6 +55,7 @@ import {
   Info,
   Printer,
   MinusCircle,
+  X,
 } from 'lucide-react';
 
 export function FoodRegistrationView() {
@@ -184,9 +185,22 @@ export function FoodRegistrationView() {
       const target = all.find((r) => r.id.toLowerCase() === urlId.toLowerCase());
       if (target) {
         setFilterSearch(urlId);
-        setActiveTab('approver');
         const canDept = canApproveFoodDept(currentUser, target);
         const canHR = canApproveFoodHR(currentUser, target);
+        const uid = currentUser.id.toLowerCase();
+        const isMy =
+          target.employeeId.toLowerCase() === uid ||
+          target.createdById?.toLowerCase() === uid ||
+          (target as any).createdBy?.toLowerCase() === uid;
+
+        if (canDept || canHR) {
+          setActiveTab('approver');
+        } else if (isMy) {
+          setActiveTab('my');
+        } else {
+          setActiveTab('all');
+        }
+
         if (urlAction === 'approve' && (canDept || canHR)) {
           setApprovingItem({ item: target, level: canHR ? 'hr' : 'dept' });
         } else if (urlAction === 'reject' && (canDept || canHR)) {
@@ -308,6 +322,8 @@ export function FoodRegistrationView() {
           id: newId,
           employeeId: selectedEmployeeId.trim(),
           employeeName: capitalizeWords(employeeName.trim()),
+          createdById: currentUser?.id || selectedEmployeeId.trim(),
+          createdByName: currentUser?.name || capitalizeWords(employeeName.trim()),
           department: capitalizeFirstLetter(department.trim()),
           entryDate,
           shift,
@@ -367,6 +383,8 @@ export function FoodRegistrationView() {
           id: newId,
           employeeId: selectedEmployeeId.trim(),
           employeeName: capitalizeWords(employeeName.trim()),
+          createdById: currentUser?.id || selectedEmployeeId.trim(),
+          createdByName: currentUser?.name || capitalizeWords(employeeName.trim()),
           department: capitalizeFirstLetter(department.trim()),
           entryDate,
           toDate,
@@ -607,15 +625,20 @@ export function FoodRegistrationView() {
 
   // Counts for tabs & metric cards
   const metrics = useMemo(() => {
+    const uid = currentUser?.id.toLowerCase();
     const guardVisible = isGuard && !isAdmin
       ? filterUserFoodRegistrations(registrations, currentUser, 'all')
       : registrations;
     const myTickets = registrations.filter(
-      (r) => currentUser && r.employeeId.toLowerCase() === currentUser.id.toLowerCase()
+      (r) =>
+        uid &&
+        (r.employeeId.toLowerCase() === uid ||
+          r.createdById?.toLowerCase() === uid ||
+          (r as any).createdBy?.toLowerCase() === uid)
     );
     const waitingMe = registrations.filter((r) => {
       if (!currentUser) return false;
-      if (r.employeeId.toLowerCase() === currentUser.id.toLowerCase()) return false;
+      if (r.employeeId.toLowerCase() === uid && !isAdmin) return false;
       return canApproveFoodDept(currentUser, r) || canApproveFoodHR(currentUser, r);
     });
     const pendingTotal = registrations.filter(
@@ -628,6 +651,51 @@ export function FoodRegistrationView() {
       waitingMeCount: isGuard ? pendingTotal : waitingMe.length,
     };
   }, [registrations, currentUser, isGuard, isAdmin]);
+
+  // Check if search query matches in other tabs when current tab has 0 results
+  const matchInOtherTabs = useMemo(() => {
+    if (!filterSearch.trim() || filteredRegistrations.length > 0) return null;
+    const q = filterSearch.trim().toLowerCase();
+    const searchFilter = (r: FoodRegistration) =>
+      r.id.toLowerCase().includes(q) ||
+      r.employeeName.toLowerCase().includes(q) ||
+      r.employeeId.toLowerCase().includes(q) ||
+      r.department.toLowerCase().includes(q) ||
+      r.foodDetails.toLowerCase().includes(q);
+
+    if (activeTab !== 'approver' && (isManager || isHR || isAdmin)) {
+      const approverList = filterUserFoodRegistrations(registrations, currentUser, 'approver');
+      const found = approverList.filter(searchFilter);
+      if (found.length > 0) {
+        return { tab: 'approver' as const, count: found.length, tabLabel: 'Phiếu cần tôi duyệt' };
+      }
+    }
+
+    if (activeTab !== 'my' && !isGuard) {
+      const myList = filterUserFoodRegistrations(registrations, currentUser, 'my');
+      const found = myList.filter(searchFilter);
+      if (found.length > 0) {
+        return { tab: 'my' as const, count: found.length, tabLabel: 'Phiếu của tôi' };
+      }
+    }
+
+    if (activeTab !== 'all') {
+      const allList = filterUserFoodRegistrations(registrations, currentUser, 'all');
+      const found = allList.filter(searchFilter);
+      if (found.length > 0) {
+        return { tab: 'all' as const, count: found.length, tabLabel: 'Tất cả phiếu' };
+      }
+    }
+
+    return null;
+  }, [filterSearch, filteredRegistrations.length, activeTab, registrations, currentUser, isManager, isHR, isAdmin, isGuard]);
+
+  const handleTabChange = (newTab: 'all' | 'approver' | 'my') => {
+    setActiveTab(newTab);
+    if (filterSearch.trim()) {
+      setFilterSearch('');
+    }
+  };
 
   return (
     <div className="space-y-6 pb-12">
@@ -689,7 +757,7 @@ export function FoodRegistrationView() {
       {canManageOthers && (
         <div className="flex items-center gap-1.5 sm:gap-2 border-b border-slate-200 dark:border-slate-800 pb-2 overflow-x-auto no-scrollbar">
           <button
-            onClick={() => setActiveTab('all')}
+            onClick={() => handleTabChange('all')}
             className={`px-3 py-1.5 sm:px-3.5 sm:py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 cursor-pointer ${
               activeTab === 'all'
                 ? 'bg-amber-600 text-white shadow-xs'
@@ -701,7 +769,7 @@ export function FoodRegistrationView() {
 
           {(isManager || isHR || isAdmin) && (
             <button
-              onClick={() => setActiveTab('approver')}
+              onClick={() => handleTabChange('approver')}
               className={`px-3 py-1.5 sm:px-3.5 sm:py-1.5 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'approver'
                   ? 'bg-amber-600 text-white shadow-xs'
@@ -719,7 +787,7 @@ export function FoodRegistrationView() {
 
           {!isGuard && (
             <button
-              onClick={() => setActiveTab('my')}
+              onClick={() => handleTabChange('my')}
               className={`px-3 py-1.5 sm:px-3.5 sm:py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'my'
                   ? 'bg-amber-600 text-white shadow-xs'
@@ -741,8 +809,18 @@ export function FoodRegistrationView() {
             value={filterSearch}
             onChange={(e) => setFilterSearch(e.target.value)}
             placeholder="Tìm theo tên NV, mã NV, phòng ban, món ăn..."
-            className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 font-medium"
+            className="w-full pl-9 pr-8 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 font-medium"
           />
+          {filterSearch && (
+            <button
+              type="button"
+              onClick={() => setFilterSearch('')}
+              className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer transition-colors"
+              title="Xóa tìm kiếm"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
 
         <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
@@ -793,9 +871,42 @@ export function FoodRegistrationView() {
         {/* Mobile View (md:hidden) */}
         <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
           {filteredRegistrations.length === 0 ? (
-            <div className="py-10 px-4 text-center text-slate-400 text-xs">
-              <UtensilsCrossed className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2 opacity-60" />
-              Không tìm thấy phiếu đăng ký thực phẩm nào.
+            <div className="py-10 px-4 text-center text-slate-400 text-xs space-y-3">
+              <UtensilsCrossed className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-1 opacity-60" />
+              <p className="font-medium text-slate-600 dark:text-slate-300">
+                Không tìm thấy phiếu nào trong mục <b>&ldquo;{activeTab === 'my' ? 'Phiếu của tôi' : activeTab === 'approver' ? 'Phiếu cần tôi duyệt' : 'Tất cả phiếu'}&rdquo;</b>
+                {filterSearch ? ` khớp với &ldquo;${filterSearch}&rdquo;` : ''}.
+              </p>
+              {matchInOtherTabs && (
+                <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200 space-y-2">
+                  <div className="flex items-center justify-center gap-1.5 font-bold">
+                    <Info className="w-4 h-4 text-amber-600" />
+                    <span>Tìm thấy {matchInOtherTabs.count} phiếu khớp trong tab &ldquo;{matchInOtherTabs.tabLabel}&rdquo;</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab(matchInOtherTabs.tab)}
+                    className="w-full py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl transition-colors cursor-pointer"
+                  >
+                    Chuyển sang tab &ldquo;{matchInOtherTabs.tabLabel}&rdquo; để xem
+                  </button>
+                </div>
+              )}
+              {(filterSearch || selectedStatusSingle !== 'all' || filterCategory !== 'all') && (
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFilterSearch('');
+                      setSelectedStatusSingle('all');
+                      setFilterCategory('all');
+                    }}
+                    className="text-amber-600 dark:text-amber-400 hover:underline font-semibold cursor-pointer"
+                  >
+                    Xóa bộ lọc để hiển thị danh sách
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             filteredRegistrations.map((item) => {
@@ -935,9 +1046,42 @@ export function FoodRegistrationView() {
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {filteredRegistrations.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-10 text-center text-slate-400">
-                    <UtensilsCrossed className="w-7 h-7 mx-auto text-slate-300 dark:text-slate-600 mb-2 opacity-60" />
-                    Không tìm thấy phiếu đăng ký thực phẩm nào.
+                  <td colSpan={8} className="py-10 text-center text-slate-400 text-xs">
+                    <UtensilsCrossed className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2 opacity-60" />
+                    <p className="font-medium text-slate-600 dark:text-slate-300 text-sm">
+                      Không tìm thấy phiếu nào trong mục <b>&ldquo;{activeTab === 'my' ? 'Phiếu của tôi' : activeTab === 'approver' ? 'Phiếu cần tôi duyệt' : 'Tất cả phiếu'}&rdquo;</b>
+                      {filterSearch ? ` khớp với từ khóa &ldquo;${filterSearch}&rdquo;` : ''}.
+                    </p>
+                    {matchInOtherTabs && (
+                      <div className="mt-3 inline-flex items-center gap-2 p-2.5 px-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200">
+                        <Info className="w-4 h-4 text-amber-600 shrink-0" />
+                        <span>
+                          Tìm thấy <b>{matchInOtherTabs.count}</b> phiếu khớp từ khóa trong tab <b>&ldquo;{matchInOtherTabs.tabLabel}&rdquo;</b>.
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setActiveTab(matchInOtherTabs.tab)}
+                          className="ml-2 px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl transition-colors cursor-pointer"
+                        >
+                          Chuyển đến xem ngay &rarr;
+                        </button>
+                      </div>
+                    )}
+                    {(filterSearch || selectedStatusSingle !== 'all' || filterCategory !== 'all') && (
+                      <div className="mt-3">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFilterSearch('');
+                            setSelectedStatusSingle('all');
+                            setFilterCategory('all');
+                          }}
+                          className="text-amber-600 dark:text-amber-400 hover:underline font-semibold cursor-pointer"
+                        >
+                          Xóa bộ lọc & Hiển thị lại tất cả phiếu trong tab này
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ) : (

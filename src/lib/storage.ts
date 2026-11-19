@@ -2090,6 +2090,10 @@ class StorageService {
     const isNew = existingIndex < 0;
 
     if (isNew) {
+      if (byUser && !registration.createdById) {
+        registration.createdById = byUser.id;
+        registration.createdByName = byUser.name;
+      }
       list.unshift(registration);
     } else {
       list[existingIndex] = registration;
@@ -2316,6 +2320,10 @@ class StorageService {
     const isNew = existingIndex < 0;
 
     if (isNew) {
+      if (byUser && !registration.createdById) {
+        registration.createdById = byUser.id;
+        registration.createdByName = byUser.name;
+      }
       list.unshift(registration);
     } else {
       list[existingIndex] = {
