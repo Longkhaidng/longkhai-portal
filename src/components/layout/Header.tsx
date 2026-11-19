@@ -66,18 +66,37 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
 
   return (
     <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 sm:px-4 md:px-6 flex items-center justify-between sticky top-0 z-30 transition-colors">
-      {/* Left: Mobile Hamburger & Search bar */}
+      {/* Left: 3-dash Hamburger Menu Button, Brand & Search bar */}
       <div className="flex items-center gap-2 sm:gap-3">
         <button
           type="button"
           onClick={onToggleSidebar}
-          className="p-2.5 -ml-1 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:bg-slate-200 dark:active:bg-slate-700 lg:hidden mobile-landscape-hamburger cursor-pointer shrink-0 touch-manipulation"
-          title="Mở menu"
+          className="p-2.5 -ml-1 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:bg-slate-200 dark:active:bg-slate-700 cursor-pointer shrink-0 touch-manipulation flex items-center justify-center transition-colors"
+          title="Mở menu chức năng (3 dấu gạch ngang)"
         >
           <Menu className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-44 sm:w-64 md:w-80">
+        {/* Brand logo & name on header */}
+        <div className="flex items-center gap-2 mr-1 sm:mr-2 shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-slate-900/10 dark:bg-white/10 p-1 flex items-center justify-center shadow-xs border border-slate-200 dark:border-slate-700 shrink-0">
+            <img
+              src="/logo.png"
+              alt="Long Khai Corporation Logo"
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="hidden sm:block leading-none">
+            <div className="font-black text-xs text-slate-900 dark:text-white tracking-wide">
+              LONG KHẢI
+            </div>
+            <div className="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider mt-0.5">
+              PORTAL
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-36 sm:w-64 md:w-80">
           <Search className="w-4 h-4 text-slate-400 shrink-0" />
           <input
             type="text"

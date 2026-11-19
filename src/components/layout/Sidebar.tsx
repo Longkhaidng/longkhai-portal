@@ -97,6 +97,17 @@ export function Sidebar({
     }));
   };
 
+  // Close sidebar drawer on Escape key press
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen && onClose) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   // Hide WEB-001 from external links section since it is now integrated natively as 'food_inspection'
   const allWebIntegrations = storage
     .getWebIntegrations()
@@ -241,22 +252,22 @@ export function Sidebar({
 
   return (
     <>
-      {/* Mobile Drawer Backdrop */}
+      {/* Sidebar Drawer Backdrop (Hiển thị khi mở menu trên mọi thiết bị) */}
       {isOpen && (
         <div
           onClick={onClose}
-          className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-40 lg:hidden mobile-landscape-backdrop transition-opacity"
+          className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-40 transition-opacity"
         />
       )}
 
-      {/* Responsive Sidebar (Static on desktop, drawer on mobile & landscape mobile) */}
+      {/* Sidebar Drawer (Ẩn mặc định giống mobile, trượt ra khi bấm 3 dấu gạch ngang) */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-72 lg:w-64 xl:w-68 bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800 shrink-0 h-screen lg:h-auto lg:min-h-screen transition-transform duration-300 ease-in-out mobile-landscape-sidebar ${
-          isOpen ? 'translate-x-0 shadow-2xl sidebar-open' : '-translate-x-full lg:translate-x-0'
+        className={`fixed inset-y-0 left-0 z-50 w-72 sm:w-80 bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800 shrink-0 h-screen transition-transform duration-300 ease-in-out ${
+          isOpen ? 'translate-x-0 shadow-2xl sidebar-open' : '-translate-x-full'
         }`}
       >
-        {/* Logo & Brand & Mobile Close Button */}
-        <div className="h-16 px-4 lg:px-5 flex items-center justify-between border-b border-slate-800">
+        {/* Logo & Brand & Close Button */}
+        <div className="h-16 px-4 sm:px-5 flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-white/10 p-1 flex items-center justify-center shadow-md border border-white/10 shrink-0">
               <img
@@ -275,10 +286,10 @@ export function Sidebar({
             </div>
           </div>
 
-          {/* Close button on mobile drawer */}
+          {/* Close button on drawer */}
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 lg:hidden mobile-landscape-close-btn cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
             title="Đóng menu"
           >
             <X className="w-5 h-5" />
