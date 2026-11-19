@@ -77,10 +77,35 @@ export function FoodRegistrationView() {
   const [selectedDetailItem, setSelectedDetailItem] = useState<FoodRegistration | null>(null);
   const [approvingItem, setApprovingItem] = useState<{ item: FoodRegistration; level: 'dept' | 'hr' } | null>(null);
   const [approvalComment, setApprovalComment] = useState<string>('Đồng ý phê duyệt');
+  const [modalActionType, setModalActionType] = useState<'approve' | 'reject'>('approve');
+  const [modalRejectReason, setModalRejectReason] = useState<string>('');
   const [rejectingItem, setRejectingItem] = useState<{ item: FoodRegistration; level: 'approver' | 'guard' } | null>(null);
   const [rejectReason, setRejectReason] = useState<string>('');
   const [selectedQrItem, setSelectedQrItem] = useState<FoodRegistration | null>(null);
   const [isQrModalOpen, setIsQrModalOpen] = useState<boolean>(false);
+
+  // Helper tính số ngày đăng ký
+  const calculateItemDays = (item: FoodRegistration): number => {
+    if (item.durationDays && item.durationDays > 0) return item.durationDays;
+    if (!item.toDate || item.toDate === item.entryDate) return 1;
+    try {
+      const d1 = new Date(item.entryDate);
+      const d2 = new Date(item.toDate);
+      const diffTime = d2.getTime() - d1.getTime();
+      const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1;
+      return diffDays > 0 ? diffDays : 1;
+    } catch {
+      return 1;
+    }
+  };
+
+  // Helper mở modal phê duyệt & từ chối
+  const openApproveModal = (item: FoodRegistration, level: 'dept' | 'hr') => {
+    setApprovingItem({ item, level });
+    setModalActionType('approve');
+    setApprovalComment('Đồng ý phê duyệt');
+    setModalRejectReason('');
+  };
 
   // Filter & Search states
   const [activeTab, setActiveTab] = useState<'my' | 'approver' | 'all'>(() =>
@@ -202,7 +227,7 @@ export function FoodRegistrationView() {
         }
 
         if (urlAction === 'approve' && (canDept || canHR)) {
-          setApprovingItem({ item: target, level: canHR ? 'hr' : 'dept' });
+          openApproveModal(target, canHR ? 'hr' : 'dept');
         } else if (urlAction === 'reject' && (canDept || canHR)) {
           setRejectingItem({ item: target, level: 'approver' });
         } else {
@@ -500,7 +525,47 @@ export function FoodRegistrationView() {
 
     setRegistrations(storage.getFoodRegistrations());
     setApprovingItem(null);
+    setModalActionType('approve');
     setApprovalComment('Đồng ý phê duyệt');
+    setModalRejectReason('');
+  };
+
+  // Reject directly from the Approve/Reject notification modal
+  const handleModalRejectSubmit = () => {
+    if (!approvingItem) return;
+    const { item } = approvingItem;
+    const reason = modalRejectReason.trim();
+    if (!reason) {
+      showToast('Vui lòng nhập lý do từ chối!', 'error');
+      return;
+    }
+
+    const canDept = canApproveFoodDept(currentUser, item);
+    const canHR = canApproveFoodHR(currentUser, item);
+    if (!canDept && !canHR) {
+      showToast('Bạn không có quyền từ chối phiếu này!', 'error');
+      setApprovingItem(null);
+      setModalActionType('approve');
+      setModalRejectReason('');
+      return;
+    }
+
+    storage.rejectFoodRegistrationByApprover(
+      item.id,
+      { id: currentUser?.id || 'approver', name: currentUser?.name || 'Người duyệt' },
+      reason
+    );
+    showToast(`Đã từ chối phê duyệt đơn ${item.id}`);
+
+    const updatedList = storage.getFoodRegistrations();
+    setRegistrations(updatedList);
+    if (selectedDetailItem?.id === item.id) {
+      const updated = updatedList.find((r) => r.id === item.id);
+      if (updated) setSelectedDetailItem(updated);
+    }
+    setApprovingItem(null);
+    setModalActionType('approve');
+    setModalRejectReason('');
   };
 
   // Approver / Guard Action: Reject
@@ -963,7 +1028,7 @@ export function FoodRegistrationView() {
                       {canDept && (
                         <button
                           type="button"
-                          onClick={() => setApprovingItem({ item, level: 'dept' })}
+                          onClick={() => openApproveModal(item, 'dept')}
                           className="px-2.5 py-1 bg-amber-600 hover:bg-amber-700 text-white font-bold text-[11px] rounded-lg"
                         >
                           Trưởng BP duyệt
@@ -972,7 +1037,7 @@ export function FoodRegistrationView() {
                       {canHR && (
                         <button
                           type="button"
-                          onClick={() => setApprovingItem({ item, level: 'hr' })}
+                          onClick={() => openApproveModal(item, 'hr')}
                           className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] rounded-lg"
                         >
                           HCNS duyệt
@@ -1215,7 +1280,7 @@ export function FoodRegistrationView() {
                           {canDeptApprove && (
                             <button
                               type="button"
-                              onClick={() => setApprovingItem({ item, level: 'dept' })}
+                              onClick={() => openApproveModal(item, 'dept')}
                               className="px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-[11px] cursor-pointer"
                               title="Trưởng BP duyệt"
                             >
@@ -1225,7 +1290,7 @@ export function FoodRegistrationView() {
                           {canHRApprove && (
                             <button
                               type="button"
-                              onClick={() => setApprovingItem({ item, level: 'hr' })}
+                              onClick={() => openApproveModal(item, 'hr')}
                               className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] cursor-pointer"
                               title="Trưởng phòng HCNS duyệt"
                             >
@@ -1908,7 +1973,7 @@ export function FoodRegistrationView() {
                     </div>
                     <div className="flex gap-2">
                       <button
-                        onClick={() => setApprovingItem({ item: selectedDetailItem, level: canHR ? 'hr' : 'dept' })}
+                        onClick={() => openApproveModal(selectedDetailItem, canHR ? 'hr' : 'dept')}
                         className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm cursor-pointer"
                       >
                         ✓ Duyệt phiếu này
@@ -1967,21 +2032,57 @@ export function FoodRegistrationView() {
         </div>
       )}
 
-      {/* MODAL PHÊ DUYỆT (Nhập ý kiến duyệt) */}
+      {/* MODAL PHÊ DUYỆT & TỪ CHỐI */}
       {approvingItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                <CheckCircle2 className="w-5 h-5" />
-              </div>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs animate-in fade-in duration-200"
+          onClick={() => {
+            setApprovingItem(null);
+            setModalActionType('approve');
+            setModalRejectReason('');
+          }}
+        >
+          <div
+            className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Nút đóng X góc trên bên phải thay thế cho nút Đóng ở dưới */}
+            <button
+              type="button"
+              onClick={() => {
+                setApprovingItem(null);
+                setModalActionType('approve');
+                setModalRejectReason('');
+              }}
+              className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              title="Đóng hộp thoại"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-3 pr-8">
+              {modalActionType === 'approve' ? (
+                <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
+              ) : (
+                <div className="w-10 h-10 rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+                  <XCircle className="w-5 h-5" />
+                </div>
+              )}
               <div>
                 <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                  {approvingItem.level === 'dept'
-                    ? '1. Trưởng Bộ Phận Phê Duyệt'
-                    : isHROrITDepartment(approvingItem.item.department)
-                    ? 'Trưởng Phòng HCNS Phê Duyệt (Duyệt trực tiếp)'
-                    : '2. Trưởng Phòng HCNS Phê Duyệt'}
+                  {modalActionType === 'approve' ? (
+                    approvingItem.level === 'dept'
+                      ? '1. Trưởng Bộ Phận Phê Duyệt'
+                      : isHROrITDepartment(approvingItem.item.department)
+                      ? 'Trưởng Phòng HCNS Phê Duyệt (Duyệt trực tiếp)'
+                      : '2. Trưởng Phòng HCNS Phê Duyệt'
+                  ) : (
+                    approvingItem.level === 'dept'
+                      ? '1. Trưởng Bộ Phận Từ Chối'
+                      : 'Trưởng Phòng HCNS Từ Chối Phê Duyệt'
+                  )}
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
                   Phiếu: <b className="font-mono">{approvingItem.item.id}</b> - {approvingItem.item.employeeName}
@@ -2005,7 +2106,15 @@ export function FoodRegistrationView() {
               <div className="flex justify-between">
                 <span className="text-slate-400">Khoảng ngày:</span>
                 <span className="font-bold text-slate-800 dark:text-slate-200">
-                  {formatDate(approvingItem.item.entryDate)} → {formatDate(approvingItem.item.toDate || approvingItem.item.entryDate)}
+                  {approvingItem.item.toDate
+                    ? `${formatDate(approvingItem.item.entryDate)} → ${formatDate(approvingItem.item.toDate)}`
+                    : `Ngày ${formatDate(approvingItem.item.entryDate)} (${approvingItem.item.shift || 'Ca HC'})`}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-400">Số ngày đăng ký:</span>
+                <span className="font-bold text-blue-600 dark:text-blue-400">
+                  {calculateItemDays(approvingItem.item)} ngày
                 </span>
               </div>
               {approvingItem.item.category === 'pregnant' && (
@@ -2015,41 +2124,85 @@ export function FoodRegistrationView() {
               )}
             </div>
 
-            <div>
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                Ý kiến phê duyệt:
-              </label>
-              <input
-                type="text"
-                value={approvalComment}
-                onChange={(e) => setApprovalComment(capitalizeFirstLetter(e.target.value))}
-                autoCapitalize="sentences"
-                placeholder="Ý kiến ghi chú của người duyệt..."
-                className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500"
-              />
-            </div>
+            {modalActionType === 'approve' ? (
+              <>
+                <div>
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                    Ý kiến phê duyệt:
+                  </label>
+                  <input
+                    type="text"
+                    value={approvalComment}
+                    onChange={(e) => setApprovalComment(capitalizeFirstLetter(e.target.value))}
+                    autoCapitalize="sentences"
+                    placeholder="Ý kiến ghi chú của người duyệt..."
+                    className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
 
-            <div className="flex items-center gap-2 pt-2">
-              <button
-                type="button"
-                onClick={handleApproveSubmit}
-                className="flex-1 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-emerald-600/20"
-              >
-                <CheckCircle2 className="w-4 h-4" />
-                <span>
-                  {approvingItem.level === 'dept'
-                    ? 'Xác nhận duyệt (Chuyển HCNS)'
-                    : 'Duyệt hoàn tất'}
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setApprovingItem(null)}
-                className="py-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-semibold text-xs hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
-              >
-                Đóng
-              </button>
-            </div>
+                <div className="flex items-center gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={handleApproveSubmit}
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-emerald-600/20 transition-colors"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>
+                      {approvingItem.level === 'dept'
+                        ? 'Xác nhận duyệt (Chuyển HCNS)'
+                        : 'Duyệt hoàn tất'}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setModalActionType('reject')}
+                    className="py-2.5 px-3.5 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/60 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                  >
+                    <XCircle className="w-4 h-4" />
+                    <span>Từ chối</span>
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="animate-in fade-in duration-150">
+                  <label className="text-xs font-bold text-rose-600 dark:text-rose-400 block mb-1">
+                    Lý do từ chối: *
+                  </label>
+                  <textarea
+                    rows={3}
+                    autoFocus
+                    required
+                    value={modalRejectReason}
+                    onChange={(e) => setModalRejectReason(capitalizeFirstLetter(e.target.value))}
+                    autoCapitalize="sentences"
+                    placeholder="Nhập lý do từ chối phê duyệt đơn này..."
+                    className="w-full p-2.5 rounded-xl border border-rose-300 dark:border-rose-800/80 bg-rose-50/40 dark:bg-rose-950/20 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-500 resize-none font-medium"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={handleModalRejectSubmit}
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-rose-600/20 transition-colors"
+                  >
+                    <XCircle className="w-4 h-4" />
+                    <span>Xác nhận từ chối</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setModalActionType('approve');
+                      setModalRejectReason('');
+                    }}
+                    className="py-2.5 px-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-semibold text-xs hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+                  >
+                    Quay lại
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
