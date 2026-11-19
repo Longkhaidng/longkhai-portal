@@ -13,12 +13,16 @@
   "foodDetails": "Nước thuốc (Lý do: Đau dạ dày)",
   "medicineReason": "Đau dạ dày",
   "complianceCommitment": true,
-  "status": "pending_dept",
+  "status": "pending_hr",
   "steps": [
     {
       "stepName": "Trưởng bộ phận",
       "roleRequired": "manager",
-      "status": "pending"
+      "approverId": "2409",
+      "approverName": "Trịnh Anh Tài",
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-11-19T06:54:48.589Z"
     },
     {
       "stepName": "Trưởng phòng HCNS",
@@ -26,7 +30,7 @@
       "status": "pending"
     }
   ],
-  "currentStepIndex": 0,
+  "currentStepIndex": 1,
   "createdAt": "2026-11-19T06:52:47.403Z",
-  "updatedAt": "2026-11-19T06:52:47.403Z"
+  "updatedAt": "2026-11-19T06:54:48.589Z"
 }
