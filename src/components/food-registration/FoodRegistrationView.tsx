@@ -1035,7 +1035,7 @@ export function FoodRegistrationView() {
               <tr>
                 <th className="py-3 px-3.5 whitespace-nowrap w-[95px]">Mã phiếu</th>
                 <th className="py-3 px-3.5 whitespace-nowrap w-[170px] min-w-[150px]">Nhân viên</th>
-                <th className="py-3 px-3.5 min-w-[130px] max w-[145px]">Nhóm thực phẩm</th>
+                <th className="py-3 px-3.5 whitespace-normal max w-[140px]">Nhóm thực phẩm</th>
                 <th className="py-3 px-3.5 min-w-[170px] max-w-[220px]">Chi tiết món / Nước thuốc</th>
                 <th className="py-3 px-3.5 whitespace-nowrap w-[150px]">Thời gian hiệu lực</th>
                 <th className="py-3 px-3.5 whitespace-nowrap w-[155px]">Tiến trình duyệt</th>
