@@ -453,30 +453,6 @@ export function Sidebar({
           )}
         </div>
 
-        {/* User profile & Mobile Logout Button in Drawer */}
-        <div className="p-3 border-t border-slate-800 bg-slate-900/90 space-y-2">
-          <div className="flex items-center gap-2.5 px-1">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center uppercase shadow-sm shrink-0">
-              {currentUser?.name ? currentUser.name.slice(0, 2) : 'NV'}
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="text-xs font-bold text-white truncate">{currentUser?.name || 'Nhân viên'}</div>
-              <div className="text-[10px] text-slate-400 font-mono truncate">MSNV: {currentUser?.id} &bull; {currentUser?.department}</div>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              if (onClose) onClose();
-              logout();
-            }}
-            className="w-full py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
-          >
-            <LogOut className="w-4 h-4 shrink-0" />
-            <span>Đăng xuất khỏi hệ thống</span>
-          </button>
-        </div>
-
         {/* Footer info */}
         <div className="p-4 border-t border-slate-800 text-[11px] text-slate-500 text-center">
           <div>Hệ thống Nhà máy Long Khải</div>
