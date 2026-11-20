@@ -1,0 +1,32 @@
+{
+  "id": "TP26-0001",
+  "employeeId": "2754",
+  "employeeName": "Lê Thị Thu Sương",
+  "createdById": "2754",
+  "createdByName": "Lê Thị Thu Sương",
+  "department": "Phân xưởng dệt",
+  "entryDate": "2026-11-20",
+  "toDate": "2027-02-17",
+  "durationDays": 90,
+  "category": "medicine_drink",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Nước thuốc (Lý do: Rối loạn tiền đình,nhức đầu,chóng mặt,)",
+  "medicineReason": "Rối loạn tiền đình,nhức đầu,chóng mặt,",
+  "complianceCommitment": true,
+  "status": "pending_dept",
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận",
+      "roleRequired": "manager",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-20T13:15:18.259Z",
+  "updatedAt": "2026-11-20T13:15:18.259Z"
+}
