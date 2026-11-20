@@ -1471,7 +1471,7 @@
     "role": "employee",
     "departmentHeadId": "1241",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "dung.vo@longkhai.com.vn",
+    "departmentHeadEmail": "it@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
@@ -1481,7 +1481,7 @@
     "isActive": true,
     "password": "1466",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-20T02:48:53.771Z"
+    "updatedAt": "2026-11-20T05:37:25.480Z"
   },
   {
     "id": "1491",
