@@ -1390,9 +1390,13 @@ export function FoodRegistrationView() {
                   <h2 className="text-base font-bold text-slate-900 dark:text-white">
                     Đăng Ký Mang Thực Phẩm Vào Nhà Máy
                   </h2>
-                  <p className="text-xs text-slate-400">
-                    Vui lòng chọn nhóm thực phẩm và điền đầy đủ thông tin theo quy định
-                  </p>
+                    <p className="text-xs text-slate-400">
+                      Vui lòng chọn nhóm thực phẩm và điền đầy đủ thông tin theo quy định
+                    </p>
+                  <p className="italic text-red-600">
+                      * Lưu ý: Không được phép mang Thực Phẩm/Nước Thuốc vào khu vực sản xuất.
+                  </p>                       
+                  
                 </div>
               </div>
               <button
@@ -1810,13 +1814,7 @@ export function FoodRegistrationView() {
                   </span>
                 </label>
               </div>
-              <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-                <label className="flex items-start gap-2.5 cursor-pointer text-slate-700 dark:text-slate-300 text-xs leading-relaxed select-none">
-                  <span className="italic text-red-600">
-                      * Lưu ý: Không được phép mang thực phẩm vào khu vực sản xuất.
-                  </span>
-                </label>
-              </div>
+              
 
               {/* Action Buttons */}
               <div className="flex items-center justify-end gap-2.5 pt-2">
