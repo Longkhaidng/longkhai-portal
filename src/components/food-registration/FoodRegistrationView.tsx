@@ -1812,8 +1812,8 @@ export function FoodRegistrationView() {
               </div>
               <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
                 <label className="flex items-start gap-2.5 cursor-pointer text-slate-700 dark:text-slate-300 text-xs leading-relaxed select-none">
-                  <span>
-                    Lưu ý: Không được phép mang thực phẩm vào khu vực sản xuất.
+                  <span className="italic text-red-600">
+                      * Lưu ý: Không được phép mang thực phẩm vào khu vực sản xuất.
                   </span>
                 </label>
               </div>
