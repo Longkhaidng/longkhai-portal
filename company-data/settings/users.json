@@ -1034,7 +1034,7 @@
     "department": "Phòng Mẫu",
     "position": "Nhân viên công nghệ mẫu",
     "role": "manager",
-    "email": "dung.vo@longkhai.com.vn",
+    "email": "it@longkhai.com.vn",
     "economicStaffId": "1139",
     "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
@@ -1047,7 +1047,7 @@
     "isActive": true,
     "password": "1241",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-20T05:34:57.888Z",
+    "updatedAt": "2026-11-20T05:35:23.366Z",
     "allowedWebIntegrations": []
   },
   {
