@@ -497,12 +497,14 @@
       "dashboard",
       "food_registration",
       "repair",
-      "announcements"
+      "announcements",
+      "reports"
     ],
     "isActive": true,
     "password": "1030",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-20T02:48:53.771Z"
+    "updatedAt": "2026-11-20T03:53:55.190Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "1035",
