@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   FoodRegistration,
   FOOD_CATEGORY_LABELS,
@@ -21,6 +21,8 @@ import {
   UserCheck,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
+import { generateQrDataUrl, getQrConfirmUrl } from '@/lib/qr';
+import { storage } from '@/lib/storage';
 
 interface FoodQrModalProps {
   isOpen: boolean;
@@ -40,20 +42,170 @@ export function FoodQrModal({
   onGuardReject,
 }: FoodQrModalProps) {
   const qrRef = useRef<HTMLImageElement>(null);
+  const [activeQrUrl, setActiveQrUrl] = useState<string>(registration?.qrDataUrl || '');
+  const [isGeneratingQr, setIsGeneratingQr] = useState<boolean>(false);
+
+  // Auto-generate QR code on the fly if missing and record is approved/confirmed/vegetarian
+  useEffect(() => {
+    let isMounted = true;
+    if (isOpen && registration) {
+      if (registration.qrDataUrl) {
+        setActiveQrUrl(registration.qrDataUrl);
+      } else if (
+        registration.status === 'approved' ||
+        registration.status === 'confirmed' ||
+        registration.category === 'vegetarian'
+      ) {
+        setIsGeneratingQr(true);
+        const confirmUrl = registration.qrCodeUrl || getQrConfirmUrl('food', registration.id);
+        generateQrDataUrl(confirmUrl)
+          .then((dataUrl) => {
+            if (isMounted) {
+              setActiveQrUrl(dataUrl);
+              registration.qrCodeUrl = confirmUrl;
+              registration.qrDataUrl = dataUrl;
+              storage.saveFoodRegistration(registration, { id: 'system', name: 'Hệ thống' });
+            }
+          })
+          .catch((err) => {
+            console.warn('Error auto-generating QR code:', err);
+          })
+          .finally(() => {
+            if (isMounted) setIsGeneratingQr(false);
+          });
+      } else {
+        setActiveQrUrl('');
+      }
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [isOpen, registration]);
 
   if (!isOpen || !registration) return null;
 
   const validity = checkFoodQrValidity(registration);
   const isPendingApproval = registration.status === 'pending_dept' || registration.status === 'pending_hr';
 
+  // Helper lấy tên thực phẩm hiển thị chuẩn
+  const getFoodDisplayName = (): string => {
+    if (registration.category === 'medicine_drink') {
+      return registration.medicineReason || registration.foodDetails || 'Nước thuốc';
+    }
+    if (registration.category === 'pregnant') {
+      return registration.foodDetails || 'Bánh + Sữa hoặc Trái cây + Sữa';
+    }
+    return registration.foodDetails || FOOD_CATEGORY_LABELS[registration.category] || 'Thực phẩm';
+  };
+
+  const foodDisplayName = getFoodDisplayName();
+
+  // Helper download QR badge card
   const handleDownloadQr = () => {
-    if (!registration.qrDataUrl) return;
-    const a = document.createElement('a');
-    a.href = registration.qrDataUrl;
-    a.download = `QR_ThucPham_${registration.id}_${registration.employeeId}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    if (!activeQrUrl) return;
+
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        // Fallback simple download
+        const a = document.createElement('a');
+        a.href = activeQrUrl;
+        a.download = `QR_ThucPham_${registration.id}_${registration.employeeId}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return;
+      }
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        canvas.width = 500;
+        canvas.height = 640;
+
+        // Background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Header banner
+        ctx.fillStyle = '#059669';
+        ctx.fillRect(0, 0, canvas.width, 68);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 18px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('PHIẾU MANG THỰC PHẨM VÀO NHÀ MÁY', canvas.width / 2, 32);
+        ctx.font = '13px sans-serif';
+        ctx.fillText(`Mã phiếu: ${registration.id} | CÔNG TY LONG KHẢI`, canvas.width / 2, 54);
+
+        // QR Image
+        ctx.drawImage(img, 100, 85, 300, 300);
+
+        // Separator
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(30, 400);
+        ctx.lineTo(470, 400);
+        ctx.stroke();
+
+        // 2 MAIN INFORMATION ITEMS
+        ctx.textAlign = 'left';
+
+        // 1. Họ và tên người đăng ký
+        ctx.fillStyle = '#64748b';
+        ctx.font = '13px sans-serif';
+        ctx.fillText('1. Họ và tên người đăng ký:', 36, 430);
+
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 20px sans-serif';
+        ctx.fillText(`${registration.employeeName} (${registration.employeeId})`, 36, 458);
+
+        ctx.fillStyle = '#475569';
+        ctx.font = '13px sans-serif';
+        ctx.fillText(`Bộ phận: ${registration.department}`, 36, 482);
+
+        // 2. Tên thực phẩm mang vào
+        ctx.fillStyle = '#64748b';
+        ctx.font = '13px sans-serif';
+        ctx.fillText('2. Tên thực phẩm mang vào:', 36, 520);
+
+        ctx.fillStyle = '#047857';
+        ctx.font = 'bold 17px sans-serif';
+        const displayFood = foodDisplayName.length > 42 ? foodDisplayName.slice(0, 40) + '...' : foodDisplayName;
+        ctx.fillText(displayFood, 36, 546);
+
+        // Validity period footer
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '12px sans-serif';
+        const dateStr = registration.toDate && registration.toDate !== registration.entryDate
+          ? `${formatDate(registration.entryDate)} → ${formatDate(registration.toDate)}`
+          : formatDate(registration.entryDate);
+        ctx.fillText(`Thời gian hiệu lực: ${dateStr}`, 36, 595);
+
+        // Border card
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
+
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL('image/png');
+        a.download = `QR_ThucPham_${registration.id}_${registration.employeeId}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      };
+      img.src = activeQrUrl;
+    } catch {
+      // Fallback
+      const a = document.createElement('a');
+      a.href = activeQrUrl;
+      a.download = `QR_ThucPham_${registration.id}_${registration.employeeId}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
   };
 
   return (
@@ -126,7 +278,7 @@ export function FoodQrModal({
               </div>
               <p className="text-xs text-amber-700 dark:text-amber-300">
                 {registration.steps && registration.steps.length === 1
-                  ? 'Đơn đăng ký của nhân viên Phòng HCNS được chuyển trực tiếp đến Trưởng phòng HCNS phê duyệt. Mã QR sẽ được kích hoạt ngay sau khi Trưởng phòng HCNS phê duyệt.'
+                  ? 'Đơn đăng ký của nhân viên Phòng HCNS hoặc CNTT được chuyển trực tiếp đến Trưởng phòng HCNS phê duyệt. Mã QR sẽ được kích hoạt ngay sau khi Trưởng phòng HCNS phê duyệt.'
                   : 'Theo quy định, thực phẩm chế độ dài ngày cần được Trưởng bộ phận và Trưởng phòng HCNS phê duyệt. Mã QR sẽ được cấp tự động sau khi phê duyệt hoàn tất.'}
               </p>
 
@@ -175,17 +327,22 @@ export function FoodQrModal({
 
               {/* QR Container */}
               <div className="p-4 bg-white rounded-3xl shadow-inner border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center">
-                {registration.qrDataUrl ? (
+                {activeQrUrl ? (
                   <img
                     ref={qrRef}
-                    src={registration.qrDataUrl}
+                    src={activeQrUrl}
                     alt={`QR Code ${registration.id}`}
                     className="w-56 h-56 object-contain rounded-xl"
                   />
+                ) : isGeneratingQr ? (
+                  <div className="w-56 h-56 flex flex-col items-center justify-center text-slate-400 text-xs">
+                    <QrCode className="w-12 h-12 mb-2 stroke-1 animate-pulse text-emerald-500" />
+                    <span className="font-medium text-emerald-600">Đang khởi tạo mã QR...</span>
+                  </div>
                 ) : (
                   <div className="w-56 h-56 flex flex-col items-center justify-center text-slate-400 text-xs">
-                    <QrCode className="w-12 h-12 mb-2 stroke-1 animate-pulse" />
-                    <span>Đang tải mã QR...</span>
+                    <QrCode className="w-12 h-12 mb-2 stroke-1 text-slate-300" />
+                    <span>Mã QR chưa sẵn sàng</span>
                   </div>
                 )}
                 <p className="mt-2 text-[11px] text-slate-500 font-medium">
@@ -195,150 +352,66 @@ export function FoodQrModal({
             </>
           )}
 
-          {/* Registration Info Summary Card */}
-          <div className="w-full bg-slate-50 dark:bg-slate-950/60 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-3.5 text-left text-xs space-y-2">
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <span className="text-slate-400 text-[10px] block">Người mang vào:</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200">
-                  {registration.employeeName} ({registration.employeeId})
+          {/* Registration Info: ONLY 2 main items as requested */}
+          <div className="w-full bg-slate-50 dark:bg-slate-950/60 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-4 text-left space-y-3">
+            <div>
+              <span className="text-slate-400 text-xs font-medium block mb-0.5">
+                1. Họ và tên người đăng ký:
+              </span>
+              <div className="flex items-center justify-between">
+                <span className="text-base font-extrabold text-slate-900 dark:text-white">
+                  {registration.employeeName}
                 </span>
-              </div>
-              <div>
-                <span className="text-slate-400 text-[10px] block">Bộ phận / Xưởng:</span>
-                <span className="font-semibold text-slate-700 dark:text-slate-300">
-                  {registration.department}
-                </span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
-              <div>
-                <span className="text-slate-400 text-[10px] block">
-                  {registration.toDate ? 'Thời gian mang vào:' : 'Ngày mang vào:'}
-                </span>
-                <span className="font-bold text-slate-800 dark:text-slate-200">
-                  {registration.toDate && registration.toDate !== registration.entryDate
-                    ? `${formatDate(registration.entryDate)} → ${formatDate(registration.toDate)}`
-                    : formatDate(registration.entryDate)}
-                </span>
-              </div>
-              <div>
-                <span className="text-slate-400 text-[10px] block">
-                  {registration.shift ? 'Ca làm việc:' : 'Hình thức:'}
-                </span>
-                <span className="font-semibold text-amber-600 dark:text-amber-400">
-                  {registration.shift || (registration.toDate ? 'Theo đợt' : '-')}
+                <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                  MSNV: <b>{registration.employeeId}</b>
                 </span>
               </div>
             </div>
 
             <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
-              <span className="text-slate-400 text-[10px] block mb-0.5">
-                {registration.category === 'medicine_drink' ? 'Phân loại & Lý do mang vào:' : 'Phân loại & Món ăn:'}
+              <span className="text-slate-400 text-xs font-medium block mb-0.5">
+                2. Tên thực phẩm mang vào:
               </span>
-              <p className="font-semibold text-emerald-700 dark:text-emerald-400">
-                {FOOD_CATEGORY_LABELS[registration.category]}
-                {registration.customCategory ? ` (${registration.customCategory})` : ''}
-              </p>
-              <p className="text-slate-600 dark:text-slate-300 text-[11px] mt-0.5 line-clamp-2">
-                {registration.category === 'medicine_drink'
-                  ? (registration.medicineReason || registration.foodDetails)
-                  : registration.foodDetails}
-              </p>
-              {registration.category === 'pregnant' && (
-                <p className="text-[10px] text-amber-600 dark:text-amber-400 italic mt-1 font-medium">
-                  * Ghi chú: Mỗi người chỉ được phép mang vào 02 đơn vị cho mỗi loại thực phẩm.
-                </p>
-              )}
-              {registration.notes && (
-                <p className="text-[10px] text-slate-500 mt-1">
-                  <span className="font-medium text-slate-400">Ghi chú:</span> {registration.notes}
-                </p>
-              )}
+              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400 block">
+                {foodDisplayName}
+              </span>
             </div>
 
-            {registration.entryLogs && registration.entryLogs.length > 0 && (
-              <div className="space-y-1.5 pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block">
-                  Lịch sử bảo vệ xác nhận ({registration.entryLogs.length} lần):
-                </span>
-                <div className="space-y-1 max-h-32 overflow-y-auto">
-                  {registration.entryLogs.map((log, idx) => (
-                    <div
-                      key={idx}
-                      className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between text-[10px]"
-                    >
-                      <div className="flex items-center gap-1.5">
-                        <span className={log.action === 'confirmed' ? 'text-emerald-600 font-bold' : 'text-rose-600 font-bold'}>
-                          {log.action === 'confirmed' ? '✓' : '✕'}
-                        </span>
-                        <span className="font-semibold text-slate-800 dark:text-slate-200">{log.guardName}</span>
-                      </div>
-                      <span className="text-slate-400 font-mono">
-                        {log.timestamp ? new Date(log.timestamp).toLocaleDateString('vi-VN') + ' ' + new Date(log.timestamp).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : '-'}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+            {/* Guard status / confirmation indicator if confirmed */}
+            {registration.status === 'confirmed' && (
+              <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800/60 flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <span>Bảo vệ {registration.guardName || 'cổng'} đã quét xác nhận</span>
               </div>
             )}
 
-            {registration.status === 'confirmed' && (!registration.entryLogs || registration.entryLogs.length === 0) && (
-              <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-[11px] text-emerald-700 dark:text-emerald-300 flex items-start gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                <span>
-                  Bảo vệ <b>{registration.guardName || 'Bảo vệ cổng'}</b> đã xác nhận cho mang vào
-                  {registration.confirmedAt && ` (${new Date(registration.confirmedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })})`}.
-                </span>
-              </div>
-            )}
-
-            {registration.status === 'rejected' && (
-              <div className="p-2 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-[11px] text-rose-700 dark:text-rose-300">
-                Lý do từ chối: <b>{registration.rejectedReason || 'Không đảm bảo an toàn vệ sinh'}</b>
-              </div>
-            )}
-
-            {/* Khối bảo vệ cổng kiểm tra & xác nhận trong modal */}
-            {isGuard && (
+            {/* Khối bảo vệ cổng kiểm tra & xác nhận trong modal (nếu bảo vệ đang xem) */}
+            {isGuard && !validity.isExpired && (registration.status === 'approved' || registration.status === 'confirmed') && (
               <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
-                {!validity.isExpired && (registration.status === 'approved' || registration.status === 'confirmed' || registration.status === 'guard_rejected') ? (
-                  <div className="p-3 rounded-2xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800 space-y-2">
-                    <div className="text-xs font-bold text-teal-900 dark:text-teal-200 flex items-center gap-1.5">
-                      <ShieldCheck className="w-4 h-4 text-teal-600" />
-                      <span>Bảo vệ cổng kiểm tra &amp; xác nhận tại chỗ (Còn hiệu lực):</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={() => onGuardConfirm?.(registration)}
-                        className="py-2.5 px-3 rounded-xl bg-teal-600 hover:bg-teal-500 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer"
-                      >
-                        <CheckCircle2 className="w-4 h-4" />
-                        <span>Cho vào</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => onGuardReject?.(registration)}
-                        className="py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer"
-                      >
-                        <XCircle className="w-4 h-4" />
-                        <span>Từ chối</span>
-                      </button>
-                    </div>
+                <div className="p-3 rounded-2xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800 space-y-2">
+                  <div className="text-xs font-bold text-teal-900 dark:text-teal-200 flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-teal-600" />
+                    <span>Xác nhận tại cổng:</span>
                   </div>
-                ) : validity.isExpired && registration.status === 'confirmed' ? (
-                  <div className="p-3 rounded-2xl bg-teal-50 dark:bg-teal-950/40 border border-teal-300 dark:border-teal-800 flex items-center justify-center gap-2 text-teal-700 dark:text-teal-300 font-bold text-xs">
-                    <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />
-                    <span>Đã xác nhận cho mang vào (Hết hiệu lực)</span>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => onGuardConfirm?.(registration)}
+                      className="py-2.5 px-3 rounded-xl bg-teal-600 hover:bg-teal-500 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer"
+                    >
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>Cho vào</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onGuardReject?.(registration)}
+                      className="py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer"
+                    >
+                      <XCircle className="w-4 h-4" />
+                      <span>Từ chối</span>
+                    </button>
                   </div>
-                ) : validity.isExpired && (registration.status === 'guard_rejected' || registration.status === 'rejected') ? (
-                  <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-800 flex items-center justify-center gap-2 text-rose-700 dark:text-rose-300 font-bold text-xs">
-                    <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
-                    <span>Đã từ chối tại cổng (Hết hiệu lực)</span>
-                  </div>
-                ) : null}
+                </div>
               </div>
             )}
           </div>
@@ -346,13 +419,13 @@ export function FoodQrModal({
 
         {/* Footer Actions */}
         <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 flex items-center gap-2">
-          {registration.qrDataUrl && !isPendingApproval && !validity.isExpired && (
+          {activeQrUrl && !isPendingApproval && !validity.isExpired && (
             <button
               onClick={handleDownloadQr}
               className="flex-1 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 transition-all cursor-pointer"
             >
               <Download className="w-4 h-4" />
-              <span>Tải ảnh QR</span>
+              <span>Tải thẻ &amp; Mã QR</span>
             </button>
           )}
 

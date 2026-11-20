@@ -29,6 +29,8 @@ import {
   KeyRound,
   ScanLine,
   Check,
+  Volume2,
+  VolumeX,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
@@ -141,7 +143,42 @@ function ScanConfirmContent() {
   const [scannerActive, setScannerActive] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [manualCodeInput, setManualCodeInput] = useState('');
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
+
+  // Helper Vietnamese Text-to-Speech
+  const speakFoodRegistration = useCallback((empName: string, food: string) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const cleanFood = food
+        .replace(/\+/g, ' và ')
+        .replace(/\//g, ' hoặc ')
+        .replace(/\(.*?\)/g, '')
+        .trim();
+      const textToSpeak = `${empName}. ${cleanFood}`;
+
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.lang = 'vi-VN';
+      utterance.rate = 0.95;
+      utterance.pitch = 1.0;
+
+      const voices = window.speechSynthesis.getVoices();
+      const viVoice = voices.find((v) => v.lang.toLowerCase().includes('vi'));
+      if (viVoice) {
+        utterance.voice = viVoice;
+      }
+
+      utterance.onstart = () => setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      console.warn('Speech error:', e);
+      setIsSpeaking(false);
+    }
+  }, []);
 
   // Check login on mount
   useEffect(() => {
@@ -183,6 +220,17 @@ function ScanConfirmContent() {
         setDocType(data.type);
         setEmployeeInfo(data.employee);
         setManagerInfo(data.manager);
+
+        if (data.type === 'food' && data.record) {
+          const rec = data.record;
+          const foodName =
+            rec.category === 'medicine_drink'
+              ? (rec.medicineReason || rec.foodDetails || 'Nước thuốc')
+              : rec.category === 'pregnant'
+              ? (rec.foodDetails || 'Bánh và Sữa hoặc Trái cây và Sữa')
+              : (rec.foodDetails || 'Thực phẩm');
+          speakFoodRegistration(rec.employeeName, foodName);
+        }
       })
       .catch((err) => {
         setErrorMsg(err.message || 'Lỗi kết nối máy chủ.');
@@ -191,7 +239,7 @@ function ScanConfirmContent() {
       .finally(() => {
         setIsLoadingDoc(false);
       });
-  }, []);
+  }, [speakFoodRegistration]);
 
   // Load document when currentDocId changes or on init
   useEffect(() => {
@@ -829,15 +877,39 @@ function ScanConfirmContent() {
                         <UtensilsCrossed className="w-5 h-5 text-emerald-400" />
                         <span>Chi tiết mang thực phẩm vào</span>
                       </div>
-                      <span className="text-xs sm:text-sm px-3 py-1 rounded-full font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                        {docData.category === 'pregnant'
-                          ? 'Thức ăn mang thai'
-                          : docData.category === 'vegetarian'
-                          ? 'Món chay'
-                          : docData.category === 'medicine_drink'
-                          ? 'Nước thuốc'
-                          : docData.customCategory ? `Khác (${docData.customCategory})` : 'Khác'}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        {/* Audio speaker button for Guard */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const foodName =
+                              docData.category === 'medicine_drink'
+                                ? (docData.medicineReason || docData.foodDetails || 'Nước thuốc')
+                                : docData.category === 'pregnant'
+                                ? (docData.foodDetails || 'Bánh và Sữa hoặc Trái cây và Sữa')
+                                : (docData.foodDetails || 'Thực phẩm');
+                            speakFoodRegistration(docData.employeeName, foodName);
+                          }}
+                          className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                            isSpeaking
+                              ? 'bg-amber-400 text-slate-950 animate-pulse font-black shadow-md shadow-amber-400/40'
+                              : 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/40'
+                          }`}
+                          title="Đọc to tên người lao động và món ăn"
+                        >
+                          <Volume2 className={`w-3.5 h-3.5 ${isSpeaking ? 'animate-bounce' : ''}`} />
+                          <span>{isSpeaking ? 'Đang đọc âm thanh...' : '🔊 Đọc lại'}</span>
+                        </button>
+                        <span className="text-xs sm:text-sm px-3 py-1 rounded-full font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                          {docData.category === 'pregnant'
+                            ? 'Thức ăn mang thai'
+                            : docData.category === 'vegetarian'
+                            ? 'Món chay'
+                            : docData.category === 'medicine_drink'
+                            ? 'Nước thuốc'
+                            : docData.customCategory ? `Khác (${docData.customCategory})` : 'Khác'}
+                        </span>
+                      </div>
                     </div>
 
                     <div className="space-y-3 text-sm">

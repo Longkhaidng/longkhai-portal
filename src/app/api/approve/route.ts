@@ -698,6 +698,14 @@ export async function POST(req: NextRequest) {
             hrStep.actionAt = now;
             hrStep.comment = comment || 'Trưởng phòng HCNS phê duyệt qua Email';
           }
+          const baseUrl = emailConfig?.portalBaseUrl || 'https://longkhai-portal.vercel.app';
+          doc.qrCodeUrl = `${baseUrl}/scan-confirm?id=${encodeURIComponent(doc.id)}&type=food`;
+          try {
+            const QRCode = require('qrcode');
+            doc.qrDataUrl = await QRCode.toDataURL(doc.qrCodeUrl, { width: 300, margin: 2 });
+          } catch (e) {
+            console.warn('Cannot generate qrDataUrl in approve route', e);
+          }
         }
       } else {
         doc.status = 'rejected_approver';

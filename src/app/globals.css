@@ -2,6 +2,7 @@
 
 @layer base {
   :root {
+    font-size: calc(1rem + 2pt);
     --background: #f8fafc;
     --foreground: #0f172a;
     --card: #ffffff;
@@ -71,10 +72,21 @@ body {
 }
 
 /* Mobile-optimized responsive layout */
-html, body {
+html {
+  font-size: calc(1rem + 2pt);
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
 }
+
+body {
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Tăng kích cỡ font chữ toàn hệ thống lên thêm 2 pt cho các cỡ tùy chỉnh */
+.text-\[9px\] { font-size: calc(9px + 2pt) !important; }
+.text-\[10px\] { font-size: calc(10px + 2pt) !important; }
+.text-\[11px\] { font-size: calc(11px + 2pt) !important; }
 
 /* Hide scrollbar for clean mobile horizontal pill lists */
 .no-scrollbar::-webkit-scrollbar {
