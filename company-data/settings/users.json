@@ -1041,12 +1041,14 @@
       "dashboard",
       "food_registration",
       "repair",
-      "announcements"
+      "announcements",
+      "reports"
     ],
     "isActive": true,
     "password": "1241",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-20T02:48:53.771Z"
+    "updatedAt": "2026-11-20T04:08:34.140Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "1243",
