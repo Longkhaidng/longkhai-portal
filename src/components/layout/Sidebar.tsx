@@ -297,7 +297,7 @@ export function Sidebar({
           </button>
         </div>
 
-        {/* User Card in Sidebar */}
+        {/* User Card in Sidebar 
         <div className="p-4 mx-3 my-3 rounded-xl bg-slate-800/60 border border-slate-700/50">
           <div className="text-xs font-bold text-white truncate">
             {currentUser?.name}
@@ -314,7 +314,7 @@ export function Sidebar({
             </span>
           </div>
         </div>
-
+              */}
         {/* Navigation Menu */}
         <div className="flex-1 overflow-y-auto px-3 py-2 space-y-1">
           <div className="px-3 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
@@ -453,12 +453,7 @@ export function Sidebar({
           )}
         </div>
 
-        {/* Footer info */}
-        <div className="p-4 border-t border-slate-800 text-[11px] text-slate-500 text-center">
-          <div>Hệ thống Nhà máy Long Khải</div>
-          <div className="text-[10px] text-slate-600 mt-0.5">Phiên bản 2026.2 &bull; Next.js 15</div>
-        </div>
-      </aside>
+        </aside>
     </>
   );
 }
