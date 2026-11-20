@@ -13,7 +13,7 @@
   "foodDetails": "Nước thuốc (Lý do: Thuốc bắc hỗ trợ tiêu hóa)",
   "medicineReason": "Thuốc bắc hỗ trợ tiêu hóa",
   "complianceCommitment": true,
-  "status": "pending_dept",
+  "status": "rejected",
   "steps": [
     {
       "stepName": "Trưởng bộ phận",
@@ -28,5 +28,8 @@
   ],
   "currentStepIndex": 0,
   "createdAt": "2026-11-20T03:55:43.832Z",
-  "updatedAt": "2026-11-20T03:55:43.832Z"
+  "updatedAt": "2026-11-20T06:15:42.293Z",
+  "rejectedReason": "Không đảm bảo điều kiện quy định",
+  "rejectedBy": "Trần Lê Hữu Lực",
+  "rejectedAt": "2026-11-20T06:15:42.293Z"
 }
