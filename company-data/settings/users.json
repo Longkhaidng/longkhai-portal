@@ -1573,7 +1573,8 @@
     "isActive": true,
     "password": "1643",
     "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "updatedAt": "2026-11-20T02:24:55.714Z",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn"
   },
   {
     "id": "1649",
