@@ -111,7 +111,7 @@
     "department": "Phòng HCNS",
     "position": "Trưởng phòng HCNS",
     "role": "manager",
-    "email": "Quynh.truong@longkhai.com.vn",
+    "email": "quynh.truong@longkhai.com.vn",
     "phone": "0919188051",
     "economicStaffId": "1139",
     "departmentHeadEmail": "buithuanh@vitex.com.vn",
@@ -146,7 +146,7 @@
     "phone": "0935198776",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
+    "departmentHeadEmail": "quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "departments",
@@ -265,7 +265,7 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
+    "departmentHeadEmail": "quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
@@ -285,7 +285,7 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
+    "departmentHeadEmail": "quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
@@ -890,7 +890,7 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
+    "departmentHeadEmail": "quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
@@ -911,7 +911,7 @@
     "email": "tuyet.vo@longkhai.com.vn",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
+    "departmentHeadEmail": "quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
@@ -1078,7 +1078,7 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
+    "departmentHeadEmail": "quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
@@ -1595,7 +1595,7 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
+    "departmentHeadEmail": "quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
@@ -2698,7 +2698,7 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
+    "departmentHeadEmail": "quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
@@ -2780,7 +2780,7 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
+    "departmentHeadEmail": "quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
@@ -4511,7 +4511,7 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
+    "departmentHeadEmail": "quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
@@ -4696,7 +4696,7 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
+    "departmentHeadEmail": "quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
@@ -4841,7 +4841,7 @@
     "email": "hr.01@longkhai.com.vn",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
+    "departmentHeadEmail": "quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
@@ -5297,7 +5297,7 @@
     "email": "hai.nguyen@longkhai.com.vn",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
+    "departmentHeadEmail": "quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
@@ -5317,7 +5317,7 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
-    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
+    "departmentHeadEmail": "quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",

@@ -93,6 +93,9 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
   const rawGatePasses = useMemo(() => storage.getGatePasses(), [dataVersion]);
   const rawFoods = useMemo(() => storage.getFoodRegistrations(), [dataVersion]);
   const rawProposals = useMemo(() => storage.getRepairProposals(), [dataVersion]);
+  const rawStationery = useMemo(() => storage.getStationeryProposals(), [dataVersion]);
+  const rawGeneral = useMemo(() => storage.getGeneralProposals(), [dataVersion]);
+  const rawCamera = useMemo(() => storage.getCameraRequests(), [dataVersion]);
   const rawOvertime = useMemo(() => storage.getOvertimeRegistrations(), [dataVersion]);
   const announcementsList = useMemo(() => storage.getAnnouncements(), [dataVersion]);
 
@@ -187,19 +190,50 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
   const pendingProposals = useMemo(() => {
     if (!currentUser) return [];
     const canApproveProposals = isSuperAdmin || isMaintenance || isManager;
+    let repairList: any[] = [];
     if (!canApproveProposals) {
       // Nhân viên thông thường: CHỈ thấy đề xuất của chính mình
-      return proposals.filter((p) => p.employeeId.toLowerCase() === uid && p.status !== 'completed' && p.status !== 'rejected');
+      repairList = proposals.filter((p) => p.employeeId.toLowerCase() === uid && p.status !== 'completed' && p.status !== 'rejected');
+    } else {
+      repairList = proposals.filter((p) => {
+        const isMy = p.employeeId.toLowerCase() === uid;
+        if (isMy) return p.status !== 'completed' && p.status !== 'rejected';
+        if (isSuperAdmin) return p.status === 'pending_manager' || p.status === 'maintenance_pending' || p.status === 'pending_confirmation';
+        if (isMaintenance) return p.status === 'maintenance_pending';
+        if (isManager) return p.status === 'pending_manager';
+        return false;
+      });
     }
-    return proposals.filter((p) => {
-      const isMy = p.employeeId.toLowerCase() === uid;
-      if (isMy) return p.status !== 'completed' && p.status !== 'rejected';
-      if (isSuperAdmin) return p.status === 'pending_manager' || p.status === 'maintenance_pending' || p.status === 'pending_confirmation';
-      if (isMaintenance) return p.status === 'maintenance_pending';
-      if (isManager) return p.status === 'pending_manager';
-      return false;
+
+    // Văn phòng phẩm
+    const stationeryList = rawStationery.filter((s: any) => {
+      const isMy = s.createdById?.toLowerCase() === uid;
+      if (isSuperAdmin || isManager) {
+        return s.status === 'pending_manager' || s.status === 'pending_hr' || (isMy && s.status !== 'approved' && s.status !== 'rejected');
+      }
+      return isMy && s.status !== 'approved' && s.status !== 'rejected';
     });
-  }, [proposals, currentUser, isSuperAdmin, isMaintenance, isManager, uid]);
+
+    // Đề xuất chung
+    const generalList = rawGeneral.filter((g: any) => {
+      const isMy = g.employeeId?.toLowerCase() === uid;
+      if (isSuperAdmin || isManager) {
+        return g.status === 'pending' || g.status === 'processing' || (isMy && g.status === 'pending');
+      }
+      return isMy && g.status === 'pending';
+    });
+
+    // Xem camera
+    const cameraList = rawCamera.filter((c: any) => {
+      const isMy = c.employeeId?.toLowerCase() === uid;
+      if (isSuperAdmin || isManager) {
+        return c.status === 'pending_it' || c.status === 'pending_hr' || (isMy && c.status !== 'approved' && c.status !== 'rejected');
+      }
+      return isMy && c.status !== 'approved' && c.status !== 'rejected';
+    });
+
+    return [...repairList, ...stationeryList, ...generalList, ...cameraList];
+  }, [proposals, rawStationery, rawGeneral, rawCamera, currentUser, isSuperAdmin, isMaintenance, isManager, uid]);
 
   const pendingOvertime = useMemo(() => {
     if (!currentUser) return [];
@@ -271,18 +305,47 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
 
     // Proposals
     if (hasPermission('repair')) {
-      pendingProposals.forEach((item) => {
+      pendingProposals.forEach((item: any) => {
+        const isRepair = !!item.issueDescription;
+        const isStationery = !!item.items && !item.issueDescription && !item.areaDescription;
+        const isCamera = !!item.areaDescription || (item.id && String(item.id).startsWith('CAM'));
+        const typeLabel = isRepair
+          ? 'Đề xuất sửa chữa'
+          : isStationery
+          ? 'Đề xuất VPP'
+          : isCamera
+          ? 'Đăng ký Camera'
+          : 'Đề xuất chung';
+        const subtitle = isRepair
+          ? `${item.department} • Vị trí: ${item.location} - ${item.issueDescription}`
+          : isStationery
+          ? `${item.department} • Văn phòng phẩm (${item.items?.length || 0} món)`
+          : isCamera
+          ? `${item.department} • Trích xuất camera (${item.areaDescription || item.reason || 'Xem camera'})`
+          : `${item.department} • ${item.title || item.description || 'Đề xuất khác'}`;
+        const targetTab = isCamera ? 'camera' : 'proposals';
+        const statusText =
+          item.status === 'pending_manager'
+            ? 'Chờ Trưởng BP'
+            : item.status === 'maintenance_pending'
+            ? 'Chờ Cơ điện'
+            : item.status === 'pending_hr'
+            ? 'Chờ TP HCNS'
+            : item.status === 'pending_it'
+            ? 'Chờ IT'
+            : 'Chờ duyệt';
+
         list.push({
           id: item.id,
           type: 'proposal',
-          typeLabel: 'Đề xuất sửa chữa',
+          typeLabel,
           typeBadgeColor: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800',
-          title: `${item.employeeName} (${item.employeeId})`,
-          subtitle: `${item.department} • Vị trí: ${item.location} - ${item.issueDescription}`,
+          title: `${item.employeeName || item.createdByName} (${item.employeeId || item.createdById})`,
+          subtitle,
           dateStr: formatDate(item.createdAt),
-          statusText: item.status === 'pending_manager' ? 'Chờ Trưởng BP' : item.status === 'maintenance_pending' ? 'Chờ Cơ điện' : 'Chờ xác nhận',
+          statusText,
           statusBadgeColor: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800',
-          targetTab: 'proposals',
+          targetTab,
         });
       });
     }
@@ -313,6 +376,8 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
       title: string;
       count: number;
       label: string;
+      hasPending?: boolean;
+      pendingCount?: number;
       icon: any;
       colorBg: string;
       colorText: string;
@@ -321,11 +386,14 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
     }> = [];
 
     if (hasPermission('leave')) {
+      const pCount = pendingLeaves.length;
       list.push({
         id: 'leave',
         title: 'Nghỉ phép',
-        count: pendingLeaves.length,
+        count: pCount,
         label: 'Đang chờ duyệt',
+        hasPending: pCount > 0,
+        pendingCount: pCount,
         icon: CalendarDays,
         colorBg: 'bg-blue-50 dark:bg-blue-950/60',
         colorText: 'text-blue-600 dark:text-blue-400',
@@ -335,11 +403,14 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
     }
 
     if (hasPermission('attendance')) {
+      const pCount = pendingAttendances.length;
       list.push({
         id: 'attendance',
         title: 'Xác nhận công',
-        count: pendingAttendances.length,
+        count: pCount,
         label: 'Quên / Mất thẻ',
+        hasPending: pCount > 0,
+        pendingCount: pCount,
         icon: Clock,
         colorBg: 'bg-amber-50 dark:bg-amber-950/60',
         colorText: 'text-amber-600 dark:text-amber-400',
@@ -354,6 +425,8 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
         title: 'Ra vào cổng',
         count: activeGatePasses.length,
         label: 'Đang lưu hành',
+        hasPending: false,
+        pendingCount: 0,
         icon: QrCode,
         colorBg: 'bg-emerald-50 dark:bg-emerald-950/60',
         colorText: 'text-emerald-600 dark:text-emerald-400',
@@ -363,11 +436,17 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
     }
 
     if (hasPermission('food_registration')) {
+      const pCount = pendingFoods.length;
+      const aCount = activeFoodRegistrations.length;
       list.push({
         id: 'food_registration',
         title: 'Thực phẩm mang vào',
-        count: activeFoodRegistrations.length,
-        label: 'Mã QR hiệu lực',
+        count: pCount > 0 ? pCount : aCount,
+        label: pCount > 0
+          ? (aCount > 0 ? `${pCount} chờ duyệt • ${aCount} mã QR` : 'Chờ phê duyệt')
+          : 'Mã QR hiệu lực',
+        hasPending: pCount > 0,
+        pendingCount: pCount,
         icon: UtensilsCrossed,
         colorBg: 'bg-teal-50 dark:bg-teal-950/60',
         colorText: 'text-teal-600 dark:text-teal-400',
@@ -379,14 +458,16 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
     const canRepair = hasPermission('repair');
     const canOT = hasPermission('overtime');
     if (canRepair || canOT) {
-      const count = (canRepair ? pendingProposals.length : 0) + (canOT ? pendingOvertime.length : 0);
+      const pCount = (canRepair ? pendingProposals.length : 0) + (canOT ? pendingOvertime.length : 0);
       const title = canRepair && canOT ? 'Đề xuất & Thêm giờ' : canRepair ? 'Phiếu đề xuất' : 'Làm thêm giờ';
       const targetTab = canRepair ? 'proposals' : 'overtime';
       list.push({
         id: 'proposals_ot',
         title,
-        count,
+        count: pCount,
         label: 'Chờ phê duyệt',
+        hasPending: pCount > 0,
+        pendingCount: pCount,
         icon: Timer,
         colorBg: 'bg-purple-50 dark:bg-purple-950/60',
         colorText: 'text-purple-600 dark:text-purple-400',
@@ -402,6 +483,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
     pendingAttendances.length,
     activeGatePasses.length,
     activeFoodRegistrations.length,
+    pendingFoods.length,
     pendingProposals.length,
     pendingOvertime.length,
   ]);
@@ -496,6 +578,36 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
         </div>
       </div>
 
+      {/* Thông báo / Thông cáo nổi bật khi có nhân viên tạo phiếu mới chờ xử lý */}
+      {taskItems.length > 0 && (
+        <div className="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/5 border border-amber-300 dark:border-amber-700/60 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-xs animate-bounce">
+              <Bell className="w-4 h-4" />
+            </div>
+            <div className="text-xs text-slate-800 dark:text-slate-200 min-w-0">
+              <div className="font-bold text-amber-900 dark:text-amber-200">
+                Thông báo hồ sơ &amp; phiếu mới:
+              </div>
+              <div className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
+                Hiện có <span className="font-bold text-amber-600 dark:text-amber-400">{taskItems.length} phiếu</span> đang chờ bạn hoặc cấp quản lý xem xét và giải quyết.
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              const firstTask = taskItems[0];
+              if (firstTask) onNavigateTab(firstTask.targetTab);
+            }}
+            className="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-bold rounded-xl transition-all shadow-xs cursor-pointer self-start sm:self-auto shrink-0 flex items-center gap-1.5"
+          >
+            <span>Xem phiếu</span>
+            <ArrowRight className="w-3 h-3" />
+          </button>
+        </div>
+      )}
+
       {/* 2. Key Operational Metric Cards (Chỉ hiển thị các mục mà người lao động được phân quyền) */}
       {metricCards.length > 0 && (
         <div className={`grid ${gridColsClass} gap-3 sm:gap-4`}>
@@ -505,12 +617,19 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
               <div
                 key={card.id}
                 onClick={() => onNavigateTab(card.tab)}
-                className={`bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer ${card.hoverBorder} hover:shadow-md transition-all group`}
+                className={`bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between cursor-pointer ${card.hoverBorder} hover:shadow-md transition-all group relative overflow-hidden`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    {card.title}
-                  </span>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                      {card.title}
+                    </span>
+                    {card.hasPending && (
+                      <span className="px-1.5 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-500 text-white shadow-xs animate-pulse">
+                        {card.pendingCount} chờ duyệt
+                      </span>
+                    )}
+                  </div>
                   <div className={`p-2 ${card.colorBg} ${card.colorText} rounded-xl group-hover:scale-110 transition-transform`}>
                     <Icon className="w-4 h-4" />
                   </div>

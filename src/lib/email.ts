@@ -4,7 +4,7 @@ import { RepairProposal } from '@/types/repair';
 import { StationeryProposal, GeneralProposal } from '@/types/proposal';
 import { FoodRegistration } from '@/types/food-registration';
 import { isHRHead, isHROrITDepartment } from './permissions';
-import { formatDateTime } from './utils';
+import { formatDate, formatDateTime } from './utils';
 
 export function generateMailtoUrl(payload: SendEmailPayload, baseUrl: string): string {
   const typeTitle =
@@ -192,7 +192,9 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
           <tr>
             <td style="padding: 26px 24px;">
               <p style="margin-top: 0; margin-bottom: 8px; font-size: 15px; color: #1e293b;">
-                Kính gửi <strong>${payload.managerName || 'Quý cấp Quản lý'}</strong>,
+                ${payload.managerName?.startsWith('(Anh/Chị):')
+                  ? `Kính gửi (Anh/Chị): <strong>${payload.managerName.replace(/^\(Anh\/Chị\):\s*/i, '')}</strong>,`
+                  : `Kính gửi <strong>${payload.managerName || 'Quý cấp Quản lý'}</strong>,`}
               </p>
               <p style="font-size: 14px; color: #475569; margin-top: 0; margin-bottom: 20px; line-height: 1.5;">
                 Nhân viên <strong>${payload.employeeName}</strong> (Mã NV: <strong>${payload.employeeId}</strong>) thuộc <strong>${payload.department}</strong> vừa tạo yêu cầu cần được xem xét và phê duyệt:
@@ -750,8 +752,8 @@ export async function dispatchStationeryApprovalEmail(
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   const baseUrl = config.portalBaseUrl || origin || 'https://longkhai-portal.vercel.app';
 
-  const toEmail = targetStep === 'hr' ? 'tuyet.vo@longkhai.com.vn' : 'Quynh.truong@longkhai.com.vn';
-  const managerName = targetStep === 'hr' ? 'Chị Võ Thị Tuyết (HCNS)' : 'Chị Trương Anh Như Quỳnh (Trưởng phòng HCNS)';
+  const toEmail = targetStep === 'hr' ? 'tuyet.vo@longkhai.com.vn' : 'quynh.truong@longkhai.com.vn';
+  const managerName = targetStep === 'hr' ? 'Chị Võ Thị Tuyết (HCNS)' : '(Anh/Chị): Trương Anh Như Quỳnh (Trưởng phòng HCNS)';
 
   // Lấy số lượng nhân viên hiện tại tại nhà máy (từ danh sách nhân sự thực tế)
   const allUsers = storage.getUsers();
@@ -909,12 +911,10 @@ export async function dispatchFoodRegistrationApprovalEmail(
       (u) => u.id === '1867' || (isHRHead(u) && u.email)
     );
     if (!toEmail) {
-      toEmail = (hrHead?.email || 'Quynh.truong@longkhai.com.vn').trim();
+      toEmail = (hrHead?.email || 'quynh.truong@longkhai.com.vn').trim().toLowerCase();
     }
     if (!managerName) {
-      managerName = hrHead?.name
-        ? `Chị ${hrHead.name} (Trưởng phòng HCNS)`
-        : 'Chị Trương Anh Như Quỳnh (Trưởng phòng HCNS)';
+      managerName = '(Anh/Chị): Trương Anh Như Quỳnh (Trưởng phòng HCNS)';
     }
   }
 
@@ -922,7 +922,7 @@ export async function dispatchFoodRegistrationApprovalEmail(
     registration.category === 'pregnant'
       ? 'Thực phẩm cho người mang thai'
       : registration.category === 'medicine_drink'
-      ? 'Nước thuốc uống hỗ trợ sức khỏe'
+      ? 'Nước thuốc'
       : 'Thực phẩm chay';
 
   const isDirect = registration.steps?.length === 1 || isHROrITDepartment(registration.department);
@@ -933,9 +933,18 @@ export async function dispatchFoodRegistrationApprovalEmail(
       ? 'Trưởng phòng HCNS phê duyệt trực tiếp & Cấp mã QR'
       : 'Bước 2/2: Trưởng phòng HCNS phê duyệt & Cấp mã QR';
 
+  const formatDateVN = (dateStr?: string): string => {
+    if (!dateStr) return '-';
+    const parts = dateStr.slice(0, 10).split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return formatDate(dateStr);
+  };
+
   const timeRangeText = registration.toDate
-    ? `${registration.durationDays || 14} ngày (Từ ${registration.entryDate} đến ${registration.toDate})`
-    : `Ngày ${registration.entryDate}`;
+    ? `${registration.durationDays || 14} ngày (Từ ${formatDateVN(registration.entryDate)} đến ${formatDateVN(registration.toDate)})`
+    : `Ngày ${formatDateVN(registration.entryDate)}`;
 
   const detailItems: { label: string; value: string }[] = [
     { label: 'Cấp phê duyệt', value: stepName },
@@ -963,12 +972,6 @@ export async function dispatchFoodRegistrationApprovalEmail(
       });
     }
   }
-
-  detailItems.push({
-    label: 'Quy định kiểm soát',
-    value:
-      'Mỗi người tối đa 02 đơn vị tính/loại thực phẩm. Sau khi Trưởng phòng HCNS phê duyệt hoàn tất, hệ thống sẽ tự động kích hoạt mã QR hiệu lực để bảo vệ cổng kiểm soát.',
-  });
 
   const payload: SendEmailPayload = {
     toEmail,

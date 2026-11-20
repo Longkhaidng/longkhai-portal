@@ -614,11 +614,10 @@ export function filterUserGeneralProposals(
 
 /**
  * Check if the user is HR Department Head / Trưởng phòng HCNS
- * (ID 1867, role manager in HCNS/Nhân sự, or Admin/BOD)
+ * (ID 1867: Trương Anh Như Quỳnh, hoặc quản lý thuộc phòng HCNS)
  */
 export function isHRHead(user?: User | null): boolean {
   if (!user) return false;
-  if (isSuperAdminOrBOD(user)) return true;
   if (user.id === '1867') return true;
   const dept = (user.department || '').toLowerCase();
   const isHCNS = dept.includes('hcns') || dept.includes('hành chính') || dept.includes('nhân sự');
