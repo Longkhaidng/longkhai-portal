@@ -1136,6 +1136,14 @@ class StorageService {
         this.setClearedCollections(clearedMap);
       }
 
+      const deletedIds = this.getDeletedDocIds();
+      if (Array.isArray(json.data.deletedDocIds)) {
+        json.data.deletedDocIds.forEach((id: string) => deletedIds.add(id));
+        try {
+          localStorage.setItem('lk_deleted_doc_ids', JSON.stringify(Array.from(deletedIds)));
+        } catch {}
+      }
+
       // Helper to filter out any server/local items that were created before clearance
       const filterCleared = <T extends { createdAt?: string; updatedAt?: string }>(
         list: T[],
@@ -1149,7 +1157,7 @@ class StorageService {
         });
       };
 
-      const mergeWithRecentLocal = <T extends { id: string; createdAt?: string; updatedAt?: string }>(
+      const mergeWithRecentLocal = <T extends { id: string; createdAt?: string; updatedAt?: string; status?: string }>(
         serverList: T[],
         localList: T[],
         targetKey?: string,
@@ -1159,20 +1167,35 @@ class StorageService {
         const validLocal = targetKey ? filterCleared(localList, targetKey) : localList;
 
         const map = new Map<string, T>();
+
+        // 1. Nạp các phiếu hợp lệ từ máy chủ
         validServer.forEach((item) => {
+          if ((item as any).status === 'cancelled' || (item as any).isDeleted) return;
           const id = formatFn ? formatFn(item.id) : item.id;
+          if (deletedIds.has(id)) return;
           map.set(id, { ...item, id });
         });
-        const now = Date.now();
+
+        // 2. Hợp nhất phiếu cục bộ: Luôn bảo toàn phiếu người dùng tạo, không tự động xóa sau timeout
         validLocal.forEach((item) => {
+          if ((item as any).status === 'cancelled' || (item as any).isDeleted) return;
           const id = formatFn ? formatFn(item.id) : item.id;
+          if (deletedIds.has(id)) return;
+
           if (!map.has(id)) {
-            const time = new Date(item.createdAt || item.updatedAt || 0).getTime();
-            if (time > 0 && now - time < 15000) {
+            // Phiếu mới tạo ở máy khách chưa kịp ghi vào file máy chủ -> GIỮ LẠI, KHÔNG BAO GIỜ XÓA
+            map.set(id, { ...item, id });
+          } else {
+            // Cả hai cùng có: nếu bản ghi ở máy khách có updatedAt mới hơn thì ưu tiên máy khách
+            const serverItem = map.get(id)!;
+            const serverTime = new Date(serverItem.updatedAt || serverItem.createdAt || 0).getTime();
+            const localTime = new Date(item.updatedAt || item.createdAt || 0).getTime();
+            if (localTime > serverTime) {
               map.set(id, { ...item, id });
             }
           }
         });
+
         return Array.from(map.values());
       };
 
@@ -1729,6 +1752,29 @@ class StorageService {
     if (!this.isClient()) return;
     try {
       localStorage.setItem('lk_cleared_collections', JSON.stringify(map));
+    } catch {}
+  }
+
+  getDeletedDocIds(): Set<string> {
+    if (!this.isClient()) return new Set();
+    try {
+      const raw = localStorage.getItem('lk_deleted_doc_ids');
+      if (raw) {
+        const arr = JSON.parse(raw);
+        if (Array.isArray(arr)) return new Set(arr);
+      }
+    } catch {
+      return new Set();
+    }
+    return new Set();
+  }
+
+  addDeletedDocId(id: string): void {
+    if (!this.isClient() || !id) return;
+    try {
+      const set = this.getDeletedDocIds();
+      set.add(id);
+      localStorage.setItem('lk_deleted_doc_ids', JSON.stringify(Array.from(set)));
     } catch {}
   }
 
@@ -2497,6 +2543,7 @@ class StorageService {
 
   deleteFoodRegistration(id: string, byUser?: { id: string; name: string }): void {
     if (!this.isClient()) return;
+    this.addDeletedDocId(id);
     const list = this.getFoodRegistrations();
     const item = list.find((r) => r.id === id);
     const updated = list.filter((r) => r.id !== id);

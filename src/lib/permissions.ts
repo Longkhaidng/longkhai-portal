@@ -656,7 +656,8 @@ export function filterUserFoodRegistrations(
   scope: DocumentScope = 'all'
 ): FoodRegistration[] {
   if (!user) return [];
-  const uid = user.id.toLowerCase();
+  const uid = (user.id || '').trim().toLowerCase();
+  const uname = (user.name || '').trim().toLowerCase();
   const isAdmin = isSuperAdminOrBOD(user);
   const isSecurity = isSecurityRole(user);
   const isHR = isHRHead(user) || user.role === 'hr' || user.role === 'cb';
@@ -669,10 +670,13 @@ export function filterUserFoodRegistrations(
     });
   }
 
-  const isMyTicket = (r: FoodRegistration) =>
-    r.employeeId.toLowerCase() === uid ||
-    r.createdById?.toLowerCase() === uid ||
-    (r as any).createdBy?.toLowerCase() === uid;
+  const isMyTicket = (r: FoodRegistration) => {
+    if (!r) return false;
+    const empId = (r.employeeId || '').trim().toLowerCase();
+    const createdId = (r.createdById || (r as any).createdBy || '').trim().toLowerCase();
+    const empName = (r.employeeName || '').trim().toLowerCase();
+    return empId === uid || createdId === uid || (uname && empName === uname);
+  };
 
   if (scope === 'my') {
     return registrations.filter(isMyTicket);

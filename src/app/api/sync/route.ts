@@ -60,9 +60,43 @@ function getClearedTimestamp(subDir: string): number {
   return map[norm] || map[subDir] || 0;
 }
 
+function getDeletedDocIdsMap(): Record<string, number> {
+  const map: Record<string, number> = {};
+  try {
+    const baseMeta = path.join(BASE_DIR, '.deleted_doc_ids.json');
+    if (fs.existsSync(baseMeta)) {
+      Object.assign(map, JSON.parse(fs.readFileSync(baseMeta, 'utf-8')));
+    }
+  } catch {}
+  try {
+    const tmpMeta = path.join(TMP_DIR, '.deleted_doc_ids.json');
+    if (fs.existsSync(tmpMeta)) {
+      Object.assign(map, JSON.parse(fs.readFileSync(tmpMeta, 'utf-8')));
+    }
+  } catch {}
+  return map;
+}
+
+function recordDeletedDocId(id: string): void {
+  const map = getDeletedDocIdsMap();
+  map[id] = Date.now();
+  const jsonStr = JSON.stringify(map, null, 2);
+  try {
+    const tmpMeta = path.join(TMP_DIR, '.deleted_doc_ids.json');
+    ensureDir(path.dirname(tmpMeta));
+    fs.writeFileSync(tmpMeta, jsonStr, 'utf-8');
+  } catch {}
+  try {
+    const baseMeta = path.join(BASE_DIR, '.deleted_doc_ids.json');
+    ensureDir(path.dirname(baseMeta));
+    fs.writeFileSync(baseMeta, jsonStr, 'utf-8');
+  } catch {}
+}
+
 function scanJsonFiles<T>(subDir: string): T[] {
   const results: Map<string, T> = new Map();
   const clearedAt = getClearedTimestamp(subDir);
+  const deletedMap = getDeletedDocIdsMap();
 
   // Helper to read directory recursively
   const readDir = (dir: string) => {
@@ -79,7 +113,12 @@ function scanJsonFiles<T>(subDir: string): T[] {
             const parsed = JSON.parse(content);
             if (parsed && (parsed.id || parsed._id)) {
               const id = parsed.id || parsed._id;
-              if (parsed.status === 'cancelled' || parsed.isCancelled === true || parsed.isDeleted === true) {
+              if (
+                parsed.status === 'cancelled' ||
+                parsed.isCancelled === true ||
+                parsed.isDeleted === true ||
+                deletedMap[id]
+              ) {
                 continue; // Không tải các phiếu đã bị hủy / xóa
               }
               if (clearedAt > 0) {
@@ -165,6 +204,7 @@ export async function GET() {
         cameras,
         cameraRequests,
         clearedCollections: getClearedCollectionsMap(),
+        deletedDocIds: Object.keys(getDeletedDocIdsMap()),
       },
       counts: {
         users: users.length,
@@ -247,6 +287,9 @@ async function performDeleteSyncItem(
       console.warn('[Sync API] GitHub delete service error:', e.message);
     }
   }
+
+  // Record in deleted map so it will never resurrect on any client
+  recordDeletedDocId(id);
 
   return { success: true, message: `Đã xóa hoàn toàn phiếu ${id} khỏi hệ thống!` };
 }

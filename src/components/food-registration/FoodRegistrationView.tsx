@@ -477,6 +477,12 @@ export function FoodRegistrationView() {
       setToDate(calculateEndDate(new Date().toISOString().slice(0, 10), 14));
       setComplianceCommitment(false);
       setShowCreateModal(false);
+
+      // Tự động chuyển về tab "Phiếu của tôi" và bỏ bộ lọc để phiếu vừa tạo xuất hiện ngay trước mắt
+      setActiveTab('my');
+      setSelectedStatusSingle('all');
+      setFilterCategory('all');
+      setFilterSearch('');
     } catch (err: any) {
       showToast(err.message || 'Có lỗi xảy ra khi gửi đăng ký.', 'error');
     } finally {
