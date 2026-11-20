@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
 import {
@@ -39,6 +39,9 @@ import {
   isSuperAdminOrBOD,
   isSecurityRole,
   isMaintenanceStaff,
+  isSameDepartment,
+  isITStaff,
+  isHRHead,
 } from '@/lib/permissions';
 
 interface DashboardViewProps {
@@ -106,6 +109,42 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
   const isSecurity = isSecurityRole(currentUser);
   const uid = currentUser?.id.toLowerCase() || '';
 
+  // All registered users for supervisor/head checking
+  const allUsers = useMemo(() => storage.getUsers(), [dataVersion]);
+
+  // Unified RBAC check for document ownership & management:
+  // - Admin: sees all documents across the entire company
+  // - Department head / Manager / Team Leader: sees own tickets + tickets of employees in their department or supervised by them
+  // - Normal employee: sees ONLY their own tickets
+  const isManagedByViewer = useCallback(
+    (empId?: string, empDept?: string) => {
+      if (!currentUser) return false;
+      if (isSuperAdmin) return true;
+      const ownerId = (empId || '').trim().toLowerCase();
+      if (ownerId && ownerId === uid) return true;
+
+      if (isManager || isApprover) {
+        if (empDept && isSameDepartment(currentUser.department, empDept)) return true;
+        if (ownerId && allUsers.length > 0) {
+          const target = allUsers.find((u) => (u.id || '').trim().toLowerCase() === ownerId);
+          if (target) {
+            if (target.departmentHeadId && target.departmentHeadId.trim().toLowerCase() === uid) return true;
+            if (
+              target.departmentHeadEmail &&
+              currentUser.email &&
+              target.departmentHeadEmail.trim().toLowerCase() === currentUser.email.trim().toLowerCase()
+            ) {
+              return true;
+            }
+            if (target.department && isSameDepartment(currentUser.department, target.department)) return true;
+          }
+        }
+      }
+      return false;
+    },
+    [currentUser, isSuperAdmin, isManager, isApprover, uid, allUsers]
+  );
+
   // Filtered collections
   const leaves = useMemo(() => {
     return filterUserLeaves(rawLeaves, currentUser, isApprover ? 'all' : 'my');
@@ -116,15 +155,15 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
   }, [rawAttendances, currentUser, isApprover]);
 
   const gatePasses = useMemo(() => {
-    return filterUserGatePasses(rawGatePasses, currentUser, (isApprover || isSecurity) ? 'all' : 'my');
+    return filterUserGatePasses(rawGatePasses, currentUser, isApprover || isSecurity ? 'all' : 'my');
   }, [rawGatePasses, currentUser, isApprover, isSecurity]);
 
   const foodRegistrations = useMemo(() => {
-    return filterUserFoodRegistrations(rawFoods, currentUser, (isApprover || isSecurity) ? 'all' : 'my');
+    return filterUserFoodRegistrations(rawFoods, currentUser, isApprover || isSecurity ? 'all' : 'my');
   }, [rawFoods, currentUser, isApprover, isSecurity]);
 
   const proposals = useMemo(() => {
-    return filterUserRepairProposals(rawProposals, currentUser, (isSuperAdmin || isMaintenance || isManager) ? 'all' : 'my');
+    return filterUserRepairProposals(rawProposals, currentUser, isSuperAdmin || isMaintenance || isManager ? 'all' : 'my');
   }, [rawProposals, currentUser, isSuperAdmin, isMaintenance, isManager]);
 
   // Announcements list (pinned first, then newest)
@@ -136,114 +175,94 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
     });
   }, [announcementsList]);
 
-  // Pending counts & queues (Nhân viên thông thường CHỈ thấy đơn của chính mình)
+  // Pending counts & queues strictly complying with RBAC
   const pendingLeaves = useMemo(() => {
     if (!currentUser) return [];
-    if (!isApprover) {
-      return leaves.filter((l) => l.employeeId.toLowerCase() === uid && l.status === 'pending');
-    }
-    return leaves.filter((l) => l.status === 'pending');
-  }, [leaves, currentUser, isApprover, uid]);
+    return rawLeaves.filter((l) => {
+      if (l.status !== 'pending') return false;
+      return isManagedByViewer(l.employeeId, l.department);
+    });
+  }, [rawLeaves, currentUser, isManagedByViewer]);
 
   const pendingAttendances = useMemo(() => {
     if (!currentUser) return [];
-    if (!isApprover) {
-      return attendances.filter((a) => a.employeeId.toLowerCase() === uid && a.status === 'pending');
-    }
-    return attendances.filter((a) => a.status === 'pending');
-  }, [attendances, currentUser, isApprover, uid]);
+    return rawAttendances.filter((a) => {
+      if (a.status !== 'pending') return false;
+      return isManagedByViewer(a.employeeId, a.department);
+    });
+  }, [rawAttendances, currentUser, isManagedByViewer]);
 
   const activeGatePasses = useMemo(() => {
     if (!currentUser) return [];
-    if (!isApprover && !isSecurity) {
-      return gatePasses.filter((g) => g.employeeId.toLowerCase() === uid && (g.status === 'approved' || g.status === 'departed'));
-    }
-    return gatePasses.filter((g) => g.status === 'approved' || g.status === 'departed');
-  }, [gatePasses, currentUser, isApprover, isSecurity, uid]);
-
-  const activeFoodRegistrations = useMemo(() => {
-    if (!currentUser) return [];
-    return foodRegistrations.filter((f) => {
-      const isMy = f.employeeId.toLowerCase() === uid || f.createdById?.toLowerCase() === uid;
-      if (!isApprover && !isSecurity && !isMy) return false;
-      const v = checkFoodQrValidity(f);
-      return v.isValid && !v.isExpired;
+    return rawGatePasses.filter((g) => {
+      const isActive = g.status === 'approved' || g.status === 'departed' || g.status === 'pending';
+      if (!isActive) return false;
+      if (isSecurity) return true;
+      return isManagedByViewer(g.employeeId, g.department);
     });
-  }, [foodRegistrations, currentUser, isApprover, isSecurity, uid]);
+  }, [rawGatePasses, currentUser, isSecurity, isManagedByViewer]);
 
   const pendingFoods = useMemo(() => {
     if (!currentUser) return [];
-    if (!isApprover) {
-      return foodRegistrations.filter((f) => {
-        const isMy = f.employeeId.toLowerCase() === uid || f.createdById?.toLowerCase() === uid;
-        return isMy && (f.status === 'pending_dept' || f.status === 'pending_hr');
-      });
-    }
-    return foodRegistrations.filter((f) => {
-      const isMy = f.employeeId.toLowerCase() === uid || f.createdById?.toLowerCase() === uid;
-      const canDept = canApproveFoodDept(currentUser, f);
-      const canHR = canApproveFoodHR(currentUser, f);
-      return canDept || canHR || (isMy && (f.status === 'pending_dept' || f.status === 'pending_hr'));
+    return rawFoods.filter((f) => {
+      if (f.status !== 'pending_dept' && f.status !== 'pending_hr') return false;
+      return isManagedByViewer(f.employeeId || f.createdById, f.department);
     });
-  }, [foodRegistrations, currentUser, isApprover, uid]);
+  }, [rawFoods, currentUser, isManagedByViewer]);
+
+  const activeFoodRegistrations = useMemo(() => {
+    if (!currentUser) return [];
+    return rawFoods.filter((f) => {
+      if (f.status !== 'approved' && f.status !== 'confirmed') return false;
+      const v = checkFoodQrValidity(f);
+      if (v.isExpired) return false;
+      if (isSecurity) return true;
+      return isManagedByViewer(f.employeeId || f.createdById, f.department);
+    });
+  }, [rawFoods, currentUser, isSecurity, isManagedByViewer]);
 
   const pendingProposals = useMemo(() => {
     if (!currentUser) return [];
-    const canApproveProposals = isSuperAdmin || isMaintenance || isManager;
     let repairList: any[] = [];
-    if (!canApproveProposals) {
-      // Nhân viên thông thường: CHỈ thấy đề xuất của chính mình
-      repairList = proposals.filter((p) => p.employeeId.toLowerCase() === uid && p.status !== 'completed' && p.status !== 'rejected');
+    if (!isSuperAdmin && !isMaintenance && !isManager) {
+      repairList = rawProposals.filter((p) => p.employeeId?.toLowerCase() === uid && p.status !== 'completed' && p.status !== 'rejected');
     } else {
-      repairList = proposals.filter((p) => {
-        const isMy = p.employeeId.toLowerCase() === uid;
-        if (isMy) return p.status !== 'completed' && p.status !== 'rejected';
-        if (isSuperAdmin) return p.status === 'pending_manager' || p.status === 'maintenance_pending' || p.status === 'pending_confirmation';
-        if (isMaintenance) return p.status === 'maintenance_pending';
-        if (isManager) return p.status === 'pending_manager';
-        return false;
+      repairList = rawProposals.filter((p) => {
+        if (p.status === 'completed' || p.status === 'rejected') return false;
+        if (isMaintenance && p.status === 'maintenance_pending') return true;
+        return isManagedByViewer(p.employeeId, p.department);
       });
     }
 
-    // Văn phòng phẩm
     const stationeryList = rawStationery.filter((s: any) => {
-      const isMy = s.createdById?.toLowerCase() === uid;
-      if (isSuperAdmin || isManager) {
-        return s.status === 'pending_manager' || s.status === 'pending_hr' || (isMy && s.status !== 'approved' && s.status !== 'rejected');
-      }
-      return isMy && s.status !== 'approved' && s.status !== 'rejected';
+      if (s.status === 'approved' || s.status === 'rejected') return false;
+      return isManagedByViewer(s.createdById, s.department);
     });
 
-    // Đề xuất chung
     const generalList = rawGeneral.filter((g: any) => {
-      const isMy = g.employeeId?.toLowerCase() === uid;
-      if (isSuperAdmin || isManager) {
-        return g.status === 'pending' || g.status === 'processing' || (isMy && g.status === 'pending');
-      }
-      return isMy && g.status === 'pending';
+      if (g.status === 'completed' || g.status === 'rejected') return false;
+      return isManagedByViewer(g.employeeId, g.department);
     });
 
-    // Xem camera
     const cameraList = rawCamera.filter((c: any) => {
-      const isMy = c.employeeId?.toLowerCase() === uid;
-      if (isSuperAdmin || isManager) {
-        return c.status === 'pending_it' || c.status === 'pending_hr' || (isMy && c.status !== 'approved' && c.status !== 'rejected');
-      }
-      return isMy && c.status !== 'approved' && c.status !== 'rejected';
+      if (c.status === 'approved' || c.status === 'rejected') return false;
+      if (isITStaff(currentUser) && c.status === 'pending_it') return true;
+      if (isHRHead(currentUser) && c.status === 'pending_hr') return true;
+      return isManagedByViewer(c.employeeId, c.department);
     });
 
     return [...repairList, ...stationeryList, ...generalList, ...cameraList];
-  }, [proposals, rawStationery, rawGeneral, rawCamera, currentUser, isSuperAdmin, isMaintenance, isManager, uid]);
+  }, [rawProposals, rawStationery, rawGeneral, rawCamera, currentUser, isSuperAdmin, isMaintenance, isManager, uid, isManagedByViewer]);
 
   const pendingOvertime = useMemo(() => {
     if (!currentUser) return [];
-    const canApproveOT = isSuperAdmin || isManager;
-    if (!canApproveOT) {
-      // Nhân viên thông thường: CHỈ thấy đơn tăng ca của chính mình
-      return rawOvertime.filter((o) => (o.createdById?.toLowerCase() === uid || o.items?.some((it) => it.employeeId?.toLowerCase() === uid)) && o.status === 'pending');
-    }
-    return rawOvertime.filter((o) => o.status === 'pending');
-  }, [rawOvertime, currentUser, isSuperAdmin, isManager, uid]);
+    return rawOvertime.filter((o) => {
+      if (o.status !== 'pending') return false;
+      const isParticipant = o.items?.some((it) => it.employeeId?.toLowerCase() === uid);
+      if (isParticipant) return true;
+      return isManagedByViewer(o.createdById, o.department);
+    });
+  }, [rawOvertime, currentUser, uid, isManagedByViewer]);
 
   // Unified Actionable Task Items (Chỉ hiển thị các mục mà người lao động được phân quyền)
   const taskItems: DashboardTaskItem[] = useMemo(() => {
@@ -287,6 +306,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
 
     // Food
     if (hasPermission('food_registration')) {
+      // 1. Pending food registrations
       pendingFoods.forEach((item) => {
         list.push({
           id: item.id,
@@ -294,10 +314,28 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
           typeLabel: 'Thực phẩm',
           typeBadgeColor: 'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/40 dark:text-teal-300 dark:border-teal-800',
           title: `${item.employeeName} (${item.employeeId})`,
-          subtitle: `${item.department} • ${FOOD_CATEGORY_LABELS[item.category] || item.category} (${item.foodDetails})`,
+          subtitle: `${item.department} • ${FOOD_CATEGORY_LABELS[item.category] || item.category} (${item.foodDetails || item.customFoodDetails || 'Thực phẩm'}) - Ngày ${formatDate(item.entryDate)}`,
           dateStr: formatDate(item.createdAt),
           statusText: item.status === 'pending_dept' ? 'Chờ Trưởng BP' : 'Chờ TP HCNS',
           statusBadgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800',
+          targetTab: 'food_registration',
+        });
+      });
+
+      // 2. Active approved food registrations (like vegetarian or approved medicine)
+      activeFoodRegistrations.forEach((item) => {
+        list.push({
+          id: item.id,
+          type: 'food',
+          typeLabel: 'Thực phẩm',
+          typeBadgeColor: 'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/40 dark:text-teal-300 dark:border-teal-800',
+          title: `${item.employeeName} (${item.employeeId})`,
+          subtitle: `${item.department} • ${FOOD_CATEGORY_LABELS[item.category] || item.category} (${item.foodDetails || item.customFoodDetails || 'Thực phẩm'}) - Ngày ${formatDate(item.entryDate)}`,
+          dateStr: formatDate(item.createdAt),
+          statusText: item.status === 'confirmed' ? 'Đã vào cổng' : 'Đã duyệt (Mã QR)',
+          statusBadgeColor: item.status === 'confirmed'
+            ? 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
+            : 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800',
           targetTab: 'food_registration',
         });
       });
@@ -350,8 +388,31 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
       });
     }
 
+    // Overtime
+    if (hasPermission('overtime')) {
+      pendingOvertime.forEach((item) => {
+        list.push({
+          id: item.id,
+          type: 'proposal',
+          typeLabel: 'Làm thêm giờ',
+          typeBadgeColor: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800',
+          title: `${item.createdByName || item.department} (${item.createdById})`,
+          subtitle: `${item.department} • Đăng ký tăng ca (${item.items?.length || 0} người) - Ngày ${formatDate(item.registrationDate)}`,
+          dateStr: formatDate(item.createdAt),
+          statusText: 'Chờ duyệt',
+          statusBadgeColor: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800',
+          targetTab: 'overtime',
+        });
+      });
+    }
+
     return list;
-  }, [hasPermission, pendingLeaves, pendingAttendances, pendingFoods, pendingProposals]);
+  }, [hasPermission, pendingLeaves, pendingAttendances, pendingFoods, activeFoodRegistrations, pendingProposals, pendingOvertime]);
+
+  const leaveCount = useMemo(() => taskItems.filter((t) => t.type === 'leave').length, [taskItems]);
+  const attendanceCount = useMemo(() => taskItems.filter((t) => t.type === 'attendance').length, [taskItems]);
+  const foodCount = useMemo(() => taskItems.filter((t) => t.type === 'food').length, [taskItems]);
+  const proposalCount = useMemo(() => taskItems.filter((t) => t.type === 'proposal').length, [taskItems]);
 
   const filteredTasks = useMemo(() => {
     if (activeTaskTab === 'all') return taskItems;
@@ -719,7 +780,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
                         : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
-                    Phép ({pendingLeaves.length})
+                    Phép ({leaveCount})
                   </button>
                 )}
                 {hasPermission('attendance') && (
@@ -732,7 +793,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
                         : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
-                    Công ({pendingAttendances.length})
+                    Công ({attendanceCount})
                   </button>
                 )}
                 {hasPermission('food_registration') && (
@@ -745,7 +806,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
                         : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
-                    Thực phẩm ({pendingFoods.length})
+                    Thực phẩm ({foodCount})
                   </button>
                 )}
                 {hasPermission('repair') && (
@@ -758,7 +819,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
                         : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
-                    Đề xuất ({pendingProposals.length})
+                    Đề xuất ({proposalCount})
                   </button>
                 )}
               </div>

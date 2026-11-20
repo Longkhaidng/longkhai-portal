@@ -245,7 +245,7 @@ export function checkFoodQrValidity(registration: FoodRegistration): FoodQrValid
     };
   }
 
-  // 2. Chế độ Thực phẩm chay: Hạn trong 12h, và ngay khi bảo vệ xác nhận cho vào thì chuyển sang trạng thái hết hiệu lực
+  // 2. Chế độ Thực phẩm chay: Hạn trong ngày đăng ký, và ngay khi bảo vệ xác nhận cho vào thì chuyển sang trạng thái hết hiệu lực
   if (registration.category === 'vegetarian') {
     if (registration.status === 'confirmed' || registration.status === 'guard_rejected') {
       return {
@@ -256,21 +256,21 @@ export function checkFoodQrValidity(registration: FoodRegistration): FoodQrValid
     }
 
     const startOfDay = new Date(`${registration.entryDate}T00:00:00.000`);
+    const endOfDay = new Date(`${registration.entryDate}T23:59:59.999`);
+
     if (now < startOfDay) {
       return {
         isValid: false,
         isExpired: false,
         isNotYetValid: true,
-        message: 'Phiếu đăng ký chưa có hiệu lực',
+        message: `Phiếu đăng ký chưa có hiệu lực (hiệu lực vào ngày ${registration.entryDate})`,
       };
     }
 
-    const createdTime = new Date(registration.createdAt).getTime();
-    const expiresTime = registration.expiresAt
-      ? new Date(registration.expiresAt).getTime()
-      : createdTime + 12 * 60 * 60 * 1000;
+    const expiryTime = registration.expiresAt ? new Date(registration.expiresAt).getTime() : endOfDay.getTime();
+    const effectiveExpiry = Math.max(endOfDay.getTime(), expiryTime);
 
-    if (now.getTime() > expiresTime) {
+    if (now.getTime() > effectiveExpiry) {
       return {
         isValid: false,
         isExpired: true,
@@ -278,14 +278,17 @@ export function checkFoodQrValidity(registration: FoodRegistration): FoodQrValid
       };
     }
 
-    const diffMs = expiresTime - now.getTime();
+    const diffMs = effectiveExpiry - now.getTime();
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
 
     return {
       isValid: true,
       isExpired: false,
-      remainingText: `Còn hiệu lực trong ${diffHours > 0 ? `${diffHours} giờ ` : ''}${diffMins} phút (Thời hạn 12h)`,
+      remainingText:
+        diffHours > 0
+          ? `Còn hiệu lực ${diffHours} giờ ${diffMins} phút (hết ngày ${registration.entryDate})`
+          : `Còn hiệu lực ${diffMins} phút (hết ngày ${registration.entryDate})`,
     };
   }
 

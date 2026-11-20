@@ -197,10 +197,11 @@ export function FoodRegistrationView() {
       setSelectedEmployeeId(currentUser.id);
       setEmployeeName(currentUser.name);
       setDepartment(currentUser.department || 'Phân xưởng sản xuất');
-      if (isGuard) {
+      if (isGuard || isAdmin) {
         setActiveTab('all');
-      } else if (isAdmin || isHR || isManager) {
-        setActiveTab('approver');
+      } else if (isHR || isManager) {
+        const pendingForMe = filterUserFoodRegistrations(registrations, currentUser, 'approver');
+        setActiveTab(pendingForMe.length > 0 ? 'approver' : 'all');
       } else {
         setActiveTab('my');
       }
@@ -352,8 +353,10 @@ export function FoodRegistrationView() {
 
       if (isVeg) {
         const finalVegQuantity = typeof vegQuantity === 'number' ? vegQuantity : parseInt(String(vegQuantity), 10) || 1;
-        // THỰC PHẨM CHAY: Có hiệu lực trong ngày (12h)
-        const expiresAt = new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString();
+        // THỰC PHẨM CHAY: Có hiệu lực trong ngày đăng ký (đến hết ngày đăng ký)
+        const entryEndOfDay = new Date(`${entryDate}T23:59:59.999`).getTime();
+        const twelveHoursFromNow = Date.now() + 12 * 60 * 60 * 1000;
+        const expiresAt = new Date(Math.max(entryEndOfDay, twelveHoursFromNow)).toISOString();
         const qrUrl = getQrConfirmUrl('food', newId);
         const qrDataUrl = await generateQrDataUrl(qrUrl);
         newRegistration = {

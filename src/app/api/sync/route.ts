@@ -57,7 +57,7 @@ function getClearedCollectionsMap(): Record<string, number> {
 function getClearedTimestamp(subDir: string): number {
   const map = getClearedCollectionsMap();
   const norm = subDir.replace(/\\/g, '/');
-  return map[norm] || map[subDir] || 0;
+  return map[norm] || map[subDir] || map[norm.replace(/-/g, '_')] || map[norm.replace(/_/g, '-')] || 0;
 }
 
 function getDeletedDocIdsMap(): Record<string, number> {
@@ -125,10 +125,6 @@ function scanJsonFiles<T>(subDir: string): T[] {
                 const itemTime = new Date(parsed.createdAt || parsed.updatedAt || 0).getTime();
                 if (itemTime > 0 && itemTime <= clearedAt) {
                   continue; // Skip items created before clearance
-                }
-                const stat = fs.statSync(full);
-                if (stat.mtimeMs <= clearedAt) {
-                  continue;
                 }
               }
               results.set(id, parsed);

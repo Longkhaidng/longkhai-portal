@@ -703,7 +703,7 @@ export function filterUserFoodRegistrations(
     return registrations;
   }
 
-  if (user.role === 'manager') {
+  if (user.role === 'manager' || user.role === 'team_leader') {
     return registrations.filter(
       (r) => isMyTicket(r) || isSameDepartment(user.department, r.department)
     );
