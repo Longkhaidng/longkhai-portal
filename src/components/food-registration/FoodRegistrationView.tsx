@@ -123,12 +123,12 @@ export function FoodRegistrationView() {
   const [department, setDepartment] = useState<string>('');
   const [vegOption, setVegOption] = useState<string>(VEGETARIAN_FOOD_OPTIONS[0]);
   const [customVegDish, setCustomVegDish] = useState<string>('');
-  const [vegQuantity, setVegQuantity] = useState<number>(1);
+  const [vegQuantity, setVegQuantity] = useState<number | ''>(1);
   const [vegUnit, setVegUnit] = useState<string>('Tô/Hộp');
   const [customVegUnit, setCustomVegUnit] = useState<string>('');
   const [vegNotes, setVegNotes] = useState<string>('');
   const [medicineReason, setMedicineReason] = useState<string>('');
-  const [durationDays, setDurationDays] = useState<number>(14);
+  const [durationDays, setDurationDays] = useState<number | ''>(14);
   const [entryDate, setEntryDate] = useState<string>(() => new Date().toISOString().slice(0, 10));
   const [toDate, setToDate] = useState<string>(() => {
     const today = new Date().toISOString().slice(0, 10);
@@ -140,7 +140,16 @@ export function FoodRegistrationView() {
 
   const isHRDeptEmployee = isHROrITDepartment(department.trim()) || isHROrITDepartment(currentUser?.department);
 
-  const handleDurationDaysChange = (val: number) => {
+  const handleDurationDaysChange = (valStr: string | number) => {
+    if (valStr === '' || valStr === undefined || valStr === null) {
+      setDurationDays('');
+      return;
+    }
+    const val = typeof valStr === 'number' ? valStr : parseInt(valStr, 10);
+    if (isNaN(val)) {
+      setDurationDays('');
+      return;
+    }
     setDurationDays(val);
     if (val > 0 && entryDate) {
       setToDate(calculateEndDate(entryDate, val));
@@ -149,8 +158,9 @@ export function FoodRegistrationView() {
 
   const handleEntryDateChange = (val: string) => {
     setEntryDate(val);
-    if (durationDays > 0 && val) {
-      setToDate(calculateEndDate(val, durationDays));
+    const d = typeof durationDays === 'number' ? durationDays : parseInt(String(durationDays), 10);
+    if (!isNaN(d) && d > 0 && val) {
+      setToDate(calculateEndDate(val, d));
     }
   };
 
@@ -281,7 +291,8 @@ export function FoodRegistrationView() {
       }
       const unitStr = vegUnit === 'Khác' ? capitalizeFirstLetter(customVegUnit.trim()) : vegUnit;
       const cleanNotes = vegNotes.trim() ? capitalizeFirstLetter(vegNotes.trim()) : '';
-      finalFoodDetails = `${dishName} (SL: ${vegQuantity} ${unitStr})${cleanNotes ? ` - Ghi chú: ${cleanNotes}` : ''}`;
+      const finalVegQuantity = typeof vegQuantity === 'number' ? vegQuantity : parseInt(String(vegQuantity), 10) || 1;
+      finalFoodDetails = `${dishName} (SL: ${finalVegQuantity} ${unitStr})${cleanNotes ? ` - Ghi chú: ${cleanNotes}` : ''}`;
 
       if (!entryDate) {
         showToast('Vui lòng chọn ngày mang thực phẩm vào.', 'error');
@@ -306,7 +317,8 @@ export function FoodRegistrationView() {
         finalFoodDetails = `Nước thuốc (Lý do: ${capitalizeFirstLetter(medicineReason.trim())})`;
       }
 
-      if (!durationDays || durationDays <= 0) {
+      const finalDurationDays = typeof durationDays === 'number' ? durationDays : parseInt(String(durationDays), 10);
+      if (!finalDurationDays || isNaN(finalDurationDays) || finalDurationDays <= 0) {
         showToast('Vui lòng nhập số ngày cần mang vào hợp lệ (tối thiểu 1 ngày).', 'error');
         return;
       }
@@ -339,6 +351,7 @@ export function FoodRegistrationView() {
       let newRegistration: FoodRegistration;
 
       if (isVeg) {
+        const finalVegQuantity = typeof vegQuantity === 'number' ? vegQuantity : parseInt(String(vegQuantity), 10) || 1;
         // THỰC PHẨM CHAY: Có hiệu lực trong ngày (12h)
         const expiresAt = new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString();
         const qrUrl = getQrConfirmUrl('food', newId);
@@ -356,7 +369,7 @@ export function FoodRegistrationView() {
           mainGroup: 'vegetarian',
           foodDetails: finalFoodDetails,
           customFoodDetails: vegOption === 'Khác' ? capitalizeFirstLetter(customVegDish.trim()) : undefined,
-          quantity: vegQuantity,
+          quantity: finalVegQuantity,
           unit: vegUnit === 'Khác' ? capitalizeFirstLetter(customVegUnit.trim()) : vegUnit,
           customUnit: vegUnit === 'Khác' ? capitalizeFirstLetter(customVegUnit.trim()) : undefined,
           notes: vegNotes.trim() ? capitalizeFirstLetter(vegNotes.trim()) : undefined,
@@ -377,6 +390,7 @@ export function FoodRegistrationView() {
         setRegistrations(storage.getFoodRegistrations());
         showToast(`Đăng ký thành công! Mã phiếu: ${newId}.`);
       } else {
+        const finalDurationDays = typeof durationDays === 'number' ? durationDays : parseInt(String(durationDays), 10) || 14;
         // MANG THAI / NƯỚC THUỐC:
         // - Nhân viên thuộc phòng HCNS hoặc CNTT: gửi trực tiếp đến mail Trưởng phòng HCNS
         // - Nhân viên các phòng ban khác: Luồng duyệt 2 cấp tuần tự: Trưởng BP -> Trưởng phòng HCNS
@@ -413,7 +427,7 @@ export function FoodRegistrationView() {
           department: capitalizeFirstLetter(department.trim()),
           entryDate,
           toDate,
-          durationDays,
+          durationDays: finalDurationDays,
           category: finalCategory,
           mainGroup: 'pregnant_medicine',
           foodDetails: finalFoodDetails,
@@ -1548,7 +1562,13 @@ export function FoodRegistrationView() {
                         max={90}
                         required
                         value={durationDays}
-                        onChange={(e) => handleDurationDaysChange(parseInt(e.target.value) || 1)}
+                        onChange={(e) => handleDurationDaysChange(e.target.value)}
+                        onBlur={() => {
+                          if (durationDays === '' || Number(durationDays) < 1) {
+                            handleDurationDaysChange('1');
+                          }
+                        }}
+                        placeholder="Số ngày (1 - 90)"
                         className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-bold focus:ring-2 focus:ring-amber-500"
                       />
                     </div>
@@ -1616,7 +1636,20 @@ export function FoodRegistrationView() {
                         max={10}
                         required
                         value={vegQuantity}
-                        onChange={(e) => setVegQuantity(parseInt(e.target.value) || 1)}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          if (v === '') {
+                            setVegQuantity('');
+                          } else {
+                            const n = parseInt(v, 10);
+                            setVegQuantity(isNaN(n) ? '' : n);
+                          }
+                        }}
+                        onBlur={() => {
+                          if (vegQuantity === '' || Number(vegQuantity) < 1) {
+                            setVegQuantity(1);
+                          }
+                        }}
                         className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-bold focus:ring-2 focus:ring-emerald-500"
                       />
                     </div>
