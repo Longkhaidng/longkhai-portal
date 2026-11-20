@@ -1640,10 +1640,7 @@ export function FoodRegistrationView() {
                         ? 'Nhân viên ➔ Trưởng phòng HCNS phê duyệt. Sau khi Trưởng phòng HCNS duyệt, phiếu sẽ có hiệu lực trong khoảng thời gian đã duyệt.'
                         : 'Nhân viên ➔ Trưởng bộ phận duyệt ➔ Trưởng phòng HCNS duyệt. Sau khi Trưởng phòng HCNS duyệt hoàn tất, hệ thống sẽ tự động kích hoạt mã QR hiệu lực để bảo vệ cổng kiểm soát.'}
                     </p>
-                    <p className="text-[11px] text-amber-600 dark:text-amber-400 italic">
-                    * Lưu ý: Không được phép mang thức ăn vào khu vực sản xuất.
-                   </p>
-                    
+                                        
                   </div>
                 </div>
               )}
@@ -1810,6 +1807,13 @@ export function FoodRegistrationView() {
                   />
                   <span>
                     Tôi cam kết thực phẩm mang vào đáp ứng đầy đủ điều kiện an toàn vệ sinh thực phẩm, đóng gói sạch sẽ, đúng chủng loại đã đăng ký và chịu hoàn toàn trách nhiệm theo quy định của Công ty.
+                  </span>
+                </label>
+              </div>
+              <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                <label className="flex items-start gap-2.5 cursor-pointer text-slate-700 dark:text-slate-300 text-xs leading-relaxed select-none">
+                  <span>
+                    Lưu ý: Không được phép mang thực phẩm vào khu vực sản xuất.
                   </span>
                 </label>
               </div>
