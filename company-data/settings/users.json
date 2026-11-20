@@ -9,15 +9,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2876",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2874",
@@ -29,15 +31,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2874",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2871",
@@ -49,15 +53,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2871",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "BOD",
@@ -65,19 +71,16 @@
     "department": "Ban Giám Đốc",
     "position": "Giám đốc sản xuất",
     "role": "manager",
+    "email": "it@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "announcements",
-      "reports",
-      "repair",
-      "overtime"
+      "reports"
     ],
     "isActive": true,
     "password": "BOD",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-19T08:46:27.379Z",
-    "allowedWebIntegrations": [],
-    "email": "it@longkhai.com.vn"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2864",
@@ -92,14 +95,13 @@
     "permissions": [
       "dashboard",
       "food_registration",
-      "announcements",
-      "reports"
+      "repair",
+      "announcements"
     ],
     "isActive": true,
     "password": "2864",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:52:47.511Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1867",
@@ -125,15 +127,12 @@
       "announcements",
       "forms",
       "reports",
-      "camera",
-      "food_inspection",
       "users"
     ],
     "isActive": true,
-    "password": "Lk@0.123",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-19T08:54:01.664Z",
-    "allowedWebIntegrations": []
+    "password": "1867",
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2265",
@@ -145,6 +144,7 @@
     "phone": "0935198776",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "departments",
@@ -153,6 +153,8 @@
       "gate_pass",
       "overtime",
       "food_registration",
+      "food_inspection",
+      "camera",
       "repair",
       "pccc",
       "periodic_inspection",
@@ -165,8 +167,8 @@
     ],
     "isActive": true,
     "password": "2265",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "101",
@@ -177,15 +179,13 @@
     "permissions": [
       "dashboard",
       "food_registration",
-      "announcements",
-      "gate_pass",
-      "attendance"
+      "repair",
+      "announcements"
     ],
     "isActive": true,
     "password": "101",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-11T05:40:57.405Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "102",
@@ -196,12 +196,13 @@
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "102",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "103",
@@ -212,12 +213,13 @@
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "103",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "104",
@@ -228,12 +230,13 @@
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "104",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "105",
@@ -244,12 +247,13 @@
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "105",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1002",
@@ -259,15 +263,17 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1002",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1005",
@@ -277,15 +283,17 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1005",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1008",
@@ -299,12 +307,13 @@
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1008",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1010",
@@ -315,15 +324,17 @@
     "email": "hien.nguyen@longkhai.com.vn",
     "departmentHeadId": "2864",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1010",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1012",
@@ -334,15 +345,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1012",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1014",
@@ -353,15 +366,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1014",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1015",
@@ -372,15 +387,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1015",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1020",
@@ -391,15 +408,17 @@
     "teamLeaderId": "1403",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1020",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1022",
@@ -410,15 +429,17 @@
     "teamLeaderId": "2645",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1022",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1025",
@@ -429,15 +450,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1025",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1026",
@@ -447,15 +470,17 @@
     "role": "employee",
     "departmentHeadId": "2831",
     "economicStaffId": "2421",
+    "departmentHeadEmail": "thanhdieu.tran@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1026",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1030",
@@ -465,18 +490,17 @@
     "role": "manager",
     "email": "kythuatmau.01@longkhai.com.vn",
     "economicStaffId": "2777",
-    "departmentHeadEmail": "tu.pham@longkhai.com.vn",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
-      "announcements",
-      "camera"
+      "repair",
+      "announcements"
     ],
     "isActive": true,
     "password": "1030",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-13T09:24:26.029Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1035",
@@ -486,15 +510,17 @@
     "role": "employee",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
-    "password": "123456",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-19T09:46:35.060Z"
+    "password": "1035",
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1049",
@@ -504,15 +530,17 @@
     "role": "employee",
     "departmentHeadId": "2831",
     "economicStaffId": "2421",
+    "departmentHeadEmail": "thanhdieu.tran@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1049",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1051",
@@ -526,12 +554,13 @@
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1051",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1056",
@@ -542,15 +571,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1056",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1061",
@@ -561,15 +592,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1061",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1070",
@@ -580,15 +613,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1070",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1079",
@@ -598,15 +633,17 @@
     "role": "team_leader",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1079",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1085",
@@ -616,15 +653,17 @@
     "role": "employee",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1085",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1094",
@@ -635,15 +674,17 @@
     "teamLeaderId": "1403",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1094",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1096",
@@ -654,15 +695,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1096",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1097",
@@ -672,15 +715,17 @@
     "role": "employee",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1097",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1101",
@@ -691,15 +736,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1101",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1104",
@@ -710,15 +757,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1104",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1114",
@@ -728,16 +777,17 @@
     "role": "team_leader",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1114",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-12T04:26:55.377Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1116",
@@ -748,15 +798,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1116",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1118",
@@ -766,15 +818,17 @@
     "role": "employee",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1118",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1119",
@@ -785,15 +839,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1119",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1121",
@@ -804,15 +860,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1121",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1131",
@@ -822,15 +880,17 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1131",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1139",
@@ -841,23 +901,17 @@
     "email": "tuyet.vo@longkhai.com.vn",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
-      "announcements",
-      "leave",
-      "gate_pass",
       "repair",
-      "periodic_inspection",
-      "reports",
-      "attendance",
-      "overtime"
+      "announcements"
     ],
     "isActive": true,
     "password": "1139",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-12T06:51:10.966Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1147",
@@ -868,15 +922,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1147",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1158",
@@ -887,15 +943,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1158",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1204",
@@ -906,15 +964,17 @@
     "teamLeaderId": "1403",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1204",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1205",
@@ -925,15 +985,17 @@
     "teamLeaderId": "1403",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1205",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1240",
@@ -944,15 +1006,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1240",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1241",
@@ -966,12 +1030,13 @@
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1241",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1243",
@@ -981,15 +1046,17 @@
     "role": "employee",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1243",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1246",
@@ -999,15 +1066,17 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1246",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1253",
@@ -1017,15 +1086,17 @@
     "role": "employee",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1253",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1255",
@@ -1036,15 +1107,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1255",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1258",
@@ -1055,15 +1128,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1258",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1264",
@@ -1074,15 +1149,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1264",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1271",
@@ -1092,15 +1169,17 @@
     "role": "employee",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1271",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1282",
@@ -1114,12 +1193,13 @@
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1282",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1305",
@@ -1130,15 +1210,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1305",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1307",
@@ -1149,15 +1231,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1307",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1308",
@@ -1168,15 +1252,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1308",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1348",
@@ -1187,15 +1273,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1348",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1368",
@@ -1206,15 +1294,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1368",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1400",
@@ -1228,12 +1318,13 @@
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1400",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1403",
@@ -1243,15 +1334,17 @@
     "role": "team_leader",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1403",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1413",
@@ -1262,15 +1355,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1413",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1418",
@@ -1281,15 +1376,17 @@
     "teamLeaderId": "1403",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1418",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1419",
@@ -1300,15 +1397,17 @@
     "teamLeaderId": "1403",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1419",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1443",
@@ -1319,15 +1418,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1443",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1444",
@@ -1338,15 +1439,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1444",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1466",
@@ -1356,15 +1459,17 @@
     "role": "employee",
     "departmentHeadId": "1241",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "dung.vo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1466",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1491",
@@ -1375,15 +1480,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1491",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1503",
@@ -1394,15 +1501,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1503",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1527",
@@ -1413,15 +1522,17 @@
     "teamLeaderId": "2645",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1527",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1532",
@@ -1432,15 +1543,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1532",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1554",
@@ -1450,15 +1563,17 @@
     "role": "team_leader",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1554",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1559",
@@ -1468,17 +1583,17 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
-      "announcements",
-      "food_inspection"
+      "repair",
+      "announcements"
     ],
     "isActive": true,
     "password": "1559",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-16T07:07:46.210Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1598",
@@ -1489,15 +1604,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1598",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1635",
@@ -1508,15 +1625,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1635",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1637",
@@ -1527,15 +1646,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1637",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1640",
@@ -1546,15 +1667,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1640",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1643",
@@ -1565,16 +1688,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1643",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-20T02:24:55.714Z",
-    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1649",
@@ -1585,15 +1709,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1649",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1672",
@@ -1603,15 +1729,17 @@
     "role": "employee",
     "departmentHeadId": "2409",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "tai.trinh@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1672",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1679",
@@ -1622,15 +1750,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1679",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1706",
@@ -1641,15 +1771,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1706",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1770",
@@ -1657,19 +1789,20 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
-    "teamLeaderId": "2380",
+    "teamLeaderId": "2308",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1770",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-20T02:24:27.388Z",
-    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1778",
@@ -1679,15 +1812,17 @@
     "role": "employee",
     "departmentHeadId": "2409",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "tai.trinh@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1778",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1785",
@@ -1698,15 +1833,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1785",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1802",
@@ -1717,15 +1854,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1802",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1804",
@@ -1736,15 +1875,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1804",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1809",
@@ -1755,15 +1896,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1809",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1849",
@@ -1774,15 +1917,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1849",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1894",
@@ -1792,16 +1937,17 @@
     "role": "employee",
     "email": "nhu-y.tran@longkhai.com.vn",
     "economicStaffId": "2795",
-    "departmentHeadEmail": "tu.pham@longkhai.com.vn",
+    "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1894",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1912",
@@ -1812,15 +1958,17 @@
     "email": "finishing04@longkhai.com.vn",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1912",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1924",
@@ -1831,15 +1979,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1924",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1926",
@@ -1850,15 +2000,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1926",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1927",
@@ -1868,15 +2020,17 @@
     "role": "employee",
     "departmentHeadId": "2409",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "tai.trinh@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1927",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1975",
@@ -1887,15 +2041,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1975",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1983",
@@ -1906,15 +2062,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1983",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2033",
@@ -1924,15 +2082,17 @@
     "role": "employee",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2033",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2039",
@@ -1942,15 +2102,17 @@
     "role": "employee",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2039",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2040",
@@ -1960,15 +2122,17 @@
     "role": "employee",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2040",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2043",
@@ -1979,15 +2143,17 @@
     "teamLeaderId": "1403",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2043",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2102",
@@ -1998,15 +2164,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2102",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2105",
@@ -2017,15 +2185,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2105",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2107",
@@ -2036,15 +2206,17 @@
     "teamLeaderId": "2645",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2107",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2118",
@@ -2055,15 +2227,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2118",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2120",
@@ -2074,15 +2248,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2120",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2121",
@@ -2093,15 +2269,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2121",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2123",
@@ -2112,15 +2290,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2123",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2124",
@@ -2131,15 +2311,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2124",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2131",
@@ -2150,15 +2332,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2131",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2139",
@@ -2169,15 +2353,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2139",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2140",
@@ -2188,15 +2374,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2140",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2146",
@@ -2207,15 +2395,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2146",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2154",
@@ -2226,15 +2416,17 @@
     "teamLeaderId": "2645",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2154",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2164",
@@ -2244,15 +2436,17 @@
     "role": "employee",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2164",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2190",
@@ -2263,15 +2457,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2190",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2196",
@@ -2282,15 +2478,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2196",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2227",
@@ -2301,15 +2499,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2227",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2243",
@@ -2320,15 +2520,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2243",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2247",
@@ -2339,15 +2541,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2247",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2250",
@@ -2358,15 +2562,17 @@
     "teamLeaderId": "2645",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2250",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2254",
@@ -2377,15 +2583,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2254",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2267",
@@ -2396,15 +2604,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2267",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2268",
@@ -2414,15 +2624,17 @@
     "role": "employee",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2268",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2277",
@@ -2433,15 +2645,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2277",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2284",
@@ -2452,15 +2666,17 @@
     "teamLeaderId": "2645",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2284",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2287",
@@ -2470,15 +2686,17 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2287",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2293",
@@ -2488,15 +2706,17 @@
     "role": "employee",
     "departmentHeadId": "2831",
     "economicStaffId": "2421",
+    "departmentHeadEmail": "thanhdieu.tran@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2293",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2297",
@@ -2504,17 +2724,20 @@
     "department": "Cơ điện",
     "position": "Chuyên viên kỹ thuật cơ điện",
     "role": "employee",
+    "email": "codien.01@longkhai.com.vn",
     "departmentHeadId": "2409",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "tai.trinh@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2297",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2320",
@@ -2525,15 +2748,17 @@
     "teamLeaderId": "2645",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2320",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2332",
@@ -2543,15 +2768,17 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2332",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2336",
@@ -2562,15 +2789,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2336",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2341",
@@ -2581,15 +2810,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2341",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2342",
@@ -2600,15 +2831,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2342",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2344",
@@ -2619,15 +2852,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2344",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2351",
@@ -2637,15 +2872,17 @@
     "role": "employee",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2351",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2359",
@@ -2656,15 +2893,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2359",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2365",
@@ -2675,15 +2914,17 @@
     "teamLeaderId": "1403",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2365",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2366",
@@ -2694,15 +2935,17 @@
     "teamLeaderId": "1403",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2366",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2373",
@@ -2713,15 +2956,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2373",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2374",
@@ -2732,15 +2977,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2374",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2380",
@@ -2750,15 +2997,17 @@
     "role": "team_leader",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2380",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2388",
@@ -2769,15 +3018,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2388",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2391",
@@ -2788,15 +3039,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2391",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2399",
@@ -2807,15 +3060,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2399",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2409",
@@ -2829,12 +3084,13 @@
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2409",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2410",
@@ -2845,15 +3101,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2410",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2415",
@@ -2864,17 +3122,17 @@
     "email": "finishing05@longkhai.com.vn",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
-      "announcements",
-      "overtime"
+      "repair",
+      "announcements"
     ],
     "isActive": true,
     "password": "2415",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-19T07:14:49.389Z",
-    "allowedWebIntegrations": []
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2421",
@@ -2885,15 +3143,17 @@
     "email": "kcs01@longkhai.com.vn",
     "departmentHeadId": "2831",
     "economicStaffId": "2421",
+    "departmentHeadEmail": "thanhdieu.tran@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2421",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2431",
@@ -2904,15 +3164,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2431",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2435",
@@ -2923,15 +3185,17 @@
     "email": "warehouse01@longkhai.com.vn",
     "departmentHeadId": "2745",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "warehouse03@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2435",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2436",
@@ -2942,15 +3206,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2436",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2446",
@@ -2961,15 +3227,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2446",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2448",
@@ -2980,15 +3248,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2448",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2471",
@@ -2999,15 +3269,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2471",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2472",
@@ -3018,15 +3290,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2472",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2473",
@@ -3037,15 +3311,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2473",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2474",
@@ -3056,15 +3332,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2474",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2476",
@@ -3075,15 +3353,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2476",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2486",
@@ -3094,15 +3374,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2486",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2489",
@@ -3113,15 +3395,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2489",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2500",
@@ -3132,15 +3416,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
-    "password": "175Ngoquyen",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-19T12:05:59.658Z"
+    "password": "2500",
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2502",
@@ -3151,15 +3437,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2502",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2506",
@@ -3170,15 +3458,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2506",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2507",
@@ -3188,15 +3478,17 @@
     "role": "employee",
     "departmentHeadId": "2831",
     "economicStaffId": "2421",
+    "departmentHeadEmail": "thanhdieu.tran@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2507",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2509",
@@ -3207,15 +3499,17 @@
     "teamLeaderId": "2645",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2509",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2510",
@@ -3226,15 +3520,17 @@
     "teamLeaderId": "2645",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2510",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2515",
@@ -3245,15 +3541,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2515",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2522",
@@ -3264,15 +3562,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2522",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2525",
@@ -3283,15 +3583,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2525",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2528",
@@ -3302,15 +3604,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2528",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2529",
@@ -3320,15 +3624,17 @@
     "role": "employee",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2529",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2535",
@@ -3338,15 +3644,17 @@
     "role": "employee",
     "departmentHeadId": "2745",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "warehouse03@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2535",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2539",
@@ -3356,15 +3664,17 @@
     "role": "employee",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2539",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2560",
@@ -3375,15 +3685,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2560",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2576",
@@ -3393,15 +3705,17 @@
     "role": "employee",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2576",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2598",
@@ -3411,15 +3725,17 @@
     "role": "employee",
     "departmentHeadId": "2831",
     "economicStaffId": "2421",
+    "departmentHeadEmail": "thanhdieu.tran@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2598",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2602",
@@ -3429,15 +3745,17 @@
     "role": "employee",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2602",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2611",
@@ -3448,15 +3766,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2611",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2613",
@@ -3466,15 +3786,17 @@
     "role": "employee",
     "departmentHeadId": "2831",
     "economicStaffId": "2421",
+    "departmentHeadEmail": "thanhdieu.tran@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2613",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2615",
@@ -3485,15 +3807,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2615",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2620",
@@ -3504,15 +3828,17 @@
     "teamLeaderId": "1403",
     "departmentHeadId": "1051",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2620",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2625",
@@ -3523,15 +3849,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2625",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2626",
@@ -3542,15 +3870,17 @@
     "teamLeaderId": "2645",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2626",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2627",
@@ -3561,15 +3891,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2627",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2629",
@@ -3580,15 +3912,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2629",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2632",
@@ -3599,15 +3933,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2632",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2645",
@@ -3617,15 +3953,17 @@
     "role": "team_leader",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2645",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2646",
@@ -3635,15 +3973,17 @@
     "role": "employee",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2646",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2656",
@@ -3654,15 +3994,17 @@
     "teamLeaderId": "2645",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2656",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2663",
@@ -3673,15 +4015,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2663",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2667",
@@ -3692,15 +4036,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2667",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2669",
@@ -3711,15 +4057,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2669",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2671",
@@ -3730,15 +4078,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2671",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2685",
@@ -3749,15 +4099,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2685",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2692",
@@ -3768,15 +4120,17 @@
     "teamLeaderId": "2645",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2692",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2710",
@@ -3787,15 +4141,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2710",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2713",
@@ -3806,15 +4162,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2713",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2717",
@@ -3825,15 +4183,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2717",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2725",
@@ -3844,15 +4204,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2725",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2727",
@@ -3865,12 +4227,13 @@
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2727",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2732",
@@ -3880,15 +4243,17 @@
     "role": "employee",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
-    "password": "170304",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-19T08:55:40.696Z"
+    "password": "2732",
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2736",
@@ -3899,15 +4264,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2736",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2737",
@@ -3918,15 +4285,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2737",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2739",
@@ -3937,15 +4306,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2739",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2740",
@@ -3956,15 +4327,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2740",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2741",
@@ -3975,15 +4348,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2741",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2742",
@@ -3994,15 +4369,17 @@
     "teamLeaderId": "1114",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2742",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2745",
@@ -4010,17 +4387,19 @@
     "department": "Kho",
     "position": "Phụ trách kho",
     "role": "manager",
+    "email": "warehouse03@longkhai.com.vn",
     "economicStaffId": "1139",
     "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2745",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2747",
@@ -4031,15 +4410,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2747",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2752",
@@ -4050,15 +4431,17 @@
     "teamLeaderId": "1403",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2752",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2754",
@@ -4069,15 +4452,17 @@
     "email": "finishing03@longkhai.com.vn",
     "departmentHeadId": "2864",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2754",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2755",
@@ -4088,15 +4473,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2755",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2760",
@@ -4106,15 +4493,17 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2760",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2765",
@@ -4125,15 +4514,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2765",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2772",
@@ -4144,15 +4535,17 @@
     "teamLeaderId": "1403",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2772",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2777",
@@ -4162,15 +4555,17 @@
     "role": "employee",
     "departmentHeadId": "2864",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2777",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2778",
@@ -4180,15 +4575,17 @@
     "role": "employee",
     "departmentHeadId": "2831",
     "economicStaffId": "2421",
+    "departmentHeadEmail": "thanhdieu.tran@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2778",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2781",
@@ -4199,15 +4596,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2781",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2791",
@@ -4218,15 +4617,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2791",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2793",
@@ -4234,17 +4635,20 @@
     "department": "Kho",
     "position": "Thủ kho thành phẩm",
     "role": "employee",
+    "email": "warehouse02@longkhai.com.vn",
     "departmentHeadId": "2745",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "warehouse03@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2793",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2795",
@@ -4254,15 +4658,17 @@
     "role": "employee",
     "departmentHeadId": "2864",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2795",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2800",
@@ -4272,15 +4678,17 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2800",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2802",
@@ -4291,15 +4699,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2802",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2810",
@@ -4309,15 +4719,17 @@
     "role": "employee",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2810",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2809",
@@ -4328,15 +4740,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2809",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2811",
@@ -4346,15 +4760,17 @@
     "role": "employee",
     "departmentHeadId": "2409",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "tai.trinh@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2811",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2816",
@@ -4365,15 +4781,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2816",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2817",
@@ -4384,15 +4802,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2817",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2818",
@@ -4403,15 +4823,17 @@
     "email": "hr.01@longkhai.com.vn",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
-    "password": "Yen@123456",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-19T08:59:26.483Z"
+    "password": "2818",
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2819",
@@ -4422,15 +4844,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2819",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2820",
@@ -4440,15 +4864,17 @@
     "role": "employee",
     "departmentHeadId": "2831",
     "economicStaffId": "2421",
+    "departmentHeadEmail": "thanhdieu.tran@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2820",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2822",
@@ -4459,15 +4885,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2822",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2823",
@@ -4478,15 +4906,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2823",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2826",
@@ -4497,15 +4927,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2826",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2830",
@@ -4515,15 +4947,17 @@
     "role": "employee",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2830",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2831",
@@ -4531,17 +4965,19 @@
     "department": "Phòng KCS",
     "position": "Phụ trách KCS",
     "role": "manager",
+    "email": "thanhdieu.tran@longkhai.com.vn",
     "economicStaffId": "2421",
     "departmentHeadEmail": "tu.pham@vitex.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2831",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2834",
@@ -4552,15 +4988,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2834",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2836",
@@ -4571,15 +5009,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2836",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2838",
@@ -4590,15 +5030,17 @@
     "teamLeaderId": "1403",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2838",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2839",
@@ -4609,15 +5051,17 @@
     "teamLeaderId": "1079",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2839",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2841",
@@ -4628,15 +5072,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2841",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2843",
@@ -4647,15 +5093,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2843",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2846",
@@ -4666,15 +5114,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2846",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2847",
@@ -4685,15 +5135,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2847",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2848",
@@ -4703,15 +5155,17 @@
     "role": "employee",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2848",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2850",
@@ -4722,15 +5176,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2850",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2851",
@@ -4740,15 +5196,17 @@
     "role": "employee",
     "departmentHeadId": "2831",
     "economicStaffId": "2421",
+    "departmentHeadEmail": "thanhdieu.tran@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2851",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2852",
@@ -4759,15 +5217,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2852",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2854",
@@ -4778,15 +5238,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2854",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2856",
@@ -4796,15 +5258,17 @@
     "role": "employee",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2856",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1386",
@@ -4812,17 +5276,20 @@
     "department": "Phòng HCNS",
     "position": "Giám sát nhà máy",
     "role": "hr",
+    "email": "hai.nguyen@longkhai.com.vn",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1386",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2424",
@@ -4832,15 +5299,17 @@
     "role": "employee",
     "departmentHeadId": "1867",
     "economicStaffId": "1139",
+    "departmentHeadEmail": "Quynh.truong@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2424",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1142",
@@ -4849,15 +5318,17 @@
     "position": "Nhân viên KCS dệt",
     "role": "employee",
     "departmentHeadId": "2831",
+    "departmentHeadEmail": "thanhdieu.tran@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1142",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1310",
@@ -4866,15 +5337,17 @@
     "position": "Nhân viên KCS dệt",
     "role": "employee",
     "departmentHeadId": "2831",
+    "departmentHeadEmail": "thanhdieu.tran@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1310",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1311",
@@ -4883,15 +5356,17 @@
     "position": "Nhân viên KCS dệt",
     "role": "employee",
     "departmentHeadId": "2831",
+    "departmentHeadEmail": "thanhdieu.tran@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1311",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1312",
@@ -4900,15 +5375,17 @@
     "position": "Nhân viên KCS dệt",
     "role": "employee",
     "departmentHeadId": "2831",
+    "departmentHeadEmail": "thanhdieu.tran@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1312",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "1141",
@@ -4920,12 +5397,13 @@
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "1141",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2866",
@@ -4936,15 +5414,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2866",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2867",
@@ -4955,15 +5435,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2867",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2868",
@@ -4974,15 +5456,17 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2868",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2869",
@@ -4992,15 +5476,17 @@
     "role": "employee",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2869",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2857",
@@ -5011,15 +5497,17 @@
     "teamLeaderId": "1554",
     "departmentHeadId": "1030",
     "economicStaffId": "2777",
+    "departmentHeadEmail": "kythuatmau.01@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2857",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2861",
@@ -5029,15 +5517,17 @@
     "role": "employee",
     "departmentHeadId": "1051",
     "economicStaffId": "2795",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2861",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   },
   {
     "id": "2862",
@@ -5048,14 +5538,79 @@
     "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
     "permissions": [
       "dashboard",
       "food_registration",
+      "repair",
       "announcements"
     ],
     "isActive": true,
     "password": "2862",
-    "createdAt": "2026-11-10T08:50:03.788Z",
-    "updatedAt": "2026-11-10T08:50:03.788Z"
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
+  },
+  {
+    "id": "2878",
+    "name": "Trần Thị Hiền",
+    "department": "Phân xưởng hoàn thành",
+    "position": "Công nhân tổ 2 - KTTH",
+    "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
+    "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
+    "permissions": [
+      "dashboard",
+      "food_registration",
+      "repair",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "2878",
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
+  },
+  {
+    "id": "2879",
+    "name": "Võ Duy Hiệp",
+    "department": "Phân xưởng hoàn thành",
+    "position": "Công nhân vận hành máy sấy văng - Tổ 3 - S",
+    "role": "employee",
+    "teamLeaderId": "1079",
+    "departmentHeadId": "1051",
+    "economicStaffId": "2415",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
+    "permissions": [
+      "dashboard",
+      "food_registration",
+      "repair",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "2879",
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
+  },
+  {
+    "id": "2880",
+    "name": "Trần Thị Mỹ Hạnh",
+    "department": "Phân xưởng hoàn thành",
+    "position": "Công nhân tổ 1 - K",
+    "role": "employee",
+    "teamLeaderId": "2380",
+    "departmentHeadId": "1051",
+    "economicStaffId": "2576",
+    "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
+    "permissions": [
+      "dashboard",
+      "food_registration",
+      "repair",
+      "announcements"
+    ],
+    "isActive": true,
+    "password": "2880",
+    "createdAt": "2026-11-20T02:48:53.771Z",
+    "updatedAt": "2026-11-20T02:48:53.771Z"
   }
 ]
