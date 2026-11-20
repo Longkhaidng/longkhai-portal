@@ -298,7 +298,7 @@ function ScanConfirmContent() {
           const rec = data.record;
           const foodName =
             rec.category === 'medicine_drink'
-              ? (rec.medicineReason || rec.foodDetails || 'Nước thuốc')
+              ? 'Nước thuốc'
               : rec.category === 'pregnant'
               ? (rec.foodDetails || 'Bánh và Sữa hoặc Trái cây và Sữa')
               : (rec.foodDetails || 'Thực phẩm');
@@ -951,7 +951,7 @@ function ScanConfirmContent() {
                         setAutoplayBlocked(false);
                         const foodName =
                           docData.category === 'medicine_drink'
-                            ? (docData.medicineReason || docData.foodDetails || 'Nước thuốc')
+                            ? 'Nước thuốc'
                             : docData.category === 'pregnant'
                             ? (docData.foodDetails || 'Bánh và Sữa hoặc Trái cây và Sữa')
                             : (docData.foodDetails || 'Thực phẩm');
@@ -979,7 +979,7 @@ function ScanConfirmContent() {
                           onClick={() => {
                             const foodName =
                               docData.category === 'medicine_drink'
-                                ? (docData.medicineReason || docData.foodDetails || 'Nước thuốc')
+                                ? 'Nước thuốc'
                                 : docData.category === 'pregnant'
                                 ? (docData.foodDetails || 'Bánh và Sữa hoặc Trái cây và Sữa')
                                 : (docData.foodDetails || 'Thực phẩm');
@@ -1027,16 +1027,22 @@ function ScanConfirmContent() {
                         </div>
                       </div>
 
-                      {/* 2. CHI TIẾT MÓN ĂN */}
+                      {/* 2. CHI TIẾT MÓN ĂN / THỰC PHẨM MANG VÀO */}
                       <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
                         <span className="text-xs text-slate-400 uppercase tracking-wider block font-bold">
-                          {docData.category === 'medicine_drink' ? 'Lý do mang nước thuốc:' : 'Chi tiết món ăn:'}
+                          {docData.category === 'medicine_drink' ? 'Tên thực phẩm mang vào:' : 'Chi tiết món ăn:'}
                         </span>
                         <div className="text-base sm:text-lg font-black text-emerald-400 whitespace-pre-wrap leading-relaxed">
                           {docData.category === 'medicine_drink'
-                            ? (docData.medicineReason || docData.foodDetails || 'Uống nước thuốc theo nhu cầu y tế')
+                            ? 'Nước thuốc'
                             : (normalizedFoodDetails || docData.foodDetails)}
                         </div>
+                        {docData.category === 'medicine_drink' && (docData.medicineReason || docData.foodDetails) && (
+                          <div className="text-xs sm:text-sm text-slate-300 pt-1.5 border-t border-slate-800/60 mt-1">
+                            <span className="text-slate-400 font-semibold">Lý do: </span>
+                            <span>{docData.medicineReason || docData.foodDetails.replace(/^Nước thuốc\s*\(Lý do:\s*/i, '').replace(/\)$/, '')}</span>
+                          </div>
+                        )}
                         {docData.category === 'pregnant' && (
                           <div className="text-xs sm:text-sm text-amber-300/90 italic font-medium pt-1.5 border-t border-slate-800/60 mt-1">
                             * Ghi chú: Mỗi người chỉ được phép mang vào 02 đơn vị cho mỗi loại thực phẩm.

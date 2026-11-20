@@ -90,7 +90,7 @@ export function FoodQrModal({
   // Helper lấy tên thực phẩm hiển thị chuẩn
   const getFoodDisplayName = (): string => {
     if (registration.category === 'medicine_drink') {
-      return registration.medicineReason || registration.foodDetails || 'Nước thuốc';
+      return 'Nước thuốc';
     }
     if (registration.category === 'pregnant') {
       return registration.foodDetails || 'Bánh + Sữa hoặc Trái cây + Sữa';
@@ -372,9 +372,14 @@ export function FoodQrModal({
               <span className="text-slate-400 text-xs font-medium block mb-0.5">
                 2. Tên thực phẩm mang vào:
               </span>
-              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400 block">
+              <span className="text-base font-bold text-emerald-700 dark:text-emerald-400 block">
                 {foodDisplayName}
               </span>
+              {registration.category === 'medicine_drink' && (registration.medicineReason || registration.foodDetails) && (
+                <span className="text-xs text-slate-500 dark:text-slate-400 block mt-0.5 font-normal">
+                  Lý do: {registration.medicineReason || registration.foodDetails.replace(/^Nước thuốc\s*\(Lý do:\s*/i, '').replace(/\)$/, '')}
+                </span>
+              )}
             </div>
 
             {/* Guard status / confirmation indicator if confirmed */}
