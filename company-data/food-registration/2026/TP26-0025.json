@@ -1,0 +1,32 @@
+{
+  "id": "TP26-0025",
+  "employeeId": "1770",
+  "employeeName": "Nguyễn Thị Xuân Hoa",
+  "createdById": "1770",
+  "createdByName": "Nguyễn Thị Xuân Hoa",
+  "department": "Phân xưởng hoàn thành",
+  "entryDate": "2026-11-20",
+  "toDate": "2026-12-08",
+  "durationDays": 19,
+  "category": "medicine_drink",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Nước thuốc (Lý do: Bác sĩ chỉ định. Uống bổ sung với thuốc,cao huyết áp)",
+  "medicineReason": "Bác sĩ chỉ định. Uống bổ sung với thuốc,cao huyết áp",
+  "complianceCommitment": true,
+  "status": "pending_dept",
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận",
+      "roleRequired": "manager",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-20T02:00:35.958Z",
+  "updatedAt": "2026-11-20T02:00:35.958Z"
+}
