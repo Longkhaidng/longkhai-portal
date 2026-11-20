@@ -129,23 +129,30 @@ class StorageService {
   // --- EMAIL CONFIG ---
   getEmailConfig(): EmailConfig {
     const defaultConfig: EmailConfig = {
-      provider: 'gmail',
-      smtpHost: 'smtp.gmail.com',
-      smtpPort: 465,
-      smtpSecure: true,
+      provider: 'google_relay',
+      googleScriptUrl:
+        'https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec',
+      smtpHost: 'smtp.office365.com',
+      smtpPort: 587,
+      smtpSecure: false,
       smtpUser: '',
       smtpPassword: '',
       senderName: 'Cổng Thông Tin Long Khải',
-      senderEmail: '',
+      senderEmail: 'no-reply@longkhai.com.vn',
       isEnabled: true,
-      portalBaseUrl: typeof window !== 'undefined' ? window.location.origin : '',
+      portalBaseUrl:
+        typeof window !== 'undefined' ? window.location.origin : 'https://longkhai-portal.vercel.app',
     };
     if (!this.isClient()) return defaultConfig;
     try {
       const data = localStorage.getItem(STORAGE_KEYS.EMAIL_CONFIG);
       if (data) {
         const parsed = JSON.parse(data);
-        return { ...defaultConfig, ...parsed };
+        return {
+          ...defaultConfig,
+          ...parsed,
+          googleScriptUrl: parsed.googleScriptUrl || defaultConfig.googleScriptUrl,
+        };
       }
     } catch {}
     return defaultConfig;
@@ -1345,8 +1352,14 @@ class StorageService {
         });
         localStorage.setItem(STORAGE_KEYS.PERIODIC_GROUNDWATER_SOIL, JSON.stringify(Array.from(map.values())));
       }
-      if (emailConfig && emailConfig.googleScriptUrl) {
-        localStorage.setItem(STORAGE_KEYS.EMAIL_CONFIG, JSON.stringify(emailConfig));
+      if (emailConfig) {
+        const local = this.getEmailConfig();
+        const merged = { ...local, ...emailConfig };
+        if (!merged.googleScriptUrl) {
+          merged.googleScriptUrl =
+            'https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec';
+        }
+        localStorage.setItem(STORAGE_KEYS.EMAIL_CONFIG, JSON.stringify(merged));
       }
       if (githubConfig && githubConfig.token) {
         localStorage.setItem(STORAGE_KEYS.GITHUB_CONFIG, JSON.stringify(githubConfig));
@@ -2484,8 +2497,10 @@ class StorageService {
 
   deleteFoodRegistration(id: string, byUser?: { id: string; name: string }): void {
     if (!this.isClient()) return;
-    const list = this.getFoodRegistrations().filter((r) => r.id !== id);
-    localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(list));
+    const list = this.getFoodRegistrations();
+    const item = list.find((r) => r.id === id);
+    const updated = list.filter((r) => r.id !== id);
+    localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(updated));
 
     this.addAuditLog(
       'delete',
@@ -2493,12 +2508,37 @@ class StorageService {
       id,
       byUser?.id || 'admin',
       byUser?.name || 'Admin',
-      `Xóa phiếu đăng ký thực phẩm ${id}`
+      `Xóa hoàn toàn phiếu đăng ký thực phẩm ${id} khỏi hệ thống`
     );
 
     try {
       window.dispatchEvent(new Event('food_registrations_updated'));
+      window.dispatchEvent(new Event('storage'));
     } catch {}
+
+    const year = item?.entryDate ? new Date(item.entryDate).getFullYear() : new Date().getFullYear();
+    const relFilePath = `food-registration/${year}/${id}.json`;
+
+    // 1. Delete on GitHub
+    const ghClient = this.getGitHubClient();
+    const ghConfig = this.getGitHubConfig();
+    if (ghClient) {
+      const fullPath = `${ghConfig.basePath || 'company-data'}/${relFilePath}`;
+      ghClient.deleteFile(fullPath, `Permanently delete Food Registration ${id}`).catch(() => {});
+    }
+
+    // 2. Delete on server (local disk + /tmp) via /api/sync
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'delete',
+        type: 'food_registration',
+        id,
+        year,
+        githubToken: ghConfig.token,
+      }),
+    }).catch(() => {});
   }
 
   approveFoodRegistrationByDept(
@@ -2658,15 +2698,8 @@ class StorageService {
   }
 
   cancelFoodRegistration(id: string, byUser?: { id: string; name: string }): void {
-    if (!this.isClient()) return;
-    const list = this.getFoodRegistrations();
-    const item = list.find((r) => r.id === id);
-    if (!item) return;
-
-    item.status = 'cancelled';
-    item.updatedAt = new Date().toISOString();
-
-    this.saveFoodRegistration(item, byUser);
+    // Những phiếu người lao động nhấn hủy sẽ bị xóa hoàn toàn trên hệ thống
+    this.deleteFoodRegistration(id, byUser);
   }
 
   // --- CAMERA MASTER DATA ---

@@ -79,6 +79,9 @@ function scanJsonFiles<T>(subDir: string): T[] {
             const parsed = JSON.parse(content);
             if (parsed && (parsed.id || parsed._id)) {
               const id = parsed.id || parsed._id;
+              if (parsed.status === 'cancelled' || parsed.isCancelled === true || parsed.isDeleted === true) {
+                continue; // Không tải các phiếu đã bị hủy / xóa
+              }
               if (clearedAt > 0) {
                 const itemTime = new Date(parsed.createdAt || parsed.updatedAt || 0).getTime();
                 if (itemTime > 0 && itemTime <= clearedAt) {
@@ -185,9 +188,98 @@ export async function GET() {
   }
 }
 
+async function performDeleteSyncItem(
+  type: string,
+  id: string,
+  year?: string | number,
+  githubToken?: string
+): Promise<{ success: boolean; message: string }> {
+  const currentYear = year || new Date().getFullYear();
+  let relFilePath = '';
+
+  if (type === 'food_registration') {
+    relFilePath = `food-registration/${currentYear}/${id}.json`;
+  } else if (type === 'leave_request') {
+    relFilePath = `leave-request/${currentYear}/${id}.json`;
+  } else if (type === 'gate_pass') {
+    relFilePath = `gate-pass/${currentYear}/${id}.json`;
+  } else if (type === 'attendance') {
+    relFilePath = `attendance/${currentYear}/${id}.json`;
+  } else if (type === 'repair_proposal') {
+    relFilePath = `repair-proposal/${currentYear}/${id}.json`;
+  } else if (type === 'stationery_proposal') {
+    relFilePath = `stationery-proposal/${currentYear}/${id}.json`;
+  } else if (type === 'general_proposal') {
+    relFilePath = `general-proposal/${currentYear}/${id}.json`;
+  } else if (type === 'camera_request') {
+    relFilePath = `camera-request/${currentYear}/${id}.json`;
+  } else if (type === 'overtime_registration') {
+    relFilePath = `overtime/${currentYear}/${id}.json`;
+  }
+
+  if (!relFilePath) {
+    return { success: false, message: `Không xác định được đường dẫn cho loại ${type}` };
+  }
+
+  // 1. Delete from /tmp
+  try {
+    const tmpFile = path.join(TMP_DIR, relFilePath);
+    if (fs.existsSync(tmpFile)) fs.unlinkSync(tmpFile);
+  } catch {}
+
+  // 2. Delete from company-data local
+  try {
+    const localFile = path.join(BASE_DIR, relFilePath);
+    if (fs.existsSync(localFile)) fs.unlinkSync(localFile);
+  } catch {}
+
+  // 3. Delete from GitHub repository
+  const gitConfig = resolveServerGitHubConfig();
+  const token = githubToken?.trim() || gitConfig.token?.trim();
+  if (token && gitConfig.owner && gitConfig.repo) {
+    try {
+      const gh = new GitHubService({ ...gitConfig, token });
+      const ghPath = `${gitConfig.basePath || 'company-data'}/${relFilePath}`;
+      gh.deleteFile(ghPath, `Delete ${type} ${id}`).catch((ghErr) => {
+        console.warn('[Sync API] GitHub deleteFile background failed:', ghErr.message);
+      });
+    } catch (e: any) {
+      console.warn('[Sync API] GitHub delete service error:', e.message);
+    }
+  }
+
+  return { success: true, message: `Đã xóa hoàn toàn phiếu ${id} khỏi hệ thống!` };
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const result = await performDeleteSyncItem(
+      body.type,
+      body.id || body.data?.id,
+      body.year || body.data?.year,
+      body.githubToken
+    );
+    return NextResponse.json(result);
+  } catch (err: any) {
+    return NextResponse.json({ success: false, message: err.message }, { status: 500 });
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+
+    // Support action: 'delete' for hard deleting specific items
+    if (body.action === 'delete') {
+      const result = await performDeleteSyncItem(
+        body.type,
+        body.id || body.data?.id,
+        body.year || body.data?.year,
+        body.githubToken
+      );
+      return NextResponse.json(result);
+    }
     const { type, data, githubToken } = body as {
       type:
         | 'users'

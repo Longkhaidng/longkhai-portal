@@ -27,14 +27,16 @@ export async function GET() {
   return NextResponse.json({
     success: true,
     config: {
-      provider: 'smtp',
+      provider: 'google_relay',
+      googleScriptUrl:
+        'https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec',
       smtpHost: 'smtp.office365.com',
       smtpPort: 587,
       smtpSecure: false,
       smtpUser: '',
       smtpPassword: '',
       senderName: 'Cổng Thông Tin Long Khải',
-      senderEmail: '',
+      senderEmail: 'no-reply@longkhai.com.vn',
       isEnabled: true,
       portalBaseUrl: 'https://longkhai-portal.vercel.app',
     },

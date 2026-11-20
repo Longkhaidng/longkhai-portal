@@ -449,21 +449,19 @@ export function FoodRegistrationView() {
 
         setRegistrations(storage.getFoodRegistrations());
         if (isDirectToHR) {
-          dispatchFoodRegistrationApprovalEmail(newRegistration, 'hr').then((res) => {
-            if (res.success) {
-              showToast(`Gửi đơn thành công (${newId})! Đã gửi email thông báo trực tiếp đến Trưởng phòng HCNS (${res.toEmail || 'Quỳnh'}).`);
-            } else {
-              showToast(`Gửi đơn thành công (${newId})! Đơn đã chuyển trực tiếp đến Trưởng phòng HCNS phê duyệt.`);
-            }
-          });
+          const res = await dispatchFoodRegistrationApprovalEmail(newRegistration, 'hr');
+          if (res.success) {
+            showToast(`Gửi đơn thành công (${newId})! Đã gửi email thông báo trực tiếp đến Trưởng phòng HCNS (${res.toEmail || 'Quỳnh'}).`);
+          } else {
+            showToast(`Gửi đơn thành công (${newId})! Lưu ý: ${res.message || 'Không thể gửi email thông báo'}.`, 'error');
+          }
         } else {
-          dispatchFoodRegistrationApprovalEmail(newRegistration, 'dept').then((res) => {
-            if (res.success) {
-              showToast(`Gửi đơn thành công (${newId})! Đã gửi email thông báo đến Trưởng bộ phận (${res.toEmail || 'Quản lý'}).`);
-            } else {
-              showToast(`Gửi đơn thành công (${newId})! Đơn đã chuyển đến Trưởng bộ phận phê duyệt.`);
-            }
-          });
+          const res = await dispatchFoodRegistrationApprovalEmail(newRegistration, 'dept');
+          if (res.success) {
+            showToast(`Gửi đơn thành công (${newId})! Đã gửi email thông báo đến Trưởng bộ phận (${res.toEmail || 'Quản lý'}).`);
+          } else {
+            showToast(`Gửi đơn thành công (${newId})! Lưu ý: ${res.message || 'Không thể gửi email thông báo'}.`, 'error');
+          }
         }
       }
 
@@ -645,10 +643,15 @@ export function FoodRegistrationView() {
     showToast(`Bảo vệ đã xác nhận thời gian mang vào cho phiếu ${item.id}`);
   };
 
-  // Cancel Registration by Owner
+  // Cancel & Hard Delete Registration by Owner
   const handleCancelRegistration = (item: FoodRegistration) => {
-    if (!confirm(`Bạn có chắc chắn muốn hủy phiếu đăng ký "${item.id}" không?`)) return;
-    storage.cancelFoodRegistration(item.id, {
+    if (
+      !confirm(
+        `Bạn có chắc chắn muốn hủy phiếu đăng ký "${item.id}" không? Sau khi hủy, phiếu sẽ bị xóa hoàn toàn khỏi hệ thống.`
+      )
+    )
+      return;
+    storage.deleteFoodRegistration(item.id, {
       id: currentUser?.id || 'user',
       name: currentUser?.name || 'Người dùng',
     });
@@ -657,7 +660,7 @@ export function FoodRegistrationView() {
     if (selectedDetailItem?.id === item.id) {
       setSelectedDetailItem(null);
     }
-    showToast(`Đã hủy phiếu đăng ký ${item.id}`);
+    showToast(`Đã hủy và xóa hoàn toàn phiếu đăng ký ${item.id} khỏi hệ thống.`);
   };
 
   // Filtered List based on tab, search, status, and permissions
@@ -1078,6 +1081,21 @@ export function FoodRegistrationView() {
                           <span>Mã QR</span>
                         </button>
                       )}
+                      {(item.status === 'pending_dept' || item.status === 'pending_hr') &&
+                        (currentUser?.id === item.employeeId || isAdmin) && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCancelRegistration(item);
+                            }}
+                            className="px-2 py-1 bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400 font-bold text-[11px] rounded-lg border border-rose-200 dark:border-rose-800 flex items-center gap-1 cursor-pointer hover:bg-rose-100"
+                            title="Hủy phiếu (Xóa hoàn toàn khỏi hệ thống)"
+                          >
+                            <Ban className="w-3.5 h-3.5" />
+                            <span>Hủy phiếu</span>
+                          </button>
+                        )}
                       <button
                         type="button"
                         onClick={() => setSelectedDetailItem(item)}
@@ -1318,6 +1336,18 @@ export function FoodRegistrationView() {
                               Cho vào
                             </button>
                           )}
+                          {(item.status === 'pending_dept' || item.status === 'pending_hr') &&
+                            (currentUser?.id === item.employeeId || isAdmin) && (
+                              <button
+                                type="button"
+                                onClick={() => handleCancelRegistration(item)}
+                                className="px-2 py-1 rounded-lg border border-rose-300 text-rose-600 hover:bg-rose-50 font-bold text-[11px] flex items-center gap-1 cursor-pointer"
+                                title="Hủy phiếu (Xóa hoàn toàn khỏi hệ thống)"
+                              >
+                                <Ban className="w-3.5 h-3.5" />
+                                <span>Hủy</span>
+                              </button>
+                            )}
                           <button
                             type="button"
                             onClick={() => setSelectedDetailItem(item)}
@@ -2044,7 +2074,7 @@ export function FoodRegistrationView() {
                     className="w-full py-2 border border-rose-300 text-rose-600 hover:bg-rose-50 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <Ban className="w-4 h-4" />
-                    <span>Hủy phiếu đăng ký này</span>
+                    <span>Hủy phiếu (Xóa hoàn toàn khỏi hệ thống)</span>
                   </button>
                 </div>
               )}

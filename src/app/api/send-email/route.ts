@@ -6,48 +6,60 @@ import { EmailConfig } from '@/types/email';
 
 const CONFIG_PATH = path.join(process.cwd(), 'company-data', 'settings', 'email-config.json');
 const TMP_CONFIG_PATH = path.join('/tmp', 'email-config.json');
+const DEFAULT_GOOGLE_SCRIPT_URL =
+  'https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec';
 
 function resolveServerEmailConfig(clientConfig?: EmailConfig): EmailConfig {
   const envConfig: EmailConfig = {
     provider: 'google_relay',
-    smtpHost: process.env.SMTP_HOST || '',
-    smtpPort: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : undefined,
+    smtpHost: process.env.SMTP_HOST || 'smtp.office365.com',
+    smtpPort: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 587,
     smtpSecure: process.env.SMTP_PORT === '465',
     smtpUser: process.env.SMTP_USER || '',
     smtpPassword: process.env.SMTP_PASSWORD || '',
     senderName: process.env.SMTP_FROM_NAME || 'Cổng Thông Tin Long Khải',
-    senderEmail: process.env.SMTP_FROM_EMAIL || '',
+    senderEmail: process.env.SMTP_FROM_EMAIL || 'no-reply@longkhai.com.vn',
     resendApiKey: process.env.RESEND_API_KEY || '',
-    googleScriptUrl: process.env.GOOGLE_SCRIPT_URL || '',
+    googleScriptUrl: process.env.GOOGLE_SCRIPT_URL || DEFAULT_GOOGLE_SCRIPT_URL,
     isEnabled: true,
   };
 
-  // 1. If payload provides credentials or Resend API key or Google Script URL directly from client, prioritize it!
-  if (clientConfig?.googleScriptUrl || clientConfig?.resendApiKey || (clientConfig?.smtpUser && clientConfig?.smtpPassword)) {
-    return { ...envConfig, ...clientConfig };
-  }
+  let resolved: EmailConfig = { ...envConfig };
 
-  // 2. Read from /tmp or company-data/settings/email-config.json on disk
+  // 1. Read from /tmp or company-data/settings/email-config.json on disk
   try {
     const targetFile = fs.existsSync(TMP_CONFIG_PATH) ? TMP_CONFIG_PATH : CONFIG_PATH;
     if (fs.existsSync(targetFile)) {
       const fileData = fs.readFileSync(targetFile, 'utf-8');
       const parsed = JSON.parse(fileData);
-      return {
-        ...envConfig,
+      resolved = {
+        ...resolved,
         ...parsed,
-        ...(clientConfig || {}),
-        smtpPassword:
-          clientConfig?.smtpPassword && clientConfig.smtpPassword !== '********'
-            ? clientConfig.smtpPassword
-            : parsed.smtpPassword || '',
       };
     }
   } catch (err: any) {
     console.warn('Lỗi đọc email-config.json trên máy chủ:', err.message);
   }
 
-  return { ...envConfig, ...(clientConfig || {}) };
+  // 2. Client override if provided
+  if (clientConfig) {
+    resolved = {
+      ...resolved,
+      ...clientConfig,
+      googleScriptUrl: clientConfig.googleScriptUrl || resolved.googleScriptUrl || DEFAULT_GOOGLE_SCRIPT_URL,
+      smtpPassword:
+        clientConfig.smtpPassword && clientConfig.smtpPassword !== '********'
+          ? clientConfig.smtpPassword
+          : resolved.smtpPassword || '',
+    };
+  }
+
+  // 3. Always guarantee googleScriptUrl fallback
+  if (!resolved.googleScriptUrl) {
+    resolved.googleScriptUrl = DEFAULT_GOOGLE_SCRIPT_URL;
+  }
+
+  return resolved;
 }
 
 export async function POST(req: NextRequest) {
@@ -86,7 +98,8 @@ export async function POST(req: NextRequest) {
     const senderEmail = activeConfig.senderEmail || user || 'no-reply@longkhai.vn';
 
     // 1. If Google Apps Script Relay is provided (Phương án 1 - Khuyên dùng)
-    const googleScriptUrl = activeConfig.googleScriptUrl || process.env.GOOGLE_SCRIPT_URL;
+    const googleScriptUrl =
+      activeConfig.googleScriptUrl || process.env.GOOGLE_SCRIPT_URL || DEFAULT_GOOGLE_SCRIPT_URL;
     if (googleScriptUrl && googleScriptUrl.trim()) {
       try {
         const scriptRes = await fetch(googleScriptUrl.trim(), {
