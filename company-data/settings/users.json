@@ -1801,7 +1801,7 @@
     "department": "Phân xưởng hoàn thành",
     "position": "Công nhân tổ 1 - L",
     "role": "employee",
-    "teamLeaderId": "2308",
+    "teamLeaderId": "2380",
     "departmentHeadId": "1051",
     "economicStaffId": "2576",
     "departmentHeadEmail": "cuong.ngo@longkhai.com.vn",
@@ -1814,7 +1814,7 @@
     "isActive": true,
     "password": "1770",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-20T02:48:53.771Z"
+    "updatedAt": "2026-11-20T06:34:23.207Z"
   },
   {
     "id": "1778",
