@@ -1632,10 +1632,7 @@ export function FoodRegistrationView() {
                       <span>
                         {isHRDeptEmployee
                           ? 'Luồng duyệt trực tiếp Trưởng phòng HCNS:'
-                          : 'Luồng phê duyệt 2 cấp tuần tự:'}
-                        <p className="text-[11px] text-amber-600 dark:text-amber-400 italic">
-                    * Lưu ý: Không được phép mang thức ăn vào khu vực sản xuất.
-                        </p>
+                          : 'Luồng phê duyệt 2 cấp tuần tự:'}                        
                       </span>
                     </span>
                     <p className="leading-relaxed">
@@ -1643,6 +1640,10 @@ export function FoodRegistrationView() {
                         ? 'Nhân viên ➔ Trưởng phòng HCNS phê duyệt. Sau khi Trưởng phòng HCNS duyệt, phiếu sẽ có hiệu lực trong khoảng thời gian đã duyệt.'
                         : 'Nhân viên ➔ Trưởng bộ phận duyệt ➔ Trưởng phòng HCNS duyệt. Sau khi Trưởng phòng HCNS duyệt hoàn tất, hệ thống sẽ tự động kích hoạt mã QR hiệu lực để bảo vệ cổng kiểm soát.'}
                     </p>
+                    <p className="text-[11px] text-amber-600 dark:text-amber-400 italic">
+                    * Lưu ý: Không được phép mang thức ăn vào khu vực sản xuất.
+                   </p>
+                    
                   </div>
                 </div>
               )}
