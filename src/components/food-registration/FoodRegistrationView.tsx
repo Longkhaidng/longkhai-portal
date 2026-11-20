@@ -1517,7 +1517,7 @@ export function FoodRegistrationView() {
                         value={medicineReason}
                         onChange={(e) => setMedicineReason(capitalizeFirstLetter(e.target.value))}
                         autoCapitalize="sentences"
-                        placeholder="Ví dụ: Bác sĩ chỉ định uống thuốc nam/thuốc bắc sau ăn, điều trị đau bao tử..."
+                        placeholder="Nêu lý do cụ thể"
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-medium"
                       />
                     </div>
