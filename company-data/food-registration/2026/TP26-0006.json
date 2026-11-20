@@ -1,0 +1,32 @@
+{
+  "id": "TP26-0006",
+  "employeeId": "1466",
+  "employeeName": "Nguyễn Thị Thanh Tâm",
+  "createdById": "1466",
+  "createdByName": "Nguyễn Thị Thanh Tâm",
+  "department": "Phòng Mẫu",
+  "entryDate": "2026-11-20",
+  "toDate": "2026-11-22",
+  "durationDays": 3,
+  "category": "medicine_drink",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Nước thuốc (Lý do: Đau đầu)",
+  "medicineReason": "Đau đầu",
+  "complianceCommitment": true,
+  "status": "pending_dept",
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận",
+      "roleRequired": "manager",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-20T05:40:09.678Z",
+  "updatedAt": "2026-11-20T05:40:09.678Z"
+}
