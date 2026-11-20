@@ -1393,7 +1393,7 @@ export function FoodRegistrationView() {
                     <p className="text-xs text-slate-400">
                       Vui lòng chọn nhóm thực phẩm và điền đầy đủ thông tin theo quy định
                     </p>
-                  <p className="italic text-red-600">
+                  <p className="italic text-red-400">
                       * Lưu ý: Không được phép mang Thực Phẩm/Nước Thuốc vào khu vực sản xuất.
                   </p>                       
                   
