@@ -13,7 +13,7 @@
   "foodDetails": "Nước thuốc (Lý do: Thuốc nam chữa bệnh đau đầu)",
   "medicineReason": "Thuốc nam chữa bệnh đau đầu",
   "complianceCommitment": true,
-  "status": "pending_hr",
+  "status": "cancelled",
   "steps": [
     {
       "stepName": "Trưởng bộ phận",
@@ -32,5 +32,5 @@
   ],
   "currentStepIndex": 1,
   "createdAt": "2026-11-20T04:01:11.049Z",
-  "updatedAt": "2026-11-20T04:09:55.669Z"
+  "updatedAt": "2026-11-20T05:36:22.552Z"
 }
