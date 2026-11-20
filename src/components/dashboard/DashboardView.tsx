@@ -20,6 +20,7 @@ import {
   CheckCircle2,
   Sparkles,
   ArrowRight,
+  LogOut,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
@@ -60,7 +61,7 @@ interface DashboardTaskItem {
 }
 
 export function DashboardView({ onNavigateTab }: DashboardViewProps) {
-  const { currentUser, hasPermission } = useAuth();
+  const { currentUser, hasPermission, logout } = useAuth();
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
   const [activeTaskTab, setActiveTaskTab] = useState<TaskTab>('all');
 
@@ -464,6 +465,19 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
               <span className="text-slate-200 font-semibold">{currentUser?.department}</span>
               <span>&bull;</span>
               <span className="text-blue-300">{currentUser?.position || 'Nhân viên'}</span>
+            </div>
+
+            {/* Nút đăng xuất nhanh trên điện thoại */}
+            <div className="sm:hidden pt-1">
+              <button
+                type="button"
+                onClick={() => logout()}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 border border-rose-400/30 text-xs font-bold transition-colors cursor-pointer"
+                title="Đăng xuất khỏi hệ thống"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Đăng xuất</span>
+              </button>
             </div>
           </div>
 

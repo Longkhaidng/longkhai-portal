@@ -65,20 +65,20 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
   const hasGitToken = Boolean(gitConfig.token && gitConfig.owner && gitConfig.repo);
 
   return (
-    <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 sm:px-4 md:px-6 flex items-center justify-between sticky top-0 z-30 transition-colors">
+    <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-2.5 sm:px-4 md:px-6 flex items-center justify-between sticky top-0 z-30 transition-colors">
       {/* Left: 3-dash Hamburger Menu Button, Brand & Search bar */}
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
         <button
           type="button"
           onClick={onToggleSidebar}
-          className="p-2.5 -ml-1 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:bg-slate-200 dark:active:bg-slate-700 cursor-pointer shrink-0 touch-manipulation flex items-center justify-center transition-colors"
+          className="p-2 sm:p-2.5 -ml-1 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:bg-slate-200 dark:active:bg-slate-700 cursor-pointer shrink-0 touch-manipulation flex items-center justify-center transition-colors"
           title="Mở menu chức năng (3 dấu gạch ngang)"
         >
           <Menu className="w-5 h-5" />
         </button>
 
         {/* Brand logo & name on header */}
-        <div className="flex items-center gap-2 mr-1 sm:mr-2 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 mr-1 sm:mr-2 shrink-0">
           <div className="w-8 h-8 rounded-xl bg-slate-900/10 dark:bg-white/10 p-1 flex items-center justify-center shadow-xs border border-slate-200 dark:border-slate-700 shrink-0">
             <img
               src="/logo.png"
@@ -96,7 +96,7 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-36 sm:w-64 md:w-80">
+        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-44 lg:w-72">
           <Search className="w-4 h-4 text-slate-400 shrink-0" />
           <input
             type="text"
@@ -106,8 +106,8 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
         </div>
       </div>
 
-      {/* Right: Theme toggle, Quick Backup, User profile */}
-      <div className="flex items-center gap-2 sm:gap-3">
+      {/* Right: Theme toggle, Quick Backup, Logout & User profile */}
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
 
         {/* Sync Data Button for All Devices */}
         <div className="relative">
@@ -172,19 +172,30 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
           title="Chuyển chế độ Sáng / Tối"
         >
           {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
         </button>
 
+        {/* Nút Đăng xuất riêng biệt hiển thị rõ ràng trên điện thoại */}
+        <button
+          type="button"
+          onClick={() => logout()}
+          className="flex sm:hidden items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:hover:bg-rose-900/80 dark:text-rose-300 border border-rose-200/80 dark:border-rose-900/80 transition-colors shadow-xs cursor-pointer shrink-0"
+          title="Đăng xuất khỏi hệ thống"
+        >
+          <LogOut className="w-3.5 h-3.5 shrink-0" />
+          <span className="text-[11px] font-bold">Đăng xuất</span>
+        </button>
+
         {/* User Profile Pill */}
-        <div className="relative">
+        <div className="relative shrink-0">
           <button
             onClick={() => setShowProfileMenu(!showProfileMenu)}
             className="flex items-center gap-2 p-1 sm:px-3 sm:py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center uppercase shadow-sm">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center uppercase shadow-sm shrink-0">
               {currentUser?.name ? currentUser.name.slice(0, 2) : 'NV'}
             </div>
             <div className="text-left hidden sm:block">

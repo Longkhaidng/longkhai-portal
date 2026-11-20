@@ -782,24 +782,24 @@ function ScanConfirmContent() {
               />
             </div>
           </div>
-          <div className="text-xs font-black uppercase tracking-wider text-slate-400 mb-0.5">
+          <div className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-0.5">
             CN CÔNG TY CỔ PHẦN LONG KHẢI TẠI ĐÀ NẴNG
           </div>
-          <h1 className="text-lg sm:text-xl font-black tracking-tight text-white flex items-center justify-center gap-2">
+          <h1 className="text-base sm:text-lg font-black tracking-tight text-white flex items-center justify-center gap-2">
             <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
             <span>XÁC NHẬN BẢO VỆ CỔNG (QUÉT MÃ QR)</span>
           </h1>
 
           {/* Active Guard Status Banner */}
           <div className="mt-2.5 flex flex-wrap items-center justify-center gap-2">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-xs sm:text-sm font-bold text-emerald-300">
-              <User className="w-4 h-4 text-emerald-400" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-[11px] sm:text-xs font-bold text-emerald-300">
+              <User className="w-3.5 h-3.5 text-emerald-400" />
               <span>Bảo vệ: {currentUser.name} ({currentUser.id}) &bull; Đang trực ca</span>
             </div>
             <button
               type="button"
               onClick={handleLogout}
-              className="text-xs text-slate-400 hover:text-rose-300 underline cursor-pointer ml-1"
+              className="text-[10px] sm:text-[11px] text-slate-400 hover:text-rose-300 underline cursor-pointer ml-1"
             >
               Đổi tài khoản
             </button>
@@ -838,22 +838,22 @@ function ScanConfirmContent() {
           {!isLoadingDoc && docData && (
             <>
               {/* Document Identity Banner: Corrected Title according to docType */}
-              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/80">
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-800/80 border border-slate-700/80">
                 <div>
-                  <span className="text-xs sm:text-sm uppercase font-bold text-slate-400 block">
+                  <span className="text-[10px] sm:text-xs uppercase font-bold text-slate-400 block">
                     {docType === 'gate_pass'
                       ? 'Phiếu Ra - Vào Cổng'
                       : docType === 'food'
                       ? 'Phiếu Đăng Ký Mang Thực Phẩm'
                       : 'Phiếu Xác Nhận Công Vào - Ra'}
                   </span>
-                  <span className="text-xl sm:text-2xl font-black font-mono text-emerald-400">
+                  <span className="text-lg sm:text-xl font-black font-mono text-emerald-400">
                     {docData.id}
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="text-xs text-slate-400 block">Thời gian tạo:</span>
-                  <span className="text-sm font-bold text-slate-300">
+                  <span className="text-[10px] text-slate-400 block">Thời gian tạo:</span>
+                  <span className="text-xs sm:text-sm font-bold text-slate-300">
                     {docData.createdAt ? new Date(docData.createdAt).toLocaleDateString('vi-VN') : ''}
                   </span>
                 </div>
@@ -894,52 +894,52 @@ function ScanConfirmContent() {
                 <div className="space-y-3.5">
                   {/* Status Banner (nếu hết hạn, chưa cấp phép, hoặc đã xử lý) */}
                   {foodValidity?.isExpired ? (
-                    <div className="p-4 rounded-2xl bg-rose-950/80 border-2 border-rose-500 text-center space-y-1.5 animate-in fade-in">
-                      <AlertTriangle className="w-8 h-8 text-rose-400 mx-auto" />
-                      <h4 className="text-sm sm:text-base font-black text-rose-200 uppercase tracking-wide">
+                    <div className="p-3 rounded-2xl bg-rose-950/80 border-2 border-rose-500 text-center space-y-1 animate-in fade-in">
+                      <AlertTriangle className="w-7 h-7 text-rose-400 mx-auto" />
+                      <h4 className="text-xs sm:text-sm font-black text-rose-200 uppercase tracking-wide">
                         Thời hạn đem thực phẩm vào nhà máy đã hết hiệu lực
                       </h4>
-                      <p className="text-xs sm:text-sm text-rose-300">
+                      <p className="text-[11px] sm:text-xs text-rose-300">
                         Mã QR này không còn giá trị sử dụng. Bảo vệ không được phép cho mang vào.
                       </p>
                     </div>
                   ) : !foodValidity?.isValid ? (
-                    <div className="p-4 rounded-2xl bg-amber-950/80 border-2 border-amber-500/80 text-center space-y-1.5 animate-in fade-in">
-                      <AlertTriangle className="w-8 h-8 text-amber-400 mx-auto" />
-                      <h4 className="text-sm sm:text-base font-bold text-amber-200 uppercase">
+                    <div className="p-3 rounded-2xl bg-amber-950/80 border-2 border-amber-500/80 text-center space-y-1 animate-in fade-in">
+                      <AlertTriangle className="w-7 h-7 text-amber-400 mx-auto" />
+                      <h4 className="text-xs sm:text-sm font-bold text-amber-200 uppercase">
                         Chưa Được Cấp Phép Mang Vào
                       </h4>
-                      <p className="text-xs sm:text-sm text-amber-300 font-medium">
+                      <p className="text-[11px] sm:text-xs text-amber-300 font-medium">
                         {foodValidity?.message || 'Đơn đăng ký cần được phê duyệt trước khi được phép mang vào.'}
                       </p>
                     </div>
                   ) : docData.status === 'confirmed' ? (
-                    <div className="p-4 rounded-2xl bg-teal-950/80 border-2 border-teal-500 text-center space-y-1.5 animate-in fade-in">
-                      <CheckCircle2 className="w-8 h-8 text-teal-400 mx-auto" />
-                      <h4 className="text-sm sm:text-base font-black text-teal-200 uppercase tracking-wide">
+                    <div className="p-3 rounded-2xl bg-teal-950/80 border-2 border-teal-500 text-center space-y-1 animate-in fade-in">
+                      <CheckCircle2 className="w-7 h-7 text-teal-400 mx-auto" />
+                      <h4 className="text-xs sm:text-sm font-black text-teal-200 uppercase tracking-wide">
                         ĐÃ XÁC NHẬN CHO MANG VÀO
                       </h4>
-                      <p className="text-xs sm:text-sm text-teal-300">
+                      <p className="text-[11px] sm:text-xs text-teal-300">
                         Phiếu này đã được bảo vệ xác nhận cho nhân viên mang thực phẩm vào nhà máy.
                       </p>
                     </div>
                   ) : docData.status === 'guard_rejected' || docData.status === 'rejected' ? (
-                    <div className="p-4 rounded-2xl bg-rose-950/80 border-2 border-rose-500 text-center space-y-1.5 animate-in fade-in">
-                      <XCircle className="w-8 h-8 text-rose-400 mx-auto" />
-                      <h4 className="text-sm sm:text-base font-black text-rose-200 uppercase tracking-wide">
+                    <div className="p-3 rounded-2xl bg-rose-950/80 border-2 border-rose-500 text-center space-y-1 animate-in fade-in">
+                      <XCircle className="w-7 h-7 text-rose-400 mx-auto" />
+                      <h4 className="text-xs sm:text-sm font-black text-rose-200 uppercase tracking-wide">
                         ĐÃ TỪ CHỐI TẠI CỔNG
                       </h4>
-                      <p className="text-xs sm:text-sm text-rose-300">
+                      <p className="text-[11px] sm:text-xs text-rose-300">
                         Phiếu này đã bị bảo vệ ghi nhận từ chối cho mang vào nhà máy.
                       </p>
                     </div>
                   ) : (
-                    <div className="p-3 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-sm font-bold flex items-center justify-between">
+                    <div className="p-2.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
                         <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                         <span>MÃ QR HỢP LỆ</span>
                       </div>
-                      <span className="text-xs sm:text-sm font-semibold text-emerald-200">{foodValidity.remainingText}</span>
+                      <span className="text-[11px] sm:text-xs font-semibold text-emerald-200">{foodValidity.remainingText}</span>
                     </div>
                   )}
 
@@ -965,14 +965,14 @@ function ScanConfirmContent() {
                   )}
 
                   {/* THẺ THÔNG TIN MANG THỰC PHẨM VÀO */}
-                  <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3.5 shadow-lg">
+                  <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 shadow-lg">
                     {/* Header: Tiêu đề + Nút đọc lại + Phân loại */}
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
-                      <div className="flex items-center gap-2 text-sm sm:text-base font-bold text-slate-200 uppercase tracking-wide">
-                        <UtensilsCrossed className="w-5 h-5 text-emerald-400" />
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                      <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-200 uppercase tracking-wide">
+                        <UtensilsCrossed className="w-4 h-4 text-emerald-400" />
                         <span>Chi tiết mang thực phẩm vào</span>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         {/* Audio speaker button for Guard */}
                         <button
                           type="button"
@@ -985,17 +985,17 @@ function ScanConfirmContent() {
                                 : (docData.foodDetails || 'Thực phẩm');
                             playFoodAudio(docData.employeeName, foodName);
                           }}
-                          className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                          className={`px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
                             isSpeaking
                               ? 'bg-amber-400 text-slate-950 animate-pulse font-black shadow-md shadow-amber-400/40'
                               : 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/40'
                           }`}
                           title="Đọc to tên người lao động và món ăn"
                         >
-                          <Volume2 className={`w-3.5 h-3.5 ${isSpeaking ? 'animate-bounce' : ''}`} />
+                          <Volume2 className={`w-3 h-3 ${isSpeaking ? 'animate-bounce' : ''}`} />
                           <span>{isSpeaking ? 'Đang đọc...' : '🔊 Đọc lại'}</span>
                         </button>
-                        <span className="text-xs sm:text-sm px-3 py-1 rounded-full font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                        <span className="text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
                           {docData.category === 'pregnant'
                             ? 'Thức ăn mang thai'
                             : docData.category === 'vegetarian'
@@ -1007,49 +1007,49 @@ function ScanConfirmContent() {
                       </div>
                     </div>
 
-                    <div className="space-y-3 text-sm">
+                    <div className="space-y-2.5 text-xs">
                       {/* 1. TÊN NGƯỜI ĐĂNG KÝ & MÃ SỐ NHÂN VIÊN */}
-                      <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
+                      <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
                         <div>
-                          <span className="text-xs text-slate-400 uppercase tracking-wider block font-bold">Tên người đăng ký:</span>
-                          <span className="font-black text-white text-base sm:text-lg block mt-0.5">
+                          <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-bold">Tên người đăng ký:</span>
+                          <span className="font-black text-white text-sm sm:text-base block mt-0.5">
                             {docData.employeeName}
                           </span>
-                          <span className="text-xs sm:text-sm text-slate-300 block mt-0.5">
+                          <span className="text-[11px] text-slate-300 block mt-0.5">
                             Phòng ban: <b className="text-white font-semibold">{docData.department}</b>
                           </span>
                         </div>
                         <div className="text-right shrink-0">
-                          <span className="text-xs text-slate-400 uppercase tracking-wider block font-bold">Mã số nhân viên:</span>
-                          <span className="font-black font-mono text-blue-400 text-xl sm:text-2xl block mt-0.5">
+                          <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-bold">Mã số nhân viên:</span>
+                          <span className="font-black font-mono text-blue-400 text-lg sm:text-xl block mt-0.5">
                             {docData.employeeId}
                           </span>
                         </div>
                       </div>
 
                       {/* 2. CHI TIẾT MÓN ĂN / THỰC PHẨM MANG VÀO */}
-                      <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
-                        <span className="text-xs text-slate-400 uppercase tracking-wider block font-bold">
+                      <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
+                        <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-bold">
                           {docData.category === 'medicine_drink' ? 'Tên thực phẩm mang vào:' : 'Chi tiết món ăn:'}
                         </span>
-                        <div className="text-base sm:text-lg font-black text-emerald-400 whitespace-pre-wrap leading-relaxed">
+                        <div className="text-sm sm:text-base font-black text-emerald-400 whitespace-pre-wrap leading-relaxed">
                           {docData.category === 'medicine_drink'
                             ? 'Nước thuốc'
                             : (normalizedFoodDetails || docData.foodDetails)}
                         </div>
                         {docData.category === 'medicine_drink' && (docData.medicineReason || docData.foodDetails) && (
-                          <div className="text-xs sm:text-sm text-slate-300 pt-1.5 border-t border-slate-800/60 mt-1">
+                          <div className="text-[11px] text-slate-300 pt-1 border-t border-slate-800/60 mt-1">
                             <span className="text-slate-400 font-semibold">Lý do: </span>
                             <span>{docData.medicineReason || docData.foodDetails.replace(/^Nước thuốc\s*\(Lý do:\s*/i, '').replace(/\)$/, '')}</span>
                           </div>
                         )}
                         {docData.category === 'pregnant' && (
-                          <div className="text-xs sm:text-sm text-amber-300/90 italic font-medium pt-1.5 border-t border-slate-800/60 mt-1">
+                          <div className="text-[11px] text-amber-300/90 italic font-medium pt-1 border-t border-slate-800/60 mt-0.5">
                             * Ghi chú: Mỗi người chỉ được phép mang vào 02 đơn vị cho mỗi loại thực phẩm.
                           </div>
                         )}
                         {docData.notes && (
-                          <div className="text-xs sm:text-sm text-slate-300 pt-1.5 border-t border-slate-800/60 mt-1">
+                          <div className="text-[11px] text-slate-300 pt-1 border-t border-slate-800/60 mt-0.5">
                             <span className="text-slate-400 font-semibold">Ghi chú: </span>{docData.notes}
                           </div>
                         )}
@@ -1058,15 +1058,15 @@ function ScanConfirmContent() {
 
                     {/* 3. NÚT XÁC NHẬN VÀ NÚT TỪ CHỐI (KHI CHƯA XÁC NHẬN / TỪ CHỐI VÀ CÒN HIỆU LỰC) */}
                     {foodValidity?.isValid && !foodValidity?.isExpired && docData.status !== 'confirmed' && docData.status !== 'guard_rejected' && docData.status !== 'rejected' && (
-                      <div className="pt-2 border-t border-slate-800 space-y-3">
-                        <div className="grid grid-cols-2 gap-3">
+                      <div className="pt-1.5 border-t border-slate-800 space-y-2.5">
+                        <div className="grid grid-cols-2 gap-2.5">
                           <button
                             type="button"
                             disabled={isSubmitting}
                             onClick={() => handleFoodAction('confirm')}
-                            className="py-3.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer disabled:opacity-50"
+                            className="py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer disabled:opacity-50"
                           >
-                            <CheckCircle2 className="w-5 h-5 shrink-0" />
+                            <CheckCircle2 className="w-4 h-4 shrink-0" />
                             <span>{isSubmitting ? 'ĐANG LƯU...' : 'Xác nhận cho mang vào'}</span>
                           </button>
 
@@ -1077,9 +1077,9 @@ function ScanConfirmContent() {
                               setRejectReasonInput('Thực phẩm không đúng với đăng ký');
                               setRejectPromptOpen(true);
                             }}
-                            className="py-3.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-98 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg shadow-rose-600/30 transition-all cursor-pointer disabled:opacity-50"
+                            className="py-3 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-98 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-rose-600/30 transition-all cursor-pointer disabled:opacity-50"
                           >
-                            <XCircle className="w-5 h-5 shrink-0" />
+                            <XCircle className="w-4 h-4 shrink-0" />
                             <span>Từ chối</span>
                           </button>
                         </div>
@@ -1091,9 +1091,9 @@ function ScanConfirmContent() {
                       <button
                         type="button"
                         onClick={handleNextPerson}
-                        className="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-98 text-slate-200 hover:text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 border border-slate-700 transition-colors cursor-pointer"
+                        className="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-98 text-slate-200 hover:text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border border-slate-700 transition-colors cursor-pointer"
                       >
-                        <QrCode className="w-5 h-5 text-emerald-400" />
+                        <QrCode className="w-4 h-4 text-emerald-400" />
                         <span>Quay lại màn hình quét mã QR</span>
                       </button>
                     </div>
@@ -1353,11 +1353,11 @@ function ScanConfirmContent() {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 pt-1">
+            <div className="grid grid-cols-2 gap-2.5 pt-1">
               <button
                 type="button"
                 onClick={() => setRejectPromptOpen(false)}
-                className="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-bold cursor-pointer transition-colors"
+                className="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer transition-colors"
               >
                 Hủy bỏ
               </button>
@@ -1368,7 +1368,7 @@ function ScanConfirmContent() {
                   const finalReason = rejectReasonInput.trim() || 'Thực phẩm không đúng với đăng ký';
                   handleFoodAction('reject', finalReason);
                 }}
-                className="py-3 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-sm font-black cursor-pointer transition-colors"
+                className="py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-black cursor-pointer transition-colors"
               >
                 {isSubmitting ? 'Đang lưu...' : 'Xác nhận từ chối'}
               </button>
