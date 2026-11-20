@@ -144,40 +144,113 @@ function ScanConfirmContent() {
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [manualCodeInput, setManualCodeInput] = useState('');
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
+  const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
 
-  // Helper Vietnamese Text-to-Speech
-  const speakFoodRegistration = useCallback((empName: string, food: string) => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  // Fallback to Web Speech API if offline or API error
+  const fallbackSpeechSynthesis = useCallback((textToSpeak: string) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      setIsSpeaking(false);
+      return;
+    }
     try {
       window.speechSynthesis.cancel();
-      const cleanFood = food
-        .replace(/\+/g, ' và ')
-        .replace(/\//g, ' hoặc ')
-        .replace(/\(.*?\)/g, '')
-        .trim();
-      const textToSpeak = `${empName}. ${cleanFood}`;
-
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
       const utterance = new SpeechSynthesisUtterance(textToSpeak);
       utterance.lang = 'vi-VN';
       utterance.rate = 0.95;
       utterance.pitch = 1.0;
-
       const voices = window.speechSynthesis.getVoices();
       const viVoice = voices.find((v) => v.lang.toLowerCase().includes('vi'));
-      if (viVoice) {
-        utterance.voice = viVoice;
-      }
+      if (viVoice) utterance.voice = viVoice;
 
       utterance.onstart = () => setIsSpeaking(true);
       utterance.onend = () => setIsSpeaking(false);
       utterance.onerror = () => setIsSpeaking(false);
 
       window.speechSynthesis.speak(utterance);
-    } catch (e) {
-      console.warn('Speech error:', e);
+    } catch {
       setIsSpeaking(false);
     }
+  }, []);
+
+  // Helper Vietnamese Text-to-Speech using high-quality /api/tts endpoint with SpeechSynthesis fallback
+  const playFoodAudio = useCallback((empName: string, food: string) => {
+    if (typeof window === 'undefined') return;
+
+    // Clean text for natural Vietnamese speech
+    const cleanFood = food
+      .replace(/\+/g, ' và ')
+      .replace(/\//g, ' hoặc ')
+      .replace(/\(.*?\)/g, '')
+      .replace(/SL:\s*\d+/gi, '')
+      .trim();
+    const textToSpeak = `${empName}. ${cleanFood}`;
+
+    setIsSpeaking(true);
+    setAutoplayBlocked(false);
+
+    try {
+      if (!audioPlayerRef.current) {
+        audioPlayerRef.current = new Audio();
+      }
+      const audio = audioPlayerRef.current;
+      audio.pause();
+      audio.currentTime = 0;
+      audio.src = `/api/tts?text=${encodeURIComponent(textToSpeak)}`;
+
+      audio.onended = () => {
+        setIsSpeaking(false);
+        setAutoplayBlocked(false);
+      };
+
+      audio.onerror = () => {
+        console.warn('TTS API error, falling back to Web Speech API');
+        fallbackSpeechSynthesis(textToSpeak);
+      };
+
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setAutoplayBlocked(false);
+          })
+          .catch((err) => {
+            console.warn('Autoplay blocked by mobile browser policy:', err);
+            setAutoplayBlocked(true);
+            setIsSpeaking(false);
+            // Attempt speech synthesis fallback
+            fallbackSpeechSynthesis(textToSpeak);
+          });
+      }
+    } catch (err) {
+      console.warn('Audio play error:', err);
+      fallbackSpeechSynthesis(textToSpeak);
+    }
+  }, [fallbackSpeechSynthesis]);
+
+  // Unlock audio on the first user interaction (touch or click) on the page
+  useEffect(() => {
+    const unlockAudio = () => {
+      try {
+        if (!audioPlayerRef.current) {
+          audioPlayerRef.current = new Audio();
+        }
+        if (window.speechSynthesis && window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+      } catch {}
+    };
+
+    window.addEventListener('touchstart', unlockAudio, { once: true, passive: true });
+    window.addEventListener('click', unlockAudio, { once: true, passive: true });
+    return () => {
+      window.removeEventListener('touchstart', unlockAudio);
+      window.removeEventListener('click', unlockAudio);
+    };
   }, []);
 
   // Check login on mount
@@ -229,7 +302,7 @@ function ScanConfirmContent() {
               : rec.category === 'pregnant'
               ? (rec.foodDetails || 'Bánh và Sữa hoặc Trái cây và Sữa')
               : (rec.foodDetails || 'Thực phẩm');
-          speakFoodRegistration(rec.employeeName, foodName);
+          playFoodAudio(rec.employeeName, foodName);
         }
       })
       .catch((err) => {
@@ -239,7 +312,7 @@ function ScanConfirmContent() {
       .finally(() => {
         setIsLoadingDoc(false);
       });
-  }, [speakFoodRegistration]);
+  }, [playFoodAudio]);
 
   // Load document when currentDocId changes or on init
   useEffect(() => {
@@ -403,7 +476,7 @@ function ScanConfirmContent() {
       actualTime: actualTimeVN,
       note: action === 'confirm'
         ? (guardNote.trim() || 'Đã kiểm tra thực phẩm đảm bảo ATVSTP, đóng gói kín')
-        : (rejectReason || guardNote.trim() || 'Không đảm bảo an toàn vệ sinh thực phẩm'),
+        : (rejectReason || guardNote.trim() || 'Thực phẩm không đúng với đăng ký'),
     };
 
     fetch('/api/scan-confirm', {
@@ -870,8 +943,30 @@ function ScanConfirmContent() {
                     </div>
                   )}
 
-                  {/* THẺ GỘP: THÔNG TIN NGƯỜI ĐĂNG KÝ & CHI TIẾT THỰC PHẨM */}
+                  {/* Banner cảnh báo nếu trình duyệt di động chặn autoplay âm thanh */}
+                  {autoplayBlocked && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAutoplayBlocked(false);
+                        const foodName =
+                          docData.category === 'medicine_drink'
+                            ? (docData.medicineReason || docData.foodDetails || 'Nước thuốc')
+                            : docData.category === 'pregnant'
+                            ? (docData.foodDetails || 'Bánh và Sữa hoặc Trái cây và Sữa')
+                            : (docData.foodDetails || 'Thực phẩm');
+                        playFoodAudio(docData.employeeName, foodName);
+                      }}
+                      className="w-full p-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 text-slate-950 font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/30 animate-pulse transition-all cursor-pointer border border-amber-300"
+                    >
+                      <Volume2 className="w-5 h-5 shrink-0 animate-bounce" />
+                      <span>BẢO VỆ CHẠM VÀO ĐÂY ĐỂ NGHE ĐỌC TÊN &amp; MÓN ĂN</span>
+                    </button>
+                  )}
+
+                  {/* THẺ THÔNG TIN MANG THỰC PHẨM VÀO */}
                   <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3.5 shadow-lg">
+                    {/* Header: Tiêu đề + Nút đọc lại + Phân loại */}
                     <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
                       <div className="flex items-center gap-2 text-sm sm:text-base font-bold text-slate-200 uppercase tracking-wide">
                         <UtensilsCrossed className="w-5 h-5 text-emerald-400" />
@@ -888,9 +983,9 @@ function ScanConfirmContent() {
                                 : docData.category === 'pregnant'
                                 ? (docData.foodDetails || 'Bánh và Sữa hoặc Trái cây và Sữa')
                                 : (docData.foodDetails || 'Thực phẩm');
-                            speakFoodRegistration(docData.employeeName, foodName);
+                            playFoodAudio(docData.employeeName, foodName);
                           }}
-                          className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                          className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                             isSpeaking
                               ? 'bg-amber-400 text-slate-950 animate-pulse font-black shadow-md shadow-amber-400/40'
                               : 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/40'
@@ -898,7 +993,7 @@ function ScanConfirmContent() {
                           title="Đọc to tên người lao động và món ăn"
                         >
                           <Volume2 className={`w-3.5 h-3.5 ${isSpeaking ? 'animate-bounce' : ''}`} />
-                          <span>{isSpeaking ? 'Đang đọc âm thanh...' : '🔊 Đọc lại'}</span>
+                          <span>{isSpeaking ? 'Đang đọc...' : '🔊 Đọc lại'}</span>
                         </button>
                         <span className="text-xs sm:text-sm px-3 py-1 rounded-full font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
                           {docData.category === 'pregnant'
@@ -913,7 +1008,7 @@ function ScanConfirmContent() {
                     </div>
 
                     <div className="space-y-3 text-sm">
-                      {/* 1. TÊN NGƯỜI ĐĂNG KÝ */}
+                      {/* 1. TÊN NGƯỜI ĐĂNG KÝ & MÃ SỐ NHÂN VIÊN */}
                       <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
                         <div>
                           <span className="text-xs text-slate-400 uppercase tracking-wider block font-bold">Tên người đăng ký:</span>
@@ -924,44 +1019,26 @@ function ScanConfirmContent() {
                             Phòng ban: <b className="text-white font-semibold">{docData.department}</b>
                           </span>
                         </div>
-                        <div className="text-right">
+                        <div className="text-right shrink-0">
                           <span className="text-xs text-slate-400 uppercase tracking-wider block font-bold">Mã số nhân viên:</span>
-                          <span className="font-black font-mono text-blue-400 text-base sm:text-lg block mt-0.5">
+                          <span className="font-black font-mono text-blue-400 text-xl sm:text-2xl block mt-0.5">
                             {docData.employeeId}
                           </span>
                         </div>
                       </div>
 
-                      {/* 2. THỜI GIAN MANG VÀO */}
-                      <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
-                        <div>
-                          <span className="text-xs text-slate-400 uppercase tracking-wider block font-bold">Thời gian mang vào:</span>
-                          <span className="font-black text-amber-300 text-sm sm:text-base block mt-0.5">
-                            {docData.toDate && docData.toDate !== docData.entryDate
-                              ? `${formatDate(docData.entryDate)} → ${formatDate(docData.toDate)}`
-                              : `Ngày ${formatDate(docData.entryDate)}`}
-                          </span>
-                        </div>
-                        <div className="text-right">
-                          <span className="text-xs text-slate-400 uppercase tracking-wider block font-bold">Ca làm việc:</span>
-                          <span className="font-bold text-slate-200 text-sm sm:text-base block mt-0.5">
-                            {docData.shift || (docData.toDate ? 'Theo đợt' : 'Ca làm việc')}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* 3. CHI TIẾT MÓN ĂN */}
+                      {/* 2. CHI TIẾT MÓN ĂN */}
                       <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
                         <span className="text-xs text-slate-400 uppercase tracking-wider block font-bold">
                           {docData.category === 'medicine_drink' ? 'Lý do mang nước thuốc:' : 'Chi tiết món ăn:'}
                         </span>
-                        <div className="text-sm sm:text-base font-bold text-emerald-400 whitespace-pre-wrap leading-relaxed">
+                        <div className="text-base sm:text-lg font-black text-emerald-400 whitespace-pre-wrap leading-relaxed">
                           {docData.category === 'medicine_drink'
                             ? (docData.medicineReason || docData.foodDetails || 'Uống nước thuốc theo nhu cầu y tế')
                             : (normalizedFoodDetails || docData.foodDetails)}
                         </div>
                         {docData.category === 'pregnant' && (
-                          <div className="text-xs sm:text-sm text-amber-300/90 italic font-medium pt-1.5 border-t border-slate-800/60 mt-1.5">
+                          <div className="text-xs sm:text-sm text-amber-300/90 italic font-medium pt-1.5 border-t border-slate-800/60 mt-1">
                             * Ghi chú: Mỗi người chỉ được phép mang vào 02 đơn vị cho mỗi loại thực phẩm.
                           </div>
                         )}
@@ -973,20 +1050,9 @@ function ScanConfirmContent() {
                       </div>
                     </div>
 
-                    {/* KHỐI THAO TÁC CỦA BẢO VỆ (CHỈ HIỂN THỊ KHI CHƯA XÁC NHẬN / TỪ CHỐI VÀ QR CÒN HIỆU LỰC) */}
+                    {/* 3. NÚT XÁC NHẬN VÀ NÚT TỪ CHỐI (KHI CHƯA XÁC NHẬN / TỪ CHỐI VÀ CÒN HIỆU LỰC) */}
                     {foodValidity?.isValid && !foodValidity?.isExpired && docData.status !== 'confirmed' && docData.status !== 'guard_rejected' && docData.status !== 'rejected' && (
                       <div className="pt-2 border-t border-slate-800 space-y-3">
-                        <div>
-                          <input
-                            type="text"
-                            value={guardNote}
-                            onChange={(e) => setGuardNote(e.target.value)}
-                            placeholder="Ghi chú kiểm tra (ví dụ: Đã kiểm tra đúng món, đóng hộp kín...)"
-                            className="w-full p-3 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
-                          />
-                        </div>
-
-                        {/* 4. NÚT XÁC NHẬN MANG VÀO & NÚT TỪ CHỐI */}
                         <div className="grid grid-cols-2 gap-3">
                           <button
                             type="button"
@@ -1001,8 +1067,11 @@ function ScanConfirmContent() {
                           <button
                             type="button"
                             disabled={isSubmitting}
-                            onClick={() => setRejectPromptOpen(true)}
-                            className="py-3.5 px-3 rounded-xl bg-rose-600/90 hover:bg-rose-600 active:scale-98 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+                            onClick={() => {
+                              setRejectReasonInput('Thực phẩm không đúng với đăng ký');
+                              setRejectPromptOpen(true);
+                            }}
+                            className="py-3.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-98 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg shadow-rose-600/30 transition-all cursor-pointer disabled:opacity-50"
                           >
                             <XCircle className="w-5 h-5 shrink-0" />
                             <span>Từ chối</span>
@@ -1011,7 +1080,7 @@ function ScanConfirmContent() {
                       </div>
                     )}
 
-                    {/* 5. NÚT QUAY LẠI MÀN HÌNH QUÉT MÃ QR */}
+                    {/* 4. NÚT QUAY LẠI MÀN HÌNH QUÉT MÃ QR */}
                     <div className="pt-1">
                       <button
                         type="button"
@@ -1270,9 +1339,12 @@ function ScanConfirmContent() {
                 rows={3}
                 value={rejectReasonInput}
                 onChange={(e) => setRejectReasonInput(e.target.value)}
-                placeholder="Ví dụ: Thực phẩm không đúng danh mục đã đăng ký, bao bì không kín, không đảm bảo ATVSTP..."
+                placeholder="Thực phẩm không đúng với đăng ký"
                 className="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500 font-medium"
               />
+              <p className="text-[11px] text-slate-400 mt-1 italic">
+                Mặc định lý do từ chối: &ldquo;Thực phẩm không đúng với đăng ký&rdquo;
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-3 pt-1">
@@ -1286,7 +1358,10 @@ function ScanConfirmContent() {
               <button
                 type="button"
                 disabled={isSubmitting}
-                onClick={() => handleFoodAction('reject', rejectReasonInput)}
+                onClick={() => {
+                  const finalReason = rejectReasonInput.trim() || 'Thực phẩm không đúng với đăng ký';
+                  handleFoodAction('reject', finalReason);
+                }}
                 className="py-3 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-sm font-black cursor-pointer transition-colors"
               >
                 {isSubmitting ? 'Đang lưu...' : 'Xác nhận từ chối'}

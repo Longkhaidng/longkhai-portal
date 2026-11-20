@@ -572,7 +572,7 @@ export function FoodRegistrationView() {
   const handleRejectSubmit = () => {
     if (!rejectingItem) return;
     const { item, level } = rejectingItem;
-    const reason = rejectReason.trim() || 'Không đảm bảo điều kiện quy định';
+    const reason = rejectReason.trim() || (level === 'guard' ? 'Thực phẩm không đúng với đăng ký' : 'Không đảm bảo điều kiện quy định');
 
     if (level === 'approver') {
       const canDept = canApproveFoodDept(currentUser, item);
@@ -2270,6 +2270,7 @@ export function FoodRegistrationView() {
         }}
         onGuardReject={(item) => {
           setRejectingItem({ item, level: 'guard' });
+          setRejectReason('Thực phẩm không đúng với đăng ký');
         }}
       />
     </div>

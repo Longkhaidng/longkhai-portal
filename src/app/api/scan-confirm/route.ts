@@ -486,7 +486,7 @@ export async function POST(req: NextRequest) {
       } else if (action === 'reject') {
         doc.status = 'guard_rejected';
         doc.guardName = finalGuard;
-        doc.rejectedReason = (note || '').trim() || 'Thực phẩm không đúng danh mục đã đăng ký hoặc không đảm bảo ATVSTP';
+        doc.rejectedReason = (note || '').trim() || 'Thực phẩm không đúng với đăng ký';
         doc.updatedAt = now;
 
         const newLog = {
