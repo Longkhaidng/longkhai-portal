@@ -3085,12 +3085,14 @@
       "dashboard",
       "food_registration",
       "repair",
-      "announcements"
+      "announcements",
+      "reports"
     ],
     "isActive": true,
     "password": "2409",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-20T02:48:53.771Z"
+    "updatedAt": "2026-11-20T03:53:17.525Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "2410",
