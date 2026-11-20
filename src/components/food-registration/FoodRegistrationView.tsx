@@ -1633,6 +1633,9 @@ export function FoodRegistrationView() {
                         {isHRDeptEmployee
                           ? 'Luồng duyệt trực tiếp Trưởng phòng HCNS:'
                           : 'Luồng phê duyệt 2 cấp tuần tự:'}
+                        <p className="text-[11px] text-amber-600 dark:text-amber-400 italic">
+                    * Lưu ý: Không được phép mang thức ăn vào khu vực sản xuất.
+                        </p>
                       </span>
                     </span>
                     <p className="leading-relaxed">
