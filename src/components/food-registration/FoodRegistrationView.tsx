@@ -1551,19 +1551,7 @@ export function FoodRegistrationView() {
                     </label>
                   </div>
 
-                  {subCategory === 'pregnant' ? (
-                    <div className="p-3 rounded-xl bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 text-slate-700 dark:text-slate-300 space-y-1.5">
-                      <p className="font-bold text-amber-900 dark:text-amber-200">
-                        Danh mục cố định cho người mang thai:
-                      </p>
-                      <p className="text-[11px] text-slate-600 dark:text-slate-300">
-                        • Bánh + Sữa hoặc Trái cây + Sữa
-                      </p>
-                      <p className="text-[10px] text-amber-700 dark:text-amber-300 italic">
-                        * Quy định: Tối đa 02 đơn vị cho mỗi loại thực phẩm.
-                      </p>
-                    </div>
-                  ) : (
+                  {subCategory === 'medicine_drink' && (
                     <div>
                       <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                         Lý do mang nước thuốc vào (bắt buộc): *
@@ -1629,22 +1617,19 @@ export function FoodRegistrationView() {
                     </div>
                   </div>
 
-                  {/* Thông tin luồng duyệt */}
-                  <div className="p-3 rounded-xl bg-amber-100/70 dark:bg-amber-900/30 text-amber-900 dark:text-amber-200 text-[11px] space-y-1">
-                    <span className="font-bold flex items-center gap-1.5">
-                      <Info className="w-3.5 h-3.5" />
+                  {/* Cam kết VSATTP (Chuyển lên thay chỗ luồng phê duyệt) */}
+                  <div className="p-3 rounded-xl bg-white dark:bg-slate-800/80 border border-amber-200 dark:border-amber-800">
+                    <label className="flex items-start gap-2.5 cursor-pointer text-slate-700 dark:text-slate-300 text-xs leading-relaxed select-none">
+                      <input
+                        type="checkbox"
+                        checked={complianceCommitment}
+                        onChange={(e) => setComplianceCommitment(e.target.checked)}
+                        className="mt-0.5 rounded text-amber-600 focus:ring-amber-500 w-4 h-4"
+                      />
                       <span>
-                        {isHRDeptEmployee
-                          ? 'Luồng duyệt trực tiếp Trưởng phòng HCNS:'
-                          : 'Luồng phê duyệt 2 cấp tuần tự:'}                        
+                        Tôi cam kết thực phẩm mang vào đáp ứng đầy đủ điều kiện an toàn vệ sinh thực phẩm, đóng gói sạch sẽ, đúng chủng loại đã đăng ký và chịu hoàn toàn trách nhiệm theo quy định của Công ty.
                       </span>
-                    </span>
-                    <p className="leading-relaxed">
-                      {isHRDeptEmployee
-                        ? 'Nhân viên ➔ Trưởng phòng HCNS phê duyệt. Sau khi Trưởng phòng HCNS duyệt, phiếu sẽ có hiệu lực trong khoảng thời gian đã duyệt.'
-                        : 'Nhân viên ➔ Trưởng bộ phận duyệt ➔ Trưởng phòng HCNS duyệt. Sau khi Trưởng phòng HCNS duyệt hoàn tất, hệ thống sẽ tự động kích hoạt mã QR hiệu lực để bảo vệ cổng kiểm soát.'}
-                    </p>
-                                        
+                    </label>
                   </div>
                 </div>
               )}
@@ -1797,24 +1782,42 @@ export function FoodRegistrationView() {
                       </select>
                     </div>
                   </div>
+
+                  {/* Cam kết VSATTP */}
+                  <div className="p-3 rounded-xl bg-white dark:bg-slate-800/80 border border-emerald-200 dark:border-emerald-800">
+                    <label className="flex items-start gap-2.5 cursor-pointer text-slate-700 dark:text-slate-300 text-xs leading-relaxed select-none">
+                      <input
+                        type="checkbox"
+                        checked={complianceCommitment}
+                        onChange={(e) => setComplianceCommitment(e.target.checked)}
+                        className="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4"
+                      />
+                      <span>
+                        Tôi cam kết thực phẩm mang vào đáp ứng đầy đủ điều kiện an toàn vệ sinh thực phẩm, đóng gói sạch sẽ, đúng chủng loại đã đăng ký và chịu hoàn toàn trách nhiệm theo quy định của Công ty.
+                      </span>
+                    </label>
+                  </div>
                 </div>
               )}
 
-              {/* Cam kết VSATTP */}
-              <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-                <label className="flex items-start gap-2.5 cursor-pointer text-slate-700 dark:text-slate-300 text-xs leading-relaxed select-none">
-                  <input
-                    type="checkbox"
-                    checked={complianceCommitment}
-                    onChange={(e) => setComplianceCommitment(e.target.checked)}
-                    className="mt-0.5 rounded text-amber-600 focus:ring-amber-500 w-4 h-4"
-                  />
-                  <span>
-                    Tôi cam kết thực phẩm mang vào đáp ứng đầy đủ điều kiện an toàn vệ sinh thực phẩm, đóng gói sạch sẽ, đúng chủng loại đã đăng ký và chịu hoàn toàn trách nhiệm theo quy định của Công ty.
+              {/* Thông tin luồng duyệt (Chuyển xuống vị trí của cam kết trước đây) */}
+              {mainGroup === 'pregnant_medicine' && (
+                <div className="p-3 rounded-xl bg-amber-100/70 dark:bg-amber-900/30 text-amber-900 dark:text-amber-200 text-[11px] space-y-1">
+                  <span className="font-bold flex items-center gap-1.5">
+                    <Info className="w-3.5 h-3.5" />
+                    <span>
+                      {isHRDeptEmployee
+                        ? 'Luồng duyệt trực tiếp Trưởng phòng HCNS:'
+                        : 'Luồng phê duyệt 2 cấp tuần tự:'}
+                    </span>
                   </span>
-                </label>
-              </div>
-              
+                  <p className="leading-relaxed">
+                    {isHRDeptEmployee
+                      ? 'Nhân viên ➔ Trưởng phòng HCNS phê duyệt. Sau khi Trưởng phòng HCNS duyệt, phiếu sẽ có hiệu lực trong khoảng thời gian đã duyệt.'
+                      : 'Nhân viên ➔ Trưởng bộ phận duyệt ➔ Trưởng phòng HCNS duyệt. Sau khi Trưởng phòng HCNS duyệt hoàn tất, hệ thống sẽ tự động kích hoạt mã QR hiệu lực để bảo vệ cổng kiểm soát.'}
+                  </p>
+                </div>
+              )}
 
               {/* Action Buttons */}
               <div className="flex items-center justify-end gap-2.5 pt-2">
