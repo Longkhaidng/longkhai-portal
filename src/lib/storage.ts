@@ -1123,18 +1123,41 @@ class StorageService {
         cameraRequests,
       } = json.data;
 
+      const clearedMap = this.getClearedCollections();
+      if (json.data.clearedCollections && typeof json.data.clearedCollections === 'object') {
+        Object.assign(clearedMap, json.data.clearedCollections);
+        this.setClearedCollections(clearedMap);
+      }
+
+      // Helper to filter out any server/local items that were created before clearance
+      const filterCleared = <T extends { createdAt?: string; updatedAt?: string }>(
+        list: T[],
+        targetKey: string
+      ): T[] => {
+        const clearedAt = clearedMap[targetKey];
+        if (!clearedAt) return list;
+        return list.filter((item) => {
+          const t = new Date(item.createdAt || item.updatedAt || 0).getTime();
+          return t > clearedAt;
+        });
+      };
+
       const mergeWithRecentLocal = <T extends { id: string; createdAt?: string; updatedAt?: string }>(
         serverList: T[],
         localList: T[],
+        targetKey?: string,
         formatFn?: (id: string) => string
       ): T[] => {
+        const validServer = targetKey ? filterCleared(serverList, targetKey) : serverList;
+        const validLocal = targetKey ? filterCleared(localList, targetKey) : localList;
+
         const map = new Map<string, T>();
-        serverList.forEach((item) => {
+        validServer.forEach((item) => {
           const id = formatFn ? formatFn(item.id) : item.id;
           map.set(id, { ...item, id });
         });
         const now = Date.now();
-        localList.forEach((item) => {
+        validLocal.forEach((item) => {
           const id = formatFn ? formatFn(item.id) : item.id;
           if (!map.has(id)) {
             const time = new Date(item.createdAt || item.updatedAt || 0).getTime();
@@ -1160,7 +1183,7 @@ class StorageService {
       }
       if (Array.isArray(foodRegistrations)) {
         const local = this.getFoodRegistrations();
-        const merged = mergeWithRecentLocal(foodRegistrations, local, formatDocId);
+        const merged = mergeWithRecentLocal(foodRegistrations, local, 'food_registration', formatDocId);
         localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, JSON.stringify(merged));
         try {
           window.dispatchEvent(new Event('food_registrations_updated'));
@@ -1168,37 +1191,37 @@ class StorageService {
       }
       if (Array.isArray(leaveRequests)) {
         const local = this.getLeaveRequests();
-        const merged = mergeWithRecentLocal(leaveRequests, local, formatDocId);
+        const merged = mergeWithRecentLocal(leaveRequests, local, 'leave_request', formatDocId);
         localStorage.setItem(STORAGE_KEYS.LEAVE_REQUESTS, JSON.stringify(merged));
       }
       if (Array.isArray(gatePasses)) {
         const local = this.getGatePasses();
-        const merged = mergeWithRecentLocal(gatePasses, local, formatDocId);
+        const merged = mergeWithRecentLocal(gatePasses, local, 'gate_pass', formatDocId);
         localStorage.setItem(STORAGE_KEYS.GATE_PASSES, JSON.stringify(merged));
       }
       if (Array.isArray(attendanceConfirms)) {
         const local = this.getAttendanceConfirms();
-        const merged = mergeWithRecentLocal(attendanceConfirms, local, formatDocId);
+        const merged = mergeWithRecentLocal(attendanceConfirms, local, 'attendance', formatDocId);
         localStorage.setItem(STORAGE_KEYS.ATTENDANCE_CONFIRMS, JSON.stringify(merged));
       }
       if (Array.isArray(repairProposals)) {
         const local = this.getRepairProposals();
-        const merged = mergeWithRecentLocal(repairProposals, local, formatDocId);
+        const merged = mergeWithRecentLocal(repairProposals, local, 'repair', formatDocId);
         localStorage.setItem(STORAGE_KEYS.REPAIR_PROPOSALS, JSON.stringify(merged));
       }
       if (Array.isArray(stationeryProposals)) {
         const local = this.getStationeryProposals();
-        const merged = mergeWithRecentLocal(stationeryProposals, local, formatDocId);
+        const merged = mergeWithRecentLocal(stationeryProposals, local, 'stationery', formatDocId);
         localStorage.setItem(STORAGE_KEYS.STATIONERY_PROPOSALS, JSON.stringify(merged));
       }
       if (Array.isArray(generalProposals)) {
         const local = this.getGeneralProposals();
-        const merged = mergeWithRecentLocal(generalProposals, local, formatDocId);
+        const merged = mergeWithRecentLocal(generalProposals, local, 'general_proposal', formatDocId);
         localStorage.setItem(STORAGE_KEYS.GENERAL_PROPOSALS, JSON.stringify(merged));
       }
       if (Array.isArray(overtimeRegistrations)) {
         const local = this.getOvertimeRegistrations();
-        const merged = mergeWithRecentLocal(overtimeRegistrations, local);
+        const merged = mergeWithRecentLocal(overtimeRegistrations, local, 'overtime');
         localStorage.setItem(STORAGE_KEYS.OVERTIME_REGISTRATIONS, JSON.stringify(merged));
       }
       if (Array.isArray(overtimeMealMenus) && overtimeMealMenus.length > 0) {
@@ -1211,28 +1234,31 @@ class StorageService {
         } catch {}
       }
       if (foodInspection3Step && typeof foodInspection3Step === 'object' && foodInspection3Step.settings) {
-        const localRaw = localStorage.getItem(STORAGE_KEYS.FOOD_INSPECTION_3STEP);
-        let shouldOverwrite = true;
-        if (localRaw) {
-          try {
-            const localParsed = JSON.parse(localRaw);
-            const localTime = new Date(localParsed?.updatedAt || 0).getTime();
-            const serverTime = new Date(foodInspection3Step?.updatedAt || 0).getTime();
-            if (localTime > 0 && (localTime >= serverTime || Date.now() - localTime < 60000)) {
-              shouldOverwrite = false;
-            }
-          } catch {}
-        }
-        if (shouldOverwrite) {
-          localStorage.setItem(STORAGE_KEYS.FOOD_INSPECTION_3STEP, JSON.stringify(foodInspection3Step));
-          try {
-            window.dispatchEvent(new Event('food_inspection_updated'));
-          } catch {}
+        const clearedFoodInsp = clearedMap['food_inspection_3step'] || 0;
+        const serverTime = new Date(foodInspection3Step?.updatedAt || 0).getTime();
+        if (!clearedFoodInsp || serverTime > clearedFoodInsp) {
+          const localRaw = localStorage.getItem(STORAGE_KEYS.FOOD_INSPECTION_3STEP);
+          let shouldOverwrite = true;
+          if (localRaw) {
+            try {
+              const localParsed = JSON.parse(localRaw);
+              const localTime = new Date(localParsed?.updatedAt || 0).getTime();
+              if (localTime > 0 && (localTime >= serverTime || Date.now() - localTime < 60000)) {
+                shouldOverwrite = false;
+              }
+            } catch {}
+          }
+          if (shouldOverwrite) {
+            localStorage.setItem(STORAGE_KEYS.FOOD_INSPECTION_3STEP, JSON.stringify(foodInspection3Step));
+            try {
+              window.dispatchEvent(new Event('food_inspection_updated'));
+            } catch {}
+          }
         }
       }
       if (Array.isArray(cameraRequests)) {
         const local = this.getCameraRequests();
-        const merged = mergeWithRecentLocal(cameraRequests, local);
+        const merged = mergeWithRecentLocal(cameraRequests, local, 'camera_request');
         localStorage.setItem(STORAGE_KEYS.CAMERA_REQUESTS, JSON.stringify(merged));
         try {
           window.dispatchEvent(new Event('camera_requests_updated'));
@@ -1251,46 +1277,71 @@ class StorageService {
       }
       if (Array.isArray(pcccInspections)) {
         const local = this.getPCCCInspections();
-        const merged = mergeWithRecentLocal(pcccInspections, local);
+        const merged = mergeWithRecentLocal(pcccInspections, local, 'pccc_inspections');
         localStorage.setItem(STORAGE_KEYS.PCCC_INSPECTIONS, JSON.stringify(merged));
       }
+      const clearedPeriodic = clearedMap['periodic_inspections'] || 0;
       if (Array.isArray(periodicFirstAid)) {
         const local = this.getFirstAidInspections();
         const map = new Map<string, FirstAidInspection>();
-        local.forEach((it) => map.set(it.id, it));
+        local.forEach((it) => {
+          const t = new Date((it as any).createdAt || (it as any).updatedAt || 0).getTime();
+          if (!clearedPeriodic || t > clearedPeriodic) map.set(it.id, it);
+        });
         periodicFirstAid.forEach((it: FirstAidInspection) => {
-          const id = OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id;
-          map.set(id, { ...it, id });
+          const t = new Date((it as any).createdAt || (it as any).updatedAt || 0).getTime();
+          if (!clearedPeriodic || t > clearedPeriodic) {
+            const id = OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id;
+            map.set(id, { ...it, id });
+          }
         });
         localStorage.setItem(STORAGE_KEYS.PERIODIC_FIRST_AID, JSON.stringify(Array.from(map.values())));
       }
       if (Array.isArray(periodicEyewash)) {
         const local = this.getEyewashInspections();
         const map = new Map<string, EyewashInspection>();
-        local.forEach((it) => map.set(it.id, it));
+        local.forEach((it) => {
+          const t = new Date((it as any).createdAt || (it as any).updatedAt || 0).getTime();
+          if (!clearedPeriodic || t > clearedPeriodic) map.set(it.id, it);
+        });
         periodicEyewash.forEach((it: EyewashInspection) => {
-          const id = OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id;
-          map.set(id, { ...it, id });
+          const t = new Date((it as any).createdAt || (it as any).updatedAt || 0).getTime();
+          if (!clearedPeriodic || t > clearedPeriodic) {
+            const id = OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id;
+            map.set(id, { ...it, id });
+          }
         });
         localStorage.setItem(STORAGE_KEYS.PERIODIC_EYEWASH, JSON.stringify(Array.from(map.values())));
       }
       if (Array.isArray(periodicStormwater)) {
         const local = this.getStormwaterInspections();
         const map = new Map<string, StormwaterInspection>();
-        local.forEach((it) => map.set(it.id, it));
+        local.forEach((it) => {
+          const t = new Date((it as any).createdAt || (it as any).updatedAt || 0).getTime();
+          if (!clearedPeriodic || t > clearedPeriodic) map.set(it.id, it);
+        });
         periodicStormwater.forEach((it: StormwaterInspection) => {
-          const id = OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id;
-          map.set(id, { ...it, id });
+          const t = new Date((it as any).createdAt || (it as any).updatedAt || 0).getTime();
+          if (!clearedPeriodic || t > clearedPeriodic) {
+            const id = OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id;
+            map.set(id, { ...it, id });
+          }
         });
         localStorage.setItem(STORAGE_KEYS.PERIODIC_STORMWATER, JSON.stringify(Array.from(map.values())));
       }
       if (Array.isArray(periodicGroundwaterSoil)) {
         const local = this.getGroundwaterSoilInspections();
         const map = new Map<string, GroundwaterSoilInspection>();
-        local.forEach((it) => map.set(it.id, it));
+        local.forEach((it) => {
+          const t = new Date((it as any).createdAt || (it as any).updatedAt || 0).getTime();
+          if (!clearedPeriodic || t > clearedPeriodic) map.set(it.id, it);
+        });
         periodicGroundwaterSoil.forEach((it: GroundwaterSoilInspection) => {
-          const id = OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id;
-          map.set(id, { ...it, id });
+          const t = new Date((it as any).createdAt || (it as any).updatedAt || 0).getTime();
+          if (!clearedPeriodic || t > clearedPeriodic) {
+            const id = OLD_TO_NEW_PERIODIC_IDS[it.id] || it.id;
+            map.set(id, { ...it, id });
+          }
         });
         localStorage.setItem(STORAGE_KEYS.PERIODIC_GROUNDWATER_SOIL, JSON.stringify(Array.from(map.values())));
       }
@@ -1651,6 +1702,23 @@ class StorageService {
     }).catch(() => {});
   }
 
+  getClearedCollections(): Record<string, number> {
+    if (!this.isClient()) return {};
+    try {
+      const raw = localStorage.getItem('lk_cleared_collections');
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  }
+
+  setClearedCollections(map: Record<string, number>): void {
+    if (!this.isClient()) return;
+    try {
+      localStorage.setItem('lk_cleared_collections', JSON.stringify(map));
+    } catch {}
+  }
+
   async clearAllDocuments(
     targets: (
       | 'gate_pass'
@@ -1662,12 +1730,24 @@ class StorageService {
       | 'stationery'
       | 'general_proposal'
       | 'pccc_inspections'
+      | 'camera_request'
+      | 'periodic_inspections'
+      | 'food_inspection_3step'
+      | 'announcements'
     )[],
     byUser?: { id: string; name: string }
   ): Promise<{ success: boolean; message: string; deletedCounts?: any }> {
     if (!this.isClient()) return { success: false, message: 'Chỉ hỗ trợ trên trình duyệt' };
 
     const clearedLabels: string[] = [];
+    const now = Date.now();
+    const clearedMap = this.getClearedCollections();
+
+    for (const t of targets) {
+      clearedMap[t] = now;
+    }
+    this.setClearedCollections(clearedMap);
+
     if (targets.includes('gate_pass')) {
       localStorage.setItem(STORAGE_KEYS.GATE_PASSES, '[]');
       clearedLabels.push('Phiếu ra vào cổng');
@@ -1682,7 +1762,7 @@ class StorageService {
     }
     if (targets.includes('food_registration')) {
       localStorage.setItem(STORAGE_KEYS.FOOD_REGISTRATIONS, '[]');
-      clearedLabels.push('Đăng ký thực phẩm');
+      clearedLabels.push('Đăng ký thực phẩm mang vào');
       try {
         window.dispatchEvent(new Event('food_registrations_updated'));
       } catch {}
@@ -1707,6 +1787,43 @@ class StorageService {
       localStorage.setItem(STORAGE_KEYS.PCCC_INSPECTIONS, '[]');
       clearedLabels.push('Kiểm tra PCCC');
     }
+    if (targets.includes('camera_request')) {
+      localStorage.setItem(STORAGE_KEYS.CAMERA_REQUESTS, '[]');
+      clearedLabels.push('Đăng ký xem Camera');
+      try {
+        window.dispatchEvent(new Event('camera_requests_updated'));
+      } catch {}
+    }
+    if (targets.includes('periodic_inspections')) {
+      localStorage.setItem(STORAGE_KEYS.PERIODIC_FIRST_AID, '[]');
+      localStorage.setItem(STORAGE_KEYS.PERIODIC_EYEWASH, '[]');
+      localStorage.setItem(STORAGE_KEYS.PERIODIC_STORMWATER, '[]');
+      localStorage.setItem(STORAGE_KEYS.PERIODIC_GROUNDWATER_SOIL, '[]');
+      clearedLabels.push('Kiểm tra an toàn định kỳ');
+    }
+    if (targets.includes('food_inspection_3step')) {
+      try {
+        const curStore = this.getFoodInspectionStore();
+        const resetStore: FoodInspectionStore = {
+          ...curStore,
+          updatedAt: new Date().toISOString(),
+          STEP1_FRESH: [],
+          STEP1_DRY: [],
+          STEP2_COOKING: [],
+          STEP3_SERVING: [],
+          STEP4_SAMPLE: [],
+        };
+        this.saveFoodInspectionStore(resetStore, byUser);
+      } catch {}
+      clearedLabels.push('Kiểm tra thực phẩm 3 bước');
+      try {
+        window.dispatchEvent(new Event('food_inspection_updated'));
+      } catch {}
+    }
+    if (targets.includes('announcements')) {
+      localStorage.setItem(STORAGE_KEYS.ANNOUNCEMENTS, '[]');
+      clearedLabels.push('Thông báo & Bản tin');
+    }
 
     try {
       window.dispatchEvent(new Event('storage'));
@@ -1720,6 +1837,9 @@ class StorageService {
         body: JSON.stringify({ targets }),
       });
       serverRes = await res.json();
+      if (serverRes?.clearedMap) {
+        this.setClearedCollections({ ...clearedMap, ...serverRes.clearedMap });
+      }
     } catch (e: any) {
       console.warn('Lỗi gọi /api/clear-data:', e);
     }

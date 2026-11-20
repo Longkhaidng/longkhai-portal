@@ -42,7 +42,10 @@ export type ClearTargetType =
   | 'repair'
   | 'stationery'
   | 'general_proposal'
-  | 'pccc_inspections';
+  | 'pccc_inspections'
+  | 'periodic_inspections'
+  | 'food_inspection_3step'
+  | 'announcements';
 
 const ALL_TARGETS: ClearTargetType[] = [
   'gate_pass',
@@ -55,19 +58,30 @@ const ALL_TARGETS: ClearTargetType[] = [
   'stationery',
   'general_proposal',
   'pccc_inspections',
+  'periodic_inspections',
+  'food_inspection_3step',
+  'announcements',
 ];
 
-const TARGET_DIR_MAP: Record<ClearTargetType, string> = {
-  gate_pass: 'gate-pass',
-  leave_request: 'leave-request',
-  attendance: 'attendance',
-  food_registration: 'food-registration',
-  camera_request: 'camera-request',
-  overtime: 'overtime',
-  repair: 'repair-proposal',
-  stationery: 'stationery-proposal',
-  general_proposal: 'general-proposal',
-  pccc_inspections: path.join('pccc', 'inspections'),
+const TARGET_DIR_MAP: Record<ClearTargetType, string[]> = {
+  gate_pass: ['gate-pass'],
+  leave_request: ['leave-request'],
+  attendance: ['attendance'],
+  food_registration: ['food-registration'],
+  camera_request: ['camera-request'],
+  overtime: ['overtime'],
+  repair: ['repair-proposal'],
+  stationery: ['stationery-proposal'],
+  general_proposal: ['general-proposal'],
+  pccc_inspections: [path.join('pccc', 'inspections')],
+  periodic_inspections: [
+    path.join('periodic-inspections', 'first-aid'),
+    path.join('periodic-inspections', 'eyewash'),
+    path.join('periodic-inspections', 'stormwater'),
+    path.join('periodic-inspections', 'groundwater-soil'),
+  ],
+  food_inspection_3step: [path.join('settings', 'food-inspection-3step.json')],
+  announcements: [path.join('settings', 'announcements.json')],
 };
 
 export async function POST(req: NextRequest) {
@@ -102,12 +116,56 @@ export async function POST(req: NextRequest) {
     } catch {}
 
     for (const target of targetList) {
-      const relDir = TARGET_DIR_MAP[target];
-      if (!relDir) continue;
-      clearedMap[relDir] = now;
+      const paths = TARGET_DIR_MAP[target] || [];
+      clearedMap[target] = now;
       let count = 0;
-      count += deleteFilesRecursive(path.join(BASE_DIR, relDir));
-      count += deleteFilesRecursive(path.join(TMP_DIR, relDir));
+
+      for (const p of paths) {
+        clearedMap[p.replace(/\\/g, '/')] = now;
+        const isFile = p.endsWith('.json');
+
+        if (isFile) {
+          // Special file reset (e.g. food inspection or announcements)
+          for (const base of [BASE_DIR, TMP_DIR]) {
+            const targetFile = path.join(base, p);
+            try {
+              if (fs.existsSync(targetFile)) {
+                if (p.includes('food-inspection-3step')) {
+                  const content = fs.readFileSync(targetFile, 'utf-8');
+                  const parsed = JSON.parse(content);
+                  const resetStore = {
+                    settings: parsed?.settings || {
+                      companyName: 'Công ty CP Long Khải tại Đà Nẵng',
+                      inspector: '',
+                      location: 'Nhà ăn',
+                    },
+                    updatedAt: new Date().toISOString(),
+                    STEP1_FRESH: [],
+                    STEP1_DRY: [],
+                    STEP2_COOKING: [],
+                    STEP3_SERVING: [],
+                    STEP4_SAMPLE: [],
+                    freshTemplates: parsed?.freshTemplates || [],
+                    dryTemplates: parsed?.dryTemplates || [],
+                    cookingTemplates: parsed?.cookingTemplates || [],
+                    servingTemplates: parsed?.servingTemplates || [],
+                    sampleFoodTemplates: parsed?.sampleFoodTemplates || [],
+                  };
+                  fs.writeFileSync(targetFile, JSON.stringify(resetStore, null, 2), 'utf-8');
+                  count++;
+                } else if (p.includes('announcements')) {
+                  fs.writeFileSync(targetFile, '[]', 'utf-8');
+                  count++;
+                }
+              }
+            } catch {}
+          }
+        } else {
+          // Directory deletion
+          count += deleteFilesRecursive(path.join(BASE_DIR, p));
+          count += deleteFilesRecursive(path.join(TMP_DIR, p));
+        }
+      }
       deletedCounts[target] = count;
     }
 
@@ -121,7 +179,7 @@ export async function POST(req: NextRequest) {
       fs.writeFileSync(metaPathBase, JSON.stringify(clearedMap, null, 2), 'utf-8');
     } catch {}
 
-    // Optionally clean on GitHub if token configured
+    // Await cleaning on GitHub if token configured
     const gitConfig = resolveServerGitHubConfig();
     if (gitConfig.token && gitConfig.owner && gitConfig.repo) {
       try {
@@ -129,21 +187,72 @@ export async function POST(req: NextRequest) {
         const basePath = gitConfig.basePath || 'company-data';
 
         const cleanGitHubDir = async (subDir: string) => {
-          const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
+          const currentYr = new Date().getFullYear();
+          const years = [currentYr, currentYr - 1, currentYr + 1];
+
           for (const yr of years) {
-            const list = await gh.listFiles(`${basePath}/${subDir}/${yr}`);
+            try {
+              const list = await gh.listFiles(`${basePath}/${subDir}/${yr}`);
+              for (const item of list) {
+                if (item.type === 'file' && item.name.endsWith('.json')) {
+                  await gh.deleteFile(item.path, `Clean ${item.name} via Data Management`, item.sha);
+                }
+              }
+            } catch {}
+          }
+
+          // Check direct subDir files
+          try {
+            const list = await gh.listFiles(`${basePath}/${subDir}`);
             for (const item of list) {
-              if (item.type === 'file' && item.name.endsWith('.json')) {
+              if (item.type === 'file' && item.name.endsWith('.json') && !item.name.startsWith('.')) {
                 await gh.deleteFile(item.path, `Clean ${item.name} via Data Management`, item.sha);
               }
             }
-          }
+          } catch {}
         };
 
         for (const target of targetList) {
-          const relDir = TARGET_DIR_MAP[target].replace(/\\/g, '/');
-          cleanGitHubDir(relDir).catch(() => {});
+          const paths = TARGET_DIR_MAP[target] || [];
+          for (const p of paths) {
+            const relDir = p.replace(/\\/g, '/');
+            if (relDir.endsWith('.json')) {
+              // Special file on GitHub
+              try {
+                const ghPath = `${basePath}/${relDir}`;
+                if (relDir.includes('food-inspection-3step')) {
+                  const emptyStore = JSON.stringify({
+                    settings: {
+                      companyName: 'Công ty CP Long Khải tại Đà Nẵng',
+                      inspector: '',
+                      location: 'Nhà ăn',
+                    },
+                    updatedAt: new Date().toISOString(),
+                    STEP1_FRESH: [],
+                    STEP1_DRY: [],
+                    STEP2_COOKING: [],
+                    STEP3_SERVING: [],
+                    STEP4_SAMPLE: [],
+                  }, null, 2);
+                  await gh.saveFile(ghPath, emptyStore, 'Clean food inspection logs via Data Management');
+                } else if (relDir.includes('announcements')) {
+                  await gh.saveFile(ghPath, '[]', 'Clean announcements via Data Management');
+                }
+              } catch {}
+            } else {
+              await cleanGitHubDir(relDir);
+            }
+          }
         }
+
+        // Save .cleared_collections.json to GitHub
+        try {
+          await gh.saveFile(
+            `${basePath}/.cleared_collections.json`,
+            JSON.stringify(clearedMap, null, 2),
+            'Update cleared collections timestamps'
+          );
+        } catch {}
       } catch (ghErr) {
         console.warn('Lỗi dọn dẹp trên GitHub:', ghErr);
       }
@@ -153,6 +262,7 @@ export async function POST(req: NextRequest) {
       success: true,
       message: `Đã dọn dẹp sạch sẽ dữ liệu trên máy chủ thành công!`,
       deletedCounts,
+      clearedMap,
     });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: err.message || 'Lỗi khi xóa dữ liệu' }, { status: 500 });

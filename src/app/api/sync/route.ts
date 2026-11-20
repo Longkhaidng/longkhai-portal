@@ -37,26 +37,27 @@ function readJsonFile<T>(relPath: string, defaultValue: T): T {
   return defaultValue;
 }
 
-function getClearedTimestamp(subDir: string): number {
-  try {
-    const tmpMeta = path.join(TMP_DIR, '.cleared_collections.json');
-    if (fs.existsSync(tmpMeta)) {
-      const data = JSON.parse(fs.readFileSync(tmpMeta, 'utf-8'));
-      if (data && typeof data[subDir] === 'number') {
-        return data[subDir];
-      }
-    }
-  } catch {}
+function getClearedCollectionsMap(): Record<string, number> {
+  const map: Record<string, number> = {};
   try {
     const baseMeta = path.join(BASE_DIR, '.cleared_collections.json');
     if (fs.existsSync(baseMeta)) {
-      const data = JSON.parse(fs.readFileSync(baseMeta, 'utf-8'));
-      if (data && typeof data[subDir] === 'number') {
-        return data[subDir];
-      }
+      Object.assign(map, JSON.parse(fs.readFileSync(baseMeta, 'utf-8')));
     }
   } catch {}
-  return 0;
+  try {
+    const tmpMeta = path.join(TMP_DIR, '.cleared_collections.json');
+    if (fs.existsSync(tmpMeta)) {
+      Object.assign(map, JSON.parse(fs.readFileSync(tmpMeta, 'utf-8')));
+    }
+  } catch {}
+  return map;
+}
+
+function getClearedTimestamp(subDir: string): number {
+  const map = getClearedCollectionsMap();
+  const norm = subDir.replace(/\\/g, '/');
+  return map[norm] || map[subDir] || 0;
 }
 
 function scanJsonFiles<T>(subDir: string): T[] {
@@ -74,16 +75,21 @@ function scanJsonFiles<T>(subDir: string): T[] {
           readDir(full);
         } else if (entry.isFile() && entry.name.endsWith('.json') && !entry.name.startsWith('.')) {
           try {
-            if (clearedAt > 0) {
-              const stat = fs.statSync(full);
-              if (stat.mtimeMs <= clearedAt) {
-                continue;
-              }
-            }
             const content = fs.readFileSync(full, 'utf-8');
             const parsed = JSON.parse(content);
-            if (parsed && parsed.id) {
-              results.set(parsed.id, parsed);
+            if (parsed && (parsed.id || parsed._id)) {
+              const id = parsed.id || parsed._id;
+              if (clearedAt > 0) {
+                const itemTime = new Date(parsed.createdAt || parsed.updatedAt || 0).getTime();
+                if (itemTime > 0 && itemTime <= clearedAt) {
+                  continue; // Skip items created before clearance
+                }
+                const stat = fs.statSync(full);
+                if (stat.mtimeMs <= clearedAt) {
+                  continue;
+                }
+              }
+              results.set(id, parsed);
             }
           } catch {}
         }
@@ -155,6 +161,7 @@ export async function GET() {
         overtimeMealMenus,
         cameras,
         cameraRequests,
+        clearedCollections: getClearedCollectionsMap(),
       },
       counts: {
         users: users.length,

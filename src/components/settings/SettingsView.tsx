@@ -110,6 +110,10 @@ export function SettingsView() {
   const [stationeryCount, setStationeryCount] = useState<number>(0);
   const [generalCount, setGeneralCount] = useState<number>(0);
   const [pcccInspCount, setPcccInspCount] = useState<number>(0);
+  const [cameraReqCount, setCameraReqCount] = useState<number>(0);
+  const [periodicCount, setPeriodicCount] = useState<number>(0);
+  const [foodInspectionCount, setFoodInspectionCount] = useState<number>(0);
+  const [announcementCount, setAnnouncementCount] = useState<number>(0);
 
   // Clear data state
   const [showClearModal, setShowClearModal] = useState<boolean>(false);
@@ -123,6 +127,10 @@ export function SettingsView() {
     stationery: boolean;
     general_proposal: boolean;
     pccc_inspections: boolean;
+    camera_request: boolean;
+    periodic_inspections: boolean;
+    food_inspection_3step: boolean;
+    announcements: boolean;
   }>({
     gate_pass: true,
     leave_request: true,
@@ -133,6 +141,10 @@ export function SettingsView() {
     stationery: true,
     general_proposal: true,
     pccc_inspections: true,
+    camera_request: true,
+    periodic_inspections: true,
+    food_inspection_3step: true,
+    announcements: true,
   });
   const [confirmDeleteText, setConfirmDeleteText] = useState<string>('');
   const [isClearing, setIsClearing] = useState<boolean>(false);
@@ -194,6 +206,26 @@ export function SettingsView() {
     setStationeryCount(storage.getStationeryProposals().length);
     setGeneralCount(storage.getGeneralProposals().length);
     setPcccInspCount(storage.getPCCCInspections().length);
+    setCameraReqCount(storage.getCameraRequests().length);
+    setPeriodicCount(
+      storage.getFirstAidInspections().length +
+      storage.getEyewashInspections().length +
+      storage.getStormwaterInspections().length +
+      storage.getGroundwaterSoilInspections().length
+    );
+    try {
+      const fStore = storage.getFoodInspectionStore();
+      const count =
+        (fStore.STEP1_FRESH?.length || 0) +
+        (fStore.STEP1_DRY?.length || 0) +
+        (fStore.STEP2_COOKING?.length || 0) +
+        (fStore.STEP3_SERVING?.length || 0) +
+        (fStore.STEP4_SAMPLE?.length || 0);
+      setFoodInspectionCount(count);
+    } catch {
+      setFoodInspectionCount(0);
+    }
+    setAnnouncementCount(storage.getAnnouncements().length);
     setLastBackupDate(storage.getLastBackupDate());
     setBackupInterval(storage.getBackupIntervalDays());
     setIsDue(storage.isBackupDue());
@@ -339,6 +371,10 @@ export function SettingsView() {
       | 'stationery'
       | 'general_proposal'
       | 'pccc_inspections'
+      | 'camera_request'
+      | 'periodic_inspections'
+      | 'food_inspection_3step'
+      | 'announcements'
     )[] = [];
     if (clearTargets.gate_pass) selectedTargets.push('gate_pass');
     if (clearTargets.leave_request) selectedTargets.push('leave_request');
@@ -349,6 +385,10 @@ export function SettingsView() {
     if (clearTargets.stationery) selectedTargets.push('stationery');
     if (clearTargets.general_proposal) selectedTargets.push('general_proposal');
     if (clearTargets.pccc_inspections) selectedTargets.push('pccc_inspections');
+    if (clearTargets.camera_request) selectedTargets.push('camera_request');
+    if (clearTargets.periodic_inspections) selectedTargets.push('periodic_inspections');
+    if (clearTargets.food_inspection_3step) selectedTargets.push('food_inspection_3step');
+    if (clearTargets.announcements) selectedTargets.push('announcements');
 
     if (selectedTargets.length === 0) {
       showToast({
@@ -802,6 +842,10 @@ export function SettingsView() {
                         stationery: true,
                         general_proposal: true,
                         pccc_inspections: true,
+                        camera_request: true,
+                        periodic_inspections: true,
+                        food_inspection_3step: true,
+                        announcements: true,
                       })
                     }
                     className="text-[11px] text-blue-600 dark:text-blue-400 hover:underline font-semibold cursor-pointer"
@@ -822,6 +866,10 @@ export function SettingsView() {
                         stationery: false,
                         general_proposal: false,
                         pccc_inspections: false,
+                        camera_request: false,
+                        periodic_inspections: false,
+                        food_inspection_3step: false,
+                        announcements: false,
                       })
                     }
                     className="text-[11px] text-slate-500 hover:underline font-semibold cursor-pointer"
@@ -982,6 +1030,74 @@ export function SettingsView() {
                   <div className="text-xs">
                     <div>Nhật ký kiểm tra PCCC</div>
                     <div className="text-[10px] font-normal opacity-80 mt-0.5">({pcccInspCount} lượt)</div>
+                  </div>
+                </label>
+
+                <label className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-colors ${
+                  clearTargets.camera_request
+                    ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={clearTargets.camera_request}
+                    onChange={(e) => setClearTargets({ ...clearTargets, camera_request: e.target.checked })}
+                    className="rounded text-rose-600 focus:ring-rose-500"
+                  />
+                  <div className="text-xs">
+                    <div>Đăng ký xem Camera</div>
+                    <div className="text-[10px] font-normal opacity-80 mt-0.5">({cameraReqCount} đề xuất)</div>
+                  </div>
+                </label>
+
+                <label className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-colors ${
+                  clearTargets.periodic_inspections
+                    ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={clearTargets.periodic_inspections}
+                    onChange={(e) => setClearTargets({ ...clearTargets, periodic_inspections: e.target.checked })}
+                    className="rounded text-rose-600 focus:ring-rose-500"
+                  />
+                  <div className="text-xs">
+                    <div>Kiểm tra an toàn định kỳ</div>
+                    <div className="text-[10px] font-normal opacity-80 mt-0.5">({periodicCount} lượt)</div>
+                  </div>
+                </label>
+
+                <label className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-colors ${
+                  clearTargets.food_inspection_3step
+                    ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={clearTargets.food_inspection_3step}
+                    onChange={(e) => setClearTargets({ ...clearTargets, food_inspection_3step: e.target.checked })}
+                    className="rounded text-rose-600 focus:ring-rose-500"
+                  />
+                  <div className="text-xs">
+                    <div>Kiểm tra thực phẩm 3 bước</div>
+                    <div className="text-[10px] font-normal opacity-80 mt-0.5">({foodInspectionCount} lượt)</div>
+                  </div>
+                </label>
+
+                <label className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-colors ${
+                  clearTargets.announcements
+                    ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={clearTargets.announcements}
+                    onChange={(e) => setClearTargets({ ...clearTargets, announcements: e.target.checked })}
+                    className="rounded text-rose-600 focus:ring-rose-500"
+                  />
+                  <div className="text-xs">
+                    <div>Bản tin & Thông báo nội bộ</div>
+                    <div className="text-[10px] font-normal opacity-80 mt-0.5">({announcementCount} bài)</div>
                   </div>
                 </label>
               </div>
@@ -1490,6 +1606,10 @@ export function SettingsView() {
                 {clearTargets.stationery && <li>Toàn bộ đề xuất văn phòng phẩm ({stationeryCount} đề xuất)</li>}
                 {clearTargets.general_proposal && <li>Toàn bộ đề xuất chung ({generalCount} đề xuất)</li>}
                 {clearTargets.pccc_inspections && <li>Toàn bộ nhật ký kiểm tra PCCC ({pcccInspCount} lượt)</li>}
+                {clearTargets.camera_request && <li>Toàn bộ đề xuất xem Camera ({cameraReqCount} đề xuất)</li>}
+                {clearTargets.periodic_inspections && <li>Toàn bộ nhật ký kiểm tra định kỳ ({periodicCount} lượt)</li>}
+                {clearTargets.food_inspection_3step && <li>Toàn bộ nhật ký kiểm thực 3 bước ({foodInspectionCount} lượt)</li>}
+                {clearTargets.announcements && <li>Toàn bộ bản tin & thông báo nội bộ ({announcementCount} bài)</li>}
               </ul>
             </div>
 
