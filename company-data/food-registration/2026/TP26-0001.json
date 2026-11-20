@@ -13,7 +13,7 @@
   "foodDetails": "Nước thuốc (Lý do: Thuốc bắc hỗ trợ tiêu hóa)",
   "medicineReason": "Thuốc bắc hỗ trợ tiêu hóa",
   "complianceCommitment": true,
-  "status": "pending_dept",
+  "status": "cancelled",
   "steps": [
     {
       "stepName": "Trưởng bộ phận",
@@ -28,5 +28,5 @@
   ],
   "currentStepIndex": 0,
   "createdAt": "2026-11-20T03:44:34.807Z",
-  "updatedAt": "2026-11-20T03:44:34.807Z"
+  "updatedAt": "2026-11-20T03:51:31.225Z"
 }
