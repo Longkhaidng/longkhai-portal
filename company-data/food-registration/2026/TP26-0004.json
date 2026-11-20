@@ -6,23 +6,19 @@
   "createdByName": "Nguyễn Thị Thanh Tâm",
   "department": "Phòng Mẫu",
   "entryDate": "2026-11-20",
-  "toDate": "2026-11-24",
-  "durationDays": 5,
+  "toDate": "2026-11-22",
+  "durationDays": 3,
   "category": "medicine_drink",
   "mainGroup": "pregnant_medicine",
-  "foodDetails": "Nước thuốc (Lý do: Thuốc nam chữa bệnh đau đầu)",
-  "medicineReason": "Thuốc nam chữa bệnh đau đầu",
+  "foodDetails": "Nước thuốc (Lý do: Đau đầu)",
+  "medicineReason": "Đau đầu",
   "complianceCommitment": true,
-  "status": "cancelled",
+  "status": "pending_dept",
   "steps": [
     {
       "stepName": "Trưởng bộ phận",
       "roleRequired": "manager",
-      "approverId": "1241",
-      "approverName": "Võ Thị Phương Dung",
-      "status": "approved",
-      "comment": "Đồng ý phê duyệt",
-      "actionAt": "2026-11-20T04:09:55.669Z"
+      "status": "pending"
     },
     {
       "stepName": "Trưởng phòng HCNS",
@@ -30,7 +26,7 @@
       "status": "pending"
     }
   ],
-  "currentStepIndex": 1,
-  "createdAt": "2026-11-20T04:01:11.049Z",
-  "updatedAt": "2026-11-20T05:36:22.552Z"
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-20T06:12:04.580Z",
+  "updatedAt": "2026-11-20T06:12:04.580Z"
 }
