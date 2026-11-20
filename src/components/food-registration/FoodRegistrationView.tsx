@@ -1424,7 +1424,7 @@ export function FoodRegistrationView() {
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
                   Nhóm thực phẩm đăng ký *
                 </label>
-                <div className="grid grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   <button
                     type="button"
                     onClick={() => setMainGroup('pregnant_medicine')}
