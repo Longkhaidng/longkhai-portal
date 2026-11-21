@@ -1,0 +1,23 @@
+{
+  "id": "INSP-20261121-365",
+  "deviceId": "VP-TU-17",
+  "deviceName": "Tủ chữa cháy vách tường & ngoài trời số 17",
+  "category": "tu_voi_vach",
+  "location": "VP - Cạnh cửa khu phòng khách tầng 2",
+  "inspectorId": "2265",
+  "inspectorName": "Trần Lê Hữu Lực",
+  "inspectedAt": "2026-11-21 14:10:45",
+  "overallResult": "pass",
+  "notes": "",
+  "checklist": {
+    "type": "tu_voi_vach",
+    "data": {
+      "angleValve": "pass",
+      "hoseLeak": "pass",
+      "hoseCoupling": "pass",
+      "nozzleAvailability": "pass",
+      "nozzleCoupling": "pass"
+    }
+  },
+  "createdAt": "2026-11-21T07:10:45.250Z"
+}
