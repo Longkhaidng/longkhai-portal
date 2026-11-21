@@ -1,0 +1,22 @@
+{
+  "id": "INSP-20261121-142",
+  "deviceId": "KHO-MFZ4-16",
+  "deviceName": "Bình chữa cháy bột ABC 4KG số 16",
+  "category": "binh_bot",
+  "location": "KHO - Sát tường nhà xe nhân viên",
+  "inspectorId": "2265",
+  "inspectorName": "Trần Lê Hữu Lực",
+  "inspectedAt": "2026-11-21 13:28:50",
+  "overallResult": "pass",
+  "notes": "",
+  "checklist": {
+    "type": "binh_bot",
+    "data": {
+      "standardWeight": 4,
+      "pressureGauge": "normal",
+      "nozzleHose": "pass",
+      "safetyPinSeal": "pass"
+    }
+  },
+  "createdAt": "2026-11-21T06:28:50.753Z"
+}
