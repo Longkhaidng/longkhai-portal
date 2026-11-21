@@ -1325,9 +1325,10 @@
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-10-29 09:17:20",
+      "date": "2026-11-21 13:06:09",
       "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
+      "inspectorName": "Trần Lê Hữu Lực",
+      "notes": ""
     }
   },
   {
@@ -1409,9 +1410,10 @@
     "inspectionExpiry": "20/12/2026",
     "lastInspection": {
       "status": "pass",
-      "date": "2026-10-29 09:17:20",
+      "date": "2026-11-21 13:05:46",
       "inspectorId": "2265",
-      "inspectorName": "Trần Lê Hữu Lực"
+      "inspectorName": "Trần Lê Hữu Lực",
+      "notes": ""
     }
   },
   {
