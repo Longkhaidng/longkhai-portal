@@ -1,0 +1,23 @@
+{
+  "id": "INSP-20261121-838",
+  "deviceId": "VP-TU-15",
+  "deviceName": "Tủ chữa cháy vách tường & ngoài trời số 15",
+  "category": "tu_voi_vach",
+  "location": "VP - Cạnh hồ cá gần nhà vệ sinh",
+  "inspectorId": "2265",
+  "inspectorName": "Trần Lê Hữu Lực",
+  "inspectedAt": "2026-11-21 13:05:46",
+  "overallResult": "pass",
+  "notes": "",
+  "checklist": {
+    "type": "tu_voi_vach",
+    "data": {
+      "angleValve": "pass",
+      "hoseLeak": "pass",
+      "hoseCoupling": "pass",
+      "nozzleAvailability": "pass",
+      "nozzleCoupling": "pass"
+    }
+  },
+  "createdAt": "2026-11-21T06:05:46.949Z"
+}
