@@ -489,7 +489,7 @@ function PortalAppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors">
       {/* Sidebar Navigation */}
       <Sidebar
         currentTab={viewingWebSite ? `web_${viewingWebSite.id}` : currentTab}
@@ -524,6 +524,8 @@ function PortalAppContent() {
             setCurrentTab('settings');
           }}
         />
+        {/* Placeholder spacer for fixed top header */}
+        <div className="h-16 shrink-0" aria-hidden="true" />
 
         <main className="flex-1 p-3 sm:p-5 lg:p-8 max-w-7xl mx-auto w-full pb-8">
           {renderActiveView()}

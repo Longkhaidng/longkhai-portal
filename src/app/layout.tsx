@@ -30,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" suppressHydrationWarning className="h-full">
-      <body className="min-h-full flex flex-col font-sans antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-x-hidden">
+      <body className="min-h-full flex flex-col font-sans antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-x-clip">
         {children}
       </body>
     </html>

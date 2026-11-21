@@ -65,7 +65,7 @@ export function Header({ onToggleSidebar, onOpenGitHubSettings }: HeaderProps) {
   const hasGitToken = Boolean(gitConfig.token && gitConfig.owner && gitConfig.repo);
 
   return (
-    <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-2.5 sm:px-4 md:px-6 flex items-center justify-between sticky top-0 z-30 transition-colors">
+    <header className="fixed top-0 left-0 right-0 h-16 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-2.5 sm:px-4 md:px-6 flex items-center justify-between z-40 transition-colors shadow-xs">
       {/* Left: 3-dash Hamburger Menu Button, Brand & Search bar */}
       <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
         <button
