@@ -1,0 +1,24 @@
+{
+  "id": "INSP-20261121-926",
+  "deviceId": "KHO-CO2-35",
+  "deviceName": "Bình chữa cháy CO2 MT3 số 35",
+  "category": "binh_co2",
+  "location": "KHO - Sát vách tường đối diện cổng chính tầng 2",
+  "inspectorId": "2265",
+  "inspectorName": "Trần Lê Hữu Lực",
+  "inspectedAt": "2026-11-21 13:33:49",
+  "overallResult": "pass",
+  "notes": "Đồng hồ hơi mờ. Đề xuất thay mới",
+  "checklist": {
+    "type": "binh_co2",
+    "data": {
+      "standardGrossWeight": 10,
+      "actualWeight": 10,
+      "gasLossPercent": 0,
+      "isLossAcceptable": true,
+      "co2Nozzle": "pass",
+      "safetyPinSeal": "pass"
+    }
+  },
+  "createdAt": "2026-11-21T06:33:49.589Z"
+}
