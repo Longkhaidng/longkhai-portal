@@ -1393,7 +1393,7 @@ export function FoodRegistrationView() {
                     Phiếu đăng ký Thực phẩm/Nước thuốc
                   </h2>                    
                     <p className="italic text-xs text-red-400">
-                      * Lưu ý: Không được phép mang Thực Phẩm/Nước Thuốc vào khu vực sản xuất.
+                      * Không được phép mang Thực Phẩm/Nước Thuốc vào khu vực sản xuất.
                     </p>                       
                   
                 </div>
@@ -1456,7 +1456,7 @@ export function FoodRegistrationView() {
               {/* 2. Bộ phận / Phân xưởng */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                  Bộ phận / Phân xưởng / Chuyền sản xuất *
+                  Bộ phận *
                 </label>
                 <div className="relative">
                   <input
@@ -1519,7 +1519,7 @@ export function FoodRegistrationView() {
                         2. Dùng trong ngày
                       </span>
                       <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
-                        Thực phẩm chay
+                        Thực phẩm chay (Rằm và mồng một)
                       </span>
                     </div>
                   </button>
