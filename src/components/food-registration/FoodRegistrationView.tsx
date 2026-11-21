@@ -1597,7 +1597,7 @@ export function FoodRegistrationView() {
                       <input
                         type="number"
                         min={1}
-                        max={90}
+                        max={365}
                         required
                         value={durationDays}
                         onChange={(e) => handleDurationDaysChange(e.target.value)}
@@ -1606,7 +1606,7 @@ export function FoodRegistrationView() {
                             handleDurationDaysChange('1');
                           }
                         }}
-                        placeholder="Số ngày (1 - 90)"
+                        placeholder="Số ngày (1 - 365)"
                         className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-bold focus:ring-2 focus:ring-amber-500"
                       />
                     </div>
