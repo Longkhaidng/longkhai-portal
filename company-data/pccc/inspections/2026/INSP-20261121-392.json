@@ -1,0 +1,23 @@
+{
+  "id": "INSP-20261121-392",
+  "deviceId": "KHO-TU-13",
+  "deviceName": "Tủ chữa cháy vách tường & ngoài trời số 13",
+  "category": "tu_voi_vach",
+  "location": "KHO - Cạnh ô thông tầng giữa tầng lửng và PX dệt",
+  "inspectorId": "2265",
+  "inspectorName": "Trần Lê Hữu Lực",
+  "inspectedAt": "2026-11-21 13:41:43",
+  "overallResult": "pass",
+  "notes": "",
+  "checklist": {
+    "type": "tu_voi_vach",
+    "data": {
+      "angleValve": "pass",
+      "hoseLeak": "pass",
+      "hoseCoupling": "pass",
+      "nozzleAvailability": "pass",
+      "nozzleCoupling": "pass"
+    }
+  },
+  "createdAt": "2026-11-21T06:41:43.668Z"
+}
