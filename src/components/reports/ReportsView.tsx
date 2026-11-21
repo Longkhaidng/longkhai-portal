@@ -744,6 +744,7 @@ export function ReportsView() {
           row.employeeId.toLowerCase().includes(q) ||
           row.employeeName.toLowerCase().includes(q) ||
           row.foodDetails.toLowerCase().includes(q) ||
+          (row.shift && row.shift.toLowerCase().includes(q)) ||
           (row.guardName && row.guardName.toLowerCase().includes(q)) ||
           (row.note && row.note.toLowerCase().includes(q)) ||
           row.displayDate.toLowerCase().includes(q);

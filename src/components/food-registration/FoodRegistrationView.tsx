@@ -431,6 +431,7 @@ export function FoodRegistrationView() {
           entryDate,
           toDate,
           durationDays: finalDurationDays,
+          shift: shift || FOOD_ENTRY_SHIFTS[0],
           category: finalCategory,
           mainGroup: 'pregnant_medicine',
           foodDetails: finalFoodDetails,
@@ -476,6 +477,7 @@ export function FoodRegistrationView() {
       setVegNotes('');
       setMedicineReason('');
       setDurationDays(14);
+      setShift(FOOD_ENTRY_SHIFTS[0]);
       setEntryDate(new Date().toISOString().slice(0, 10));
       setToDate(calculateEndDate(new Date().toISOString().slice(0, 10), 14));
       setComplianceCommitment(false);
@@ -1032,7 +1034,7 @@ export function FoodRegistrationView() {
                       {item.foodDetails}
                     </p>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Thời gian: {item.toDate ? `${formatDate(item.entryDate)} → ${formatDate(item.toDate)}` : `Ngày ${formatDate(item.entryDate)} (${item.shift || 'Ca HC'})`}
+                      Thời gian: {item.toDate ? `${formatDate(item.entryDate)} → ${formatDate(item.toDate)} (${item.durationDays || 14} ngày) • ${item.shift || 'Ca HC (08:00 - 16:30)'}` : `Ngày ${formatDate(item.entryDate)} (${item.shift || 'Ca HC'})`}
                     </p>
                   </div>
 
@@ -1223,7 +1225,7 @@ export function FoodRegistrationView() {
                               {formatDate(item.entryDate)} &rarr; {formatDate(item.toDate)}
                             </div>
                             <div className="text-[11px] text-indigo-600 dark:text-indigo-400 font-medium mt-0.5">
-                              {item.durationDays || 14} ngày
+                              {item.durationDays || 14} ngày {item.shift ? `• ${item.shift}` : ''}
                             </div>
                           </div>
                         ) : (
@@ -1572,8 +1574,8 @@ export function FoodRegistrationView() {
                     </div>
                   )}
 
-                  {/* Khoảng ngày & Số ngày */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-stretch">
+                  {/* Khoảng ngày, Ca làm việc & Số ngày */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch">
                     <div>
                       <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                         Ngày bắt đầu: *
@@ -1583,8 +1585,25 @@ export function FoodRegistrationView() {
                         required
                         value={entryDate}
                         onChange={(e) => handleEntryDateChange(e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500"
+                        className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 font-medium"
                       />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                        Ca làm việc: *
+                      </label>
+                      <select
+                        value={shift}
+                        onChange={(e) => setShift(e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-amber-500"
+                      >
+                        {FOOD_ENTRY_SHIFTS.map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
                     <div>
@@ -1935,7 +1954,7 @@ export function FoodRegistrationView() {
                 <span className="text-slate-400 block text-[11px]">Thời gian hiệu lực:</span>
                 <span className="font-bold text-slate-800 dark:text-white">
                   {selectedDetailItem.toDate
-                    ? `${formatDate(selectedDetailItem.entryDate)} → ${formatDate(selectedDetailItem.toDate)} (${selectedDetailItem.durationDays || 14} ngày)`
+                    ? `${formatDate(selectedDetailItem.entryDate)} → ${formatDate(selectedDetailItem.toDate)} (${selectedDetailItem.durationDays || 14} ngày) • ${selectedDetailItem.shift || 'Ca HC (08:00 - 16:30)'}`
                     : `Ngày ${formatDate(selectedDetailItem.entryDate)} (${selectedDetailItem.shift || 'Ca HC'})`}
                 </span>
               </div>
@@ -2179,7 +2198,7 @@ export function FoodRegistrationView() {
                 <span className="text-slate-400">Khoảng ngày:</span>
                 <span className="font-bold text-slate-800 dark:text-slate-200">
                   {approvingItem.item.toDate
-                    ? `${formatDate(approvingItem.item.entryDate)} → ${formatDate(approvingItem.item.toDate)}`
+                    ? `${formatDate(approvingItem.item.entryDate)} → ${formatDate(approvingItem.item.toDate)} (${approvingItem.item.durationDays || 14} ngày) • ${approvingItem.item.shift || 'Ca HC (08:00 - 16:30)'}`
                     : `Ngày ${formatDate(approvingItem.item.entryDate)} (${approvingItem.item.shift || 'Ca HC'})`}
                 </span>
               </div>

@@ -118,7 +118,7 @@ export interface FoodRegistration {
   entryDate: string; // Ngày mang vào (YYYY-MM-DD) hoặc Từ ngày
   toDate?: string; // Đến ngày (YYYY-MM-DD) hoặc Ngày kết thúc cho mang thai / nước thuốc
   durationDays?: number; // Số ngày cần mang vào
-  shift?: string; // Ca làm việc (cho thực phẩm chay)
+  shift?: string; // Ca làm việc: Ca HC (08:00 - 16:30), Ca 1, Ca 2... (áp dụng cho cả Thực phẩm chay và Mang thai & Nước thuốc)
   timeFrame?: string;
   category: FoodCategory;
   mainGroup?: FoodMainGroup;
@@ -469,7 +469,7 @@ export function flattenFoodRegistrationsToReportRows(registrations: FoodRegistra
           displayDate: formatDateStr(entryDate),
           isRange: hasRange,
           dateRangeText,
-          shift: reg.shift || (hasRange ? 'Theo đợt' : '-'),
+          shift: (reg.shift && reg.shift !== 'Theo đợt') ? reg.shift : 'Ca HC (08:00 - 16:30)',
           timeFrame: reg.timeFrame,
           category: reg.category,
           mainGroup: reg.mainGroup || (reg.category === 'vegetarian' ? 'vegetarian' : 'pregnant_medicine'),
@@ -521,7 +521,7 @@ export function flattenFoodRegistrationsToReportRows(registrations: FoodRegistra
         displayDate: formatDateStr(entryDate),
         isRange: hasRange,
         dateRangeText,
-        shift: reg.shift || (hasRange ? 'Theo đợt' : '-'),
+        shift: (reg.shift && reg.shift !== 'Theo đợt') ? reg.shift : 'Ca HC (08:00 - 16:30)',
         timeFrame: reg.timeFrame,
         category: reg.category,
         mainGroup: reg.mainGroup || (reg.category === 'vegetarian' ? 'vegetarian' : 'pregnant_medicine'),
@@ -552,7 +552,7 @@ export function flattenFoodRegistrationsToReportRows(registrations: FoodRegistra
           : formatDateStr(reg.entryDate),
         isRange: hasRange,
         dateRangeText: undefined,
-        shift: reg.shift || (hasRange ? 'Theo đợt' : '-'),
+        shift: (reg.shift && reg.shift !== 'Theo đợt') ? reg.shift : 'Ca HC (08:00 - 16:30)',
         timeFrame: reg.timeFrame,
         category: reg.category,
         mainGroup: reg.mainGroup || (reg.category === 'vegetarian' ? 'vegetarian' : 'pregnant_medicine'),

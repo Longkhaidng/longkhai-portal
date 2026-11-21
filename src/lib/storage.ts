@@ -2461,12 +2461,17 @@ class StorageService {
           const now = new Date();
           let changed = false;
           const normalized = parsed.map((r) => {
-            if (r.status === 'confirmed' && r.entryDate) {
-              const startOfDay = new Date(`${r.entryDate}T00:00:00.000`);
+            let updated = { ...r };
+            if (!updated.shift || updated.shift === 'Theo đợt') {
+              updated.shift = 'Ca HC (08:00 - 16:30)';
+              changed = true;
+            }
+            if (updated.status === 'confirmed' && updated.entryDate) {
+              const startOfDay = new Date(`${updated.entryDate}T00:00:00.000`);
               if (now < startOfDay) {
                 changed = true;
-                return {
-                  ...r,
+                updated = {
+                  ...updated,
                   status: 'approved' as const,
                   confirmedAt: undefined,
                   guardName: undefined,
@@ -2475,7 +2480,7 @@ class StorageService {
                 };
               }
             }
-            return r;
+            return updated;
           });
           if (changed) {
             try {
@@ -2494,6 +2499,9 @@ class StorageService {
 
   saveFoodRegistration(registration: FoodRegistration, byUser?: { id: string; name: string }): void {
     if (!this.isClient()) return;
+    if (!registration.shift || registration.shift === 'Theo đợt') {
+      registration.shift = 'Ca HC (08:00 - 16:30)';
+    }
     const list = this.getFoodRegistrations();
     const existingIndex = list.findIndex((r) => r.id === registration.id);
     const isNew = existingIndex < 0;

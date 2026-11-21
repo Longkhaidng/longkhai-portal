@@ -127,6 +127,11 @@ function scanJsonFiles<T>(subDir: string): T[] {
                   continue; // Skip items created before clearance
                 }
               }
+              if (subDir === 'food-registration') {
+                if (!parsed.shift || parsed.shift === 'Theo đợt') {
+                  parsed.shift = 'Ca HC (08:00 - 16:30)';
+                }
+              }
               results.set(id, parsed);
             }
           } catch {}
@@ -415,6 +420,9 @@ export async function POST(req: NextRequest) {
       relFilePath = `periodic-inspections/stormwater/${year}/${data.id}.json`;
       commitMessage = `Update Stormwater Inspection ${data.id}`;
     } else if (type === 'food_registration') {
+      if (!data.shift || data.shift === 'Theo đợt') {
+        data.shift = 'Ca HC (08:00 - 16:30)';
+      }
       const year = data.entryDate ? new Date(data.entryDate).getFullYear() : new Date().getFullYear();
       relFilePath = `food-registration/${year}/${data.id}.json`;
       commitMessage = `Update Food Registration ${data.id} (${data.status})`;
