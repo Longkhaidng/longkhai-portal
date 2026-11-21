@@ -1499,7 +1499,7 @@ export function FoodRegistrationView() {
                       <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
                         Bánh + Sữa hoặc Trái cây + Sữa
                        <p>
-                         (Mang 2 đơn vị cho mỗi món)
+                         (Chỉ mang 02 đơn vị cho mỗi món)
                        </p> 
                         
                       </span>
@@ -1631,7 +1631,7 @@ export function FoodRegistrationView() {
                         className="mt-0.5 rounded text-amber-600 focus:ring-amber-500 w-4 h-4"
                       />
                       <span>
-                        Tôi cam kết thực phẩm mang vào đáp ứng đầy đủ điều kiện an toàn vệ sinh thực phẩm, đóng gói sạch sẽ, đúng chủng loại đã đăng ký và chịu hoàn toàn trách nhiệm theo quy định của Công ty.
+                        Tôi cam kết đảm bảo ATVSTP, tự chịu trách nhiệm về rủi ro và tuân thủ quy định của Công ty.
                       </span>
                     </label>
                   </div>
