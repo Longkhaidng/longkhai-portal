@@ -1,0 +1,23 @@
+{
+  "id": "INSP-20261121-350",
+  "deviceId": "VP-CH-10",
+  "deviceName": "Tổ hợp chuông đèn, nút nhấn báo cháy số 10",
+  "category": "nut_chuong",
+  "location": "VP Cạnh cửa ra vào nhà vệ sinh",
+  "inspectorId": "2265",
+  "inspectorName": "Trần Lê Hữu Lực",
+  "inspectedAt": "2026-11-21 14:31:00",
+  "overallResult": "pass",
+  "notes": "",
+  "checklist": {
+    "type": "nut_chuong",
+    "data": {
+      "subType": "Tổ hợp Chuông/Đèn/Nút",
+      "emergencyButton": "pass",
+      "bellSiren": "pass",
+      "locationLight": "pass",
+      "resetSwitch": "pass"
+    }
+  },
+  "createdAt": "2026-11-21T07:31:00.898Z"
+}
