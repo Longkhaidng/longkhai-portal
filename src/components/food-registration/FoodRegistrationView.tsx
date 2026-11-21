@@ -1797,7 +1797,7 @@ export function FoodRegistrationView() {
                         className="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4"
                       />
                       <span>
-                        Tôi cam kết thực phẩm mang vào đáp ứng đầy đủ điều kiện an toàn vệ sinh thực phẩm, đóng gói sạch sẽ, đúng chủng loại đã đăng ký và chịu hoàn toàn trách nhiệm theo quy định của Công ty.
+                        Tôi cam kết đảm bảo ATVSTP, tự chịu trách nhiệm về rủi ro và tuân thủ quy định của Công ty.
                       </span>
                     </label>
                   </div>
