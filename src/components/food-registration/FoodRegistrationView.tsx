@@ -1496,14 +1496,13 @@ export function FoodRegistrationView() {
                         1. Dùng nhiều ngày
                       </span>
                       <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
-                        Mang thai &amp; Nước thuốc
+                       - Mang thai (Bánh + Sữa hoặc Trái cây + Sữa)
+                         <p>
+                         (Chỉ mang 02 đơn vị cho mỗi món)
+                       </p>
                       </span>
                       <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
-                        Bánh + Sữa hoặc Trái cây + Sữa
-                       <p>
-                         (Chỉ mang 02 đơn vị cho mỗi món)
-                       </p> 
-                        
+                       - Nước thuốc 
                       </span>
                     </div>
                   </button>
