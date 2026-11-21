@@ -621,7 +621,20 @@ export function isHRHead(user?: User | null): boolean {
   if (user.id === '1867') return true;
   const dept = (user.department || '').toLowerCase();
   const isHCNS = dept.includes('hcns') || dept.includes('hành chính') || dept.includes('nhân sự');
-  return isHCNS && user.role === 'manager';
+  const isManager = user.role === 'manager' || /trưởng phòng/i.test(user.position || '');
+  return isHCNS && isManager;
+}
+
+/**
+ * Check if user is authorized to view & operate stationery catalog management (Quản lý danh mục & Định mức VPP):
+ * Chỉ admin, trưởng phòng HCNS với Võ thị tuyết (1139) mới nhìn thấy và thao tác được.
+ */
+export function canManageStationeryCatalog(user?: User | null): boolean {
+  if (!user) return false;
+  if (isSuperAdminOrBOD(user) || user.role === 'admin') return true;
+  if (user.id === '1139' || (user.name && /võ thị tuyết/i.test(user.name))) return true;
+  if (isHRHead(user)) return true;
+  return false;
 }
 
 /**

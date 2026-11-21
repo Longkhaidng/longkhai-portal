@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import { StationeryItem } from '@/types/proposal';
 import { storage } from '@/lib/storage';
 import { useAuth } from '@/lib/auth-context';
+import { canManageStationeryCatalog } from '@/lib/permissions';
 import { useToast } from '@/components/common/Toast';
 import {
   Package,
@@ -71,7 +72,7 @@ export function StationeryCatalogModal({
   };
 
 
-  if (!isOpen) return null;
+  if (!isOpen || !canManageStationeryCatalog(currentUser)) return null;
 
   const refreshList = () => {
     const list = storage.getStationeryItems();

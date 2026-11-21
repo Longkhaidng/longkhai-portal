@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
-import { isSuperAdminOrBOD, isMaintenanceStaff } from '@/lib/permissions';
+import { isSuperAdminOrBOD, isMaintenanceStaff, canManageStationeryCatalog } from '@/lib/permissions';
 import { RepairProposalSubView } from './RepairProposalSubView';
 import { StationeryProposalSubView } from './StationeryProposalSubView';
 import { GeneralProposalSubView } from './GeneralProposalSubView';
@@ -36,14 +36,9 @@ export function ProposalHubView({ initialCategory = 'repair' }: ProposalHubViewP
     }
   }, [initialCategory]);
 
-  // Check if current user is Admin or HCNS to show "Quản lý danh mục VPP"
+  // Chỉ admin, trưởng phòng HCNS với Võ thị tuyết (1139) mới nhìn thấy mục "Quản lý danh mục VPP" và thao tác được
   const canManageCatalog = useMemo(() => {
-    if (!currentUser) return false;
-    if (isSuperAdminOrBOD(currentUser)) return true;
-    if (currentUser.role === 'admin') return true;
-    if (currentUser.id === '1139' || currentUser.id === '1867') return true;
-    if (currentUser.department && /hcns|nhân sự/i.test(currentUser.department)) return true;
-    return false;
+    return canManageStationeryCatalog(currentUser);
   }, [currentUser]);
 
   // Pending counts for badges

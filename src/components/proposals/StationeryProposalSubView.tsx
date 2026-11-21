@@ -14,6 +14,7 @@ import {
 import {
   filterUserStationeryProposals,
   isSuperAdminOrBOD,
+  canManageStationeryCatalog,
   DocumentScope,
 } from '@/lib/permissions';
 import { generateDocId, formatDateTime } from '@/lib/utils';
@@ -94,7 +95,7 @@ export function StationeryProposalSubView({ defaultTab = 'create' }: StationeryP
     currentUser?.id === '1867' ||
     (currentUser?.role === 'manager' && Boolean(currentUser?.department) && /hcns|nhân sự/i.test(currentUser!.department));
   const canManageOthers = isBOD || isHRStaff || isHRManager;
-  const canManageCatalog = isBOD || currentUser?.role === 'admin' || currentUser?.id === '1139' || currentUser?.id === '1867' || (Boolean(currentUser?.department) && /hcns|nhân sự/i.test(currentUser!.department));
+  const canManageCatalog = canManageStationeryCatalog(currentUser);
 
   const [scopeFilter, setScopeFilter] = useState<DocumentScope>(() =>
     canManageOthers ? 'all' : 'my'
