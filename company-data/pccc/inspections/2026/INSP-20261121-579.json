@@ -1,0 +1,23 @@
+{
+  "id": "INSP-20261121-579",
+  "deviceId": "KHO-CH-07",
+  "deviceName": "Tổ hợp chuông đèn, nút nhấn báo cháy số 07",
+  "category": "nut_chuong",
+  "location": "KHO - Cạnh cửa ra vào tầng lửng",
+  "inspectorId": "2265",
+  "inspectorName": "Trần Lê Hữu Lực",
+  "inspectedAt": "2026-11-21 13:36:38",
+  "overallResult": "fail",
+  "notes": "Chuông ko reo",
+  "checklist": {
+    "type": "nut_chuong",
+    "data": {
+      "subType": "Tổ hợp Chuông/Đèn/Nút",
+      "emergencyButton": "pass",
+      "bellSiren": "fail",
+      "locationLight": "pass",
+      "resetSwitch": "pass"
+    }
+  },
+  "createdAt": "2026-11-21T06:36:38.716Z"
+}
