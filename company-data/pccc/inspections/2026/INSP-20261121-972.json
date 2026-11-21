@@ -1,0 +1,22 @@
+{
+  "id": "INSP-20261121-972",
+  "deviceId": "KHO-MFZ4-20",
+  "deviceName": "Bình chữa cháy bột ABC 4KG số 20",
+  "category": "binh_bot",
+  "location": "KHO - Gần cửa ra vào tầng lửng",
+  "inspectorId": "2265",
+  "inspectorName": "Trần Lê Hữu Lực",
+  "inspectedAt": "2026-11-21 13:34:43",
+  "overallResult": "pass",
+  "notes": "Đồng hồ hơi mờ. Đề xuất thay mới",
+  "checklist": {
+    "type": "binh_bot",
+    "data": {
+      "standardWeight": 4,
+      "pressureGauge": "normal",
+      "nozzleHose": "pass",
+      "safetyPinSeal": "pass"
+    }
+  },
+  "createdAt": "2026-11-21T06:34:43.299Z"
+}
