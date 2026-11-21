@@ -805,7 +805,7 @@ export function FoodRegistrationView() {
               <UtensilsCrossed className="w-5 h-5" />
             </div>
             <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-              Phiếu Đăng Ký Mang Thực Phẩm
+              Phiếu Đăng Ký Thực Phẩm/Nước Thuốc
             </h1>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -828,7 +828,7 @@ export function FoodRegistrationView() {
             className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs rounded-xl shadow-md flex items-center gap-2 self-start sm:self-auto cursor-pointer transition-all shrink-0"
           >
             <Plus className="w-4 h-4" />
-            <span>Đăng ký mang thực phẩm vào</span>
+            <span>Đăng ký</span>
           </button>
         )}
       </div>
@@ -1496,10 +1496,7 @@ export function FoodRegistrationView() {
                         1. Dùng nhiều ngày
                       </span>
                       <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
-                       - Mang thai (Bánh + Sữa hoặc Trái cây + Sữa)
-                         <p>
-                         (Chỉ mang 02 đơn vị cho mỗi món)
-                       </p>
+                       - Mang thai (Bánh + Sữa or Trái cây + Sữa/ 02 đơn vị mỗi loại)                        
                       </span>
                       <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
                        - Nước thuốc 
@@ -1541,7 +1538,7 @@ export function FoodRegistrationView() {
                         onChange={() => setSubCategory('pregnant')}
                         className="text-amber-600 focus:ring-amber-500"
                       />
-                      <span>Thực phẩm cho người mang thai</span>
+                      <span>Mang thai</span>
                     </label>
 
                     <label className="flex items-center gap-2 cursor-pointer font-semibold text-slate-800 dark:text-slate-200">
@@ -1575,18 +1572,6 @@ export function FoodRegistrationView() {
 
                   {/* Khoảng ngày, Ca làm việc & Số ngày */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                        Ngày bắt đầu: *
-                      </label>
-                      <input
-                        type="date"
-                        required
-                        value={entryDate}
-                        onChange={(e) => handleEntryDateChange(e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 font-medium"
-                      />
-                    </div>
 
                     <div>
                       <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
@@ -1607,7 +1592,7 @@ export function FoodRegistrationView() {
 
                     <div>
                       <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                        Số ngày mang vào: *
+                        Số ngày đăng ký: *
                       </label>
                       <input
                         type="number"
@@ -1625,10 +1610,22 @@ export function FoodRegistrationView() {
                         className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-bold focus:ring-2 focus:ring-amber-500"
                       />
                     </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                        Ngày bắt đầu: *
+                      </label>
+                      <input
+                        type="date"
+                        required
+                        value={entryDate}
+                        onChange={(e) => handleEntryDateChange(e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 font-medium"
+                      />
+                    </div>                    
 
                     <div>
                       <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                        Ngày kết thúc (tự động):
+                        Ngày kết thúc:
                       </label>
                       <input
                         type="date"
