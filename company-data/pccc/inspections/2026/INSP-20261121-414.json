@@ -1,0 +1,23 @@
+{
+  "id": "INSP-20261121-414",
+  "deviceId": "KHO-CH-06",
+  "deviceName": "Tổ hợp chuông đèn, nút nhấn báo cháy số 06",
+  "category": "nut_chuong",
+  "location": "KHO - Cạnh thang máy tầng 2",
+  "inspectorId": "2265",
+  "inspectorName": "Trần Lê Hữu Lực",
+  "inspectedAt": "2026-11-21 14:19:29",
+  "overallResult": "pass",
+  "notes": "",
+  "checklist": {
+    "type": "nut_chuong",
+    "data": {
+      "subType": "Tổ hợp Chuông/Đèn/Nút",
+      "emergencyButton": "pass",
+      "bellSiren": "pass",
+      "locationLight": "pass",
+      "resetSwitch": "pass"
+    }
+  },
+  "createdAt": "2026-11-21T07:19:29.307Z"
+}
