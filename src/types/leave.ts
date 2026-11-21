@@ -55,10 +55,10 @@ export const LEAVE_SHIFTS = [
 
 export const LEAVE_TYPE_LABELS: Record<LeaveType, string> = {
   phep_nam: 'Nghỉ phép năm',
-  phep_om: 'Nghỉ ốm đau / Khám bệnh',
+  phep_om: 'Nghỉ ốm',
   viec_rieng: 'Nghỉ việc riêng (Hiếu, Hỷ...)',
-  khong_luong: 'Nghỉ không hưởng lương',
+  khong_luong: 'Nghỉ không lương',
   thai_san: 'Nghỉ thai sản / Khám thai',
-  nghi_bu: 'Nghỉ bù tăng ca / Lễ',
+  nghi_bu: 'Nghỉ bù',
   khac: 'Nghỉ lý do khác',
 };
