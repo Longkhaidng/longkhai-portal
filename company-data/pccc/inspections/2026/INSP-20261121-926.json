@@ -1,24 +1,22 @@
 {
   "id": "INSP-20261121-926",
-  "deviceId": "KHO-CO2-35",
-  "deviceName": "Bình chữa cháy CO2 MT3 số 35",
-  "category": "binh_co2",
-  "location": "KHO - Sát vách tường đối diện cổng chính tầng 2",
+  "deviceId": "KHO-MFZ8-07",
+  "deviceName": "Bình chữa cháy bột ABC 8KG số 07",
+  "category": "binh_bot",
+  "location": "KHO - Gần tủ điện tầng lửng",
   "inspectorId": "2265",
   "inspectorName": "Trần Lê Hữu Lực",
-  "inspectedAt": "2026-11-21 13:33:49",
+  "inspectedAt": "2026-11-21 14:00:13",
   "overallResult": "pass",
-  "notes": "Đồng hồ hơi mờ. Đề xuất thay mới",
+  "notes": "",
   "checklist": {
-    "type": "binh_co2",
+    "type": "binh_bot",
     "data": {
-      "standardGrossWeight": 10,
-      "actualWeight": 10,
-      "gasLossPercent": 0,
-      "isLossAcceptable": true,
-      "co2Nozzle": "pass",
+      "standardWeight": 4,
+      "pressureGauge": "normal",
+      "nozzleHose": "pass",
       "safetyPinSeal": "pass"
     }
   },
-  "createdAt": "2026-11-21T06:33:49.589Z"
+  "createdAt": "2026-11-21T07:00:13.373Z"
 }
