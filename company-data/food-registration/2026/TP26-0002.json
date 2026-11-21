@@ -13,12 +13,16 @@
   "foodDetails": "Nước thuốc (Lý do: Giảm đau dạ dày, ngăn ngừa tái phát)",
   "medicineReason": "Giảm đau dạ dày, ngăn ngừa tái phát",
   "complianceCommitment": true,
-  "status": "pending_dept",
+  "status": "pending_hr",
   "steps": [
     {
       "stepName": "Trưởng bộ phận",
       "roleRequired": "manager",
-      "status": "pending"
+      "approverId": "2864",
+      "approverName": "Nguyễn Đình Linh",
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-11-21T01:21:21.360Z"
     },
     {
       "stepName": "Trưởng phòng HCNS",
@@ -26,7 +30,7 @@
       "status": "pending"
     }
   ],
-  "currentStepIndex": 0,
+  "currentStepIndex": 1,
   "createdAt": "2026-11-21T01:20:46.233Z",
-  "updatedAt": "2026-11-21T01:20:46.233Z"
+  "updatedAt": "2026-11-21T01:21:21.360Z"
 }
