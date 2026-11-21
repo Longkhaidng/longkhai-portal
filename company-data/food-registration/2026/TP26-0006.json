@@ -1,0 +1,33 @@
+{
+  "id": "TP26-0006",
+  "employeeId": "1770",
+  "employeeName": "Nguyễn Thị Xuân Hoa",
+  "createdById": "1770",
+  "createdByName": "Nguyễn Thị Xuân Hoa",
+  "department": "Phân xưởng hoàn thành",
+  "entryDate": "2026-11-21",
+  "toDate": "2027-02-18",
+  "durationDays": 90,
+  "shift": "Ca HC (08:00 - 16:30)",
+  "category": "medicine_drink",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Nước thuốc (Lý do: Đã bị huyết áp cao15 năm,cần uống thuốc lá để hạ huyết áp)",
+  "medicineReason": "Đã bị huyết áp cao15 năm,cần uống thuốc lá để hạ huyết áp",
+  "complianceCommitment": true,
+  "status": "pending_dept",
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận",
+      "roleRequired": "manager",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-21T05:17:52.835Z",
+  "updatedAt": "2026-11-21T05:17:52.835Z"
+}
