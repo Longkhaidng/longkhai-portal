@@ -13,12 +13,16 @@
   "foodDetails": "Nước thuốc (Lý do: Rối loạn tiền đình,nhức đầu,chóng mặt,)",
   "medicineReason": "Rối loạn tiền đình,nhức đầu,chóng mặt,",
   "complianceCommitment": true,
-  "status": "pending_dept",
+  "status": "pending_hr",
   "steps": [
     {
       "stepName": "Trưởng bộ phận",
       "roleRequired": "manager",
-      "status": "pending"
+      "approverId": "1030",
+      "approverName": "Mai Hồng Hậu",
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-11-21T01:12:47.432Z"
     },
     {
       "stepName": "Trưởng phòng HCNS",
@@ -26,7 +30,7 @@
       "status": "pending"
     }
   ],
-  "currentStepIndex": 0,
+  "currentStepIndex": 1,
   "createdAt": "2026-11-20T13:15:18.259Z",
-  "updatedAt": "2026-11-20T13:15:18.259Z"
+  "updatedAt": "2026-11-21T01:12:47.432Z"
 }
