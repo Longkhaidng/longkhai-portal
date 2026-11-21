@@ -1,0 +1,23 @@
+{
+  "id": "INSP-20261121-651",
+  "deviceId": "D-CH-03",
+  "deviceName": "Tổ hợp chuông đèn, nút nhấn báo cháy số 03",
+  "category": "nut_chuong",
+  "location": "PXD - Cạnh cửa thoát hiểm gần kho NL",
+  "inspectorId": "2265",
+  "inspectorName": "Trần Lê Hữu Lực",
+  "inspectedAt": "2026-11-21 14:20:02",
+  "overallResult": "pass",
+  "notes": "",
+  "checklist": {
+    "type": "nut_chuong",
+    "data": {
+      "subType": "Tổ hợp Chuông/Đèn/Nút",
+      "emergencyButton": "pass",
+      "bellSiren": "pass",
+      "locationLight": "pass",
+      "resetSwitch": "pass"
+    }
+  },
+  "createdAt": "2026-11-21T07:20:02.395Z"
+}
