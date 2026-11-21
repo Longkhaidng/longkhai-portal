@@ -1,0 +1,23 @@
+{
+  "id": "INSP-20261121-935",
+  "deviceId": "KHO-TU-11",
+  "deviceName": "Tủ chữa cháy vách tường & ngoài trời số 11",
+  "category": "tu_voi_vach",
+  "location": "KHO - Sát vách kính tầng lửng gần cửa ra vào",
+  "inspectorId": "2265",
+  "inspectorName": "Trần Lê Hữu Lực",
+  "inspectedAt": "2026-11-21 13:37:52",
+  "overallResult": "pass",
+  "notes": "",
+  "checklist": {
+    "type": "tu_voi_vach",
+    "data": {
+      "angleValve": "pass",
+      "hoseLeak": "pass",
+      "hoseCoupling": "pass",
+      "nozzleAvailability": "pass",
+      "nozzleCoupling": "pass"
+    }
+  },
+  "createdAt": "2026-11-21T06:37:52.860Z"
+}
