@@ -1,0 +1,32 @@
+{
+  "id": "TP26-0002",
+  "employeeId": "2864",
+  "employeeName": "Nguyễn Đình Linh",
+  "createdById": "2864",
+  "createdByName": "Nguyễn Đình Linh",
+  "department": "Phòng quản lý sản xuất",
+  "entryDate": "2026-11-21",
+  "toDate": "2026-12-04",
+  "durationDays": 14,
+  "category": "medicine_drink",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Nước thuốc (Lý do: Giảm đau dạ dày, ngăn ngừa tái phát)",
+  "medicineReason": "Giảm đau dạ dày, ngăn ngừa tái phát",
+  "complianceCommitment": true,
+  "status": "pending_dept",
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận",
+      "roleRequired": "manager",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-21T01:20:46.233Z",
+  "updatedAt": "2026-11-21T01:20:46.233Z"
+}
