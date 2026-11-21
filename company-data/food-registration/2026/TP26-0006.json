@@ -14,12 +14,16 @@
   "foodDetails": "Nước thuốc (Lý do: Đã bị huyết áp cao15 năm,cần uống thuốc lá để hạ huyết áp)",
   "medicineReason": "Đã bị huyết áp cao15 năm,cần uống thuốc lá để hạ huyết áp",
   "complianceCommitment": true,
-  "status": "pending_dept",
+  "status": "pending_hr",
   "steps": [
     {
       "stepName": "Trưởng bộ phận",
       "roleRequired": "manager",
-      "status": "pending"
+      "approverId": "1051",
+      "approverName": "Ngô Thị Cường",
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-11-21T05:33:56.903Z"
     },
     {
       "stepName": "Trưởng phòng HCNS",
@@ -27,7 +31,7 @@
       "status": "pending"
     }
   ],
-  "currentStepIndex": 0,
+  "currentStepIndex": 1,
   "createdAt": "2026-11-21T05:17:52.835Z",
-  "updatedAt": "2026-11-21T05:17:52.835Z"
+  "updatedAt": "2026-11-21T05:33:56.903Z"
 }
