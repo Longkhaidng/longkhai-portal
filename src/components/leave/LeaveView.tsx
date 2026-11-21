@@ -594,7 +594,7 @@ export function LeaveView() {
               <CalendarDays className="w-5 h-5" />
             </div>
             <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-              Quản Lý Đơn Xin Nghỉ Phép
+              Đơn Xin Nghỉ Phép
             </h1>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -613,7 +613,7 @@ export function LeaveView() {
           className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-md flex items-center gap-2 self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
-          <span>Tạo đơn xin nghỉ phép</span>
+          <span>Đăng ký</span>
         </button>
       </div>
 
@@ -1008,22 +1008,10 @@ export function LeaveView() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                  {/* Row 1: Ngày bắt đầu nghỉ & Giờ bắt đầu nghỉ */}
-                  <div className="min-w-0">
-                    <label className="block text-[10.5px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 truncate">
-                      Ngày bắt đầu nghỉ <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="date"
-                      required
-                      value={fromDate}
-                      onChange={(e) => setFromDate(e.target.value)}
-                      className="w-full min-w-0 px-2 py-2 sm:p-2.5 text-xs sm:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                    />
-                  </div>
+                  {/* Row 1: Giờ bắt đầu & Giờ kết thúc */}
                   <div className="min-w-0">
                     <label className="flex items-center justify-between gap-1 text-[10.5px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      <span className="min-w-0 truncate">Giờ bắt đầu nghỉ<span className="text-red-500">*</span></span>
+                      <span className="min-w-0 truncate">Giờ bắt đầu<span className="text-red-500">*</span></span>
                       {getTimePeriodBadge(fromTime)}
                     </label>
                     <input
@@ -1035,22 +1023,9 @@ export function LeaveView() {
                     />
                   </div>
 
-                  {/* Row 2: Ngày kết thúc nghỉ & Giờ kết thúc nghỉ */}
-                  <div className="min-w-0">
-                    <label className="block text-[10.5px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 truncate">
-                      Ngày kết thúc nghỉ <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="date"
-                      required
-                      value={toDate}
-                      onChange={(e) => setToDate(e.target.value)}
-                      className="w-full min-w-0 px-2 py-2 sm:p-2.5 text-xs sm:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                    />
-                  </div>
                   <div className="min-w-0">
                     <label className="flex items-center justify-between gap-1 text-[10.5px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      <span className="min-w-0 truncate">Giờ kết thúc nghỉ<span className="text-red-500">*</span></span>
+                      <span className="min-w-0 truncate">Giờ kết thúc<span className="text-red-500">*</span></span>
                       {getTimePeriodBadge(toTime)}
                     </label>
                     <input
@@ -1061,6 +1036,35 @@ export function LeaveView() {
                       className="w-full min-w-0 px-2 py-2 sm:p-2.5 text-xs sm:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
                     />
                   </div>
+                  {/* Row 2: Ngày bắt đầu & Ngày kết thúc */}
+                  <div className="min-w-0">
+                    <label className="block text-[10.5px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 truncate">
+                      Ngày bắt đầu <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      required
+                      value={fromDate}
+                      onChange={(e) => setFromDate(e.target.value)}
+                      className="w-full min-w-0 px-2 py-2 sm:p-2.5 text-xs sm:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                    />
+                  </div>
+                  
+
+                  
+                  <div className="min-w-0">
+                    <label className="block text-[10.5px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 truncate">
+                      Ngày kết thúc <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      required
+                      value={toDate}
+                      onChange={(e) => setToDate(e.target.value)}
+                      className="w-full min-w-0 px-2 py-2 sm:p-2.5 text-xs sm:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                    />
+                  </div>
+                  
                 </div>
               </div>
 
@@ -1068,7 +1072,7 @@ export function LeaveView() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Tổng số ngày nghỉ
+                    Tổng số ngày
                   </label>
                   <input
                     type="text"
