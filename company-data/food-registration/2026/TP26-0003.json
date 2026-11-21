@@ -1,0 +1,32 @@
+{
+  "id": "TP26-0003",
+  "employeeId": "2446",
+  "employeeName": "Đỗ Thị Kiều Hoanh",
+  "createdById": "2446",
+  "createdByName": "Đỗ Thị Kiều Hoanh",
+  "department": "Phân xưởng hoàn thành",
+  "entryDate": "2026-11-21",
+  "toDate": "2027-02-18",
+  "durationDays": 90,
+  "shift": "Ca HC (08:00 - 16:30)",
+  "category": "pregnant",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Bánh + Sữa hoặc Trái cây + Sữa",
+  "complianceCommitment": true,
+  "status": "pending_dept",
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận",
+      "roleRequired": "manager",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-21T04:13:17.538Z",
+  "updatedAt": "2026-11-21T04:13:17.538Z"
+}
