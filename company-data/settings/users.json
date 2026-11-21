@@ -2039,12 +2039,14 @@
       "dashboard",
       "food_registration",
       "repair",
-      "announcements"
+      "announcements",
+      "pccc"
     ],
     "isActive": true,
     "password": "1927",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-20T02:48:53.771Z"
+    "updatedAt": "2026-11-21T06:29:25.507Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "1975",
