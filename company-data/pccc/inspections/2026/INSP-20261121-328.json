@@ -1,0 +1,24 @@
+{
+  "id": "INSP-20261121-328",
+  "deviceId": "KHO-CO2-31",
+  "deviceName": "Bình chữa cháy CO2 MT3 số 31",
+  "category": "binh_co2",
+  "location": "KHO - Sát tường phân xưởng dệt",
+  "inspectorId": "2265",
+  "inspectorName": "Trần Lê Hữu Lực",
+  "inspectedAt": "2026-11-21 13:28:05",
+  "overallResult": "pass",
+  "notes": "",
+  "checklist": {
+    "type": "binh_co2",
+    "data": {
+      "standardGrossWeight": 10,
+      "actualWeight": 10,
+      "gasLossPercent": 0,
+      "isLossAcceptable": true,
+      "co2Nozzle": "pass",
+      "safetyPinSeal": "pass"
+    }
+  },
+  "createdAt": "2026-11-21T06:28:05.362Z"
+}
