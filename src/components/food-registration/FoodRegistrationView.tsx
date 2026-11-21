@@ -1498,7 +1498,10 @@ export function FoodRegistrationView() {
                       </span>
                       <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
                         Bánh + Sữa hoặc Trái cây + Sữa
-                        (Mang 2 đơn vị cho mỗi món)
+                       <p>
+                         (Mang 2 đơn vị cho mỗi món)
+                       </p> 
+                        
                       </span>
                     </div>
                   </button>
