@@ -1556,7 +1556,7 @@ export function FoodRegistrationView() {
                   {subCategory === 'medicine_drink' && (
                     <div>
                       <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                        Lý do mang nước thuốc vào (bắt buộc): *
+                        Loại thuốc - lý do mang nước thuốc vào (bắt buộc): *
                       </label>
                       <input
                         type="text"
