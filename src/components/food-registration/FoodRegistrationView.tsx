@@ -1496,6 +1496,10 @@ export function FoodRegistrationView() {
                       <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
                         Mang thai &amp; Nước thuốc
                       </span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
+                        Bánh + Sữa hoặc Trái cây + Sữa
+                        (Mang 2 đơn vị cho mỗi món)
+                      </span>
                     </div>
                   </button>
 
