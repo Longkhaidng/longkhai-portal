@@ -13,7 +13,7 @@
   "mainGroup": "pregnant_medicine",
   "foodDetails": "Bánh + Sữa hoặc Trái cây + Sữa",
   "complianceCommitment": true,
-  "status": "pending_hr",
+  "status": "approved",
   "steps": [
     {
       "stepName": "Trưởng bộ phận",
@@ -27,10 +27,14 @@
     {
       "stepName": "Trưởng phòng HCNS",
       "roleRequired": "hr",
-      "status": "pending"
+      "approverId": "1867",
+      "approverName": "Trương Anh Như Quỳnh",
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-11-21T04:26:16.172Z"
     }
   ],
-  "currentStepIndex": 1,
+  "currentStepIndex": 2,
   "createdAt": "2026-11-21T04:25:19.222Z",
-  "updatedAt": "2026-11-21T04:25:33.539Z"
+  "updatedAt": "2026-11-21T04:26:16.172Z"
 }
