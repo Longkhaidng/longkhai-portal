@@ -13,7 +13,7 @@
   "foodDetails": "Nước thuốc (Lý do: Giảm đau dạ dày, ngăn ngừa tái phát)",
   "medicineReason": "Giảm đau dạ dày, ngăn ngừa tái phát",
   "complianceCommitment": true,
-  "status": "pending_hr",
+  "status": "approved",
   "steps": [
     {
       "stepName": "Trưởng bộ phận",
@@ -27,10 +27,14 @@
     {
       "stepName": "Trưởng phòng HCNS",
       "roleRequired": "hr",
-      "status": "pending"
+      "approverId": "1867",
+      "approverName": "Trương Anh Như Quỳnh",
+      "status": "approved",
+      "comment": "Đồng ý phê duyệt",
+      "actionAt": "2026-11-21T01:57:51.664Z"
     }
   ],
-  "currentStepIndex": 1,
+  "currentStepIndex": 2,
   "createdAt": "2026-11-21T01:20:46.233Z",
-  "updatedAt": "2026-11-21T01:21:21.360Z"
+  "updatedAt": "2026-11-21T01:57:51.664Z"
 }
