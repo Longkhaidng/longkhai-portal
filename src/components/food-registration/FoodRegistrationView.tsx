@@ -1388,11 +1388,8 @@ export function FoodRegistrationView() {
                 </div>
                 <div>
                   <h2 className="text-base font-bold text-slate-900 dark:text-white">
-                    Đăng Ký Mang Thực Phẩm Vào Nhà Máy
-                  </h2>
-                    <p className="text-xs text-slate-400">
-                      Vui lòng chọn nhóm thực phẩm và điền đầy đủ thông tin theo quy định
-                    </p>
+                    Phiếu đăng ký Thực phẩm/Nước thuốc
+                  </h2>                    
                     <p className="italic text-xs text-red-400">
                       * Lưu ý: Không được phép mang Thực Phẩm/Nước Thuốc vào khu vực sản xuất.
                     </p>                       
@@ -1494,10 +1491,10 @@ export function FoodRegistrationView() {
                     <span className="text-xl shrink-0">🤰🍵</span>
                     <div>
                       <span className="text-xs font-bold block leading-snug">
-                        1. Mang thai &amp; Nước thuốc
+                        1. Dùng nhiều ngày
                       </span>
                       <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
-                        Theo đợt (Trưởng BP &amp; HCNS duyệt)
+                        Mang thai &amp; Nước thuốc
                       </span>
                     </div>
                   </button>
@@ -1514,10 +1511,10 @@ export function FoodRegistrationView() {
                     <span className="text-xl shrink-0">🥗</span>
                     <div>
                       <span className="text-xs font-bold block leading-snug">
-                        2. Thực phẩm chay
+                        2. Dùng trong ngày
                       </span>
                       <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
-                        Dùng trong ngày
+                        Thực phẩm chay
                       </span>
                     </div>
                   </button>
@@ -1695,7 +1692,7 @@ export function FoodRegistrationView() {
                         value={customVegDish}
                         onChange={(e) => setCustomVegDish(capitalizeFirstLetter(e.target.value))}
                         autoCapitalize="sentences"
-                        placeholder="Ví dụ: Cơm chay sườn non, gỏi cuốn chay..."
+                        placeholder="Ví dụ: Bún chay, Mỳ chay..."
                         className="w-full px-3 py-2 rounded-xl border border-emerald-300 dark:border-emerald-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium"
                       />
                     </div>
@@ -1846,7 +1843,7 @@ export function FoodRegistrationView() {
                   ) : (
                     <>
                       <Send className="w-4 h-4" />
-                      <span>Gửi Đăng Ký Mang Thực Phẩm</span>
+                      <span>Đăng Ký</span>
                     </>
                   )}
                 </button>
