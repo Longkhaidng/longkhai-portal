@@ -568,7 +568,7 @@ export function RepairProposalView() {
           <div className="border-b border-slate-100 dark:border-slate-800 pb-5 mb-6">
             <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <FileText className="w-5 h-5 text-amber-500" />
-              <span>Thông tin phiếu đề xuất sửa chữa</span>
+              <span>Thông tin đề xuất</span>
             </h2>
             <p className="text-xs text-slate-400 mt-1">
               Người tạo phiếu: <b>{currentUser?.name}</b> (Mã NV: {currentUser?.id}) &bull; Trưởng bộ phận duyệt sẽ nhận thông báo tức thời qua email.
