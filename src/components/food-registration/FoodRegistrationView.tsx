@@ -291,8 +291,12 @@ export function FoodRegistrationView() {
         return;
       }
       const unitStr = vegUnit === 'Khác' ? capitalizeFirstLetter(customVegUnit.trim()) : vegUnit;
-      const cleanNotes = vegNotes.trim() ? capitalizeFirstLetter(vegNotes.trim()) : '';
       const finalVegQuantity = typeof vegQuantity === 'number' ? vegQuantity : parseInt(String(vegQuantity), 10) || 1;
+      if (finalVegQuantity > 2 && !vegNotes.trim()) {
+        showToast('Số lượng mang vào lớn hơn 2, vui lòng nhập ghi chú (bắt buộc).', 'error');
+        return;
+      }
+      const cleanNotes = vegNotes.trim() ? capitalizeFirstLetter(vegNotes.trim()) : '';
       finalFoodDetails = `${dishName} (SL: ${finalVegQuantity} ${unitStr})${cleanNotes ? ` - Ghi chú: ${cleanNotes}` : ''}`;
 
       if (!entryDate) {
@@ -1740,16 +1744,30 @@ export function FoodRegistrationView() {
 
                     <div>
                       <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                        Ghi chú:
+                        Ghi chú{Number(vegQuantity) > 2 ? ' (bắt buộc khi số lượng > 2): *' : ':'}
                       </label>
                       <input
                         type="text"
+                        required={Number(vegQuantity) > 2}
                         value={vegNotes}
                         onChange={(e) => setVegNotes(capitalizeFirstLetter(e.target.value))}
                         autoCapitalize="sentences"
-                        placeholder="Nhập chi tiết nếu vượt quá 01 đơn vị tính / người"
-                        className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium"
+                        placeholder={
+                          Number(vegQuantity) > 2
+                            ? 'Bắt buộc nhập lý do/chi tiết khi số lượng lớn hơn 2'
+                            : 'Nhập chi tiết nếu vượt quá 01 đơn vị tính / người'
+                        }
+                        className={`w-full px-3 py-2 rounded-xl border bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500 transition-colors ${
+                          Number(vegQuantity) > 2 && !vegNotes.trim()
+                            ? 'border-amber-400 dark:border-amber-500 ring-1 ring-amber-400/30'
+                            : 'border-slate-200 dark:border-slate-700'
+                        }`}
                       />
+                      {Number(vegQuantity) > 2 && !vegNotes.trim() && (
+                        <p className="mt-1 text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+                          * Vui lòng nhập ghi chú khi số lượng lớn hơn 2.
+                        </p>
+                      )}
                     </div>
                   </div>
 
