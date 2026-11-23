@@ -1519,7 +1519,7 @@ export function FoodRegistrationView() {
                         2. Dùng trong ngày
                       </span>
                       <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
-                        Thực phẩm chay (Rằm và mồng một)
+                        - Thực phẩm chay (Rằm và mồng một)/Khách                        
                       </span>
                     </div>
                   </button>
