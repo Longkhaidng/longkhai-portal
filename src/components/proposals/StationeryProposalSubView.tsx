@@ -630,7 +630,7 @@ export function StationeryProposalSubView({
                 </div>
                 <div>
                   <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <span>Thông tin phiếu đề xuất văn phòng phẩm</span>
+                    <span>Thông tin đề xuất</span>
                   </h2>
                   <p className="text-xs text-slate-400 mt-0.5">
                     Người tạo phiếu: <b>{currentUser?.name}</b> (Mã NV: {currentUser?.id}) &bull; Người nhận phiếu mặc định: <b>Võ Thị Tuyết (1139) - Chuyên viên HCNS</b>.
