@@ -27,6 +27,7 @@ export interface ProposalHubViewProps {
 export function ProposalHubView({ initialCategory = 'repair' }: ProposalHubViewProps) {
   const { currentUser } = useAuth();
   const [activeCategory, setActiveCategory] = useState<ProposalCategory>(initialCategory);
+  const [openModalCategory, setOpenModalCategory] = useState<ProposalCategory | null>(null);
   const [showCatalogModal, setShowCatalogModal] = useState(false);
 
   // Sync category if prop changes
@@ -35,6 +36,11 @@ export function ProposalHubView({ initialCategory = 'repair' }: ProposalHubViewP
       setActiveCategory(initialCategory);
     }
   }, [initialCategory]);
+
+  const handleCategoryCardClick = (cat: ProposalCategory) => {
+    setActiveCategory(cat);
+    setOpenModalCategory(cat);
+  };
 
   // Chỉ admin, trưởng phòng HCNS với Võ thị tuyết (1139) mới nhìn thấy mục "Quản lý danh mục VPP" và thao tác được
   const canManageCatalog = useMemo(() => {
@@ -165,7 +171,7 @@ export function ProposalHubView({ initialCategory = 'repair' }: ProposalHubViewP
           {/* Tab 1: Sửa chữa máy móc thiết bị */}
           <button
             type="button"
-            onClick={() => setActiveCategory('repair')}
+            onClick={() => handleCategoryCardClick('repair')}
             className={`flex items-center justify-between p-3.5 rounded-2xl transition-all cursor-pointer text-left ${
               activeCategory === 'repair'
                 ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/30 scale-[1.01]'
@@ -209,7 +215,7 @@ export function ProposalHubView({ initialCategory = 'repair' }: ProposalHubViewP
           {/* Tab 2: Văn phòng phẩm */}
           <button
             type="button"
-            onClick={() => setActiveCategory('stationery')}
+            onClick={() => handleCategoryCardClick('stationery')}
             className={`flex items-center justify-between p-3.5 rounded-2xl transition-all cursor-pointer text-left ${
               activeCategory === 'stationery'
                 ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30 scale-[1.01]'
@@ -253,7 +259,7 @@ export function ProposalHubView({ initialCategory = 'repair' }: ProposalHubViewP
           {/* Tab 3: Đề xuất khác */}
           <button
             type="button"
-            onClick={() => setActiveCategory('general')}
+            onClick={() => handleCategoryCardClick('general')}
             className={`flex items-center justify-between p-3.5 rounded-2xl transition-all cursor-pointer text-left ${
               activeCategory === 'general'
                 ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/30 scale-[1.01]'
@@ -296,11 +302,71 @@ export function ProposalHubView({ initialCategory = 'repair' }: ProposalHubViewP
         </div>
       </div>
 
+      {/* Quick Category List Selector - Chuyển đổi danh sách không cần mở modal */}
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2 overflow-x-auto no-scrollbar">
+        <span className="text-xs font-semibold text-slate-400 mr-1 hidden sm:inline">
+          Xem danh sách:
+        </span>
+        <button
+          type="button"
+          onClick={() => setActiveCategory('repair')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeCategory === 'repair'
+              ? 'bg-amber-500 text-white shadow-xs'
+              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+          }`}
+        >
+          <Wrench className="w-3.5 h-3.5" />
+          <span>Sửa chữa máy móc</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveCategory('stationery')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeCategory === 'stationery'
+              ? 'bg-blue-600 text-white shadow-xs'
+              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+          }`}
+        >
+          <Package className="w-3.5 h-3.5" />
+          <span>Văn phòng phẩm</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveCategory('general')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeCategory === 'general'
+              ? 'bg-purple-600 text-white shadow-xs'
+              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+          }`}
+        >
+          <FileQuestion className="w-3.5 h-3.5" />
+          <span>Đề xuất khác</span>
+        </button>
+      </div>
+
       {/* Active Proposal View Content */}
       <div className="transition-all">
-        {activeCategory === 'repair' && <RepairProposalSubView />}
-        {activeCategory === 'stationery' && <StationeryProposalSubView />}
-        {activeCategory === 'general' && <GeneralProposalSubView />}
+        {activeCategory === 'repair' && (
+          <RepairProposalSubView
+            isOpenCreateModal={openModalCategory === 'repair'}
+            onCloseCreateModal={() => setOpenModalCategory(null)}
+          />
+        )}
+        {activeCategory === 'stationery' && (
+          <StationeryProposalSubView
+            isOpenCreateModal={openModalCategory === 'stationery'}
+            onCloseCreateModal={() => setOpenModalCategory(null)}
+          />
+        )}
+        {activeCategory === 'general' && (
+          <GeneralProposalSubView
+            isOpenCreateModal={openModalCategory === 'general'}
+            onCloseCreateModal={() => setOpenModalCategory(null)}
+          />
+        )}
       </div>
 
       {/* Catalog Management Modal */}

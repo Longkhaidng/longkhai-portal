@@ -66,16 +66,36 @@ const capitalizeFirstLetter = (text: string) => {
 
 export interface RepairProposalSubViewProps {
   defaultTab?: 'create' | 'list';
+  isOpenCreateModal?: boolean;
+  onCloseCreateModal?: () => void;
 }
 
-export function RepairProposalSubView({ defaultTab = 'create' }: RepairProposalSubViewProps) {
+export function RepairProposalSubView({
+  defaultTab = 'list',
+  isOpenCreateModal,
+  onCloseCreateModal,
+}: RepairProposalSubViewProps) {
   const { currentUser } = useAuth();
   const { toasts, showToast, dismissToast } = useToast();
 
   const [proposals, setProposals] = useState<RepairProposal[]>(() =>
     storage.getRepairProposals()
   );
-  const [activeTab, setActiveTab] = useState<'create' | 'list'>(defaultTab);
+  const [showCreateModal, setShowCreateModal] = useState<boolean>(
+    () => defaultTab === 'create' || Boolean(isOpenCreateModal)
+  );
+
+  useEffect(() => {
+    if (isOpenCreateModal !== undefined) {
+      setShowCreateModal(isOpenCreateModal);
+    }
+  }, [isOpenCreateModal]);
+
+  const handleCloseModal = () => {
+    setShowCreateModal(false);
+    onCloseCreateModal?.();
+  };
+
   const [scopeFilter, setScopeFilter] = useState<DocumentScope>(() =>
     isApproverRole(currentUser) || isSuperAdminOrBOD(currentUser) || isMaintenanceStaff(currentUser)
       ? 'all'
@@ -83,7 +103,7 @@ export function RepairProposalSubView({ defaultTab = 'create' }: RepairProposalS
   );
 
   // Form State
-  const [department, setDepartment] = useState(() => currentUser?.department || 'Xưởng Sản Xuất 1 (Cơ Khí & CNC)');
+  const [department, setDepartment] = useState(() => currentUser?.department || 'Chung');
   const [location, setLocation] = useState('');
   const [issueDescription, setIssueDescription] = useState('');
   const [modalProposedSolution, setModalProposedSolution] = useState('');
@@ -212,9 +232,10 @@ export function RepairProposalSubView({ defaultTab = 'create' }: RepairProposalS
       const newId = generateDocId('SC', allProposals);
       const now = new Date().toISOString();
 
+      const userDept = (currentUser?.department || department || 'Chung').trim();
       // Find department head for email
       const deptUsers = allUsers.filter(
-        (u) => u.department && u.department.toLowerCase() === department.toLowerCase()
+        (u) => u.department && u.department.toLowerCase() === userDept.toLowerCase()
       );
       const managerUser =
         deptUsers.find((u) => u.role === 'manager' && u.email) ||
@@ -268,7 +289,7 @@ export function RepairProposalSubView({ defaultTab = 'create' }: RepairProposalS
         id: newId,
         employeeId: currentUser.id,
         employeeName: currentUser.name,
-        department: department.trim(),
+        department: userDept,
         location: capitalizeFirstLetter(location.trim()),
         issueDescription: capitalizeFirstLetter(issueDescription.trim()),
         status: 'pending_manager',
@@ -316,10 +337,10 @@ export function RepairProposalSubView({ defaultTab = 'create' }: RepairProposalS
         message: `Phiếu đề xuất ${newId} đã được tạo và chuyển tới Trưởng bộ phận duyệt qua email.`,
       });
 
-      // Reset form
+      // Reset form & close modal
       setLocation('');
       setIssueDescription('');
-      setActiveTab('list');
+      handleCloseModal();
     } catch (err: any) {
       showToast({
         type: 'error',
@@ -486,225 +507,27 @@ export function RepairProposalSubView({ defaultTab = 'create' }: RepairProposalS
           </div>
         </div>
 
-        {/* Tab switch buttons */}
-        <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl border border-slate-200 dark:border-slate-700">
+        {/* Header Actions */}
+        <div className="flex items-center gap-2.5">
+          {pendingCountForUser > 0 && (
+            <span className="px-3 py-1.5 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-500/20 flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5" />
+              <span>Chờ duyệt: {pendingCountForUser}</span>
+            </span>
+          )}
           <button
             type="button"
-            onClick={() => setActiveTab('create')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'create'
-                ? 'bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400 shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
-            }`}
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-bold transition-all shadow-md shadow-amber-500/20 cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" />
             <span>Tạo đề xuất mới</span>
           </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('list')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'list'
-                ? 'bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400 shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
-            }`}
-          >
-            <Clock className="w-3.5 h-3.5" />
-            <span>Theo dõi đề xuất</span>
-            {pendingCountForUser > 0 && (
-              <span className="ml-1 px-1.5 py-0.2 bg-amber-500 text-white rounded-full text-[10px]">
-                {pendingCountForUser}
-              </span>
-            )}
-          </button>
         </div>
       </div>
 
-      {/* Visual Workflow Steps Banner */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
-        <div className="p-3 bg-slate-50/70 dark:bg-slate-800/50 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between text-xs">
-          <div className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-            <span>Trình tự phê duyệt đề xuất sửa chữa máy móc thiết bị:</span>
-          </div>
-          <span className="text-[11px] text-slate-400">4 bước khép kín</span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-slate-800 p-2 sm:p-3">
-          {/* Step 1 */}
-          <div className="p-3 flex items-start gap-3">
-            <div className="w-7 h-7 rounded-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
-              1
-            </div>
-            <div>
-              <div className="text-xs font-bold text-slate-900 dark:text-white">
-                Bạn gửi đề xuất
-              </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">
-                Nhập khu vực, sự việc & gửi
-              </div>
-            </div>
-          </div>
-
-          {/* Step 2 */}
-          <div className="p-3 flex items-start gap-3">
-            <div className="w-7 h-7 rounded-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
-              2
-            </div>
-            <div>
-              <div className="text-xs font-bold text-slate-900 dark:text-white">
-                Trưởng bộ phận duyệt
-              </div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
-                qua email (gửi tiếp Cơ điện & BGĐ)
-              </div>
-            </div>
-          </div>
-
-          {/* Step 3 */}
-          <div className="p-3 flex items-start gap-3">
-            <div className="w-7 h-7 rounded-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
-              3
-            </div>
-            <div>
-              <div className="text-xs font-bold text-slate-900 dark:text-white">
-                Cơ điện sửa chữa
-              </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">
-                Khắc phục & bàn giao
-              </div>
-            </div>
-          </div>
-
-          {/* Step 4 */}
-          <div className="p-3 flex items-start gap-3">
-            <div className="w-7 h-7 rounded-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
-              4
-            </div>
-            <div>
-              <div className="text-xs font-bold text-slate-900 dark:text-white">
-                Bạn xác nhận hoàn tất
-              </div>
-              <div className="text-[11px] text-amber-600 dark:text-amber-400 font-semibold mt-0.5">
-                tab &quot;Theo dõi đề xuất&quot;
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* TAB 1: TẠO ĐỀ XUẤT MỚI */}
-      {activeTab === 'create' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm max-w-4xl mx-auto">
-          <div className="border-b border-slate-100 dark:border-slate-800 pb-5 mb-6">
-            <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <FileText className="w-5 h-5 text-amber-500" />
-              <span>Thông tin phiếu đề xuất sửa chữa</span>
-            </h2>
-            <p className="text-xs text-slate-400 mt-1">
-              Người tạo phiếu: <b>{currentUser?.name}</b> (Mã NV: {currentUser?.id}) &bull; Trưởng bộ phận duyệt sẽ nhận thông báo tức thời qua email.
-            </p>
-          </div>
-
-          <form onSubmit={handleCreateProposal} className="space-y-6">
-            {/* Field 1: Tổ/bộ phận */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
-                <Building className="w-3.5 h-3.5 text-slate-400" />
-                <span>Tổ / Bộ phận</span>
-                <span className="text-[10px] font-normal text-slate-400 ml-1">
-                  (Vị trí công tác thực tế của nhân viên trên hệ thống)
-                </span>
-              </label>
-              <div className="relative">
-                <select
-                  value={department}
-                  onChange={(e) => setDepartment(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
-                >
-                  {departments.length === 0 ? (
-                    <option value={currentUser?.department || 'Chung'}>
-                      {currentUser?.department || 'Chung'}
-                    </option>
-                  ) : (
-                    departments.map((dept) => (
-                      <option key={dept.id} value={dept.name}>
-                        {dept.name}
-                      </option>
-                    ))
-                  )}
-                </select>
-              </div>
-            </div>
-
-            {/* Field 2: Khu vực */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                <span>Khu vực</span>
-                <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="text"
-                placeholder="Nhập vị trí khu vực, máy móc hoặc thiết bị cần sửa chữa..."
-                value={location}
-                onChange={(e) => setLocation(capitalizeFirstLetter(e.target.value))}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder:text-slate-400"
-              />
-            </div>
-
-            {/* Field 3: Tình trạng sự việc */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-slate-400" />
-                <span>Tình trạng sự việc</span>
-                <span className="text-rose-500">*</span>
-              </label>
-              <textarea
-                rows={4}
-                placeholder="Mô tả chi tiết tình trạng hỏng hóc, sự cố, nguyên nhân (nếu biết)..."
-                value={issueDescription}
-                onChange={(e) => setIssueDescription(capitalizeFirstLetter(e.target.value))}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder:text-slate-400 leading-relaxed"
-              />
-            </div>
-
-            {/* Notice */}
-            <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-xs text-amber-800 dark:text-amber-300 flex items-start gap-3">
-              <Lightbulb className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
-              <div>
-                <span className="font-bold">Lưu ý về quy trình:</span> Sau khi gửi, phiếu đề xuất sẽ tự động gửi email cho Trưởng bộ phận của bạn để xem xét và nhập &quot;Đề xuất hướng khắc phục&quot;. Khi Trưởng bộ phận duyệt, phiếu sẽ chuyển tiếp đến Trưởng bộ phận Cơ điện và đồng thời gửi thông tin thông báo cho Ban Giám Đốc.
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-              <button
-                type="button"
-                onClick={() => {
-                  setLocation('');
-                  setIssueDescription('');
-                }}
-                className="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer"
-              >
-                Nhập lại
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-bold transition-all shadow-md shadow-amber-500/20 disabled:opacity-50 cursor-pointer"
-              >
-                <Send className="w-3.5 h-3.5" />
-                <span>{isSubmitting ? 'Đang gửi đề xuất...' : 'Gửi đề xuất sửa chữa'}</span>
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* TAB 2: THEO DÕI ĐỀ XUẤT */}
-      {activeTab === 'list' && (
-        <div className="space-y-4">
+      {/* DANH SÁCH ĐỀ XUẤT (THEO DÕI ĐỀ XUẤT - Luôn hiển thị mặc định) */}
+      <div className="space-y-4">
           {/* Controls Bar */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
             {/* Search */}
@@ -744,7 +567,7 @@ export function RepairProposalSubView({ defaultTab = 'create' }: RepairProposalS
                         : 'text-slate-600 dark:text-slate-400'
                     }`}
                   >
-                    Tất cả đơn
+                    {isManagerOrTL ? 'Phiếu bộ phận' : 'Tất cả đơn'}
                   </button>
                 </div>
               )}
@@ -962,6 +785,171 @@ export function RepairProposalSubView({ defaultTab = 'create' }: RepairProposalS
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+
+      {/* MODAL: TẠO ĐỀ XUẤT MỚI (Màn hình riêng giống như tạo phiếu đăng ký thực phẩm) */}
+      {showCreateModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-xs animate-in fade-in duration-200"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) handleCloseModal();
+          }}
+        >
+          <div className="w-full max-w-3xl max-h-[92vh] overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-7 shadow-2xl space-y-4">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3.5 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+                  <Wrench className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                    Thông tin phiếu đề xuất sửa chữa
+                  </h2>
+                  <p className="text-[11px] text-slate-400">
+                    Điền thông tin sự việc cần sửa chữa máy móc thiết bị
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleCloseModal}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-2xl font-bold cursor-pointer"
+              >
+                &times;
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateProposal} className="space-y-4 text-xs">
+              {/* Field 1: Khu vực */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Khu vực</span>
+                  <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Nhập vị trí khu vực, máy móc hoặc thiết bị cần sửa chữa..."
+                  value={location}
+                  onChange={(e) => setLocation(capitalizeFirstLetter(e.target.value))}
+                  className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder:text-slate-400"
+                />
+              </div>
+
+              {/* Field 2: Tình trạng sự việc */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
+                  <AlertTriangle className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Tình trạng sự việc</span>
+                  <span className="text-rose-500">*</span>
+                </label>
+                <textarea
+                  rows={4}
+                  required
+                  placeholder="Mô tả chi tiết tình trạng hỏng hóc, sự cố, nguyên nhân (nếu biết)..."
+                  value={issueDescription}
+                  onChange={(e) => setIssueDescription(capitalizeFirstLetter(e.target.value))}
+                  className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder:text-slate-400 leading-relaxed"
+                />
+              </div>
+
+              {/* Trình tự phê duyệt chuyển xuống phía dưới tình trạng sự việc theo yêu cầu */}
+              <div className="bg-slate-50/80 dark:bg-slate-800/40 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-3 sm:p-3.5 space-y-2.5">
+                <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                    <span>Trình tự phê duyệt đề xuất sửa chữa máy móc thiết bị:</span>
+                  </div>
+                  <span className="text-[11px] text-slate-400 font-normal">4 bước khép kín</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 pt-1">
+                  {/* Step 1 */}
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700/60 flex items-start gap-2.5">
+                    <div className="w-6 h-6 rounded-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold text-xs flex items-center justify-center shrink-0">
+                      1
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white">Bạn gửi đề xuất</div>
+                      <div className="text-[10px] text-slate-400 mt-0.5">Nhập khu vực, sự việc &amp; gửi</div>
+                    </div>
+                  </div>
+
+                  {/* Step 2 */}
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700/60 flex items-start gap-2.5">
+                    <div className="w-6 h-6 rounded-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold text-xs flex items-center justify-center shrink-0">
+                      2
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white">Trưởng bộ phận duyệt</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">qua email (gửi tiếp Cơ điện &amp; BGĐ)</div>
+                    </div>
+                  </div>
+
+                  {/* Step 3 */}
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700/60 flex items-start gap-2.5">
+                    <div className="w-6 h-6 rounded-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold text-xs flex items-center justify-center shrink-0">
+                      3
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white">Cơ điện sửa chữa</div>
+                      <div className="text-[10px] text-slate-400 mt-0.5">Khắc phục &amp; bàn giao</div>
+                    </div>
+                  </div>
+
+                  {/* Step 4 */}
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700/60 flex items-start gap-2.5">
+                    <div className="w-6 h-6 rounded-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold text-xs flex items-center justify-center shrink-0">
+                      4
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white">Bạn xác nhận hoàn tất</div>
+                      <div className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold mt-0.5">tab &quot;Theo dõi đề xuất&quot;</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notice */}
+              <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-xs text-amber-800 dark:text-amber-300 flex items-start gap-3">
+                <Lightbulb className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
+                <div className="text-[11px] leading-relaxed">
+                  <span className="font-bold">Lưu ý về quy trình:</span> Sau khi gửi, phiếu đề xuất sẽ tự động gửi email cho Trưởng bộ phận của bạn để xem xét và nhập &quot;Đề xuất hướng khắc phục&quot;. Khi Trưởng bộ phận duyệt, phiếu sẽ chuyển tiếp đến Trưởng bộ phận Cơ điện và đồng thời gửi thông tin thông báo cho Ban Giám Đốc.
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+                <button
+                  type="button"
+                  onClick={handleCloseModal}
+                  className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer"
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLocation('');
+                    setIssueDescription('');
+                  }}
+                  className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer"
+                >
+                  Nhập lại
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-bold transition-all shadow-md shadow-amber-500/20 disabled:opacity-50 cursor-pointer"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>{isSubmitting ? 'Đang gửi đề xuất...' : 'Gửi đề xuất sửa chữa'}</span>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

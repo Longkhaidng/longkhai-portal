@@ -58,6 +58,8 @@ const capitalizeFirstLetter = (text: string) => {
 
 export interface GeneralProposalSubViewProps {
   defaultTab?: 'create' | 'list';
+  isOpenCreateModal?: boolean;
+  onCloseCreateModal?: () => void;
 }
 
 interface ReceiverOption {
@@ -69,7 +71,11 @@ interface ReceiverOption {
   title: string;
 }
 
-export function GeneralProposalSubView({ defaultTab = 'create' }: GeneralProposalSubViewProps) {
+export function GeneralProposalSubView({
+  defaultTab = 'list',
+  isOpenCreateModal,
+  onCloseCreateModal,
+}: GeneralProposalSubViewProps) {
   const { currentUser } = useAuth();
   const { toasts, showToast, dismissToast } = useToast();
 
@@ -77,13 +83,27 @@ export function GeneralProposalSubView({ defaultTab = 'create' }: GeneralProposa
     storage.getGeneralProposals()
   );
 
-  const [activeTab, setActiveTab] = useState<'create' | 'list'>(defaultTab);
+  const [showCreateModal, setShowCreateModal] = useState<boolean>(
+    () => defaultTab === 'create' || Boolean(isOpenCreateModal)
+  );
+
+  useEffect(() => {
+    if (isOpenCreateModal !== undefined) {
+      setShowCreateModal(isOpenCreateModal);
+    }
+  }, [isOpenCreateModal]);
+
+  const handleCloseModal = () => {
+    setShowCreateModal(false);
+    onCloseCreateModal?.();
+  };
 
   // Check roles
   const isBOD = isSuperAdminOrBOD(currentUser);
   const isManager = currentUser?.role === 'manager' || currentUser?.role === 'team_leader';
   const isIT = isITStaff(currentUser);
   const canManageOthers = isBOD || isManager || isIT;
+  const isManagerOrTL = isManager && !isBOD && !isIT;
 
   const [scopeFilter, setScopeFilter] = useState<DocumentScope>(() =>
     canManageOthers ? 'all' : 'my'
@@ -348,10 +368,10 @@ export function GeneralProposalSubView({ defaultTab = 'create' }: GeneralProposa
         message: `Phiếu đề xuất ${newId} đã được chuyển tới ${chosenReceiver?.title} để xử lý.`,
       });
 
-      // Reset form
+      // Reset form & close modal
       setTitle('');
       setContent('');
-      setActiveTab('list');
+      handleCloseModal();
     } catch (err: any) {
       showToast({
         type: 'error',
@@ -479,36 +499,21 @@ export function GeneralProposalSubView({ defaultTab = 'create' }: GeneralProposa
           </div>
         </div>
 
-        {/* Tab switch buttons */}
-        <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl border border-slate-200 dark:border-slate-700">
+        {/* Header Actions */}
+        <div className="flex items-center gap-2.5">
+          {pendingCountForUser > 0 && (
+            <span className="px-3 py-1.5 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 text-xs font-bold border border-purple-500/20 flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5" />
+              <span>Chờ xử lý: {pendingCountForUser}</span>
+            </span>
+          )}
           <button
             type="button"
-            onClick={() => setActiveTab('create')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'create'
-                ? 'bg-white dark:bg-slate-900 text-purple-600 dark:text-purple-400 shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
-            }`}
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white text-xs font-bold transition-all shadow-md shadow-purple-600/20 cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" />
             <span>Tạo đề xuất mới</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('list')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'list'
-                ? 'bg-white dark:bg-slate-900 text-purple-600 dark:text-purple-400 shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
-            }`}
-          >
-            <Clock className="w-3.5 h-3.5" />
-            <span>Theo dõi đề xuất</span>
-            {pendingCountForUser > 0 && (
-              <span className="ml-1 px-1.5 py-0.2 bg-purple-500 text-white rounded-full text-[10px]">
-                {pendingCountForUser}
-              </span>
-            )}
           </button>
         </div>
       </div>
@@ -571,18 +576,37 @@ export function GeneralProposalSubView({ defaultTab = 'create' }: GeneralProposa
         </div>
       </div>
 
-      {/* TAB 1: TẠO ĐỀ XUẤT MỚI */}
-      {activeTab === 'create' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm max-w-4xl mx-auto">
-          <div className="border-b border-slate-100 dark:border-slate-800 pb-5 mb-6">
-            <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <FileText className="w-5 h-5 text-purple-500" />
-              <span>Thông tin phiếu đề xuất khác</span>
-            </h2>
-            <p className="text-xs text-slate-400 mt-1">
-              Người tạo phiếu: <b>{currentUser?.name}</b> (Mã NV: {currentUser?.id}) &bull; Chọn người tiếp nhận để chuyển tiếp yêu cầu chính xác.
-            </p>
-          </div>
+      {/* MODAL: TẠO ĐỀ XUẤT MỚI (Màn hình riêng giống như tạo phiếu đăng ký thực phẩm) */}
+      {showCreateModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-xs animate-in fade-in duration-200"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) handleCloseModal();
+          }}
+        >
+          <div className="w-full max-w-4xl max-h-[92vh] overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400">
+                  <FileQuestion className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <span>Thông tin phiếu đề xuất khác</span>
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Người tạo phiếu: <b>{currentUser?.name}</b> (Mã NV: {currentUser?.id}) &bull; Chọn người tiếp nhận để chuyển tiếp yêu cầu chính xác.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleCloseModal}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-2xl font-bold cursor-pointer"
+              >
+                &times;
+              </button>
+            </div>
 
           <form onSubmit={handleCreateProposal} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -671,6 +695,13 @@ export function GeneralProposalSubView({ defaultTab = 'create' }: GeneralProposa
             <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
               <button
                 type="button"
+                onClick={handleCloseModal}
+                className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer"
+              >
+                Hủy bỏ
+              </button>
+              <button
+                type="button"
                 onClick={() => {
                   setTitle('');
                   setContent('');
@@ -689,12 +720,12 @@ export function GeneralProposalSubView({ defaultTab = 'create' }: GeneralProposa
               </button>
             </div>
           </form>
+          </div>
         </div>
       )}
 
-      {/* TAB 2: THEO DÕI ĐỀ XUẤT */}
-      {activeTab === 'list' && (
-        <div className="space-y-4">
+      {/* DANH SÁCH ĐỀ XUẤT (THEO DÕI ĐỀ XUẤT - Luôn hiển thị mặc định) */}
+      <div className="space-y-4">
           {/* Controls Bar */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
             {/* Search */}
@@ -734,7 +765,7 @@ export function GeneralProposalSubView({ defaultTab = 'create' }: GeneralProposa
                         : 'text-slate-600 dark:text-slate-400'
                     }`}
                   >
-                    Tất cả đơn
+                    {isManagerOrTL ? 'Phiếu bộ phận' : 'Tất cả đơn'}
                   </button>
                 </div>
               )}
@@ -959,7 +990,6 @@ export function GeneralProposalSubView({ defaultTab = 'create' }: GeneralProposa
             </div>
           </div>
         </div>
-      )}
 
       {/* DETAIL MODAL */}
       {selectedProposal && (

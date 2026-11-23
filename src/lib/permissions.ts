@@ -542,6 +542,15 @@ export function filterUserStationeryProposals(
     return proposals;
   }
 
+  // Quản lý bộ phận / Tổ trưởng: chỉ xem phiếu của nhân viên bộ phận mình và phiếu của mình
+  if (user.role === 'manager' || user.role === 'team_leader') {
+    return proposals.filter((p) => {
+      const isMine = p.employeeId.toLowerCase() === uid;
+      const isMyDept = isSameDepartment(p.department, user.department);
+      return isMine || isMyDept;
+    });
+  }
+
   return proposals.filter((p) => p.employeeId.toLowerCase() === uid);
 }
 
@@ -602,10 +611,11 @@ export function filterUserGeneralProposals(
   if (isManagerOrReceiver) {
     return proposals.filter((p) => {
       const isMine = p.employeeId.toLowerCase() === uid;
+      const isMyDept = isSameDepartment(p.department, user.department);
       const isTargetUser = p.receiverUserId && p.receiverUserId.toLowerCase() === uid;
       const isTargetDept = isSameDepartment(p.receiverDepartment, user.department);
       const isIT = isITStaff(user) && /cntt|it/i.test(p.receiverDepartment);
-      return isMine || isTargetUser || isTargetDept || isIT;
+      return isMine || isMyDept || isTargetUser || isTargetDept || isIT;
     });
   }
 
