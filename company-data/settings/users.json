@@ -918,12 +918,15 @@
       "dashboard",
       "food_registration",
       "repair",
-      "announcements"
+      "announcements",
+      "periodic_inspection",
+      "food_inspection"
     ],
     "isActive": true,
     "password": "1139",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-20T02:48:53.771Z"
+    "updatedAt": "2026-11-23T09:00:42.681Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "1147",
