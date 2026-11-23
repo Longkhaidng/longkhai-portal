@@ -592,10 +592,10 @@ export function GeneralProposalSubView({
                 </div>
                 <div>
                   <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <span>Thông tin phiếu đề xuất khác</span>
+                    <span>Thông tin đề xuất</span>
                   </h2>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Người tạo phiếu: <b>{currentUser?.name}</b> (Mã NV: {currentUser?.id}) &bull; Chọn người tiếp nhận để chuyển tiếp yêu cầu chính xác.
+                    Chọn người tiếp nhận để chuyển tiếp yêu cầu chính xác.
                   </p>
                 </div>
               </div>
