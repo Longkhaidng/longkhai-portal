@@ -1685,7 +1685,7 @@ export function FoodRegistrationView() {
                       <input
                         type="number"
                         min={1}
-                        max={10}
+                        max={20}
                         required
                         value={vegQuantity}
                         onChange={(e) => {
@@ -1693,7 +1693,7 @@ export function FoodRegistrationView() {
                           if (v === '') {
                             setVegQuantity('');
                           } else {
-                            const n = parseInt(v, 10);
+                            const n = parseInt(v, 20);
                             setVegQuantity(isNaN(n) ? '' : n);
                           }
                         }}
@@ -1744,17 +1744,17 @@ export function FoodRegistrationView() {
 
                     <div>
                       <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                        Ghi chú{Number(vegQuantity) > 2 ? ' (bắt buộc khi số lượng > 2): *' : ':'}
+                        Ghi chú{Number(vegQuantity) >= 2 ? ' (bắt buộc khi số lượng từ 2 đơn vị): *' : ':'}
                       </label>
                       <input
                         type="text"
-                        required={Number(vegQuantity) > 2}
+                        required={Number(vegQuantity) >= 2}
                         value={vegNotes}
                         onChange={(e) => setVegNotes(capitalizeFirstLetter(e.target.value))}
                         autoCapitalize="sentences"
                         placeholder={
-                          Number(vegQuantity) > 2
-                            ? 'Bắt buộc nhập lý do/chi tiết khi số lượng lớn hơn 2'
+                          Number(vegQuantity) >= 2
+                            ? 'Bắt buộc nhập lý do/chi tiết khi số lượng từ 2 đơn vị'
                             : 'Nhập chi tiết nếu vượt quá 01 đơn vị tính / người'
                         }
                         className={`w-full px-3 py-2 rounded-xl border bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500 transition-colors ${
@@ -1765,7 +1765,7 @@ export function FoodRegistrationView() {
                       />
                       {Number(vegQuantity) > 2 && !vegNotes.trim() && (
                         <p className="mt-1 text-[11px] text-amber-600 dark:text-amber-400 font-medium">
-                          * Vui lòng nhập ghi chú khi số lượng lớn hơn 2.
+                          * Vui lòng nhập ghi chú khi số lượng từ 2 đơn vị tính.
                         </p>
                       )}
                     </div>
