@@ -1755,7 +1755,7 @@ export function FoodRegistrationView() {
                         placeholder={
                           Number(vegQuantity) >= 2
                             ? 'Bắt buộc nhập lý do/chi tiết khi số lượng từ 2 đơn vị'
-                            : 'Nhập chi tiết nếu vượt quá 01 đơn vị tính / người'
+                            : 'Nhập chi tiết nếu vượt quá 01 đơn vị/ người'
                         }
                         className={`w-full px-3 py-2 rounded-xl border bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500 transition-colors ${
                           Number(vegQuantity) > 2 && !vegNotes.trim()
@@ -1763,9 +1763,9 @@ export function FoodRegistrationView() {
                             : 'border-slate-200 dark:border-slate-700'
                         }`}
                       />
-                      {Number(vegQuantity) > 2 && !vegNotes.trim() && (
+                      {Number(vegQuantity) >= 2 && !vegNotes.trim() && (
                         <p className="mt-1 text-[11px] text-amber-600 dark:text-amber-400 font-medium">
-                          * Vui lòng nhập ghi chú khi số lượng từ 2 đơn vị tính.
+                          * Vui lòng nhập ghi chú khi số lượng từ 2 đơn vị.
                         </p>
                       )}
                     </div>
