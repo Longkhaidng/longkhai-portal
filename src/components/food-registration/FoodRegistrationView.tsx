@@ -292,8 +292,8 @@ export function FoodRegistrationView() {
       }
       const unitStr = vegUnit === 'Khác' ? capitalizeFirstLetter(customVegUnit.trim()) : vegUnit;
       const finalVegQuantity = typeof vegQuantity === 'number' ? vegQuantity : parseInt(String(vegQuantity), 10) || 1;
-      if (finalVegQuantity > 2 && !vegNotes.trim()) {
-        showToast('Số lượng mang vào lớn hơn 2, vui lòng nhập ghi chú (bắt buộc).', 'error');
+      if (finalVegQuantity >= 2 && !vegNotes.trim()) {
+        showToast('Số lượng mang vào từ 2 đơn vị trở lên, vui lòng nhập ghi chú (bắt buộc).', 'error');
         return;
       }
       const cleanNotes = vegNotes.trim() ? capitalizeFirstLetter(vegNotes.trim()) : '';
@@ -1685,7 +1685,7 @@ export function FoodRegistrationView() {
                       <input
                         type="number"
                         min={1}
-                        max={20}
+                        max={999}
                         required
                         value={vegQuantity}
                         onChange={(e) => {
@@ -1693,7 +1693,7 @@ export function FoodRegistrationView() {
                           if (v === '') {
                             setVegQuantity('');
                           } else {
-                            const n = parseInt(v, 20);
+                            const n = parseInt(v, 10);
                             setVegQuantity(isNaN(n) ? '' : n);
                           }
                         }}
@@ -1758,7 +1758,7 @@ export function FoodRegistrationView() {
                             : 'Nhập chi tiết nếu vượt quá 01 đơn vị/ người'
                         }
                         className={`w-full px-3 py-2 rounded-xl border bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500 transition-colors ${
-                          Number(vegQuantity) > 2 && !vegNotes.trim()
+                          Number(vegQuantity) >= 2 && !vegNotes.trim()
                             ? 'border-amber-400 dark:border-amber-500 ring-1 ring-amber-400/30'
                             : 'border-slate-200 dark:border-slate-700'
                         }`}
