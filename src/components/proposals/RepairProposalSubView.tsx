@@ -498,7 +498,7 @@ export function RepairProposalSubView({
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                Sửa chữa máy móc thiết bị
+                Đề xuất sửa chữa
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Gửi đề xuất sửa chữa máy móc thiết bị, cơ sở vật chất tới Trưởng bộ phận & Đội Cơ điện
@@ -805,11 +805,8 @@ export function RepairProposalSubView({
                 </div>
                 <div>
                   <h2 className="text-base font-bold text-slate-900 dark:text-white">
-                    Thông tin phiếu đề xuất sửa chữa
+                    Thông tin đề xuất
                   </h2>
-                  <p className="text-[11px] text-slate-400">
-                    Điền thông tin sự việc cần sửa chữa máy móc thiết bị
-                  </p>
                 </div>
               </div>
               <button

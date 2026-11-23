@@ -168,7 +168,7 @@ export function ProposalHubView({ initialCategory = 'repair' }: ProposalHubViewP
 
         {/* 3 Main Proposal Category Tabs */}
         <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5 mt-4 pt-3.5 sm:mt-6 sm:pt-5 border-t border-white/10">
-          {/* Tab 1: Sửa chữa máy móc thiết bị */}
+          {/* Tab 1: Đề xuất sửa chữa */}
           <button
             type="button"
             onClick={() => handleCategoryCardClick('repair')}
@@ -189,7 +189,7 @@ export function ProposalHubView({ initialCategory = 'repair' }: ProposalHubViewP
                 <Wrench className="w-5 h-5" />
               </div>
               <div>
-                <div className="font-bold text-xs sm:text-sm">Sửa chữa máy móc thiết bị</div>
+                <div className="font-bold text-xs sm:text-sm">Đề xuất sửa chữa</div>
                 <div
                   className={`text-[11px] ${
                     activeCategory === 'repair' ? 'text-amber-100' : 'text-slate-400'
@@ -317,7 +317,7 @@ export function ProposalHubView({ initialCategory = 'repair' }: ProposalHubViewP
           }`}
         >
           <Wrench className="w-3.5 h-3.5" />
-          <span>Sửa chữa máy móc</span>
+          <span>Đề xuất sửa chữa</span>
         </button>
 
         <button

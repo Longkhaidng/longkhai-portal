@@ -354,11 +354,12 @@ export function StationeryProposalSubView({
       ];
 
       const activeEmailCfg = storage.getEmailConfig();
+      const userDept = (currentUser?.department || department || 'Văn Phòng').trim();
       const newProposal: StationeryProposal = {
         id: newId,
         employeeId: currentUser.id,
         employeeName: currentUser.name,
-        department: department.trim(),
+        department: userDept,
         items,
         notes: generalNotes.trim() ? capitalizeFirstLetter(generalNotes.trim()) : undefined,
         receiverStaffId: '1139',
@@ -631,7 +632,7 @@ export function StationeryProposalSubView({
                 <div>
                   <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
                     <span>Thông tin đề xuất</span>
-                  </h2>                  
+                  </h2>
                 </div>
               </div>
               <button
@@ -644,49 +645,6 @@ export function StationeryProposalSubView({
             </div>
 
           <form onSubmit={handleCreateProposal} className="space-y-6">
-            {/* Header Form Row: Tổ/Bộ phận & Người nhận mặc định */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Field 1: Tổ / Bộ phận */}
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
-                  <Building className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Tổ / Bộ phận</span>
-                  <span className="text-[10px] font-normal text-slate-400 ml-1">
-                    (Bộ phận thực tế của nhân viên)
-                  </span>
-                </label>
-                <select
-                  value={department}
-                  onChange={(e) => setDepartment(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  {departments.length === 0 ? (
-                    <option value={currentUser?.department || 'Văn Phòng'}>
-                      {currentUser?.department || 'Văn Phòng'}
-                    </option>
-                  ) : (
-                    departments.map((dept) => (
-                      <option key={dept.id} value={dept.name}>
-                        {dept.name}
-                      </option>
-                    ))
-                  )}
-                </select>
-              </div>
-
-              {/* Field 2: Người nhận mặc định */}
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
-                  <UserCheck className="w-3.5 h-3.5 text-blue-500" />
-                  <span>Người nhận phiếu mặc định</span>
-                </label>
-                <div className="px-4 py-2.5 bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/60 rounded-xl text-xs font-medium text-blue-900 dark:text-blue-200 flex items-center justify-between">
-                  <span>Võ Thị Tuyết (1139) - Chuyên viên HCNS</span>
-                  <span className="text-[10px] text-blue-600 dark:text-blue-400">tuyet.vo@longkhai.com.vn</span>
-                </div>
-              </div>
-            </div>
-
             {/* Dynamic Items Table */}
             <div>
               <div className="flex items-center justify-between mb-2">
