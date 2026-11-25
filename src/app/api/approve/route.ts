@@ -6,6 +6,8 @@ import { GitHubService } from '@/lib/github-api';
 
 const BASE_DIR = path.join(process.cwd(), 'company-data');
 const TMP_DIR = path.join('/tmp', 'company-data');
+const DEFAULT_GOOGLE_SCRIPT_URL =
+  'https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec';
 
 function ensureDir(dirPath: string) {
   try {
@@ -109,7 +111,7 @@ async function sendBODNotificationEmailServer(doc: any, clientEmailConfig?: any)
       <p style="margin: 6px 0 0 0; font-size: 12px; opacity: 0.9;">Kính gửi Ban Giám Đốc (Báo cáo thông tin &bull; Không cần phê duyệt)</p>
     </div>
     <div style="padding: 24px;">
-      <p style="font-size: 14px; margin-top: 0; color: #1e293b;">Kính gửi <b>Quý Ban Giám Đốc</b>,</p>
+      <p style="font-size: 14px; margin-top: 0; color: #1e293b;">Kính gửi <b>Quý Ban Giám Đốc & Giám đốc sản xuất (Anh Phạm Đình Tú)</b>,</p>
       <p style="font-size: 13px; color: #475569;">
         Hệ thống xin trân trọng thông báo: Phiếu đề xuất sửa chữa thiết bị <b>${doc.id}</b> từ nhân viên <b>${doc.employeeName}</b> (${doc.employeeId}) thuộc <b>${doc.department}</b> đã được Trưởng bộ phận <b>${doc.managerName || 'phê duyệt'}</b> chấp thuận và chuyển giao cho Bộ phận Cơ điện xử lý.
       </p>
@@ -152,7 +154,8 @@ async function sendBODNotificationEmailServer(doc: any, clientEmailConfig?: any)
       doc.emailRelayUrl ||
       doc.emailConfig?.googleScriptUrl ||
       emailConfig?.googleScriptUrl ||
-      process.env.GOOGLE_SCRIPT_URL;
+      process.env.GOOGLE_SCRIPT_URL ||
+      DEFAULT_GOOGLE_SCRIPT_URL;
 
     for (const toEmail of defaultBODEmails) {
       if (googleScriptUrl && googleScriptUrl.trim()) {
@@ -192,7 +195,7 @@ async function sendMaintenanceEmailServer(doc: any, clientEmailConfig?: any) {
     }
 
     let toEmail = 'tai.trinh@longkhai.com.vn';
-    let managerName = 'Trưởng phòng Cơ điện';
+    let managerName = 'Trưởng phòng Cơ điện (Trịnh Anh Tài)';
 
     // Find maintenance manager from users.json
     const usersPath = fs.existsSync(path.join(TMP_DIR, 'settings', 'users.json'))
@@ -273,7 +276,8 @@ Vui lòng truy cập ${baseUrl} để tiếp nhận và cập nhật kết quả
       doc.emailRelayUrl ||
       doc.emailConfig?.googleScriptUrl ||
       emailConfig?.googleScriptUrl ||
-      process.env.GOOGLE_SCRIPT_URL;
+      process.env.GOOGLE_SCRIPT_URL ||
+      DEFAULT_GOOGLE_SCRIPT_URL;
 
     if (googleScriptUrl && googleScriptUrl.trim()) {
       try {

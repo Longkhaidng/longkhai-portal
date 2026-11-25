@@ -97,6 +97,16 @@ export async function POST(req: NextRequest) {
     const senderName = activeConfig.senderName || 'Cổng Thông Tin Long Khải';
     const senderEmail = activeConfig.senderEmail || user || 'no-reply@longkhai.vn';
 
+    // Google Apps Script Relay has a strict 200KB limit on htmlBody.
+    // If html exceeds 175,000 characters, sanitize any giant base64 data URLs to prevent Google Script from rejecting
+    let safeHtml = html || '';
+    if (safeHtml.length > 175000) {
+      safeHtml = safeHtml.replace(
+        /src="data:image\/[^;]+;base64,[^"]{70000,}"/g,
+        'src="" alt="(Ảnh đính kèm dung lượng lớn - vui lòng mở xem trên Cổng Portal)"'
+      );
+    }
+
     // 1. If Google Apps Script Relay is provided (Phương án 1 - Khuyên dùng)
     const googleScriptUrl =
       activeConfig.googleScriptUrl || process.env.GOOGLE_SCRIPT_URL || DEFAULT_GOOGLE_SCRIPT_URL;
@@ -110,7 +120,7 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             toEmail,
             subject,
-            html,
+            html: safeHtml,
             text: text || '',
             senderName,
           }),

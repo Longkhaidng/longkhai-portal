@@ -32,6 +32,7 @@ export interface SendEmailPayload {
       size?: number;
       type?: string;
       data?: string;
+      thumbnail?: string;
       url?: string;
     }[];
   };

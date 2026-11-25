@@ -123,6 +123,42 @@ export function RepairProposalSubView({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Helper: Create small compressed JPEG thumbnail (< 30KB) for email preview
+  const createImageThumbnail = (dataUrl: string, maxWidth = 420, quality = 0.5): Promise<string> => {
+    return new Promise((resolve) => {
+      if (typeof window === 'undefined' || !dataUrl.startsWith('data:image/')) {
+        resolve('');
+        return;
+      }
+      try {
+        const img = new Image();
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve('');
+            return;
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+          const thumb = canvas.toDataURL('image/jpeg', quality);
+          resolve(thumb);
+        };
+        img.onerror = () => resolve('');
+        img.src = dataUrl;
+      } catch {
+        resolve('');
+      }
+    });
+  };
+
   // Process selected files for attachment (< 1MB, image/PDF)
   const processFiles = (fileList: FileList | File[]) => {
     const files = Array.from(fileList);
@@ -153,10 +189,16 @@ export function RepairProposalSubView({
 
       // Đọc file thành Base64 Data URL
       const reader = new FileReader();
-      reader.onload = () => {
+      reader.onload = async () => {
         const dataUrl = reader.result as string;
         const now = new Date();
         const expiresDate = new Date(now.getTime() + ATTACHMENT_EXPIRY_DAYS * 24 * 60 * 60 * 1000);
+
+        let thumbnail: string | undefined = undefined;
+        if (isImg) {
+          const thumb = await createImageThumbnail(dataUrl);
+          if (thumb) thumbnail = thumb;
+        }
 
         const newAtt: ProposalAttachment = {
           id: `ATT-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
@@ -164,6 +206,7 @@ export function RepairProposalSubView({
           size: file.size,
           type: file.type || (isPdf ? 'application/pdf' : 'image/jpeg'),
           data: dataUrl,
+          thumbnail,
           uploadedAt: now.toISOString(),
           expiresAt: expiresDate.toISOString(),
           isExpired: false,
@@ -475,7 +518,7 @@ export function RepairProposalSubView({
   };
 
   // Step 2: Manager Approve / Reject
-  const handleManagerAction = (isApprove: boolean) => {
+  const handleManagerAction = async (isApprove: boolean) => {
     if (!selectedProposal || !currentUser) return;
     const now = new Date().toISOString();
     const updated: RepairProposal = { ...selectedProposal };
@@ -500,12 +543,26 @@ export function RepairProposalSubView({
       updated.status = 'maintenance_pending';
       updated.currentStepIndex = 2; // Move to Step 3: Cơ điện sửa chữa
 
+      // Ensure all image attachments have compressed thumbnails (< 30KB) for email delivery
+      if (Array.isArray(updated.attachments) && updated.attachments.length > 0) {
+        const withThumbnails = await Promise.all(
+          updated.attachments.map(async (att) => {
+            if (att.type?.startsWith('image/') && att.data && !att.thumbnail) {
+              const thumb = await createImageThumbnail(att.data);
+              return { ...att, thumbnail: thumb || undefined };
+            }
+            return att;
+          })
+        );
+        updated.attachments = withThumbnails;
+      }
+
       // 1. Dispatch notification email to Head of Maintenance
       dispatchMaintenanceNotificationEmail(updated).catch((err) =>
         console.warn('Maintenance notification email error:', err)
       );
 
-      // 2. Dispatch FYI notification email to BOD (Ban Giám Đốc)
+      // 2. Dispatch FYI notification email to BOD & Giám đốc sản xuất
       dispatchBODNotificationEmail(updated).catch((err) =>
         console.warn('BOD notification email error:', err)
       );
@@ -513,7 +570,7 @@ export function RepairProposalSubView({
       showToast({
         type: 'success',
         title: 'Phê duyệt thành công',
-        message: `Đề xuất ${updated.id} đã được duyệt và chuyển sang cho Bộ phận Cơ điện, đồng thời thông báo đến BGĐ.`,
+        message: `Đề xuất ${updated.id} đã được duyệt và chuyển tiếp email tới Trưởng phòng Cơ điện & Giám đốc sản xuất.`,
       });
     } else {
       updated.status = 'rejected';

@@ -70,12 +70,13 @@ export function renderAttachmentsEmailHtml(
     size?: number;
     type?: string;
     data?: string;
+    thumbnail?: string;
     url?: string;
   }[]
 ): string {
   if (!attachments || attachments.length === 0) return '';
   const imageAttachments = attachments.filter(
-    (att) => att.type?.startsWith('image/') || att.data?.startsWith('data:image/')
+    (att) => att.type?.startsWith('image/') || att.data?.startsWith('data:image/') || att.thumbnail?.startsWith('data:image/')
   );
   const pdfAttachments = attachments.filter(
     (att) => att.type === 'application/pdf' || att.name?.toLowerCase().endsWith('.pdf')
@@ -104,7 +105,17 @@ export function renderAttachmentsEmailHtml(
         <td style="padding: 18px;">
           ${imageAttachments
             .map(
-              (img, idx) => `
+              (img, idx) => {
+                // Safeguard: Google Apps Script Relay has a strict ~180-200KB htmlBody limit.
+                // Prefer compressed thumbnail (< 50KB), or small data URL (< 70KB).
+                const previewSrc =
+                  img.thumbnail && img.thumbnail.length < 80000
+                    ? img.thumbnail
+                    : img.data && img.data.length < 80000
+                    ? img.data
+                    : null;
+
+                return `
             <div style="margin-bottom: ${
               idx < imageAttachments.length - 1 || pdfAttachments.length > 0 ? '16px' : '0'
             }; background-color: #ffffff; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; text-align: center;">
@@ -118,12 +129,15 @@ export function renderAttachmentsEmailHtml(
               }
               </div>
               ${
-                img.data
-                  ? `<img src="${img.data}" alt="${img.name}" style="max-width: 100%; max-height: 480px; width: auto; height: auto; border-radius: 8px; border: 1px solid #e2e8f0; display: block; margin: 0 auto;" />`
-                  : `<div style="font-size: 12px; color: #ef4444; font-style: italic;">(Ảnh đã tự động xóa sau 7 ngày)</div>`
+                previewSrc
+                  ? `<img src="${previewSrc}" alt="${img.name}" style="max-width: 100%; max-height: 420px; width: auto; height: auto; border-radius: 8px; border: 1px solid #e2e8f0; display: block; margin: 0 auto;" />`
+                  : `<div style="font-size: 12px; color: #0284c7; background-color: #f0f9ff; border: 1px dashed #bae6fd; padding: 12px; border-radius: 8px; text-align: center;">
+                      &#128247; <strong>Hình ảnh đính kèm độ phân giải cao</strong> &bull; Vui lòng truy cập Cổng Portal để mở xem chi tiết
+                    </div>`
               }
             </div>
-          `
+          `;
+              }
             )
             .join('')}
 
@@ -608,7 +622,7 @@ export async function dispatchMaintenanceNotificationEmail(
     ) || allUsers.find((u) => u.id === '2409');
 
   const toEmail = maintenanceManager?.email || 'tai.trinh@longkhai.com.vn';
-  const managerName = maintenanceManager?.name || 'Trưởng phòng Cơ điện';
+  const managerName = maintenanceManager?.name || 'Trưởng phòng Cơ điện (Trịnh Anh Tài)';
 
   const subject = `[Long Khải Portal] Yêu cầu sửa chữa thiết bị: Mã ${proposal.id} - ${proposal.location} (${proposal.department})`;
 
@@ -730,26 +744,26 @@ export async function dispatchBODNotificationEmail(
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   const baseUrl = config.portalBaseUrl || origin || 'https://longkhai-portal.vercel.app';
 
+  // Find Production Director (Giám đốc sản xuất - Phạm Đình Tú)
+  const productionDirector = allUsers.find(
+    (u) =>
+      u.id === 'BOD' ||
+      (u.position && /giám đốc sản xuất|giam doc san xuat/i.test(u.position)) ||
+      (u.name && /phạm đình tú|pham dinh tu/i.test(u.name))
+  );
+  const productionDirectorEmail = productionDirector?.email || 'tu.pham@vitex.com.vn';
+
   // Default BOD emails according to company governance
   const defaultBODEmails = [
+    productionDirectorEmail,
     'tu.pham@vitex.com.vn',
     'tu.pham@longkhai.com.vn',
     'buithuanh@vitex.com.vn',
   ];
 
-  // Also include any users with role bod or director
-  const bodUsers = allUsers.filter(
-    (u) =>
-      u.role === 'admin' ||
-      (u.role as string) === 'bod' ||
-      (u.position && /giám đốc|giam doc/i.test(u.position)) ||
-      (u.department && /ban giám đốc|ban giam doc/i.test(u.department))
-  );
-
   const targetEmails = Array.from(
     new Set([
       ...defaultBODEmails,
-      ...bodUsers.map((u) => u.email).filter(Boolean) as string[],
       ...(config.bodEmails || []),
     ])
   );
@@ -767,7 +781,7 @@ export async function dispatchBODNotificationEmail(
       <p style="margin: 6px 0 0 0; font-size: 12px; opacity: 0.9;">Kính gửi Ban Giám Đốc (Báo cáo thông tin &bull; Không cần phê duyệt)</p>
     </div>
     <div style="padding: 24px;">
-      <p style="font-size: 14px; margin-top: 0; color: #1e293b;">Kính gửi <b>Quý Ban Giám Đốc</b>,</p>
+      <p style="font-size: 14px; margin-top: 0; color: #1e293b;">Kính gửi <b>Quý Ban Giám Đốc & Giám đốc sản xuất (Anh Phạm Đình Tú)</b>,</p>
       <p style="font-size: 13px; color: #475569;">
         Hệ thống xin trân trọng thông báo: Phiếu đề xuất sửa chữa thiết bị <b>${proposal.id}</b> từ nhân viên <b>${proposal.employeeName}</b> (${proposal.employeeId}) thuộc <b>${proposal.department}</b> đã được Trưởng bộ phận <b>${proposal.managerName || 'phê duyệt'}</b> chấp thuận và chuyển giao cho Bộ phận Cơ điện xử lý.
       </p>
@@ -807,10 +821,9 @@ export async function dispatchBODNotificationEmail(
 </html>
 `;
 
-  let sentCount = 0;
-  for (const toEmail of targetEmails) {
-    try {
-      await fetch('/api/send-email', {
+  const results = await Promise.allSettled(
+    targetEmails.map((toEmail) =>
+      fetch('/api/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -822,13 +835,11 @@ export async function dispatchBODNotificationEmail(
           employeeName: proposal.employeeName,
           emailConfig: config,
         }),
-      });
-      sentCount++;
-    } catch (e) {
-      console.warn('Lỗi gửi email BOD:', toEmail, e);
-    }
-  }
+      })
+    )
+  );
 
+  const sentCount = results.filter((r) => r.status === 'fulfilled').length;
   return { success: sentCount > 0, count: sentCount };
 }
 

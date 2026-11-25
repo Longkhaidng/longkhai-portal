@@ -24,6 +24,7 @@ export interface ProposalAttachment {
   size: number; // bytes
   type: string; // 'image/png' | 'image/jpeg' | 'application/pdf' ...
   data: string; // Base64 data URL string (trống nếu đã quá hạn 7 ngày và bị xóa)
+  thumbnail?: string; // Small compressed thumbnail (< 30KB) for email previews
   uploadedAt: string; // ISO date string
   expiresAt: string; // ISO date string (tự động xóa sau 7 ngày)
   isExpired?: boolean;
