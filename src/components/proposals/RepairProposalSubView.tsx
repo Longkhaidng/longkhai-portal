@@ -121,7 +121,6 @@ export function RepairProposalSubView({
   const [isDragging, setIsDragging] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [modalProposedSolution, setModalProposedSolution] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Process selected files for attachment (< 1MB, image/PDF)
@@ -287,14 +286,6 @@ export function RepairProposalSubView({
     }
   }, [proposals]);
 
-  // Sync manager proposal solution on select
-  useEffect(() => {
-    if (selectedProposal) {
-      setModalProposedSolution(selectedProposal.proposedSolution || '');
-    } else {
-      setModalProposedSolution('');
-    }
-  }, [selectedProposal]);
 
   const departments = useMemo(() => storage.getDepartments(), []);
   const allUsers = useMemo(() => storage.getUsers(), []);
@@ -454,17 +445,9 @@ export function RepairProposalSubView({
               { label: 'Tổ / Bộ phận', value: newProposal.department },
               { label: 'Khu vực thiết bị hỏng', value: newProposal.location },
               { label: 'Tình trạng sự việc', value: newProposal.issueDescription },
-              ...(newProposal.attachments && newProposal.attachments.length > 0
-                ? [
-                    {
-                      label: 'Tệp đính kèm',
-                      value: `${newProposal.attachments.map((a) => a.name).join(', ')} (${newProposal.attachments.length} tệp - tự động xóa sau 7 ngày)`,
-                    },
-                  ]
-                : []),
-              { label: 'Đề xuất hướng khắc phục', value: '(Trưởng bộ phận nhập khi duyệt đơn)' },
               { label: 'Thời gian gửi', value: formatDateTime(now) },
             ],
+            attachments: newProposal.attachments,
           },
         }).catch((err) => console.warn('Email dispatch error:', err));
       }
@@ -514,9 +497,6 @@ export function RepairProposalSubView({
     updated.managerComment = managerComment.trim();
 
     if (isApprove) {
-      if (modalProposedSolution.trim()) {
-        updated.proposedSolution = capitalizeFirstLetter(modalProposedSolution.trim());
-      }
       updated.status = 'maintenance_pending';
       updated.currentStepIndex = 2; // Move to Step 3: Cơ điện sửa chữa
 
@@ -935,9 +915,9 @@ export function RepairProposalSubView({
             if (e.target === e.currentTarget) handleCloseModal();
           }}
         >
-          <div className="w-full max-w-3xl max-h-[92vh] overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-7 shadow-2xl space-y-4">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between pb-3.5 border-b border-slate-100 dark:border-slate-800">
+          <div className="w-full max-w-3xl max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden">
+            {/* Modal Header (Cố định ở trên cùng khi cuộn/lướt) */}
+            <div className="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-5 sm:px-7 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
                   <Wrench className="w-5 h-5" />
@@ -951,13 +931,13 @@ export function RepairProposalSubView({
               <button
                 type="button"
                 onClick={handleCloseModal}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-2xl font-bold cursor-pointer"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 text-2xl font-bold transition-colors cursor-pointer"
               >
                 &times;
               </button>
             </div>
 
-            <form onSubmit={handleCreateProposal} className="space-y-4 text-xs">
+            <form onSubmit={handleCreateProposal} className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-4 text-xs">
               {/* Field 1: Khu vực */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
@@ -1143,7 +1123,7 @@ export function RepairProposalSubView({
               <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-xs text-amber-800 dark:text-amber-300 flex items-start gap-3">
                 <Lightbulb className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
                 <div className="text-[11px] leading-relaxed">
-                  <span className="font-bold">Lưu ý về quy trình:</span> Sau khi gửi, phiếu đề xuất sẽ tự động gửi email cho Trưởng bộ phận của bạn để xem xét và nhập &quot;Đề xuất hướng khắc phục&quot;. Khi Trưởng bộ phận duyệt, phiếu sẽ chuyển tiếp đến Trưởng bộ phận Cơ điện và đồng thời gửi thông tin thông báo cho Ban Giám Đốc.
+                  <span className="font-bold">Lưu ý về quy trình:</span> Sau khi gửi, phiếu đề xuất sẽ tự động gửi email cho Trưởng bộ phận của bạn để xem xét và phê duyệt. Khi Trưởng bộ phận duyệt, phiếu sẽ chuyển tiếp đến Trưởng bộ phận Cơ điện và đồng thời gửi thông tin thông báo cho Ban Giám Đốc.
                 </div>
               </div>
 
@@ -1412,39 +1392,24 @@ export function RepairProposalSubView({
                   </div>
                 )}
 
-                {/* Proposed Solution by Manager */}
-                <div className="p-4 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/60">
-                  <div className="text-amber-800 dark:text-amber-400 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                    <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
-                    <span>Đề xuất hướng khắc phục (Trưởng bộ phận)</span>
-                  </div>
-                  {selectedProposal.status === 'pending_manager' &&
-                  (isManagerOrTL || isBOD) ? (
-                    <div className="mt-2 space-y-2">
-                      <textarea
-                        rows={2}
-                        placeholder="Nhập đề xuất hướng khắc phục (Trưởng bộ phận có thể bổ sung)..."
-                        value={modalProposedSolution}
-                        onChange={(e) => setModalProposedSolution(capitalizeFirstLetter(e.target.value))}
-                        className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-amber-300 dark:border-amber-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
-                      />
+                {/* Manager Review / Comment Info */}
+                {selectedProposal.managerName && (
+                  <div className="p-4 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/60 text-xs">
+                    <div className="text-amber-800 dark:text-amber-400 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" />
+                      <span>Thông tin phê duyệt của Trưởng bộ phận</span>
                     </div>
-                  ) : (
-                    <div className="text-slate-800 dark:text-slate-200 whitespace-pre-wrap">
-                      {selectedProposal.proposedSolution || (
-                        <span className="italic text-slate-400">
-                          Chưa có nội dung đề xuất hướng khắc phục
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  {selectedProposal.managerName && (
-                    <div className="text-[11px] text-slate-400 mt-2">
-                      Người duyệt: <b>{selectedProposal.managerName}</b>
+                    {selectedProposal.managerComment && (
+                      <div className="text-slate-800 dark:text-slate-200 mt-1 mb-1 whitespace-pre-wrap">
+                        <span className="font-semibold text-slate-600 dark:text-slate-400">Ghi chú / Ý kiến:</span> {selectedProposal.managerComment}
+                      </div>
+                    )}
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5">
+                      Người duyệt: <b className="text-slate-700 dark:text-slate-300">{selectedProposal.managerName}</b>
                       {selectedProposal.managerApprovedAt && ` (${formatDateTime(selectedProposal.managerApprovedAt)})`}
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
 
                 {/* Maintenance Notes */}
                 {(selectedProposal.maintenanceNotes ||

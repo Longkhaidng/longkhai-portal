@@ -26,5 +26,13 @@ export interface SendEmailPayload {
   details: {
     title: string;
     items: { label: string; value: string }[];
+    attachments?: {
+      id?: string;
+      name: string;
+      size?: number;
+      type?: string;
+      data?: string;
+      url?: string;
+    }[];
   };
 }

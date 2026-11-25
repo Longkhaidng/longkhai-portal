@@ -63,6 +63,90 @@ ${baseUrl}`;
   return `mailto:${payload.toEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
+export function renderAttachmentsEmailHtml(
+  attachments?: {
+    id?: string;
+    name: string;
+    size?: number;
+    type?: string;
+    data?: string;
+    url?: string;
+  }[]
+): string {
+  if (!attachments || attachments.length === 0) return '';
+  const imageAttachments = attachments.filter(
+    (att) => att.type?.startsWith('image/') || att.data?.startsWith('data:image/')
+  );
+  const pdfAttachments = attachments.filter(
+    (att) => att.type === 'application/pdf' || att.name?.toLowerCase().endsWith('.pdf')
+  );
+
+  if (imageAttachments.length === 0 && pdfAttachments.length === 0) return '';
+
+  return `
+    <!-- Attached Files Section -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #f8fafc; overflow: hidden;">
+      <tr>
+        <td style="padding: 14px 18px; border-bottom: 1px solid #e2e8f0; background-color: #f1f5f9;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td style="font-size: 13px; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.5px;">
+                &#128206; HÌNH ẢNH &amp; TỆP ĐÍNH KÈM (${imageAttachments.length + pdfAttachments.length})
+              </td>
+              <td align="right" style="font-size: 11px; color: #d97706; font-weight: 600;">
+                Tự động xóa sau 7 ngày
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 18px;">
+          ${imageAttachments
+            .map(
+              (img, idx) => `
+            <div style="margin-bottom: ${
+              idx < imageAttachments.length - 1 || pdfAttachments.length > 0 ? '16px' : '0'
+            }; background-color: #ffffff; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; text-align: center;">
+              <div style="font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 10px; text-align: left;">
+                &#128247; ${img.name} ${
+                img.size
+                  ? `<span style="font-weight: normal; color: #64748b; font-size: 11px;">(${(
+                      img.size / 1024
+                    ).toFixed(1)} KB)</span>`
+                  : ''
+              }
+              </div>
+              ${
+                img.data
+                  ? `<img src="${img.data}" alt="${img.name}" style="max-width: 100%; max-height: 480px; width: auto; height: auto; border-radius: 8px; border: 1px solid #e2e8f0; display: block; margin: 0 auto;" />`
+                  : `<div style="font-size: 12px; color: #ef4444; font-style: italic;">(Ảnh đã tự động xóa sau 7 ngày)</div>`
+              }
+            </div>
+          `
+            )
+            .join('')}
+
+          ${pdfAttachments
+            .map(
+              (pdf) => `
+            <div style="padding: 12px 14px; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 10px; font-size: 12px; color: #1e293b;">
+              &#128196; <strong>${pdf.name}</strong> ${
+                pdf.size ? `<span style="color: #64748b; font-size: 11px;">(${(pdf.size / 1024).toFixed(1)} KB)</span>` : ''
+              }
+              <div style="font-size: 11px; color: #64748b; margin-top: 4px;">
+                (Tệp tài liệu PDF &bull; Vui lòng mở xem trực tiếp trên Cổng Portal)
+              </div>
+            </div>
+          `
+            )
+            .join('')}
+        </td>
+      </tr>
+    </table>
+  `;
+}
+
 export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: string): {
   subject: string;
   html: string;
@@ -116,8 +200,13 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
     ) {
       return false;
     }
+    if (l === 'đề xuất hướng khắc phục') {
+      return false;
+    }
     return true;
   });
+
+  const attachmentsHtml = renderAttachmentsEmailHtml(payload.details?.attachments);
 
   // Table rows with alternating zebra background
   const allRows = [
@@ -206,6 +295,8 @@ export function generateApprovalEmailHtml(payload: SendEmailPayload, baseUrl: st
                   ${rowsHtml}
                 </tbody>
               </table>
+
+              ${attachmentsHtml}
 
               <!-- Action Buttons Card -->
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; margin-bottom: 20px;">
@@ -571,16 +662,20 @@ export async function dispatchMaintenanceNotificationEmail(
             <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #475569;">Tình trạng sự việc</td>
             <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; color: #1e293b; white-space: pre-line;">${proposal.issueDescription}</td>
           </tr>
+          ${proposal.managerComment ? `
           <tr style="background-color: #fef3c7;">
-            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 700; color: #92400e;">Đề xuất hướng khắc phục (Trưởng BP đã duyệt)</td>
-            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #92400e; white-space: pre-line;">${proposal.proposedSolution || proposal.managerComment || 'Chưa có ghi chú'}</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 700; color: #92400e;">Ý kiến / Ghi chú của Trưởng BP</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #92400e; white-space: pre-line;">${proposal.managerComment}</td>
           </tr>
+          ` : ''}
           <tr>
             <td style="padding: 10px 14px; font-weight: 600; color: #475569;">Thời gian gửi</td>
             <td style="padding: 10px 14px; color: #64748b;">${formatDateTime(proposal.createdAt)}</td>
           </tr>
         </tbody>
       </table>
+
+      ${renderAttachmentsEmailHtml(proposal.attachments)}
 
       <div style="text-align: center; margin: 26px 0 10px 0;">
         <a href="${viewUrl}" style="display: inline-block; background-color: #d97706; color: #ffffff; text-decoration: none; padding: 12px 28px; font-size: 13px; font-weight: 700; border-radius: 12px; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);">
@@ -660,7 +755,6 @@ export async function dispatchBODNotificationEmail(
   );
 
   const subject = `[THÔNG BÁO TIẾN ĐỘ] Đề xuất sửa chữa đã được Trưởng BP duyệt: Mã ${proposal.id} - ${proposal.location} (${proposal.department})`;
-  const solutionText = proposal.proposedSolution || proposal.managerComment || 'Đồng ý phê duyệt sửa chữa';
 
   const html = `
 <!DOCTYPE html>
@@ -685,11 +779,13 @@ export async function dispatchBODNotificationEmail(
           <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600; border-bottom: 1px solid #e2e8f0;">Tổ / Bộ phận</td><td style="padding: 10px 14px; border-bottom: 1px solid #e2e8f0;">${proposal.department}</td></tr>
           <tr><td style="padding: 10px 14px; font-weight: 600; border-bottom: 1px solid #e2e8f0;">Khu vực thiết bị hỏng</td><td style="padding: 10px 14px; font-weight: 600; color: #e11d48; border-bottom: 1px solid #e2e8f0;">${proposal.location}</td></tr>
           <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600; border-bottom: 1px solid #e2e8f0;">Tình trạng sự việc</td><td style="padding: 10px 14px; white-space: pre-line; border-bottom: 1px solid #e2e8f0;">${proposal.issueDescription}</td></tr>
-          <tr style="background-color: #fef3c7;"><td style="padding: 10px 14px; font-weight: 700; color: #92400e; border-bottom: 1px solid #e2e8f0;">Đề xuất hướng khắc phục (Trưởng BP đã duyệt)</td><td style="padding: 10px 14px; font-weight: 600; color: #92400e; white-space: pre-line; border-bottom: 1px solid #e2e8f0;">${solutionText}</td></tr>
+          ${proposal.managerComment ? `<tr style="background-color: #fef3c7;"><td style="padding: 10px 14px; font-weight: 700; color: #92400e; border-bottom: 1px solid #e2e8f0;">Ý kiến / Ghi chú của Trưởng BP</td><td style="padding: 10px 14px; font-weight: 600; color: #92400e; white-space: pre-line; border-bottom: 1px solid #e2e8f0;">${proposal.managerComment}</td></tr>` : ''}
           <tr><td style="padding: 10px 14px; font-weight: 600; border-bottom: 1px solid #e2e8f0;">Trưởng bộ phận phê duyệt</td><td style="padding: 10px 14px; color: #059669; font-weight: 600; border-bottom: 1px solid #e2e8f0;">${proposal.managerName || 'Trưởng bộ phận'} (${formatDateTime(proposal.managerApprovedAt || new Date().toISOString())})</td></tr>
           <tr style="background-color: #f8fafc;"><td style="padding: 10px 14px; font-weight: 600;">Bộ phận tiếp nhận sửa chữa</td><td style="padding: 10px 14px; color: #0284c7; font-weight: 600;">Phòng Cơ Điện (Trịnh Anh Tài - tai.trinh@longkhai.com.vn)</td></tr>
         </tbody>
       </table>
+
+      ${renderAttachmentsEmailHtml(proposal.attachments)}
 
       <!-- Note for BOD: NO action buttons needed -->
       <div style="background-color: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 12px 16px; margin: 20px 0; font-size: 12px; color: #166534; text-align: center;">
@@ -839,6 +935,7 @@ export async function dispatchGeneralApprovalEmail(
         { label: 'Nội dung chi tiết', value: proposal.content },
         { label: 'Thời gian gửi', value: formatDateTime(proposal.createdAt) },
       ],
+      attachments: proposal.attachments,
     },
   };
 

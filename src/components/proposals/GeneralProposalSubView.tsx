@@ -711,8 +711,8 @@ export function GeneralProposalSubView({
             if (e.target === e.currentTarget) handleCloseModal();
           }}
         >
-          <div className="w-full max-w-4xl max-h-[92vh] overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+          <div className="w-full max-w-4xl max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden">
+            <div className="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-6 sm:px-8 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400">
                   <FileQuestion className="w-5 h-5" />
@@ -729,13 +729,13 @@ export function GeneralProposalSubView({
               <button
                 type="button"
                 onClick={handleCloseModal}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-2xl font-bold cursor-pointer"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 text-2xl font-bold transition-colors cursor-pointer"
               >
                 &times;
               </button>
             </div>
 
-          <form onSubmit={handleCreateProposal} className="space-y-6">
+          <form onSubmit={handleCreateProposal} className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Field 1: Tổ / Bộ phận */}
               <div>
