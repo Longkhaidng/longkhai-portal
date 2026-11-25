@@ -1190,6 +1190,22 @@ class StorageService {
             const serverItem = map.get(id)!;
             const serverTime = new Date(serverItem.updatedAt || serverItem.createdAt || 0).getTime();
             const localTime = new Date(item.updatedAt || item.createdAt || 0).getTime();
+            if (targetKey === 'food_registration') {
+              const serverLogs = Array.isArray((serverItem as any).entryLogs) ? (serverItem as any).entryLogs : [];
+              const localLogs = Array.isArray((item as any).entryLogs) ? (item as any).entryLogs : [];
+              if (serverLogs.length > 0 || localLogs.length > 0) {
+                const logMap = new Map<string, any>();
+                [...serverLogs, ...localLogs].forEach((l: any) => {
+                  const key = l.id || `${l.timestamp}_${l.action}`;
+                  if (!logMap.has(key)) logMap.set(key, l);
+                });
+                const mergedLogs = Array.from(logMap.values());
+                const winner = localTime > serverTime ? { ...item } : { ...serverItem };
+                (winner as any).entryLogs = mergedLogs;
+                map.set(id, winner);
+                return;
+              }
+            }
             if (localTime > serverTime) {
               map.set(id, { ...item, id });
             }

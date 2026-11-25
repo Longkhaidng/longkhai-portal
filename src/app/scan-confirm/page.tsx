@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Suspense, useState, useEffect, useRef, useCallback } from 'react';
+import React, { Suspense, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Html5Qrcode } from 'html5-qrcode';
 import {
@@ -32,7 +32,7 @@ import {
   Volume2,
   VolumeX,
 } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatDateTime } from '@/lib/utils';
 import { ISSUE_TYPE_LABELS } from '@/types/attendance';
 import { checkFoodQrValidity } from '@/types/food-registration';
 import { storage } from '@/lib/storage';
@@ -491,14 +491,12 @@ function ScanConfirmContent() {
           try {
             if (typeof window !== 'undefined') {
               const localFood = localStorage.getItem('lk_portal_food_registrations');
-              if (localFood) {
-                const list = JSON.parse(localFood);
-                const idx = list.findIndex((f: any) => f.id === data.record.id);
-                if (idx >= 0) list[idx] = data.record;
-                else list.unshift(data.record);
-                localStorage.setItem('lk_portal_food_registrations', JSON.stringify(list));
-                window.dispatchEvent(new Event('food_registrations_updated'));
-              }
+              const list = localFood ? JSON.parse(localFood) : [];
+              const idx = list.findIndex((f: any) => f.id === data.record.id);
+              if (idx >= 0) list[idx] = data.record;
+              else list.unshift(data.record);
+              localStorage.setItem('lk_portal_food_registrations', JSON.stringify(list));
+              window.dispatchEvent(new Event('food_registrations_updated'));
             }
           } catch {}
 
@@ -767,6 +765,46 @@ function ScanConfirmContent() {
     ? docData.foodDetails.replace(/Bánh \+ Sữa,\s*Trái cây \+ Sữa/gi, 'Bánh + Sữa hoặc Trái cây + Sữa')
     : 'Không có mô tả chi tiết';
 
+  const isMultiDay =
+    docType === 'food' &&
+    Boolean(docData) &&
+    (docData.category === 'pregnant' ||
+      docData.category === 'medicine_drink' ||
+      Boolean(docData.toDate && docData.toDate !== docData.entryDate));
+
+  const todayStrVN = useMemo(() => {
+    try {
+      return new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Ho_Chi_Minh',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(new Date());
+    } catch {
+      return new Date().toISOString().slice(0, 10);
+    }
+  }, []);
+
+  const todayConfirmedLogs = useMemo(() => {
+    if (!docData || !Array.isArray(docData.entryLogs)) return [];
+    return docData.entryLogs.filter((l: any) => {
+      if (!l.timestamp || l.action !== 'confirmed') return false;
+      try {
+        const logDateVN = new Intl.DateTimeFormat('en-CA', {
+          timeZone: 'Asia/Ho_Chi_Minh',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }).format(new Date(l.timestamp));
+        return logDateVN === todayStrVN;
+      } catch {
+        return false;
+      }
+    });
+  }, [docData, todayStrVN]);
+
+  const isConfirmedToday = todayConfirmedLogs.length > 0;
+
   return (
     <div className="min-h-screen bg-slate-950 py-6 px-4 flex flex-col items-center justify-start font-sans text-slate-100">
       <div className="bg-slate-900 rounded-3xl max-w-lg w-full shadow-2xl border border-slate-800 overflow-hidden text-left animate-in fade-in zoom-in-95 duration-200">
@@ -913,7 +951,7 @@ function ScanConfirmContent() {
                         {foodValidity?.message || 'Đơn đăng ký cần được phê duyệt trước khi được phép mang vào.'}
                       </p>
                     </div>
-                  ) : docData.status === 'confirmed' ? (
+                  ) : !isMultiDay && docData.status === 'confirmed' ? (
                     <div className="p-3 rounded-2xl bg-teal-950/80 border-2 border-teal-500 text-center space-y-1 animate-in fade-in">
                       <CheckCircle2 className="w-7 h-7 text-teal-400 mx-auto" />
                       <h4 className="text-xs sm:text-sm font-black text-teal-200 uppercase tracking-wide">
@@ -922,6 +960,19 @@ function ScanConfirmContent() {
                       <p className="text-[11px] sm:text-xs text-teal-300">
                         Phiếu này đã được bảo vệ xác nhận cho nhân viên mang thực phẩm vào nhà máy.
                       </p>
+                    </div>
+                  ) : isMultiDay && isConfirmedToday ? (
+                    <div className="p-3 rounded-2xl bg-teal-950/80 border-2 border-teal-500 text-center space-y-1 animate-in fade-in">
+                      <CheckCircle2 className="w-7 h-7 text-teal-400 mx-auto" />
+                      <h4 className="text-xs sm:text-sm font-black text-teal-200 uppercase tracking-wide">
+                        HÔM NAY ĐÃ XÁC NHẬN CHO MANG VÀO ({todayConfirmedLogs.length} LẦN)
+                      </h4>
+                      <p className="text-[11px] sm:text-xs text-teal-300">
+                        Lần gần nhất lúc {formatDateTime(todayConfirmedLogs[todayConfirmedLogs.length - 1].timestamp)} bởi bảo vệ {todayConfirmedLogs[todayConfirmedLogs.length - 1].guardName || 'cổng'}.
+                      </p>
+                      <div className="pt-1 text-[11px] text-teal-200/90 font-medium">
+                        {foodValidity.remainingText}
+                      </div>
                     </div>
                   ) : docData.status === 'guard_rejected' || docData.status === 'rejected' ? (
                     <div className="p-3 rounded-2xl bg-rose-950/80 border-2 border-rose-500 text-center space-y-1 animate-in fade-in">
@@ -1053,11 +1104,28 @@ function ScanConfirmContent() {
                             <span className="text-slate-400 font-semibold">Ghi chú: </span>{docData.notes}
                           </div>
                         )}
+
+                        {/* Lịch sử xác nhận cho mang vào nhiều ngày */}
+                        {isMultiDay && Array.isArray(docData.entryLogs) && docData.entryLogs.length > 0 && (
+                          <div className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80 text-[11px] text-slate-300 space-y-1 mt-1">
+                            <div className="font-bold text-slate-400 flex items-center justify-between text-[11px]">
+                              <span>Lịch sử xác nhận cho mang vào ({docData.entryLogs.length} lần):</span>
+                            </div>
+                            <div className="max-h-24 overflow-y-auto space-y-1 pr-1 font-mono text-[10px]">
+                              {docData.entryLogs.slice().reverse().map((l: any, idx: number) => (
+                                <div key={l.id || idx} className="flex items-center justify-between text-slate-300 bg-slate-950/60 px-2 py-1 rounded border border-slate-800/50">
+                                  <span className="text-emerald-400">✓ {formatDateTime(l.timestamp)}</span>
+                                  <span className="text-slate-400 font-sans">{l.guardName || 'Bảo vệ'}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {/* 3. NÚT XÁC NHẬN VÀ NÚT TỪ CHỐI (KHI CHƯA XÁC NHẬN / TỪ CHỐI VÀ CÒN HIỆU LỰC) */}
-                    {foodValidity?.isValid && !foodValidity?.isExpired && docData.status !== 'confirmed' && docData.status !== 'guard_rejected' && docData.status !== 'rejected' && (
+                    {/* 3. NÚT XÁC NHẬN VÀ NÚT TỪ CHỐI */}
+                    {foodValidity?.isValid && !foodValidity?.isExpired && docData.status !== 'rejected' && (isMultiDay || (docData.status !== 'confirmed' && docData.status !== 'guard_rejected')) && (
                       <div className="pt-1.5 border-t border-slate-800 space-y-2.5">
                         <div className="grid grid-cols-2 gap-2.5">
                           <button
@@ -1067,7 +1135,13 @@ function ScanConfirmContent() {
                             className="py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer disabled:opacity-50"
                           >
                             <CheckCircle2 className="w-4 h-4 shrink-0" />
-                            <span>{isSubmitting ? 'ĐANG LƯU...' : 'Xác nhận cho mang vào'}</span>
+                            <span>
+                              {isSubmitting
+                                ? 'ĐANG LƯU...'
+                                : isMultiDay
+                                ? (isConfirmedToday ? 'Xác nhận cho mang vào thêm' : 'Xác nhận cho mang vào hôm nay')
+                                : 'Xác nhận cho mang vào'}
+                            </span>
                           </button>
 
                           <button

@@ -381,35 +381,39 @@ export function compareFoodRegistrationsNewestFirst(a: FoodRegistration, b: Food
 }
 
 /**
- * So sánh 2 dòng báo cáo thực phẩm để dữ liệu đăng ký mới nhất hiển thị trên cùng.
- * 1. Khác đơn đăng ký: Đơn nào đăng ký mới nhất thì hiển thị trước (trên cùng).
- * 2. Cùng một đơn đăng ký: Lần bảo vệ quét xác nhận mới nhất hiển thị trước lần quét cũ hơn.
+ * So sánh 2 dòng báo cáo thực phẩm để hiển thị theo trình tự thời gian mang vào mới nhất lên trước:
+ * 1. Ngày mang vào thực tế (entryDate) mới nhất lên trên cùng (ví dụ: ngày 25/11 > ngày 23/11).
+ * 2. Cùng ngày: lần quét bảo vệ mới nhất (guardTime) hoặc giờ tạo mới nhất lên trên.
+ * 3. Cùng thời điểm: mã phiếu sau xếp trên (seqB - seqA).
  */
 export function compareFoodReportRowsNewestFirst(a: FoodReportRow, b: FoodReportRow): number {
-  if (a.id !== b.id) {
-    const seqA = extractRegistrationSequence(a.id);
-    const seqB = extractRegistrationSequence(b.id);
-    if (seqA > 0 && seqB > 0 && seqA !== seqB) {
-      return seqB - seqA;
-    }
-
-    const regTimeA = new Date(a.registration?.createdAt || 0).getTime();
-    const regTimeB = new Date(b.registration?.createdAt || 0).getTime();
-    if (regTimeB !== regTimeA) {
-      return regTimeB - regTimeA;
-    }
-
-    return (b.id || '').localeCompare(a.id || '');
+  // 1. So sánh ngày mang vào thực tế (entryDate YYYY-MM-DD): ngày mới nhất xếp trên
+  const dateA = a.entryDate || '';
+  const dateB = b.entryDate || '';
+  if (dateA !== dateB) {
+    return dateB.localeCompare(dateA);
   }
 
-  // Cùng 1 mã phiếu: xếp theo lần quét bảo vệ mới nhất lên trước
-  const logTimeA = a.guardTime ? new Date(a.guardTime).getTime() : 0;
-  const logTimeB = b.guardTime ? new Date(b.guardTime).getTime() : 0;
-  if (logTimeB !== logTimeA) {
-    return logTimeB - logTimeA;
+  // 2. Cùng ngày: so sánh thời điểm bảo vệ xác nhận (guardTime) hoặc sortTime
+  const timeA = a.guardTime ? new Date(a.guardTime).getTime() : (a.sortTime || 0);
+  const timeB = b.guardTime ? new Date(b.guardTime).getTime() : (b.sortTime || 0);
+  if (timeB !== timeA) {
+    return timeB - timeA;
   }
 
-  return (b.logIndex ?? 0) - (a.logIndex ?? 0);
+  // 3. Nếu cùng mã phiếu: index log mới nhất lên trước
+  if (a.id === b.id && a.logIndex !== undefined && b.logIndex !== undefined) {
+    return b.logIndex - a.logIndex;
+  }
+
+  // 4. Nếu khác mã phiếu: mã sequence mới hơn xếp trên
+  const seqA = extractRegistrationSequence(a.id);
+  const seqB = extractRegistrationSequence(b.id);
+  if (seqA > 0 && seqB > 0 && seqA !== seqB) {
+    return seqB - seqA;
+  }
+
+  return (b.id || '').localeCompare(a.id || '');
 }
 
 /**
@@ -437,13 +441,17 @@ export function flattenFoodRegistrationsToReportRows(registrations: FoodRegistra
       logs.forEach((log, logIdx) => {
         let entryDate = reg.entryDate;
         if (log.timestamp) {
-          const parsed = new Date(log.timestamp);
-          if (!isNaN(parsed.getTime())) {
-            const y = parsed.getFullYear();
-            const m = String(parsed.getMonth() + 1).padStart(2, '0');
-            const d = String(parsed.getDate()).padStart(2, '0');
-            entryDate = `${y}-${m}-${d}`;
-          }
+          try {
+            const dt = new Date(log.timestamp);
+            if (!isNaN(dt.getTime())) {
+              entryDate = new Intl.DateTimeFormat('en-CA', {
+                timeZone: 'Asia/Ho_Chi_Minh',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              }).format(dt);
+            }
+          } catch {}
         }
 
         const isConfirmed = log.action === 'confirmed';
@@ -480,7 +488,7 @@ export function flattenFoodRegistrationsToReportRows(registrations: FoodRegistra
           statusBadge,
           guardName: log.guardName,
           guardTime: log.timestamp,
-          sortTime: new Date(reg.createdAt).getTime(),
+          sortTime: log.timestamp ? new Date(log.timestamp).getTime() : new Date(reg.createdAt).getTime(),
           note: log.action === 'rejected' ? (log.reason || log.note || '-') : (log.note || '-'),
           isScanLog: true,
           logIndex: logIdx,
@@ -490,13 +498,17 @@ export function flattenFoodRegistrationsToReportRows(registrations: FoodRegistra
     } else if (reg.confirmedAt || reg.guardName) {
       let entryDate = reg.entryDate;
       if (reg.confirmedAt) {
-        const parsed = new Date(reg.confirmedAt);
-        if (!isNaN(parsed.getTime())) {
-          const y = parsed.getFullYear();
-          const m = String(parsed.getMonth() + 1).padStart(2, '0');
-          const d = String(parsed.getDate()).padStart(2, '0');
-          entryDate = `${y}-${m}-${d}`;
-        }
+        try {
+          const dt = new Date(reg.confirmedAt);
+          if (!isNaN(dt.getTime())) {
+            entryDate = new Intl.DateTimeFormat('en-CA', {
+              timeZone: 'Asia/Ho_Chi_Minh',
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+            }).format(dt);
+          }
+        } catch {}
       }
       const isRejected = reg.status === 'guard_rejected';
       const status: 'confirmed' | 'guard_rejected' = isRejected ? 'guard_rejected' : 'confirmed';
@@ -532,7 +544,7 @@ export function flattenFoodRegistrationsToReportRows(registrations: FoodRegistra
         statusBadge,
         guardName: reg.guardName,
         guardTime: reg.confirmedAt,
-        sortTime: new Date(reg.createdAt).getTime(),
+        sortTime: reg.confirmedAt ? new Date(reg.confirmedAt).getTime() : new Date(reg.createdAt).getTime(),
         note: reg.guardNote || reg.rejectedReason || '-',
         isScanLog: true,
       });
