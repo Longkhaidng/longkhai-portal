@@ -1,5 +1,5 @@
 export * from './repair';
-import { RepairProposal, RepairProposalStatus } from './repair';
+import { RepairProposal, RepairProposalStatus, ProposalAttachment } from './repair';
 
 export interface StationeryItem {
   id: string; // Mã VPP, e.g. 'VPP-001', 'GIAY-A4-70', 'BUT-BI-XANH'
@@ -144,6 +144,7 @@ export interface GeneralProposal {
   department: string;
   title: string; // Tiêu đề yêu cầu đề xuất
   content: string; // Nội dung chi tiết đề xuất
+  attachments?: ProposalAttachment[]; // Tệp đính kèm (ảnh, PDF < 1MB, tự động xóa sau 7 ngày)
 
   // Người / Bộ phận tiếp nhận được chọn
   receiverDepartment: string; // e.g. "Bộ Phận CNTT", "Phòng HCNS", "Cơ điện"...

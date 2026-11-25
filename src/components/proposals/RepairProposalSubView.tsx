@@ -1,12 +1,17 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { storage } from '@/lib/storage';
 import {
   RepairProposal,
   RepairProposalStatus,
   RepairStep,
+  ProposalAttachment,
+  isProposalAttachmentExpired,
+  getProposalAttachmentRemainingText,
+  ATTACHMENT_MAX_SIZE_BYTES,
+  ATTACHMENT_EXPIRY_DAYS,
   REPAIR_STATUS_BADGES,
   REPAIR_STATUS_LABELS,
 } from '@/types/repair';
@@ -46,6 +51,12 @@ import {
   ChevronRight,
   ShieldCheck,
   Check,
+  Paperclip,
+  Upload,
+  X,
+  ExternalLink,
+  ImageOff,
+  Image as ImageIcon,
 } from 'lucide-react';
 
 const capitalizeFirstLetter = (text: string) => {
@@ -106,8 +117,126 @@ export function RepairProposalSubView({
   const [department, setDepartment] = useState(() => currentUser?.department || 'Chung');
   const [location, setLocation] = useState('');
   const [issueDescription, setIssueDescription] = useState('');
+  const [attachments, setAttachments] = useState<ProposalAttachment[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [modalProposedSolution, setModalProposedSolution] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Process selected files for attachment (< 1MB, image/PDF)
+  const processFiles = (fileList: FileList | File[]) => {
+    const files = Array.from(fileList);
+    if (files.length === 0) return;
+
+    files.forEach((file) => {
+      // 1. Kiểm tra kích thước nhỏ hơn 1MB (1,048,576 bytes)
+      if (file.size > ATTACHMENT_MAX_SIZE_BYTES) {
+        showToast({
+          type: 'warning',
+          title: 'Tệp quá dung lượng',
+          message: `Tệp "${file.name}" (${(file.size / 1024 / 1024).toFixed(2)}MB) vượt quá giới hạn 1MB. Vui lòng chọn tệp nhỏ hơn 1MB.`,
+        });
+        return;
+      }
+
+      // 2. Kiểm tra định dạng: Ảnh hoặc PDF
+      const isImg = file.type.startsWith('image/');
+      const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+      if (!isImg && !isPdf) {
+        showToast({
+          type: 'warning',
+          title: 'Định dạng không hỗ trợ',
+          message: `Tệp "${file.name}" không hợp lệ. Hệ thống chỉ chấp nhận hình ảnh (PNG, JPG, WEBP) hoặc file PDF.`,
+        });
+        return;
+      }
+
+      // Đọc file thành Base64 Data URL
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+        const now = new Date();
+        const expiresDate = new Date(now.getTime() + ATTACHMENT_EXPIRY_DAYS * 24 * 60 * 60 * 1000);
+
+        const newAtt: ProposalAttachment = {
+          id: `ATT-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          name: file.name,
+          size: file.size,
+          type: file.type || (isPdf ? 'application/pdf' : 'image/jpeg'),
+          data: dataUrl,
+          uploadedAt: now.toISOString(),
+          expiresAt: expiresDate.toISOString(),
+          isExpired: false,
+        };
+
+        setAttachments((prev) => [...prev, newAtt]);
+        showToast({
+          type: 'success',
+          title: 'Đã đính kèm tệp',
+          message: `Đã thêm "${file.name}" (${(file.size / 1024).toFixed(1)} KB). Tệp sẽ tự động xóa sau 7 ngày.`,
+        });
+      };
+      reader.onerror = () => {
+        showToast({
+          type: 'error',
+          title: 'Lỗi đọc tệp',
+          message: `Không thể đọc nội dung tệp "${file.name}".`,
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      processFiles(e.target.files);
+      e.target.value = '';
+    }
+  };
+
+  const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files) {
+      processFiles(e.dataTransfer.files);
+    }
+  };
+
+  const removeAttachment = (index: number) => {
+    setAttachments((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const openAttachment = (att: ProposalAttachment) => {
+    if (!att.data) {
+      showToast({
+        type: 'warning',
+        title: 'Tệp đã hết hạn',
+        message: 'Tệp đính kèm này đã tự động xóa khỏi hệ thống sau 7 ngày.',
+      });
+      return;
+    }
+
+    try {
+      if (att.data.startsWith('data:')) {
+        const [header, base64] = att.data.split(',');
+        const mime = header.match(/:(.*?);/)?.[1] || att.type;
+        const byteCharacters = atob(base64);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: mime });
+        const blobUrl = URL.createObjectURL(blob);
+        window.open(blobUrl, '_blank');
+      } else {
+        window.open(att.data, '_blank');
+      }
+    } catch {
+      window.open(att.data, '_blank');
+    }
+  };
 
   // Table Filter & Search
   const [search, setSearch] = useState('');
@@ -292,6 +421,7 @@ export function RepairProposalSubView({
         department: userDept,
         location: capitalizeFirstLetter(location.trim()),
         issueDescription: capitalizeFirstLetter(issueDescription.trim()),
+        attachments: attachments.length > 0 ? attachments : undefined,
         status: 'pending_manager',
         steps,
         currentStepIndex: 1, // At step 2: Trưởng bộ phận duyệt
@@ -324,6 +454,14 @@ export function RepairProposalSubView({
               { label: 'Tổ / Bộ phận', value: newProposal.department },
               { label: 'Khu vực thiết bị hỏng', value: newProposal.location },
               { label: 'Tình trạng sự việc', value: newProposal.issueDescription },
+              ...(newProposal.attachments && newProposal.attachments.length > 0
+                ? [
+                    {
+                      label: 'Tệp đính kèm',
+                      value: `${newProposal.attachments.map((a) => a.name).join(', ')} (${newProposal.attachments.length} tệp - tự động xóa sau 7 ngày)`,
+                    },
+                  ]
+                : []),
               { label: 'Đề xuất hướng khắc phục', value: '(Trưởng bộ phận nhập khi duyệt đơn)' },
               { label: 'Thời gian gửi', value: formatDateTime(now) },
             ],
@@ -340,6 +478,7 @@ export function RepairProposalSubView({
       // Reset form & close modal
       setLocation('');
       setIssueDescription('');
+      setAttachments([]);
       handleCloseModal();
     } catch (err: any) {
       showToast({
@@ -853,6 +992,96 @@ export function RepairProposalSubView({
                 />
               </div>
 
+              {/* Field 3: Đính kèm file ảnh, PDF (< 1MB, tự xóa sau 7 ngày) */}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                    <Paperclip className="w-3.5 h-3.5 text-amber-500" />
+                    <span>Đính kèm hình ảnh, PDF</span>
+                    <span className="text-[11px] font-normal text-slate-400">(Không bắt buộc)</span>
+                  </label>
+                  <span className="text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+                    Tối đa 1MB/file • Tự động xóa sau 7 ngày
+                  </span>
+                </div>
+
+                {/* Dropzone & file input */}
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDragging(true);
+                  }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={handleFileDrop}
+                  className={`border-2 border-dashed rounded-xl p-3 sm:p-4 text-center cursor-pointer transition-all ${
+                    isDragging
+                      ? 'border-amber-500 bg-amber-50/50 dark:bg-amber-950/20 scale-[0.99]'
+                      : 'border-slate-200 dark:border-slate-700 hover:border-amber-400 hover:bg-slate-50/80 dark:hover:bg-slate-800/80 bg-slate-50/40 dark:bg-slate-800/40'
+                  }`}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*,application/pdf"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                  />
+                  <div className="flex items-center justify-center gap-2 text-slate-700 dark:text-slate-200">
+                    <Upload className="w-4 h-4 text-amber-500" />
+                    <span className="font-semibold text-xs">Bấm để chọn file hoặc kéo thả ảnh, PDF vào đây</span>
+                  </div>
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    Chấp nhận file hình ảnh (PNG, JPG, WEBP) hoặc file PDF &bull; Kích thước &lt; 1MB
+                  </p>
+                </div>
+
+                {/* Danh sách tệp đã chọn */}
+                {attachments.length > 0 && (
+                  <div className="mt-2.5 space-y-1.5">
+                    {attachments.map((att, idx) => (
+                      <div
+                        key={att.id || idx}
+                        className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs shadow-sm"
+                      >
+                        <div className="flex items-center gap-2.5 overflow-hidden">
+                          {att.type.startsWith('image/') ? (
+                            <div className="w-9 h-9 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 shrink-0 border border-slate-200 dark:border-slate-600">
+                              <img src={att.data} alt={att.name} className="w-full h-full object-cover" />
+                            </div>
+                          ) : (
+                            <div className="w-9 h-9 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-500 border border-rose-200 dark:border-rose-800/60 flex items-center justify-center shrink-0 font-bold text-[10px]">
+                              PDF
+                            </div>
+                          )}
+                          <div className="truncate">
+                            <div className="font-semibold text-slate-800 dark:text-slate-200 truncate">{att.name}</div>
+                            <div className="text-[10px] text-slate-400 flex items-center gap-1.5">
+                              <span>{(att.size / 1024).toFixed(1)} KB</span>
+                              <span>&bull;</span>
+                              <span className="text-amber-600 dark:text-amber-400 font-medium">Tự xóa sau 7 ngày</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeAttachment(idx);
+                          }}
+                          className="p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all cursor-pointer"
+                          title="Xóa tệp đính kèm này"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {/* Trình tự phê duyệt chuyển xuống phía dưới tình trạng sự việc theo yêu cầu */}
               <div className="bg-slate-50/80 dark:bg-slate-800/40 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-3 sm:p-3.5 space-y-2.5">
                 <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
@@ -932,6 +1161,7 @@ export function RepairProposalSubView({
                   onClick={() => {
                     setLocation('');
                     setIssueDescription('');
+                    setAttachments([]);
                   }}
                   className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer"
                 >
@@ -1094,6 +1324,93 @@ export function RepairProposalSubView({
                     {selectedProposal.issueDescription}
                   </div>
                 </div>
+
+                {/* Tệp đính kèm (Ảnh & PDF) */}
+                {selectedProposal.attachments && selectedProposal.attachments.length > 0 && (
+                  <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800 space-y-2.5">
+                    <div className="flex items-center justify-between text-[11px] font-bold">
+                      <div className="flex items-center gap-1.5 uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                        <Paperclip className="w-3.5 h-3.5 text-amber-500" />
+                        <span>Tệp đính kèm ({selectedProposal.attachments.length})</span>
+                      </div>
+                      <span className="text-[10px] font-normal text-amber-600 dark:text-amber-400">
+                        Tự động xóa sau 7 ngày kể từ lúc tạo
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                      {selectedProposal.attachments.map((att) => {
+                        const expired = isProposalAttachmentExpired(att) || !att.data;
+                        const remainingText = getProposalAttachmentRemainingText(att);
+
+                        return (
+                          <div
+                            key={att.id}
+                            className={`p-2.5 rounded-xl border flex items-center justify-between gap-2.5 transition-all ${
+                              expired
+                                ? 'bg-slate-100/60 dark:bg-slate-800/20 border-slate-200 dark:border-slate-800 opacity-60'
+                                : 'bg-white dark:bg-slate-800 border-slate-200/80 dark:border-slate-700/80 hover:shadow-sm'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              {att.type.startsWith('image/') ? (
+                                expired ? (
+                                  <div className="w-9 h-9 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-400 shrink-0">
+                                    <ImageOff className="w-4 h-4" />
+                                  </div>
+                                ) : (
+                                  <div
+                                    onClick={() => setPreviewImage(att.data)}
+                                    className="w-9 h-9 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 shrink-0 border border-slate-200 dark:border-slate-600 cursor-pointer hover:opacity-80 transition-opacity"
+                                    title="Bấm để xem ảnh lớn"
+                                  >
+                                    <img src={att.data} alt={att.name} className="w-full h-full object-cover" />
+                                  </div>
+                                )
+                              ) : (
+                                <div className="w-9 h-9 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-500 border border-rose-200 dark:border-rose-800/60 flex items-center justify-center shrink-0 font-bold text-xs">
+                                  PDF
+                                </div>
+                              )}
+
+                              <div className="min-w-0">
+                                <div className="font-semibold text-slate-900 dark:text-white text-xs truncate" title={att.name}>
+                                  {att.name}
+                                </div>
+                                <div className="text-[10px] text-slate-400 flex items-center gap-1.5 mt-0.5">
+                                  <span>{(att.size / 1024).toFixed(1)} KB</span>
+                                  <span>&bull;</span>
+                                  {expired ? (
+                                    <span className="text-rose-500 font-medium">Đã xóa sau 7 ngày</span>
+                                  ) : (
+                                    <span className="text-emerald-600 dark:text-emerald-400 font-medium">{remainingText}</span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {!expired && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (att.type.startsWith('image/')) {
+                                    setPreviewImage(att.data);
+                                  } else {
+                                    openAttachment(att);
+                                  }
+                                }}
+                                className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-[11px] font-semibold flex items-center gap-1 shrink-0 cursor-pointer transition-colors"
+                              >
+                                <ExternalLink className="w-3 h-3" />
+                                <span>Xem</span>
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
 
                 {/* Proposed Solution by Manager */}
                 <div className="p-4 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/60">
@@ -1348,6 +1665,37 @@ export function RepairProposalSubView({
               >
                 Đóng
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Lightbox Preview Modal for Image Attachments */}
+      {previewImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div
+            className="relative max-w-4xl max-h-[90vh] bg-slate-900 rounded-2xl overflow-hidden shadow-2xl p-3 border border-slate-800"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-2 border-b border-slate-800 mb-2">
+              <span className="text-xs font-bold text-slate-300">Xem ảnh đính kèm</span>
+              <button
+                type="button"
+                onClick={() => setPreviewImage(null)}
+                className="w-8 h-8 rounded-full bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 flex items-center justify-center cursor-pointer transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="max-h-[80vh] overflow-auto flex items-center justify-center">
+              <img
+                src={previewImage}
+                alt="Ảnh đính kèm"
+                className="max-w-full max-h-[75vh] object-contain rounded-xl"
+              />
             </div>
           </div>
         </div>

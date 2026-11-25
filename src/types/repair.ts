@@ -18,6 +18,46 @@ export interface RepairStep {
   comment?: string;
 }
 
+export interface ProposalAttachment {
+  id: string;
+  name: string;
+  size: number; // bytes
+  type: string; // 'image/png' | 'image/jpeg' | 'application/pdf' ...
+  data: string; // Base64 data URL string (trống nếu đã quá hạn 7 ngày và bị xóa)
+  uploadedAt: string; // ISO date string
+  expiresAt: string; // ISO date string (tự động xóa sau 7 ngày)
+  isExpired?: boolean;
+}
+
+export const ATTACHMENT_MAX_SIZE_BYTES = 1024 * 1024; // 1 MB
+export const ATTACHMENT_EXPIRY_DAYS = 7;
+export const ATTACHMENT_EXPIRY_MS = ATTACHMENT_EXPIRY_DAYS * 24 * 60 * 60 * 1000;
+
+export function isProposalAttachmentExpired(att: { uploadedAt?: string; expiresAt?: string; isExpired?: boolean }): boolean {
+  if (!att) return true;
+  if (att.isExpired) return true;
+  const now = Date.now();
+  if (att.expiresAt) {
+    return now >= new Date(att.expiresAt).getTime();
+  }
+  if (att.uploadedAt) {
+    return now >= new Date(att.uploadedAt).getTime() + ATTACHMENT_EXPIRY_MS;
+  }
+  return false;
+}
+
+export function getProposalAttachmentRemainingText(att: { uploadedAt?: string; expiresAt?: string }): string {
+  if (!att.uploadedAt && !att.expiresAt) return 'Đã hết hạn';
+  const expiresAt = att.expiresAt
+    ? new Date(att.expiresAt).getTime()
+    : new Date(att.uploadedAt!).getTime() + ATTACHMENT_EXPIRY_MS;
+  const diffMs = expiresAt - Date.now();
+  if (diffMs <= 0) return 'Đã tự động xóa sau 7 ngày';
+  const days = Math.ceil(diffMs / (24 * 60 * 60 * 1000));
+  if (days <= 1) return 'Hết hạn hôm nay';
+  return `Còn ${days} ngày (tự xóa)`;
+}
+
 export interface RepairProposal {
   id: string; // SC26-0001
   employeeId: string;
@@ -26,6 +66,7 @@ export interface RepairProposal {
   location: string; // Khu vực: vị trí thiết bị bị hỏng (bắt buộc)
   issueDescription: string; // Tình trạng sự việc (bắt buộc)
   proposedSolution?: string; // Đề xuất hướng khắc phục (không bắt buộc)
+  attachments?: ProposalAttachment[]; // Tệp đính kèm (ảnh, PDF < 1MB, tự xóa sau 7 ngày)
 
   // Trưởng bộ phận duyệt (Bước 2)
   managerId?: string;

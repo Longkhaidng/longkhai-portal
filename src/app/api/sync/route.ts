@@ -132,6 +132,25 @@ function scanJsonFiles<T>(subDir: string): T[] {
                   parsed.shift = 'Ca HC (08:00 - 16:30)';
                 }
               }
+              if (subDir === 'repair-proposal' || subDir === 'general-proposal') {
+                if (Array.isArray(parsed.attachments) && parsed.attachments.length > 0) {
+                  let fileChanged = false;
+                  parsed.attachments = parsed.attachments.map((att: any) => {
+                    const upTime = new Date(att.uploadedAt || parsed.createdAt || 0).getTime();
+                    const isExp = Date.now() - upTime >= 7 * 24 * 60 * 60 * 1000;
+                    if (isExp && att.data) {
+                      fileChanged = true;
+                      return { ...att, data: '', isExpired: true };
+                    }
+                    return att;
+                  });
+                  if (fileChanged) {
+                    try {
+                      fs.writeFileSync(full, JSON.stringify(parsed, null, 2), 'utf-8');
+                    } catch {}
+                  }
+                }
+              }
               results.set(id, parsed);
             }
           } catch {}

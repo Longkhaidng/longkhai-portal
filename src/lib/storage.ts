@@ -2,7 +2,7 @@ import { User, CATEGORY_DEFINITIONS, Department, WebIntegration, Position } from
 import { LeaveRequest } from '@/types/leave';
 import { AttendanceConfirm } from '@/types/attendance';
 import { GatePass } from '@/types/gatePass';
-import { RepairProposal } from '@/types/repair';
+import { RepairProposal, isProposalAttachmentExpired } from '@/types/repair';
 import { PCCCDevice, PCCCInspection, formatPCCCDate, inferPCCCCategory } from '@/types/pccc';
 import { INITIAL_PCCC_DEVICES, INITIAL_PCCC_INSPECTIONS } from './pccc-data';
 import {
@@ -522,21 +522,45 @@ class StorageService {
       const data = localStorage.getItem(STORAGE_KEYS.REPAIR_PROPOSALS);
       if (data) {
         const proposals: RepairProposal[] = JSON.parse(data);
+        let hasExpired = false;
         const map = new Map<string, RepairProposal>();
         for (const p of proposals) {
           const normId = formatDocId(p.id);
+          // Tự động dọn dẹp các tệp đính kèm quá 7 ngày
+          let item = p;
+          if (Array.isArray(item.attachments) && item.attachments.length > 0) {
+            let attChanged = false;
+            const cleanedAtts = item.attachments.map((att) => {
+              if (isProposalAttachmentExpired(att) && att.data) {
+                attChanged = true;
+                return { ...att, data: '', isExpired: true };
+              }
+              return att;
+            });
+            if (attChanged) {
+              hasExpired = true;
+              item = { ...item, attachments: cleanedAtts };
+            }
+          }
+
           const existing = map.get(normId);
           if (!existing) {
-            map.set(normId, { ...p, id: normId });
+            map.set(normId, { ...item, id: normId });
           } else {
             const existingTime = new Date(existing.updatedAt || existing.createdAt || 0).getTime();
-            const newTime = new Date(p.updatedAt || p.createdAt || 0).getTime();
+            const newTime = new Date(item.updatedAt || item.createdAt || 0).getTime();
             if (newTime >= existingTime) {
-              map.set(normId, { ...p, id: normId });
+              map.set(normId, { ...item, id: normId });
             }
           }
         }
-        return sortNewestFirst(Array.from(map.values()));
+        const result = sortNewestFirst(Array.from(map.values()));
+        if (hasExpired) {
+          try {
+            localStorage.setItem(STORAGE_KEYS.REPAIR_PROPOSALS, JSON.stringify(result));
+          } catch {}
+        }
+        return result;
       }
     } catch {}
     return [];
@@ -771,12 +795,34 @@ class StorageService {
       const data = localStorage.getItem(STORAGE_KEYS.GENERAL_PROPOSALS);
       if (data) {
         const proposals: GeneralProposal[] = JSON.parse(data);
+        let hasExpired = false;
         const map = new Map<string, GeneralProposal>();
         proposals.forEach((p) => {
           const fid = formatDocId(p.id);
-          map.set(fid, { ...p, id: fid });
+          let item = p;
+          if (Array.isArray(item.attachments) && item.attachments.length > 0) {
+            let attChanged = false;
+            const cleanedAtts = item.attachments.map((att) => {
+              if (isProposalAttachmentExpired(att) && att.data) {
+                attChanged = true;
+                return { ...att, data: '', isExpired: true };
+              }
+              return att;
+            });
+            if (attChanged) {
+              hasExpired = true;
+              item = { ...item, attachments: cleanedAtts };
+            }
+          }
+          map.set(fid, { ...item, id: fid });
         });
-        return sortNewestFirst(Array.from(map.values()));
+        const result = sortNewestFirst(Array.from(map.values()));
+        if (hasExpired) {
+          try {
+            localStorage.setItem(STORAGE_KEYS.GENERAL_PROPOSALS, JSON.stringify(result));
+          } catch {}
+        }
+        return result;
       }
     } catch {}
     return [];
