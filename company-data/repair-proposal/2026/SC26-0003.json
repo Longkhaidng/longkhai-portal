@@ -17,7 +17,7 @@
       "isExpired": false
     }
   ],
-  "status": "pending_manager",
+  "status": "maintenance_pending",
   "steps": [
     {
       "step": 1,
@@ -37,7 +37,9 @@
       "approverId": "1867",
       "approverName": "Trương Anh Như Quỳnh",
       "approverEmail": "Quynh.truong@longkhai.com.vn",
-      "status": "pending"
+      "status": "approved",
+      "updatedAt": "2026-11-25T04:59:02.510Z",
+      "comment": "Chuyển BP Cơ điện kiểm tra và sửa chữa phần lệch của thép gai (do quá trình chặt cây ngã làm dịch chuyển hiện trạng cũ)"
     },
     {
       "step": 3,
@@ -55,13 +57,17 @@
       "status": "pending"
     }
   ],
-  "currentStepIndex": 1,
+  "currentStepIndex": 2,
   "createdAt": "2026-11-25T04:23:54.398Z",
-  "updatedAt": "2026-11-25T04:23:54.398Z",
+  "updatedAt": "2026-11-25T04:59:02.510Z",
   "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
   "emailConfig": {
     "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
     "senderName": "Cổng Thông Tin Long Khải",
     "portalBaseUrl": "https://longkhai-portal.vercel.app"
-  }
+  },
+  "managerId": "1867",
+  "managerName": "Trương Anh Như Quỳnh",
+  "managerApprovedAt": "2026-11-25T04:59:02.510Z",
+  "managerComment": "Chuyển BP Cơ điện kiểm tra và sửa chữa phần lệch của thép gai (do quá trình chặt cây ngã làm dịch chuyển hiện trạng cũ)"
 }
