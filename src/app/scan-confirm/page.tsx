@@ -401,6 +401,10 @@ function ScanConfirmContent() {
         { facingMode: 'environment' },
         { fps: 10, qrbox: { width: 250, height: 250 } },
         (decodedText) => {
+          if (decodedText.includes('gas_inspection') || decodedText.includes('stationId=')) {
+            window.location.href = decodedText.startsWith('http') ? decodedText : `/?tab=gas_inspection&scan=true`;
+            return;
+          }
           const parsed = parseQrCodeContent(decodedText);
           if (parsed.id) {
             // Stop camera and load document
@@ -454,6 +458,10 @@ function ScanConfirmContent() {
     e.preventDefault();
     const clean = manualCodeInput.trim().toUpperCase();
     if (!clean) return;
+    if (clean.includes('GAS') || clean.includes('TRAM-GAS')) {
+      window.location.href = `/?tab=gas_inspection&scan=true`;
+      return;
+    }
     const parsed = parseQrCodeContent(clean);
     setCurrentDocId(parsed.id);
     setCurrentDocType(parsed.type || null);

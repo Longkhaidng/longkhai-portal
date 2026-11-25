@@ -263,6 +263,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
+    // Kiểm tra hệ thống Gas: cho phép nhân sự được phân quyền, hoặc EHS / Cơ điện / Bảo trì / Bếp / HCNS / Quản lý
+    if (category === 'gas_inspection') {
+      if (Array.isArray(currentUser.permissions) && currentUser.permissions.includes('gas_inspection')) {
+        return true;
+      }
+      if (
+        currentUser.role === 'ehs' ||
+        currentUser.role === 'hr' ||
+        currentUser.role === 'manager' ||
+        (currentUser.department && /cơ điện|bảo trì|an toàn|ehs|pccc|bếp|nhà bếp|kcs/i.test(currentUser.department))
+      ) {
+        return true;
+      }
+    }
+
     // Strict role-based & category-based permissions configured by Admin
     if (Array.isArray(currentUser.permissions)) {
       return currentUser.permissions.includes(category);

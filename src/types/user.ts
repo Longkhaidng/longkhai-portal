@@ -22,6 +22,7 @@ export type CategoryPermission =
   | 'gate_pass'
   | 'repair'
   | 'pccc'
+  | 'gas_inspection'
   | 'periodic_inspection'
   | 'announcements'
   | 'forms'
@@ -50,6 +51,7 @@ export const CATEGORY_DEFINITIONS: CategoryInfo[] = [
   { id: 'camera', name: 'Đăng ký xem Camera', description: 'Đăng ký và duyệt phiếu xem dữ liệu camera an ninh', iconName: 'Camera' },
   { id: 'repair', name: 'Phiếu đề xuất', description: 'Đề xuất sửa chữa, văn phòng phẩm & đề xuất khác', iconName: 'ClipboardList' },
   { id: 'pccc', name: 'Kiểm tra PCCC', description: 'Quản lý thiết bị PCCC và biên bản kiểm định', iconName: 'Flame' },
+  { id: 'gas_inspection', name: 'Kiểm tra hệ thống Gas', description: 'Kiểm tra trạm gas, van điều áp, độ kín & xác nhận nhà bếp', iconName: 'Fuel' },
   { id: 'periodic_inspection', name: 'Kiểm tra định kỳ', description: 'Tủ SCC, máy rửa mắt, nước mưa, nước ngầm & đất', iconName: 'ClipboardCheck' },
   { id: 'announcements', name: 'Thông báo & Nội quy', description: 'Thông báo, nội quy và chính sách nhà máy', iconName: 'Bell' },
   { id: 'forms', name: 'Quản lý biểu mẫu động', description: 'Biểu mẫu điện tử và khảo sát nội bộ', iconName: 'FileSpreadsheet' },

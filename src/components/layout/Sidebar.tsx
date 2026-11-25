@@ -28,6 +28,7 @@ import {
   LayoutGrid,
   ClipboardList,
   Flame,
+  Fuel,
   ClipboardCheck,
   UtensilsCrossed,
   ShieldCheck,
@@ -200,6 +201,12 @@ export function Sidebar({
       permission: 'pccc',
       label: 'Kiểm tra PCCC',
       icon: Flame,
+    },
+    {
+      id: 'gas_inspection',
+      permission: 'gas_inspection',
+      label: 'Kiểm tra hệ thống Gas',
+      icon: Fuel,
     },
     {
       id: 'periodic_inspection',

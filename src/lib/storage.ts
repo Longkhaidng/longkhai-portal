@@ -20,6 +20,12 @@ import {
   FIRST_AID_ITEMS_BY_LOCATION,
   OLD_TO_NEW_PERIODIC_IDS,
 } from './periodic-inspection-data';
+import {
+  GasInspectionRecord,
+  GasStation,
+  DEFAULT_GAS_STATIONS,
+} from '@/types/gas-inspection';
+import { INITIAL_GAS_INSPECTIONS } from './gas-inspection-data';
 import { StationeryItem, StationeryProposal, GeneralProposal } from '@/types/proposal';
 import { INITIAL_STATIONERY_ITEMS } from './initial-data';
 import { Announcement } from '@/types/announcement';
@@ -63,6 +69,8 @@ const STORAGE_KEYS = {
   STATIONERY_PROPOSALS: 'lk_portal_stationery_proposals',
   PCCC_DEVICES: 'lk_portal_pccc_devices',
   PCCC_INSPECTIONS: 'lk_portal_pccc_inspections',
+  GAS_INSPECTIONS: 'lk_portal_gas_inspections',
+  GAS_STATIONS: 'lk_portal_gas_stations',
   PERIODIC_FIRST_AID: 'lk_portal_periodic_first_aid_v3',
   PERIODIC_FIRST_AID_STANDARDS: 'lk_portal_periodic_first_aid_standards_v2',
   PERIODIC_EYEWASH: 'lk_portal_periodic_eyewash_v3',
@@ -1800,6 +1808,100 @@ class StorageService {
     }).catch(() => {});
   }
 
+  // --- GAS INSPECTION (KIỂM TRA HỆ THỐNG GAS) ---
+  getGasStations(): GasStation[] {
+    if (!this.isClient()) return DEFAULT_GAS_STATIONS;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.GAS_STATIONS);
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {}
+    this.saveGasStations(DEFAULT_GAS_STATIONS);
+    return DEFAULT_GAS_STATIONS;
+  }
+
+  saveGasStations(stations: GasStation[]): void {
+    if (!this.isClient()) return;
+    localStorage.setItem(STORAGE_KEYS.GAS_STATIONS, JSON.stringify(stations));
+  }
+
+  getGasInspections(): GasInspectionRecord[] {
+    if (!this.isClient()) return INITIAL_GAS_INSPECTIONS;
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.GAS_INSPECTIONS);
+      if (data !== null) {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed)) {
+          return sortNewestFirst(parsed);
+        }
+      }
+    } catch {}
+    if (INITIAL_GAS_INSPECTIONS.length > 0) {
+      localStorage.setItem(STORAGE_KEYS.GAS_INSPECTIONS, JSON.stringify(INITIAL_GAS_INSPECTIONS));
+    }
+    return INITIAL_GAS_INSPECTIONS;
+  }
+
+  saveGasInspection(inspection: GasInspectionRecord, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const inspections = this.getGasInspections();
+    const existingIndex = inspections.findIndex((i) => i.id === inspection.id);
+    if (existingIndex >= 0) {
+      inspections[existingIndex] = {
+        ...inspection,
+        updatedAt: new Date().toISOString(),
+      };
+    } else {
+      inspections.unshift(inspection);
+    }
+    localStorage.setItem(STORAGE_KEYS.GAS_INSPECTIONS, JSON.stringify(inspections));
+
+    this.addAuditLog(
+      existingIndex >= 0 ? 'update' : 'create',
+      'gas_inspection' as any,
+      inspection.id,
+      byUser?.id || inspection.inspector.id,
+      byUser?.name || inspection.inspector.name,
+      `Kiểm tra hệ thống Gas [${inspection.stationName}] - Mã: ${inspection.id} - Đánh giá: ${inspection.overallResult.toUpperCase()}`
+    );
+
+    const year = new Date().getFullYear();
+    this.syncFileToGitHub(
+      `gas/inspections/${year}/${inspection.id}.json`,
+      JSON.stringify(inspection, null, 2),
+      `Save Gas Inspection ${inspection.id}`
+    );
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'gas_inspections',
+        data: inspection,
+        githubToken: this.getGitHubConfig().token,
+      }),
+    }).catch(() => {});
+  }
+
+  deleteGasInspection(id: string, byUser?: { id: string; name: string }): void {
+    if (!this.isClient()) return;
+    const inspections = this.getGasInspections();
+    const filtered = inspections.filter((i) => i.id !== id);
+    localStorage.setItem(STORAGE_KEYS.GAS_INSPECTIONS, JSON.stringify(filtered));
+
+    this.addAuditLog(
+      'delete',
+      'gas_inspection' as any,
+      id,
+      byUser?.id || 'admin',
+      byUser?.name || 'Quản trị viên',
+      `Xóa phiếu kiểm tra hệ thống Gas mã: ${id}`
+    );
+  }
+
   getClearedCollections(): Record<string, number> {
     if (!this.isClient()) return {};
     try {
@@ -1851,6 +1953,7 @@ class StorageService {
       | 'stationery'
       | 'general_proposal'
       | 'pccc_inspections'
+      | 'gas_inspections'
       | 'camera_request'
       | 'periodic_inspections'
       | 'food_inspection_3step'
@@ -1907,6 +2010,10 @@ class StorageService {
     if (targets.includes('pccc_inspections')) {
       localStorage.setItem(STORAGE_KEYS.PCCC_INSPECTIONS, '[]');
       clearedLabels.push('Kiểm tra PCCC');
+    }
+    if (targets.includes('gas_inspections')) {
+      localStorage.setItem(STORAGE_KEYS.GAS_INSPECTIONS, '[]');
+      clearedLabels.push('Kiểm tra hệ thống Gas');
     }
     if (targets.includes('camera_request')) {
       localStorage.setItem(STORAGE_KEYS.CAMERA_REQUESTS, '[]');

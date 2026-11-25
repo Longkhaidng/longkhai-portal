@@ -13,6 +13,7 @@ import { GatePassView } from '@/components/gatepass/GatePassView';
 import { OvertimeView } from '@/components/overtime/OvertimeView';
 import { ProposalHubView } from '@/components/proposals/ProposalHubView';
 import { PCCCInspectionView } from '@/components/pccc/PCCCInspectionView';
+import { GasInspectionView } from '@/components/gas-inspection/GasInspectionView';
 import { PeriodicInspectionView } from '@/components/periodic-inspection/PeriodicInspectionView';
 import { FoodRegistrationView } from '@/components/food-registration/FoodRegistrationView';
 import { FoodInspection3StepView } from '@/components/food-inspection/FoodInspection3StepView';
@@ -52,6 +53,8 @@ function PortalAppContent() {
   const [viewingWebSite, setViewingWebSite] = useState<WebIntegration | null>(null);
   const [dataVersion, setDataVersion] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [gasScanFromUrl, setGasScanFromUrl] = useState(false);
+  const [gasStationFromUrl, setGasStationFromUrl] = useState<string | undefined>(undefined);
 
   React.useEffect(() => {
     const handleStorageChange = () => {
@@ -80,7 +83,18 @@ function PortalAppContent() {
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('pccc')) {
+      const tabParam = urlParams.get('tab');
+      if (tabParam === 'gas_inspection' || urlParams.get('gas') || urlParams.get('type') === 'gas') {
+        setCurrentTab('gas_inspection');
+        if (urlParams.get('scan') === 'true') {
+          setGasScanFromUrl(true);
+        }
+        if (urlParams.get('stationId')) {
+          setGasStationFromUrl(urlParams.get('stationId') || undefined);
+        }
+      } else if (tabParam) {
+        setCurrentTab(tabParam);
+      } else if (urlParams.get('pccc')) {
         setCurrentTab('pccc');
       } else {
         const targetType = urlParams.get('type');
@@ -417,6 +431,14 @@ function PortalAppContent() {
       case 'pccc':
         if (!hasPermission('pccc')) return <DashboardView onNavigateTab={(tab: string) => setCurrentTab(tab)} />;
         return <PCCCInspectionView />;
+      case 'gas_inspection':
+        if (!hasPermission('gas_inspection')) return <DashboardView onNavigateTab={(tab: string) => setCurrentTab(tab)} />;
+        return (
+          <GasInspectionView
+            initialScan={gasScanFromUrl}
+            initialStationId={gasStationFromUrl}
+          />
+        );
       case 'periodic_inspection':
       case 'periodic_first_aid':
       case 'periodic_eyewash':

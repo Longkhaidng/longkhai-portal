@@ -11,6 +11,7 @@ import {
   Timer,
   ClipboardList,
   Flame,
+  Fuel,
   BarChart3,
   Bell,
   Pin,
@@ -573,6 +574,7 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
     { id: 'food_registration', label: 'Thực phẩm mang vào', icon: UtensilsCrossed, color: 'text-teal-600 bg-teal-50 dark:bg-teal-950/40 border-teal-200 dark:border-teal-900' },
     { id: 'proposals', label: 'Phiếu đề xuất', icon: ClipboardList, color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/40 border-indigo-200 dark:border-indigo-900' },
     { id: 'pccc', label: 'Kiểm tra PCCC', icon: Flame, color: 'text-rose-600 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900' },
+    { id: 'gas_inspection', label: 'Kiểm tra Gas', icon: Fuel, color: 'text-amber-600 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900' },
     { id: 'reports', label: 'Báo cáo & Thống kê', icon: BarChart3, color: 'text-cyan-600 bg-cyan-50 dark:bg-cyan-950/40 border-cyan-200 dark:border-cyan-900' },
   ].filter((a) => {
     if (a.id === 'proposals') return hasPermission('repair');
