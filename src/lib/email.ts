@@ -781,9 +781,9 @@ export async function dispatchBODNotificationEmail(
       <p style="margin: 6px 0 0 0; font-size: 12px; opacity: 0.9;">Kính gửi Ban Giám Đốc (Báo cáo thông tin &bull; Không cần phê duyệt)</p>
     </div>
     <div style="padding: 24px;">
-      <p style="font-size: 14px; margin-top: 0; color: #1e293b;">Kính gửi <b>Quý Ban Giám Đốc & Giám đốc sản xuất (Anh Phạm Đình Tú)</b>,</p>
+      <p style="font-size: 14px; margin-top: 0; color: #1e293b;">Kính gửi <b>Ban Giám Đốc Công Ty Long Khải</b>,</p>
       <p style="font-size: 13px; color: #475569;">
-        Hệ thống xin trân trọng thông báo: Phiếu đề xuất sửa chữa thiết bị <b>${proposal.id}</b> từ nhân viên <b>${proposal.employeeName}</b> (${proposal.employeeId}) thuộc <b>${proposal.department}</b> đã được Trưởng bộ phận <b>${proposal.managerName || 'phê duyệt'}</b> chấp thuận và chuyển giao cho Bộ phận Cơ điện xử lý.
+        Phiếu đề xuất sửa chữa thiết bị <b>${proposal.id}</b> từ nhân viên <b>${proposal.employeeName}</b> (${proposal.employeeId}) thuộc <b>${proposal.department}</b> đã được Trưởng bộ phận <b>${proposal.managerName || 'phê duyệt'}</b> chấp thuận và chuyển giao cho Bộ phận Cơ điện xử lý.
       </p>
 
       <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin: 18px 0; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
