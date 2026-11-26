@@ -247,8 +247,8 @@ export function DashboardView({ onNavigateTab }: DashboardViewProps) {
 
     const cameraList = rawCamera.filter((c: any) => {
       if (c.status === 'approved' || c.status === 'rejected') return false;
-      if (isITStaff(currentUser) && c.status === 'pending_it') return true;
       if (isHRHead(currentUser) && c.status === 'pending_hr') return true;
+      if (isITStaff(currentUser) && c.status === 'pending_it') return true;
       return isManagedByViewer(c.employeeId, c.department);
     });
 

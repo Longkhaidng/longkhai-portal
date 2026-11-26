@@ -776,7 +776,16 @@ export function canAccessCameraReport(user?: User | null): boolean {
 }
 
 /**
- * Check if user can approve Camera Request at Step 1 (Bộ phận IT)
+ * Check if user can approve Camera Request at Step 1 (Trưởng phòng HCNS)
+ */
+export function canApproveCameraHR(user?: User | null, request?: CameraRequest | null): boolean {
+  if (!user || !request) return false;
+  if (request.status !== 'pending_hr') return false;
+  return isSuperAdminOrBOD(user) || isHRHead(user) || user.role === 'hr';
+}
+
+/**
+ * Check if user can approve Camera Request at Step 2 (Nhân viên IT mở camera cho xem)
  */
 export function canApproveCameraIT(user?: User | null, request?: CameraRequest | null): boolean {
   if (!user || !request) return false;
@@ -785,19 +794,10 @@ export function canApproveCameraIT(user?: User | null, request?: CameraRequest |
 }
 
 /**
- * Check if user can approve Camera Request at Step 2 (Trưởng phòng HCNS)
- */
-export function canApproveCameraHR(user?: User | null, request?: CameraRequest | null): boolean {
-  if (!user || !request) return false;
-  if (request.status !== 'pending_hr') return false;
-  return isSuperAdminOrBOD(user) || isHRHead(user);
-}
-
-/**
  * Filter Camera Requests based on user role & scope:
  * - Regular employee: Strictly can only see their own requests.
- * - IT staff: Sees pending_it in approver mode, or all in all mode, + own requests.
  * - HR Head: Sees pending_hr in approver mode, or all in all mode, + own requests.
+ * - IT staff: Sees pending_it (sau khi HCNS duyệt) in approver mode, or all in all mode, + own requests.
  * - Admin/BOD: Full visibility.
  */
 export function filterUserCameraRequests(

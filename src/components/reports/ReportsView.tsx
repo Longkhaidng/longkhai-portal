@@ -1464,6 +1464,15 @@ export function ReportsView() {
                     <option value="approved">Đã xác nhận cắt cơm</option>
                     <option value="pending">Chờ xác nhận</option>
                   </>
+                ) : reportType === 'camera' ? (
+                  <>
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="pending_hr">Chờ HCNS duyệt</option>
+                    <option value="pending_it">Chờ IT mở camera</option>
+                    <option value="approved">Hoàn tất</option>
+                    <option value="rejected">Bị từ chối</option>
+                    <option value="cancelled">Đã hủy</option>
+                  </>
                 ) : (
                   <>
                     <option value="all">Tất cả trạng thái</option>
@@ -2562,9 +2571,9 @@ export function ReportsView() {
                     </tr>
                   ) : (
                     filteredCameraRequests.map((r, idx) => {
-                      const badge = CAMERA_STATUS_BADGES[r.status] || CAMERA_STATUS_BADGES.pending_it;
-                      const itStep = r.steps?.find((s) => s.roleRequired === 'it');
+                      const badge = CAMERA_STATUS_BADGES[r.status] || CAMERA_STATUS_BADGES.pending_hr;
                       const hrStep = r.steps?.find((s) => s.roleRequired === 'hr');
+                      const itStep = r.steps?.find((s) => s.roleRequired === 'it');
 
                       return (
                         <tr key={r.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-800/40">
@@ -2601,18 +2610,6 @@ export function ReportsView() {
                           </td>
                           <td className="p-2 border text-[11px] whitespace-nowrap">
                             <div>
-                              <b>IT:</b>{' '}
-                              {itStep?.status === 'approved' ? (
-                                <span className="text-emerald-600 font-semibold">
-                                  ✓ {itStep.approverName} ({formatDate(itStep.actionAt || '')})
-                                </span>
-                              ) : itStep?.status === 'rejected' ? (
-                                <span className="text-rose-600 font-semibold">✕ Từ chối</span>
-                              ) : (
-                                <span className="text-amber-600">⏳ Chờ duyệt</span>
-                              )}
-                            </div>
-                            <div className="mt-0.5">
                               <b>HCNS:</b>{' '}
                               {hrStep?.status === 'approved' ? (
                                 <span className="text-emerald-600 font-semibold">
@@ -2622,6 +2619,18 @@ export function ReportsView() {
                                 <span className="text-rose-600 font-semibold">✕ Từ chối</span>
                               ) : (
                                 <span className="text-amber-600">⏳ Chờ duyệt</span>
+                              )}
+                            </div>
+                            <div className="mt-0.5">
+                              <b>IT mở camera:</b>{' '}
+                              {itStep?.status === 'approved' ? (
+                                <span className="text-emerald-600 font-semibold">
+                                  ✓ {itStep.approverName} ({formatDate(itStep.actionAt || '')})
+                                </span>
+                              ) : itStep?.status === 'rejected' ? (
+                                <span className="text-rose-600 font-semibold">✕ Từ chối</span>
+                              ) : (
+                                <span className="text-amber-600">⏳ Chờ mở camera</span>
                               )}
                             </div>
                           </td>
@@ -2694,13 +2703,13 @@ export function ReportsView() {
             </div>
 
             <div className="space-y-12">
-              <div className="font-bold uppercase text-slate-900 dark:text-white">BỘ PHẬN CNTT (IT)</div>
-              <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
+              <div className="font-bold uppercase text-slate-900 dark:text-white">TRƯỞNG PHÒNG HCNS</div>
+              <div className="text-[11px] text-slate-400 italic">(Ký duyệt, ghi rõ họ tên)</div>
             </div>
 
             <div className="space-y-12">
-              <div className="font-bold uppercase text-slate-900 dark:text-white">TRƯỞNG PHÒNG HCNS</div>
-              <div className="text-[11px] text-slate-400 italic">(Ký, ghi rõ họ tên)</div>
+              <div className="font-bold uppercase text-slate-900 dark:text-white">BỘ PHẬN CNTT (IT)</div>
+              <div className="text-[11px] text-slate-400 italic">(Xác nhận mở camera)</div>
             </div>
 
             <div className="space-y-12">

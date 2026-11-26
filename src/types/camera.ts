@@ -24,35 +24,35 @@ export const CAMERA_PURPOSE_LABELS: Record<CameraPurpose, string> = {
 };
 
 export type CameraRequestStatus =
-  | 'pending_it' // Chờ IT duyệt (Bước 1)
-  | 'pending_hr' // Chờ Trưởng phòng HCNS duyệt (Bước 2)
-  | 'approved'   // Đã duyệt hoàn tất
+  | 'pending_hr' // Chờ Trưởng phòng HCNS duyệt (Bước 1)
+  | 'pending_it' // Chờ IT mở camera cho nhân viên xem (Bước 2)
+  | 'approved'   // Hoàn tất
   | 'rejected'   // Từ chối
   | 'cancelled'; // Đã hủy
 
 export const CAMERA_STATUS_LABELS: Record<CameraRequestStatus, string> = {
-  pending_it: 'Chờ IT duyệt',
   pending_hr: 'Chờ HCNS duyệt',
-  approved: 'Đã duyệt',
+  pending_it: 'Chờ IT mở camera',
+  approved: 'Hoàn tất',
   rejected: 'Từ chối',
   cancelled: 'Đã hủy',
 };
 
 export const CAMERA_STATUS_BADGES: Record<CameraRequestStatus, { bg: string; text: string; border: string }> = {
-  pending_it: {
-    bg: 'bg-amber-50 dark:bg-amber-950/40',
-    text: 'text-amber-700 dark:text-amber-300',
-    border: 'border-amber-200 dark:border-amber-800/60',
-  },
   pending_hr: {
     bg: 'bg-blue-50 dark:bg-blue-950/40',
     text: 'text-blue-700 dark:text-blue-300',
     border: 'border-blue-200 dark:border-blue-800/60',
   },
+  pending_it: {
+    bg: 'bg-amber-50 dark:bg-amber-950/40',
+    text: 'text-amber-700 dark:text-amber-300',
+    border: 'border-amber-200 dark:border-amber-800/60',
+  },
   approved: {
-    bg: 'bg-indigo-50 dark:bg-indigo-950/50',
-    text: 'text-indigo-700 dark:text-indigo-300',
-    border: 'border-indigo-200 dark:border-indigo-800/60',
+    bg: 'bg-emerald-50 dark:bg-emerald-950/50',
+    text: 'text-emerald-700 dark:text-emerald-300',
+    border: 'border-emerald-200 dark:border-emerald-800/60',
   },
   rejected: {
     bg: 'bg-rose-50 dark:bg-rose-950/40',
@@ -68,8 +68,8 @@ export const CAMERA_STATUS_BADGES: Record<CameraRequestStatus, { bg: string; tex
 
 export interface CameraApprovalStep {
   stepIndex: number;
-  stepName: string; // '1. Bộ phận IT kiểm tra & duyệt' | '2. Trưởng phòng HCNS phê duyệt'
-  roleRequired: 'it' | 'hr';
+  stepName: string; // '1. Trưởng phòng HCNS phê duyệt' | '2. Nhân viên IT mở camera cho xem'
+  roleRequired: 'hr' | 'it';
   status: 'pending' | 'approved' | 'rejected';
   approverId?: string;
   approverName?: string;
@@ -238,22 +238,22 @@ export const INITIAL_CAMERA_REQUESTS: CameraRequest[] = [
     steps: [
       {
         stepIndex: 0,
-        stepName: 'Bộ phận IT kiểm tra & duyệt',
-        roleRequired: 'it',
-        status: 'approved',
-        approverId: '2265',
-        approverName: 'Trần Lê Hữu Lực',
-        comment: 'Dữ liệu camera line 1 ghi hình sắc nét, đã trích xuất sẵn sàng.',
-        actionAt: '2026-09-09T09:15:00.000Z',
-      },
-      {
-        stepIndex: 1,
         stepName: 'Trưởng phòng HCNS phê duyệt',
         roleRequired: 'hr',
         status: 'approved',
         approverId: '1867',
         approverName: 'Trần Thị Kim Loan',
-        comment: 'Đồng ý cho xem dữ liệu tại phòng IT.',
+        comment: 'Đồng ý cho xem dữ liệu camera tại phòng IT.',
+        actionAt: '2026-09-09T09:15:00.000Z',
+      },
+      {
+        stepIndex: 1,
+        stepName: 'Nhân viên IT mở camera cho xem',
+        roleRequired: 'it',
+        status: 'approved',
+        approverId: '2265',
+        approverName: 'Trần Lê Hữu Lực',
+        comment: 'Đã mở camera line 1 cho nhân viên xem trực tiếp tại phòng IT.',
         actionAt: '2026-09-09T10:00:00.000Z',
       },
     ],
@@ -271,21 +271,21 @@ export const INITIAL_CAMERA_REQUESTS: CameraRequest[] = [
     fromTime: '07:00',
     toTime: '07:45',
     reason: 'Kiểm tra va quẹt xe máy tại vị trí dãy số 3 bãi xe sáng 10/09/2026.',
-    status: 'pending_it',
+    status: 'pending_hr',
     currentStepIndex: 0,
     createdAt: '2026-09-10T08:00:00.000Z',
     updatedAt: '2026-09-10T08:00:00.000Z',
     steps: [
       {
         stepIndex: 0,
-        stepName: 'Bộ phận IT kiểm tra & duyệt',
-        roleRequired: 'it',
+        stepName: 'Trưởng phòng HCNS phê duyệt',
+        roleRequired: 'hr',
         status: 'pending',
       },
       {
         stepIndex: 1,
-        stepName: 'Trưởng phòng HCNS phê duyệt',
-        roleRequired: 'hr',
+        stepName: 'Nhân viên IT mở camera cho xem',
+        roleRequired: 'it',
         status: 'pending',
       },
     ],

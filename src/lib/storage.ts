@@ -3140,7 +3140,7 @@ class StorageService {
     } catch {}
   }
 
-  approveCameraRequestIT(
+  approveCameraRequestHR(
     requestId: string,
     approver: { id: string; name: string },
     comment?: string
@@ -3155,18 +3155,18 @@ class StorageService {
       item.steps = [
         {
           stepIndex: 0,
-          stepName: 'Bộ phận IT kiểm tra & duyệt',
-          roleRequired: 'it',
+          stepName: 'Trưởng phòng HCNS phê duyệt',
+          roleRequired: 'hr',
           status: 'approved',
           approverId: approver.id,
           approverName: approver.name,
-          comment: comment || 'Đã kiểm tra kỹ thuật',
+          comment: comment || 'Đã phê duyệt xem camera',
           actionAt: now,
         },
         {
           stepIndex: 1,
-          stepName: 'Trưởng phòng HCNS phê duyệt',
-          roleRequired: 'hr',
+          stepName: 'Nhân viên IT mở camera cho xem',
+          roleRequired: 'it',
           status: 'pending',
         },
       ];
@@ -3176,20 +3176,34 @@ class StorageService {
         status: 'approved',
         approverId: approver.id,
         approverName: approver.name,
-        comment: comment || 'Đã kiểm tra kỹ thuật',
+        comment: comment || 'Đã phê duyệt xem camera',
         actionAt: now,
       };
+      if (item.steps.length > 1) {
+        item.steps[1] = {
+          ...item.steps[1],
+          status: 'pending',
+        };
+      }
     }
 
-    item.status = 'pending_hr';
+    item.status = 'pending_it';
     item.currentStepIndex = 1;
     item.updatedAt = now;
 
     this.saveCameraRequest(item, approver);
+    this.addAuditLog(
+      'update',
+      'camera' as any,
+      item.id,
+      approver.id,
+      approver.name,
+      `Trưởng phòng HCNS ${approver.name} đã phê duyệt yêu cầu xem camera ${item.id}. Chuyển Bộ phận IT mở camera cho nhân viên xem.`
+    );
     return item;
   }
 
-  approveCameraRequestHR(
+  approveCameraRequestIT(
     requestId: string,
     approver: { id: string; name: string },
     comment?: string
@@ -3204,18 +3218,18 @@ class StorageService {
       item.steps = [
         item.steps?.[0] || {
           stepIndex: 0,
-          stepName: 'Bộ phận IT kiểm tra & duyệt',
-          roleRequired: 'it',
+          stepName: 'Trưởng phòng HCNS phê duyệt',
+          roleRequired: 'hr',
           status: 'approved',
         },
         {
           stepIndex: 1,
-          stepName: 'Trưởng phòng HCNS phê duyệt',
-          roleRequired: 'hr',
+          stepName: 'Nhân viên IT mở camera cho xem',
+          roleRequired: 'it',
           status: 'approved',
           approverId: approver.id,
           approverName: approver.name,
-          comment: comment || 'Đã phê duyệt',
+          comment: comment || 'Đã mở camera cho nhân viên xem',
           actionAt: now,
         },
       ];
@@ -3225,7 +3239,7 @@ class StorageService {
         status: 'approved',
         approverId: approver.id,
         approverName: approver.name,
-        comment: comment || 'Đã phê duyệt',
+        comment: comment || 'Đã mở camera cho nhân viên xem',
         actionAt: now,
       };
     }
@@ -3235,6 +3249,14 @@ class StorageService {
     item.updatedAt = now;
 
     this.saveCameraRequest(item, approver);
+    this.addAuditLog(
+      'update',
+      'camera' as any,
+      item.id,
+      approver.id,
+      approver.name,
+      `Bộ phận IT (${approver.name}) đã mở camera cho nhân viên xem phiếu ${item.id}. Hoàn tất quy trình.`
+    );
     return item;
   }
 

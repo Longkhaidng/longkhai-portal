@@ -252,10 +252,10 @@ function PortalAppContent() {
     if (Array.isArray(allCamReqs)) {
       if (currentUser.role === 'admin') {
         pendingCameras = allCamReqs.filter((r) => r.status === 'pending_it' || r.status === 'pending_hr').length;
-      } else if (isITStaff(currentUser)) {
-        pendingCameras = allCamReqs.filter((r) => r.status === 'pending_it').length;
       } else if (isHRHead(currentUser) || currentUser.role === 'hr') {
         pendingCameras = allCamReqs.filter((r) => r.status === 'pending_hr').length;
+      } else if (isITStaff(currentUser)) {
+        pendingCameras = allCamReqs.filter((r) => r.status === 'pending_it').length;
       } else {
         pendingCameras = allCamReqs.filter(
           (r) => r.employeeId.toLowerCase() === currentUser.id.toLowerCase() && (r.status === 'pending_it' || r.status === 'pending_hr')

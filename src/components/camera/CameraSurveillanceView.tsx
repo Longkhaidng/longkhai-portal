@@ -190,19 +190,19 @@ export function CameraSurveillanceView() {
         fromTime,
         toTime,
         reason: capitalizeFirstLetter(reason.trim()),
-        status: 'pending_it',
+        status: 'pending_hr',
         currentStepIndex: 0,
         steps: [
           {
             stepIndex: 0,
-            stepName: 'Bộ phận IT kiểm tra & duyệt',
-            roleRequired: 'it',
+            stepName: 'Trưởng phòng HCNS phê duyệt',
+            roleRequired: 'hr',
             status: 'pending',
           },
           {
             stepIndex: 1,
-            stepName: 'Trưởng phòng HCNS phê duyệt',
-            roleRequired: 'hr',
+            stepName: 'Nhân viên IT mở camera cho xem',
+            roleRequired: 'it',
             status: 'pending',
           },
         ],
@@ -213,7 +213,7 @@ export function CameraSurveillanceView() {
       storage.saveCameraRequest(newRequest, { id: currentUser.id, name: currentUser.name });
 
       handleResetForm();
-      setSubmitSuccessMsg(`Đã gửi thành công phiếu ${nextId}! Yêu cầu đang được chuyển đến Bộ phận IT kiểm tra.`);
+      setSubmitSuccessMsg(`Đã gửi thành công phiếu ${nextId}! Yêu cầu đang được chuyển đến Trưởng phòng HCNS phê duyệt.`);
       setTimeout(() => {
         setSubmitSuccessMsg('');
         setActiveTab('list');
@@ -295,24 +295,6 @@ export function CameraSurveillanceView() {
     setIsDetailModalOpen(true);
   };
 
-  const handleApproveIT = () => {
-    if (!selectedRequest || !currentUser) return;
-    setProcessingAction(true);
-    try {
-      const updated = storage.approveCameraRequestIT(
-        selectedRequest.id,
-        { id: currentUser.id, name: currentUser.name },
-        capitalizeFirstLetter(approvalComment.trim()) || 'Đã kiểm tra kỹ thuật và trích xuất dữ liệu'
-      );
-      if (updated) {
-        setSelectedRequest(updated);
-        alert(`Đã phê duyệt bước IT cho phiếu ${updated.id}! Phiếu được chuyển đến Trưởng phòng HCNS.`);
-      }
-    } finally {
-      setProcessingAction(false);
-    }
-  };
-
   const handleApproveHR = () => {
     if (!selectedRequest || !currentUser) return;
     setProcessingAction(true);
@@ -324,7 +306,25 @@ export function CameraSurveillanceView() {
       );
       if (updated) {
         setSelectedRequest(updated);
-        alert(`Trưởng phòng HCNS đã phê duyệt hoàn tất phiếu ${updated.id}!`);
+        alert(`Trưởng phòng HCNS đã phê duyệt phiếu ${updated.id}! Phiếu được chuyển đến Bộ phận IT để mở camera cho nhân viên xem.`);
+      }
+    } finally {
+      setProcessingAction(false);
+    }
+  };
+
+  const handleApproveIT = () => {
+    if (!selectedRequest || !currentUser) return;
+    setProcessingAction(true);
+    try {
+      const updated = storage.approveCameraRequestIT(
+        selectedRequest.id,
+        { id: currentUser.id, name: currentUser.name },
+        capitalizeFirstLetter(approvalComment.trim()) || 'Đã mở camera cho nhân viên xem'
+      );
+      if (updated) {
+        setSelectedRequest(updated);
+        alert(`Bộ phận IT đã xác nhận mở camera cho nhân viên xem phiếu ${updated.id}! Quy trình hoàn tất.`);
       }
     } finally {
       setProcessingAction(false);
@@ -344,7 +344,7 @@ export function CameraSurveillanceView() {
         {
           id: currentUser.id,
           name: currentUser.name,
-          role: isIT ? 'Bộ phận IT' : 'Trưởng phòng HCNS',
+          role: isHR ? 'Trưởng phòng HCNS' : isIT ? 'Bộ phận IT' : 'Ban Giám Đốc',
         },
         capitalizeFirstLetter(rejectionReason.trim())
       );
@@ -954,7 +954,7 @@ export function CameraSurveillanceView() {
               />
             </div>
 
-            {/* Section 6: Lộ trình phê duyệt tự động (Nhân viên -> Bộ phận IT -> Trưởng phòng HCNS) */}
+            {/* Section 6: Lộ trình phê duyệt tự động (Nhân viên -> Trưởng phòng HCNS -> Nhân viên IT -> Hoàn tất) */}
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-3">
               <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
                 <SlidersHorizontal className="w-4 h-4 text-indigo-500" />
@@ -966,12 +966,16 @@ export function CameraSurveillanceView() {
                   1. Người gửi đăng ký
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-400" />
-                <div className="px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 font-semibold text-indigo-700 dark:text-indigo-300 shadow-2xs">
-                  2. Bộ phận IT kiểm tra kỹ thuật & duyệt
+                <div className="px-3 py-1.5 rounded-lg bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 font-semibold text-purple-700 dark:text-purple-300 shadow-2xs">
+                  2. Trưởng phòng HCNS phê duyệt
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-400" />
-                <div className="px-3 py-1.5 rounded-lg bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 font-semibold text-purple-700 dark:text-purple-300 shadow-2xs">
-                  3. Trưởng phòng HCNS phê duyệt
+                <div className="px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 font-semibold text-indigo-700 dark:text-indigo-300 shadow-2xs">
+                  3. Nhân viên IT mở camera cho nhân viên xem
+                </div>
+                <ChevronRight className="w-4 h-4 text-slate-400" />
+                <div className="px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 font-semibold text-emerald-700 dark:text-emerald-300 shadow-2xs">
+                  4. Hoàn tất
                 </div>
               </div>
             </div>
@@ -1073,9 +1077,9 @@ export function CameraSurveillanceView() {
                 className="px-3 py-1.5 text-xs rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:ring-1 focus:ring-indigo-500"
               >
                 <option value="all">Tất cả trạng thái</option>
-                <option value="pending_it">Chờ IT duyệt</option>
                 <option value="pending_hr">Chờ HCNS duyệt</option>
-                <option value="approved">Đã duyệt</option>
+                <option value="pending_it">Chờ IT mở camera</option>
+                <option value="approved">Hoàn tất</option>
                 <option value="rejected">Từ chối</option>
               </select>
             </div>
@@ -1104,7 +1108,7 @@ export function CameraSurveillanceView() {
                     </tr>
                   ) : (
                     visibleRequests.map((req) => {
-                      const badge = CAMERA_STATUS_BADGES[req.status] || CAMERA_STATUS_BADGES.pending_it;
+                      const badge = CAMERA_STATUS_BADGES[req.status] || CAMERA_STATUS_BADGES.pending_hr;
                       const statusLabel = CAMERA_STATUS_LABELS[req.status] || req.status;
 
                       return (
@@ -1396,7 +1400,7 @@ export function CameraSurveillanceView() {
               {/* Approval Process History */}
               <div className="space-y-3">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
-                  Lịch sử phê duyệt (Nhân viên → IT → Trưởng phòng HCNS)
+                  Lịch sử phê duyệt (Nhân viên → Trưởng phòng HCNS → IT mở camera → Hoàn tất)
                 </h4>
 
                 <div className="space-y-2.5">
@@ -1424,13 +1428,13 @@ export function CameraSurveillanceView() {
                               : 'bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300'
                           }`}
                         >
-                          {st.status === 'approved' ? '✓ Đã duyệt' : st.status === 'rejected' ? '✕ Từ chối' : '⏳ Đang chờ'}
+                          {st.status === 'approved' ? '✓ Đã hoàn tất' : st.status === 'rejected' ? '✕ Từ chối' : '⏳ Đang chờ'}
                         </span>
                       </div>
 
                       {st.approverName && (
                         <div className="mt-1 text-[11px] text-slate-600 dark:text-slate-400">
-                          Người duyệt: <b>{st.approverName}</b> • Lúc: {formatDateTime(st.actionAt || '')}
+                          Người xác nhận: <b>{st.approverName}</b> • Lúc: {formatDateTime(st.actionAt || '')}
                         </div>
                       )}
                       {st.comment && (
@@ -1454,16 +1458,16 @@ export function CameraSurveillanceView() {
                 </div>
               )}
 
-              {/* APPROVER ACTION BOX (Step 1: IT, Step 2: HR) */}
-              {((canApproveCameraIT(currentUser, selectedRequest) && selectedRequest.status === 'pending_it') ||
-                (canApproveCameraHR(currentUser, selectedRequest) && selectedRequest.status === 'pending_hr')) && (
+              {/* APPROVER ACTION BOX (Step 1: HR duyệt -> Step 2: IT mở camera -> Hoàn tất) */}
+              {((canApproveCameraHR(currentUser, selectedRequest) && selectedRequest.status === 'pending_hr') ||
+                (canApproveCameraIT(currentUser, selectedRequest) && selectedRequest.status === 'pending_it')) && (
                 <div className="p-4 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 space-y-3">
                   <div className="font-bold text-indigo-900 dark:text-indigo-200 flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-indigo-600" />
                     <span>
-                      {selectedRequest.status === 'pending_it'
-                        ? 'Xác nhận kiểm tra kỹ thuật (Bộ phận IT)'
-                        : 'Phê duyệt cho phép xem camera (Trưởng phòng HCNS)'}
+                      {selectedRequest.status === 'pending_hr'
+                        ? 'Phê duyệt yêu cầu xem camera (Trưởng phòng HCNS)'
+                        : 'Xác nhận mở camera cho nhân viên xem (Bộ phận IT)'}
                     </span>
                   </div>
 
@@ -1474,9 +1478,9 @@ export function CameraSurveillanceView() {
                         value={approvalComment}
                         onChange={(e) => setApprovalComment(capitalizeFirstLetter(e.target.value))}
                         placeholder={
-                          selectedRequest.status === 'pending_it'
-                            ? 'Ý kiến kỹ thuật IT (Ví dụ: Đã trích xuất dữ liệu camera sẵn sàng...)'
-                            : 'Ý kiến phê duyệt HCNS (Ví dụ: Đồng ý cho xem dữ liệu tại phòng IT...)'
+                          selectedRequest.status === 'pending_hr'
+                            ? 'Ý kiến phê duyệt HCNS (Ví dụ: Đồng ý cho xem dữ liệu camera tại phòng IT...)'
+                            : 'Ý kiến / Ghi chú IT (Ví dụ: Đã mở camera cho nhân viên xem trực tiếp tại phòng IT lúc 14:00...)'
                         }
                         className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:ring-1 focus:ring-indigo-500"
                       />
@@ -1493,16 +1497,16 @@ export function CameraSurveillanceView() {
                         <button
                           type="button"
                           disabled={processingAction}
-                          onClick={selectedRequest.status === 'pending_it' ? handleApproveIT : handleApproveHR}
+                          onClick={selectedRequest.status === 'pending_hr' ? handleApproveHR : handleApproveIT}
                           className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5 disabled:opacity-50"
                         >
                           <Check className="w-3.5 h-3.5" />
                           <span>
                             {processingAction
                               ? 'Đang xử lý...'
-                              : selectedRequest.status === 'pending_it'
-                              ? 'IT Duyệt & Chuyển HCNS'
-                              : 'Trưởng phòng HCNS Phê Duyệt'}
+                              : selectedRequest.status === 'pending_hr'
+                              ? 'Trưởng phòng HCNS Phê Duyệt'
+                              : 'Xác nhận mở camera & Hoàn tất'}
                           </span>
                         </button>
                       </div>
