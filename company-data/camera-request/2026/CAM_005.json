@@ -15,14 +15,18 @@
   "fromTime": "12:30",
   "toTime": "13:00",
   "reason": "Kiểm tra tất B",
-  "status": "pending_it",
-  "currentStepIndex": 0,
+  "status": "pending_hr",
+  "currentStepIndex": 1,
   "steps": [
     {
       "stepIndex": 0,
       "stepName": "Bộ phận IT kiểm tra & duyệt",
       "roleRequired": "it",
-      "status": "pending"
+      "status": "approved",
+      "approverId": "2265",
+      "approverName": "Trần Lê Hữu Lực",
+      "comment": "Đã kiểm tra kỹ thuật và trích xuất dữ liệu",
+      "actionAt": "2026-11-26T06:06:51.430Z"
     },
     {
       "stepIndex": 1,
@@ -32,5 +36,5 @@
     }
   ],
   "createdAt": "2026-11-26T06:05:34.421Z",
-  "updatedAt": "2026-11-26T06:05:34.421Z"
+  "updatedAt": "2026-11-26T06:06:51.430Z"
 }
