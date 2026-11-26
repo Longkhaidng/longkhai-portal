@@ -506,7 +506,7 @@
     "isActive": true,
     "password": "1030",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-26T06:01:24.875Z",
+    "updatedAt": "2026-11-26T06:01:55.111Z",
     "allowedWebIntegrations": []
   },
   {
@@ -567,9 +567,9 @@
       "camera"
     ],
     "isActive": true,
-    "password": "040979",
+    "password": "1051",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-26T06:02:09.235Z",
+    "updatedAt": "2026-11-26T06:00:19.696Z",
     "allowedWebIntegrations": []
   },
   {
@@ -3110,12 +3110,13 @@
       "repair",
       "announcements",
       "reports",
-      "pccc"
+      "pccc",
+      "camera"
     ],
     "isActive": true,
     "password": "24092409",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-21T06:32:09.201Z",
+    "updatedAt": "2026-11-26T06:02:05.255Z",
     "allowedWebIntegrations": []
   },
   {
@@ -4421,12 +4422,13 @@
       "food_registration",
       "repair",
       "announcements",
-      "reports"
+      "reports",
+      "camera"
     ],
     "isActive": true,
     "password": "2745",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-20T03:54:30.246Z",
+    "updatedAt": "2026-11-26T06:03:13.306Z",
     "allowedWebIntegrations": []
   },
   {
