@@ -15,8 +15,8 @@
   "fromTime": "12:30",
   "toTime": "13:00",
   "reason": "Kiểm tra tất B",
-  "status": "pending_hr",
-  "currentStepIndex": 1,
+  "status": "approved",
+  "currentStepIndex": 2,
   "steps": [
     {
       "stepIndex": 0,
@@ -32,9 +32,13 @@
       "stepIndex": 1,
       "stepName": "Trưởng phòng HCNS phê duyệt",
       "roleRequired": "hr",
-      "status": "pending"
+      "status": "approved",
+      "approverId": "1867",
+      "approverName": "Trương Anh Như Quỳnh",
+      "comment": "IT mở cho Ms. Cường xem đúng nội dung yêu cầu",
+      "actionAt": "2026-11-26T06:09:30.283Z"
     }
   ],
   "createdAt": "2026-11-26T06:05:34.421Z",
-  "updatedAt": "2026-11-26T06:06:51.430Z"
+  "updatedAt": "2026-11-26T06:09:30.283Z"
 }
