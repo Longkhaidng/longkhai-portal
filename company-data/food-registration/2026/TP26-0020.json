@@ -1,0 +1,32 @@
+{
+  "id": "TP26-0020",
+  "employeeId": "2831",
+  "employeeName": "Trần Thị Thanh Diệu",
+  "createdById": "2831",
+  "createdByName": "Trần Thị Thanh Diệu",
+  "department": "Phòng KCS",
+  "entryDate": "2026-11-26",
+  "toDate": "2026-12-09",
+  "durationDays": 14,
+  "shift": "Ca HC (08:00 - 16:30)",
+  "category": "pregnant",
+  "mainGroup": "pregnant_medicine",
+  "foodDetails": "Bánh + Sữa hoặc Trái cây + Sữa",
+  "complianceCommitment": true,
+  "status": "pending_dept",
+  "steps": [
+    {
+      "stepName": "Trưởng bộ phận",
+      "roleRequired": "manager",
+      "status": "pending"
+    },
+    {
+      "stepName": "Trưởng phòng HCNS",
+      "roleRequired": "hr",
+      "status": "pending"
+    }
+  ],
+  "currentStepIndex": 0,
+  "createdAt": "2026-11-26T02:11:53.021Z",
+  "updatedAt": "2026-11-26T02:11:53.021Z"
+}
