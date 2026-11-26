@@ -506,7 +506,7 @@
     "isActive": true,
     "password": "1030",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-26T06:01:55.111Z",
+    "updatedAt": "2026-11-26T06:01:24.875Z",
     "allowedWebIntegrations": []
   },
   {
@@ -567,9 +567,9 @@
       "camera"
     ],
     "isActive": true,
-    "password": "1051",
+    "password": "040979",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-26T06:00:19.696Z",
+    "updatedAt": "2026-11-26T06:02:09.235Z",
     "allowedWebIntegrations": []
   },
   {
@@ -3110,13 +3110,12 @@
       "repair",
       "announcements",
       "reports",
-      "pccc",
-      "camera"
+      "pccc"
     ],
     "isActive": true,
     "password": "24092409",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-26T06:02:05.255Z",
+    "updatedAt": "2026-11-21T06:32:09.201Z",
     "allowedWebIntegrations": []
   },
   {
