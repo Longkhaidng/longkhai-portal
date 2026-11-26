@@ -3110,12 +3110,13 @@
       "repair",
       "announcements",
       "reports",
-      "pccc"
+      "pccc",
+      "camera"
     ],
     "isActive": true,
     "password": "24092409",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-21T06:32:09.201Z",
+    "updatedAt": "2026-11-26T06:02:05.255Z",
     "allowedWebIntegrations": []
   },
   {
