@@ -148,6 +148,38 @@ function ScanConfirmContent() {
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
 
+  // Memoized date strings and confirmation logs (placed unconditionally before early returns to satisfy Rules of Hooks)
+  const todayStrVN = useMemo(() => {
+    try {
+      return new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Ho_Chi_Minh',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(new Date());
+    } catch {
+      return new Date().toISOString().slice(0, 10);
+    }
+  }, []);
+
+  const todayConfirmedLogs = useMemo(() => {
+    if (!docData || !Array.isArray(docData.entryLogs)) return [];
+    return docData.entryLogs.filter((l: any) => {
+      if (!l.timestamp || l.action !== 'confirmed') return false;
+      try {
+        const logDateVN = new Intl.DateTimeFormat('en-CA', {
+          timeZone: 'Asia/Ho_Chi_Minh',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }).format(new Date(l.timestamp));
+        return logDateVN === todayStrVN;
+      } catch {
+        return false;
+      }
+    });
+  }, [docData, todayStrVN]);
+
   // Fallback to Web Speech API if offline or API error
   const fallbackSpeechSynthesis = useCallback((textToSpeak: string) => {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
@@ -779,37 +811,6 @@ function ScanConfirmContent() {
     (docData.category === 'pregnant' ||
       docData.category === 'medicine_drink' ||
       Boolean(docData.toDate && docData.toDate !== docData.entryDate));
-
-  const todayStrVN = useMemo(() => {
-    try {
-      return new Intl.DateTimeFormat('en-CA', {
-        timeZone: 'Asia/Ho_Chi_Minh',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }).format(new Date());
-    } catch {
-      return new Date().toISOString().slice(0, 10);
-    }
-  }, []);
-
-  const todayConfirmedLogs = useMemo(() => {
-    if (!docData || !Array.isArray(docData.entryLogs)) return [];
-    return docData.entryLogs.filter((l: any) => {
-      if (!l.timestamp || l.action !== 'confirmed') return false;
-      try {
-        const logDateVN = new Intl.DateTimeFormat('en-CA', {
-          timeZone: 'Asia/Ho_Chi_Minh',
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        }).format(new Date(l.timestamp));
-        return logDateVN === todayStrVN;
-      } catch {
-        return false;
-      }
-    });
-  }, [docData, todayStrVN]);
 
   const isConfirmedToday = todayConfirmedLogs.length > 0;
 
