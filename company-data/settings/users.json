@@ -562,12 +562,13 @@
       "food_registration",
       "repair",
       "announcements",
-      "reports"
+      "reports",
+      "camera"
     ],
     "isActive": true,
     "password": "1051",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-20T03:53:33.310Z",
+    "updatedAt": "2026-11-26T06:00:19.696Z",
     "allowedWebIntegrations": []
   },
   {
