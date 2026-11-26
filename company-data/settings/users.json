@@ -129,12 +129,14 @@
       "announcements",
       "forms",
       "reports",
-      "users"
+      "users",
+      "camera"
     ],
     "isActive": true,
     "password": "Lk@0.123",
     "createdAt": "2026-11-20T02:48:53.771Z",
-    "updatedAt": "2026-11-21T04:28:14.364Z"
+    "updatedAt": "2026-11-26T06:07:28.902Z",
+    "allowedWebIntegrations": []
   },
   {
     "id": "2265",
