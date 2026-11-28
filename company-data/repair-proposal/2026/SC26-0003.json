@@ -17,7 +17,7 @@
       "isExpired": false
     }
   ],
-  "status": "maintenance_pending",
+  "status": "pending_confirmation",
   "steps": [
     {
       "step": 1,
@@ -45,7 +45,11 @@
       "step": 3,
       "title": "Cơ điện sửa chữa",
       "roleRequired": "maintenance",
-      "status": "pending"
+      "status": "completed",
+      "approverId": "2409",
+      "approverName": "Trịnh Anh Tài",
+      "updatedAt": "2026-11-28T03:29:14.188Z",
+      "comment": "Gsnet g"
     },
     {
       "step": 4,
@@ -57,9 +61,9 @@
       "status": "pending"
     }
   ],
-  "currentStepIndex": 2,
+  "currentStepIndex": 3,
   "createdAt": "2026-11-25T04:23:54.398Z",
-  "updatedAt": "2026-11-25T04:59:02.510Z",
+  "updatedAt": "2026-11-28T03:29:14.188Z",
   "emailRelayUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
   "emailConfig": {
     "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwae17eQ6M6fj6SG3o_n3z8AdDCIdt4Ki_pqkjt4XkccWpMtb6OHSmjvvtyzPbU3_bOLQ/exec",
@@ -69,5 +73,9 @@
   "managerId": "1867",
   "managerName": "Trương Anh Như Quỳnh",
   "managerApprovedAt": "2026-11-25T04:59:02.510Z",
-  "managerComment": "Chuyển BP Cơ điện kiểm tra và sửa chữa phần lệch của thép gai (do quá trình chặt cây ngã làm dịch chuyển hiện trạng cũ)"
+  "managerComment": "Chuyển BP Cơ điện kiểm tra và sửa chữa phần lệch của thép gai (do quá trình chặt cây ngã làm dịch chuyển hiện trạng cũ)",
+  "maintenanceStaffId": "2409",
+  "maintenanceStaffName": "Trịnh Anh Tài",
+  "maintenanceCompletedAt": "2026-11-28T03:29:14.188Z",
+  "maintenanceNotes": "Gsnet g"
 }
