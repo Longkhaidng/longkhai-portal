@@ -72,6 +72,7 @@ export function PCCCInspectionView() {
   const [preSelectedDevice, setPreSelectedDevice] = useState<PCCCDevice | null>(null);
 
   const [isQrScannerOpen, setIsQrScannerOpen] = useState(false);
+  const [lastSavedDevice, setLastSavedDevice] = useState<PCCCDevice | null>(null);
   const [isQrCodeModalOpen, setIsQrCodeModalOpen] = useState(false);
   const [selectedDeviceForQr, setSelectedDeviceForQr] = useState<PCCCDevice | null>(null);
 
@@ -98,10 +99,11 @@ export function PCCCInspectionView() {
     };
     window.addEventListener('storage', handleStorageChange);
 
-    // Check if URL has ?pccc=HT-xxx
+    // Check if URL has ?pccc=HT-xxx or ?scan=true
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const pcccParam = urlParams.get('pccc');
+      const scanParam = urlParams.get('scan');
       if (pcccParam) {
         const devList = storage.getPCCCDevices();
         const found = devList.find(
@@ -111,6 +113,8 @@ export function PCCCInspectionView() {
           setPreSelectedDevice(found);
           setIsInspectionModalOpen(true);
         }
+      } else if (scanParam === 'true' || scanParam === '1' || scanParam === 'pccc') {
+        setIsQrScannerOpen(true);
       }
     }
 
@@ -275,8 +279,23 @@ export function PCCCInspectionView() {
 
   // Handle device detected by QR Scanner
   const handleDeviceDetectedFromQR = (d: PCCCDevice) => {
+    setLastSavedDevice(null);
     setPreSelectedDevice(d);
     setIsInspectionModalOpen(true);
+  };
+
+  // Handle inspection saved -> loop back to QR Scanner to check the next device
+  const handleInspectionSaved = (inspection: PCCCInspection) => {
+    loadData();
+    setIsInspectionModalOpen(false);
+    const dev = devices.find((d) => d.id === inspection.deviceId) || preSelectedDevice;
+    setLastSavedDevice(dev || null);
+    setPreSelectedDevice(null);
+
+    // Chuyển về lại màn hình quét mã QR để kiểm tra thiết bị tiếp theo
+    setTimeout(() => {
+      setIsQrScannerOpen(true);
+    }, 200);
   };
 
   // Delete a device from Master Data
@@ -1076,20 +1095,40 @@ export function PCCCInspectionView() {
       </div>
       )}
 
+      {/* Mobile Floating Action Button (FAB) for phone users to quick-scan at any time */}
+      <div className="fixed bottom-6 right-4 z-40 sm:hidden no-print">
+        <button
+          type="button"
+          onClick={() => {
+            setLastSavedDevice(null);
+            setIsQrScannerOpen(true);
+          }}
+          className="h-13 px-4.5 rounded-full bg-red-600 hover:bg-red-700 active:scale-95 text-white font-black text-xs shadow-xl shadow-red-900/50 flex items-center gap-2 border-2 border-white/20 transition-all cursor-pointer"
+        >
+          <QrCode className="w-5 h-5 animate-pulse" />
+          <span>Quét QR Thiết Bị</span>
+        </button>
+      </div>
+
       {/* ALL MODALS */}
       <PCCCInspectionModal
         isOpen={isInspectionModalOpen}
-        onClose={() => setIsInspectionModalOpen(false)}
-        preSelectedDevice={preSelectedDevice}
-        onSaved={() => {
-          loadData();
+        onClose={() => {
+          setIsInspectionModalOpen(false);
+          setPreSelectedDevice(null);
         }}
+        preSelectedDevice={preSelectedDevice}
+        onSaved={handleInspectionSaved}
       />
 
       <PCCCQrScannerModal
         isOpen={isQrScannerOpen}
-        onClose={() => setIsQrScannerOpen(false)}
+        onClose={() => {
+          setIsQrScannerOpen(false);
+          setLastSavedDevice(null);
+        }}
         onDeviceDetected={handleDeviceDetectedFromQR}
+        lastSavedDevice={lastSavedDevice}
       />
 
       <PCCCQrCodeModal

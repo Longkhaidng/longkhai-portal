@@ -437,6 +437,16 @@ function ScanConfirmContent() {
             window.location.href = decodedText.startsWith('http') ? decodedText : `/?tab=gas_inspection&scan=true`;
             return;
           }
+          if (decodedText.includes('pccc') || decodedText.includes('PCCC') || /HT-(CO2|BOT|TB|TC|NUT|CHUONG)/i.test(decodedText)) {
+            let cleanId = decodedText;
+            if (decodedText.includes('pccc=')) {
+              cleanId = decodedText.split('pccc=')[1].split('&')[0];
+            } else {
+              cleanId = decodedText.replace(/^PCCC:/i, '').trim();
+            }
+            window.location.href = `/?tab=pccc&pccc=${encodeURIComponent(cleanId)}`;
+            return;
+          }
           const parsed = parseQrCodeContent(decodedText);
           if (parsed.id) {
             // Stop camera and load document
@@ -492,6 +502,11 @@ function ScanConfirmContent() {
     if (!clean) return;
     if (clean.includes('GAS') || clean.includes('TRAM-GAS')) {
       window.location.href = `/?tab=gas_inspection&scan=true`;
+      return;
+    }
+    if (clean.includes('PCCC') || /HT-(CO2|BOT|TB|TC|NUT|CHUONG)/i.test(clean)) {
+      const cleanId = clean.replace(/^PCCC:/i, '').trim();
+      window.location.href = `/?tab=pccc&pccc=${encodeURIComponent(cleanId)}`;
       return;
     }
     const parsed = parseQrCodeContent(clean);

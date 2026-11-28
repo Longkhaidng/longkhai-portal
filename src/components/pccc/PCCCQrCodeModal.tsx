@@ -32,9 +32,14 @@ export function PCCCQrCodeModal({
       // Generate QR codes for displayed devices
       const generateAll = async () => {
         const newMap: Record<string, string> = {};
+        const origin =
+          typeof window !== 'undefined'
+            ? window.location.origin
+            : 'https://longkhai-portal.vercel.app';
         for (const d of displayDevices.slice(0, 50)) {
           // Limit to first 50 per batch for rendering performance
-          const qrText = `PCCC:${d.id}`;
+          // Direct scan URL for smartphone camera
+          const qrText = `${origin}/?tab=pccc&pccc=${encodeURIComponent(d.id)}`;
           newMap[d.id] = await generateQrDataUrl(qrText);
         }
         setQrMap(newMap);

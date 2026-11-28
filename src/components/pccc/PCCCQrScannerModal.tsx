@@ -10,12 +10,14 @@ interface PCCCQrScannerModalProps {
   isOpen: boolean;
   onClose: () => void;
   onDeviceDetected: (device: PCCCDevice) => void;
+  lastSavedDevice?: PCCCDevice | null;
 }
 
 export function PCCCQrScannerModal({
   isOpen,
   onClose,
   onDeviceDetected,
+  lastSavedDevice,
 }: PCCCQrScannerModalProps) {
   const [scannerMode, setScannerMode] = useState<'camera' | 'manual'>('camera');
   const [cameraError, setCameraError] = useState<string | null>(null);
@@ -26,16 +28,37 @@ export function PCCCQrScannerModal({
 
   const devices = storage.getPCCCDevices();
 
+  // Play short confirmation beep on successful scan
+  const playBeep = () => {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.15);
+    } catch {}
+  };
+
   // Clean device ID from QR text
   const extractDeviceId = (text: string): string => {
-    const trimmed = text.trim();
-    // Check if format is PCCC:HT-xxx or ?pccc=HT-xxx
+    let trimmed = text.trim();
+    try {
+      trimmed = decodeURIComponent(trimmed);
+    } catch {}
+    // Check if format is ?pccc=HT-xxx or &pccc=HT-xxx
     if (trimmed.includes('pccc=')) {
-      const match = trimmed.match(/pccc=([A-Za-z0-9_-]+)/i);
-      if (match && match[1]) return match[1].toUpperCase();
+      const match = trimmed.match(/pccc=([A-Za-z0-9_ -]+)/i);
+      if (match && match[1]) return match[1].trim().toUpperCase();
     }
-    if (trimmed.startsWith('PCCC:')) {
-      return trimmed.replace('PCCC:', '').trim().toUpperCase();
+    if (trimmed.toUpperCase().startsWith('PCCC:')) {
+      return trimmed.slice(5).trim().toUpperCase();
     }
     // Direct code e.g. HT-CO2-01, HT-BOT-05
     return trimmed.toUpperCase();
@@ -48,6 +71,7 @@ export function PCCCQrScannerModal({
     );
 
     if (found) {
+      playBeep();
       stopScanner();
       onDeviceDetected(found);
       onClose();
@@ -55,6 +79,7 @@ export function PCCCQrScannerModal({
       // Partial match
       const partial = devices.find((d) => cleanId.includes(d.id.toUpperCase()));
       if (partial) {
+        playBeep();
         stopScanner();
         onDeviceDetected(partial);
         onClose();
@@ -67,41 +92,74 @@ export function PCCCQrScannerModal({
   const startScanner = async () => {
     setCameraError(null);
     try {
-      if (!scannerRef.current) {
-        scannerRef.current = new Html5Qrcode('pccc-reader');
+      if (scannerRef.current) {
+        try {
+          if (scannerRef.current.isScanning) {
+            await scannerRef.current.stop();
+          }
+          await scannerRef.current.clear();
+        } catch {}
+        scannerRef.current = null;
       }
 
+      scannerRef.current = new Html5Qrcode('pccc-reader');
       setIsScanning(true);
-      await scannerRef.current.start(
-        { facingMode: 'environment' },
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
+
+      const qrConfig = {
+        fps: 10,
+        qrbox: (viewfinderWidth: number, viewfinderHeight: number) => {
+          const edge = Math.floor(Math.min(viewfinderWidth, viewfinderHeight) * 0.72);
+          return { width: Math.max(edge, 180), height: Math.max(edge, 180) };
         },
-        (decodedText) => {
-          handleSuccessfulScan(decodedText);
-        },
-        () => {
-          // ignore scan errors
+        aspectRatio: 1.0,
+      };
+
+      try {
+        await scannerRef.current.start(
+          { facingMode: 'environment' },
+          qrConfig,
+          (decodedText) => {
+            handleSuccessfulScan(decodedText);
+          },
+          () => {}
+        );
+      } catch (envErr) {
+        console.warn('FacingMode environment failed, trying available cameras:', envErr);
+        const cameras = await Html5Qrcode.getCameras();
+        if (cameras && cameras.length > 0) {
+          const backCam = cameras.find((c) => /back|rear|environment|sau/i.test(c.label)) || cameras[cameras.length - 1];
+          await scannerRef.current.start(
+            backCam.id,
+            qrConfig,
+            (decodedText) => {
+              handleSuccessfulScan(decodedText);
+            },
+            () => {}
+          );
+        } else {
+          throw envErr;
         }
-      );
+      }
     } catch (err: any) {
       console.warn('Camera scan failed to start:', err);
       setCameraError(
-        'Không thể mở camera (chưa cấp quyền truy cập hoặc thiết bị không có webcam). Bạn có thể chọn tải ảnh chụp mã QR hoặc nhập nhanh mã thiết bị.'
+        'Không thể mở camera trên trình duyệt điện thoại (chưa cấp quyền truy cập hoặc camera đang bị ứng dụng khác sử dụng). Bạn có thể chọn tải ảnh chụp mã QR hoặc nhập nhanh mã thiết bị.'
       );
       setIsScanning(false);
     }
   };
 
   const stopScanner = async () => {
-    if (scannerRef.current && isScanning) {
+    if (scannerRef.current) {
       try {
-        await scannerRef.current.stop();
-        scannerRef.current.clear();
+        if (isScanning || scannerRef.current.isScanning) {
+          await scannerRef.current.stop();
+        }
+        await scannerRef.current.clear();
       } catch (e) {
         console.warn('Error stopping scanner:', e);
       }
+      scannerRef.current = null;
       setIsScanning(false);
     }
   };
@@ -197,6 +255,21 @@ export function PCCCQrScannerModal({
             <span>Nhập mã nhanh</span>
           </button>
         </div>
+
+        {/* Success Banner when returned from a previous inspection */}
+        {lastSavedDevice && (
+          <div className="mx-4 mt-3 p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-100 flex items-start gap-2.5 animate-in fade-in slide-in-from-top-2">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+            <div className="text-xs">
+              <div className="font-bold">
+                ✓ Đã lưu kết quả: <span className="font-mono text-emerald-700 dark:text-emerald-300">{lastSavedDevice.id}</span> - {lastSavedDevice.name}
+              </div>
+              <p className="text-[11px] text-emerald-700 dark:text-emerald-300 mt-0.5 font-medium">
+                Mời hướng camera vào mã QR của <strong>thiết bị tiếp theo</strong> để tiếp tục kiểm tra.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Content Body */}
         <div className="p-4 space-y-4">
@@ -296,6 +369,23 @@ export function PCCCQrScannerModal({
               </button>
             </form>
           )}
+        </div>
+
+        {/* Footer with Finish / Close button */}
+        <div className="p-3 bg-slate-50 dark:bg-slate-850 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+            {lastSavedDevice ? 'Đang trong phiên kiểm tra liên tục' : 'Sẵn sàng quét mã QR'}
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              stopScanner();
+              onClose();
+            }}
+            className="px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+          >
+            Hoàn tất & Đóng
+          </button>
         </div>
       </div>
     </div>
