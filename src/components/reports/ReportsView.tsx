@@ -25,6 +25,7 @@ import {
   FileQuestion,
   Camera,
   ShieldCheck,
+  ChevronDown,
 } from 'lucide-react';
 import { formatDate, formatDateTime, sortNewestFirst } from '@/lib/utils';
 import { LEAVE_TYPE_LABELS } from '@/types/leave';
@@ -52,12 +53,25 @@ import { FoodRegistration, FoodReportRow, flattenFoodRegistrationsToReportRows, 
 import { FoodInspectionRecord, FoodInspectionStore, FoodReportFormKey, createInitialFoodInspectionStore } from '@/types/food-inspection';
 import { FoodInspectionPrintReport } from '@/components/food-inspection/FoodInspectionPrintReport';
 
+function getTodayStrVN(): string {
+  try {
+    return new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Ho_Chi_Minh',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(new Date());
+  } catch {
+    return new Date().toISOString().slice(0, 10);
+  }
+}
+
 export function ReportsView() {
   const { currentUser } = useAuth();
   const canAccessCamera = canAccessCameraReport(currentUser);
   const [reportType, setReportType] = useState<'leave' | 'attendance' | 'gate_pass' | 'meal_cut' | 'repair' | 'stationery' | 'general' | 'departments' | 'pccc' | 'periodic_inspection' | 'food_registration' | 'food_inspection' | 'camera'>('leave');
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
+  const [fromDate, setFromDate] = useState<string>(() => getTodayStrVN());
+  const [toDate, setToDate] = useState<string>(() => getTodayStrVN());
   const [departmentFilter, setDepartmentFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -148,23 +162,33 @@ export function ReportsView() {
 
   // Filter handlers
   const handleSetToday = () => {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = getTodayStrVN();
     setFromDate(today);
     setToDate(today);
   };
 
   const handleSetThisMonth = () => {
-    const now = new Date();
-    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10);
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().slice(0, 10);
+    const today = getTodayStrVN();
+    const parts = today.split('-');
+    const y = parseInt(parts[0], 10);
+    const m = parseInt(parts[1], 10);
+    const firstDay = `${y}-${String(m).padStart(2, '0')}-01`;
+    const lastDayNum = new Date(y, m, 0).getDate();
+    const lastDay = `${y}-${String(m).padStart(2, '0')}-${String(lastDayNum).padStart(2, '0')}`;
     setFromDate(firstDay);
     setToDate(lastDay);
   };
 
-  const handleResetFilters = () => {
-    setDepartmentFilter('all');
+  const handleSetAllTime = () => {
     setFromDate('');
     setToDate('');
+  };
+
+  const handleResetFilters = () => {
+    setDepartmentFilter('all');
+    const today = getTodayStrVN();
+    setFromDate(today);
+    setToDate(today);
     setSearchTerm('');
     setStatusFilter(reportType === 'pccc' ? 'inspected' : 'all');
     setPcccCategoryFilter('all');
@@ -172,10 +196,11 @@ export function ReportsView() {
     setFoodCategoryFilter('all');
   };
 
+  const todayVN = getTodayStrVN();
   const hasActiveFilters =
     departmentFilter !== 'all' ||
-    fromDate !== '' ||
-    toDate !== '' ||
+    fromDate !== todayVN ||
+    toDate !== todayVN ||
     searchTerm.trim() !== '' ||
     periodicCategoryFilter !== 'all' ||
     (reportType === 'pccc'
@@ -772,7 +797,17 @@ export function ReportsView() {
       ? filteredStationeries.length
       : reportType === 'general'
       ? filteredGenerals.length
-      : reportType === 'pccc' ? filteredPCCCDevices.length : reportType === 'periodic_inspection' ? filteredPeriodicInspections.length : reportType === 'food_registration' ? filteredFoods.length : filteredDepartments.length;
+      : reportType === 'pccc'
+      ? filteredPCCCDevices.length
+      : reportType === 'periodic_inspection'
+      ? filteredPeriodicInspections.length
+      : reportType === 'food_registration'
+      ? filteredFoods.length
+      : reportType === 'food_inspection'
+      ? totalFoodInspectionCount
+      : reportType === 'camera'
+      ? filteredCameraRequests.length
+      : filteredDepartments.length;
 
   // Export to Excel handler
   const handleExportExcel = () => {
@@ -1161,6 +1196,26 @@ export function ReportsView() {
     });
   };
 
+  const reportOptions = [
+    { key: 'leave', label: 'Nghỉ phép', icon: CalendarDays, count: filteredLeaves.length },
+    { key: 'attendance', label: 'Xác nhận công', icon: Clock, count: filteredAttendances.length },
+    { key: 'gate_pass', label: 'Ra vào cổng', icon: QrCode, count: filteredGatePasses.length },
+    { key: 'repair', label: 'Đề xuất sửa chữa', icon: Wrench, count: filteredRepairs.length },
+    { key: 'meal_cut', label: 'Cắt cơm', icon: Utensils, count: filteredMealCutLeaves.length },
+    { key: 'stationery', label: 'Văn phòng phẩm', icon: Package, count: filteredStationeries.length },
+    { key: 'general', label: 'Đề xuất khác', icon: FileQuestion, count: filteredGenerals.length },
+    { key: 'pccc', label: 'Kiểm tra PCCC', icon: Flame, count: filteredPCCCDevices.length },
+    { key: 'periodic_inspection', label: 'Kiểm tra định kỳ', icon: ClipboardCheck, count: filteredPeriodicInspections.length },
+    { key: 'food_registration', label: 'Thực phẩm mang vào', icon: UtensilsCrossed, count: filteredFoods.length },
+    { key: 'food_inspection', label: 'Kiểm tra thực phẩm 3 bước', icon: ShieldCheck, count: totalFoodInspectionCount },
+    ...(canAccessCamera
+      ? [{ key: 'camera', label: 'Xem Camera', icon: Camera, count: filteredCameraRequests.length }]
+      : []),
+    { key: 'departments', label: 'Cơ cấu phòng ban', icon: Building2, count: filteredDepartments.length },
+  ];
+  const activeReport = reportOptions.find((t) => t.key === reportType) || reportOptions[0];
+  const ActiveReportIcon = activeReport.icon;
+
   return (
     <div className="space-y-6">
       {/* TOP CONTROLS (Hidden completely on print/PDF) */}
@@ -1201,52 +1256,49 @@ export function ReportsView() {
         </div>
       </div>
 
-      {/* Report Type Navigation Tabs */}
-      <div className="bg-slate-100 dark:bg-slate-800/80 p-1.5 rounded-2xl flex flex-wrap gap-1.5 border border-slate-200 dark:border-slate-700/60 shadow-xs">
-        {[
-          { key: 'leave', label: 'Nghỉ phép', icon: CalendarDays, count: filteredLeaves.length },
-          { key: 'attendance', label: 'Xác nhận công', icon: Clock, count: filteredAttendances.length },
-          { key: 'gate_pass', label: 'Ra vào cổng', icon: QrCode, count: filteredGatePasses.length },
-          { key: 'repair', label: 'Đề xuất sửa chữa', icon: Wrench, count: filteredRepairs.length },
-          { key: 'meal_cut', label: 'Cắt cơm', icon: Utensils, count: filteredMealCutLeaves.length },
-          { key: 'stationery', label: 'Văn phòng phẩm', icon: Package, count: filteredStationeries.length },
-          { key: 'general', label: 'Đề xuất khác', icon: FileQuestion, count: filteredGenerals.length },
-          { key: 'pccc', label: 'Kiểm tra PCCC', icon: Flame, count: filteredPCCCDevices.length },
-          { key: 'periodic_inspection', label: 'Kiểm tra định kỳ', icon: ClipboardCheck, count: filteredPeriodicInspections.length },
-          { key: 'food_registration', label: 'Thực phẩm mang vào', icon: UtensilsCrossed, count: filteredFoods.length },
-          { key: 'food_inspection', label: 'Kiểm tra thực phẩm 3 bước', icon: ShieldCheck, count: totalFoodInspectionCount },
-          ...(canAccessCamera
-            ? [{ key: 'camera', label: 'Xem Camera', icon: Camera, count: filteredCameraRequests.length }]
-            : []),
-          { key: 'departments', label: 'Cơ cấu phòng ban', icon: Building2, count: filteredDepartments.length },
-        ].map((tab) => {
-          const Icon = tab.icon;
-          const isActive = reportType === tab.key;
-          return (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => handleSelectReportType(tab.key as any)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
-                isActive
-                  ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs ring-1 ring-slate-900/10 dark:ring-white/10'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-800/60'
-              }`}
+      {/* Report Type Dropdown Menu (Thu gọn danh mục báo cáo thành menu xổ xuống) */}
+      <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 flex-1">
+          <label
+            htmlFor="report-type-select"
+            className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-200 flex items-center gap-2 whitespace-nowrap"
+          >
+            <BarChart3 className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
+            <span>Danh mục báo cáo:</span>
+          </label>
+          <div className="relative flex-1 max-w-md">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-blue-600 dark:text-blue-400">
+              <ActiveReportIcon className="w-4 h-4" />
+            </div>
+            <select
+              id="report-type-select"
+              value={reportType}
+              onChange={(e) => handleSelectReportType(e.target.value as any)}
+              className="w-full appearance-none pl-9 pr-10 py-2.5 bg-slate-50 dark:bg-slate-800 border-2 border-blue-500/40 hover:border-blue-500 focus:border-blue-600 dark:border-slate-700 rounded-xl text-xs sm:text-sm font-bold text-slate-900 dark:text-white shadow-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer transition-all"
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400'}`} />
-              <span>{tab.label}</span>
-              <span
-                className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
-                  isActive
-                    ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400'
-                    : 'bg-slate-200/70 dark:bg-slate-700/60 text-slate-500 dark:text-slate-400'
-                }`}
-              >
-                {tab.count}
-              </span>
-            </button>
-          );
-        })}
+              {reportOptions.map((tab) => (
+                <option key={tab.key} value={tab.key} className="py-1.5 font-medium text-slate-900 dark:text-white">
+                  {tab.label} ({tab.count})
+                </option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+              <ChevronDown className="w-4 h-4" />
+            </div>
+          </div>
+        </div>
+
+        {/* Quick status pill of active report */}
+        <div className="flex items-center gap-2 text-xs self-start md:self-auto">
+          <span className="text-slate-500 dark:text-slate-400 font-medium">Báo cáo đang xem:</span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 font-bold">
+            <ActiveReportIcon className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+            <span>{activeReport.label}</span>
+            <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-blue-600 text-white font-black">
+              {activeReport.count}
+            </span>
+          </span>
+        </div>
       </div>
 
       {/* Filter Toolbar */}
@@ -1513,7 +1565,11 @@ export function ReportsView() {
             <button
               type="button"
               onClick={handleSetToday}
-              className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium rounded-lg text-[11px] transition-colors"
+              className={`px-2.5 py-1.5 font-bold rounded-lg text-[11px] transition-colors ${
+                fromDate === todayVN && toDate === todayVN
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
+              }`}
             >
               Hôm nay
             </button>
@@ -1523,6 +1579,17 @@ export function ReportsView() {
               className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium rounded-lg text-[11px] transition-colors"
             >
               Tháng này
+            </button>
+            <button
+              type="button"
+              onClick={handleSetAllTime}
+              className={`px-2.5 py-1.5 font-medium rounded-lg text-[11px] transition-colors ${
+                !fromDate && !toDate
+                  ? 'bg-blue-600 text-white font-bold shadow-xs'
+                  : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
+              }`}
+            >
+              Tất cả thời gian
             </button>
 
             {hasActiveFilters && (
@@ -1651,7 +1718,9 @@ export function ReportsView() {
           <p className="text-xs text-slate-500 mt-0.5">
             {departmentFilter !== 'all' ? `Phòng ban: ${departmentFilter} • ` : ''}
             {fromDate && toDate
-              ? `Từ ngày ${formatDate(fromDate)} đến ngày ${formatDate(toDate)}`
+              ? fromDate === toDate
+                ? `Ngày ${formatDate(fromDate)}`
+                : `Từ ngày ${formatDate(fromDate)} đến ngày ${formatDate(toDate)}`
               : fromDate
               ? `Từ ngày ${formatDate(fromDate)}`
               : toDate
@@ -1660,12 +1729,12 @@ export function ReportsView() {
           </p>
         </div>
 
-        {/* Dynamic Table Preview */}
-        <div className="overflow-x-auto">
+        {/* Dynamic Table Preview with Horizontal & Vertical Scrollbar */}
+        <div className="overflow-x-auto overflow-y-auto max-h-[560px] md:max-h-[640px] border border-slate-200 dark:border-slate-800 rounded-xl shadow-xs print:max-h-none print:overflow-visible print:border-none">
           {/* LEAVE REPORT TABLE */}
           {reportType === 'leave' && (
             <table className="w-full text-left border-collapse text-xs">
-              <thead>
+              <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs">
                 <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
                   <th className="p-2 border">Mã đơn</th>
                   <th className="p-2 border text-center">Ngày tạo</th>
@@ -1749,7 +1818,7 @@ export function ReportsView() {
           {/* ATTENDANCE REPORT TABLE */}
           {reportType === 'attendance' && (
             <table className="w-full text-left border-collapse text-xs">
-              <thead>
+              <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs">
                 <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
                   <th className="p-2 border">Mã phiếu</th>
                   <th className="p-2 border">Mã NV</th>
@@ -1817,7 +1886,7 @@ export function ReportsView() {
           {/* GATE PASS REPORT TABLE */}
           {reportType === 'gate_pass' && (
             <table className="w-full text-left border-collapse text-xs">
-              <thead>
+              <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs">
                 <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
                   <th className="p-2 border">Mã phiếu</th>
                   <th className="p-2 border">Nhân viên</th>
@@ -1911,7 +1980,7 @@ export function ReportsView() {
           {/* MEAL CUT REPORT TABLE */}
           {reportType === 'meal_cut' && (
             <table className="w-full text-left border-collapse text-xs">
-              <thead>
+              <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs">
                 <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
                   <th className="p-2 border text-center w-12">STT</th>
                   <th className="p-2 border">Mã đơn</th>
@@ -1974,7 +2043,7 @@ export function ReportsView() {
           {/* REPAIR PROPOSALS REPORT TABLE */}
           {reportType === 'repair' && (
             <table className="w-full text-left border-collapse text-xs">
-              <thead>
+              <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs">
                 <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
                   <th className="p-2 border text-center w-12">STT</th>
                   <th className="p-2 border">Mã phiếu</th>
@@ -2044,7 +2113,7 @@ export function ReportsView() {
           {/* STATIONERY REPORT TABLE */}
           {reportType === 'stationery' && (
             <table className="w-full text-left border-collapse text-xs">
-              <thead>
+              <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs">
                 <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
                   <th className="p-2 border border-slate-300 dark:border-slate-600 text-center w-12">STT</th>
                   <th className="p-2 border border-slate-300 dark:border-slate-600 text-center">Mã phiếu</th>
@@ -2174,7 +2243,7 @@ export function ReportsView() {
           {/* GENERAL REPORT TABLE */}
           {reportType === 'general' && (
             <table className="w-full text-left border-collapse text-xs">
-              <thead>
+              <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs">
                 <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
                   <th className="p-2 border text-center w-12">STT</th>
                   <th className="p-2 border">Mã phiếu</th>
@@ -2238,10 +2307,9 @@ export function ReportsView() {
 
           {/* PCCC REPORT TABLE - Thu nhỏ cột hiển thị trọn vẹn trong trang */}
           {reportType === 'pccc' && (
-            <div className="overflow-x-auto w-full">
-              <table className="w-full text-left border-collapse text-[10.5px] leading-tight">
-                <thead>
-                  <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold uppercase text-[9.5px] text-slate-700 dark:text-slate-300">
+            <table className="w-full text-left border-collapse text-[10.5px] leading-tight">
+              <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs">
+                <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold uppercase text-[9.5px] text-slate-700 dark:text-slate-300">
                     <th className="px-1.5 py-1.5 border text-center w-8 whitespace-nowrap">STT</th>
                     <th className="px-1.5 py-1.5 border text-center w-22 whitespace-nowrap">Mã TB</th>
                     <th className="px-2 py-1.5 border min-w-[125px]">Tên thiết bị</th>
@@ -2338,15 +2406,13 @@ export function ReportsView() {
                   )}
                 </tbody>
               </table>
-            </div>
           )}
 
           {/* PERIODIC INSPECTION REPORT TABLE */}
           {reportType === 'periodic_inspection' && (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold text-center">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs">
+                <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold text-center">
                     <th className="p-2 border w-10">STT</th>
                     <th className="p-2 border whitespace-nowrap">Mã phiếu</th>
                     <th className="p-2 border whitespace-nowrap">Hạng mục</th>
@@ -2408,15 +2474,13 @@ export function ReportsView() {
                   )}
                 </tbody>
               </table>
-            </div>
           )}
 
           {/* FOOD REGISTRATION REPORT TABLE */}
           {reportType === 'food_registration' && (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold text-center">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs">
+                <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold text-center">
                     <th className="p-2 border w-10">STT</th>
                     <th className="p-2 border whitespace-nowrap">Mã phiếu</th>
                     <th className="p-2 border whitespace-nowrap">MSNV</th>
@@ -2503,13 +2567,12 @@ export function ReportsView() {
                   )}
                 </tbody>
               </table>
-            </div>
           )}
 
           {/* DEPARTMENTS REPORT TABLE */}
           {reportType === 'departments' && (
             <table className="w-full text-left border-collapse text-xs">
-              <thead>
+              <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs">
                 <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
                   <th className="p-2 border">Mã phòng ban</th>
                   <th className="p-2 border">Tên phòng ban</th>
@@ -2544,10 +2607,9 @@ export function ReportsView() {
 
           {/* CAMERA SURVEILLANCE REPORT TABLE */}
           {reportType === 'camera' && (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800 shadow-xs">
+                <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 font-bold">
                     <th className="p-2 border text-center">STT</th>
                     <th className="p-2 border text-center">Mã yêu cầu</th>
                     <th className="p-2 border text-center">Ngày đăng ký</th>
@@ -2640,7 +2702,6 @@ export function ReportsView() {
                   )}
                 </tbody>
               </table>
-            </div>
           )}
         </div>
 
